@@ -1,0 +1,407 @@
+import React, { useState, useEffect } from 'react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { createPageUrl } from '../utils';
+import { 
+  MapPin, Calendar, Clock, Heart, Share2, Navigation, 
+  ChevronLeft, ChevronRight, X, ArrowLeft, Tag 
+} from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import { format } from 'date-fns';
+import { toast } from "sonner";
+
+export default function YardSaleDetails() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const saleId = urlParams.get('id');
+  
+  const [user, setUser] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const isAuth = await base44.auth.isAuthenticated();
+        if (isAuth) {
+          const currentUser = await base44.auth.me();
+          setUser(currentUser);
+        }
+      } catch (e) {
+        console.log('Not authenticated');
+      }
+    };
+    checkAuth();
+  }, []);
+
+  const { data: sale, isLoading } = useQuery({
+    queryKey: ['yardSale', saleId],
+    queryFn: async () => {
+      const sales = await base44.entities.YardSale.filter({ id: saleId });
+      if (sales.length > 0) {
+        // Increment views
+        await base44.entities.YardSale.update(saleId, { views: (sales[0].views || 0) + 1 });
+        return sales[0];
+      }
+      return null;
+    },
+    enabled: !!saleId,
+  });
+
+  const { data: favorites = [] } = useQuery({
+    queryKey: ['favorites', user?.email, saleId],
+    queryFn: async () => {
+      if (!user) return [];
+      return await base44.entities.Favorite.filter({ user_email: user.email, yard_sale_id: saleId });
+    },
+    enabled: !!user && !!saleId,
+  });
+
+  useEffect(() => {
+    setIsFavorite(favorites.length > 0);
+  }, [favorites]);
+
+  const favoriteMutation = useMutation({
+    mutationFn: async () => {
+      if (!user) {
+        base44.auth.redirectToLogin();
+        return;
+      }
+      
+      if (isFavorite) {
+        const existing = favorites[0];
+        if (existing) {
+          await base44.entities.Favorite.delete(existing.id);
+        }
+      } else {
+        await base44.entities.Favorite.create({ yard_sale_id: saleId, user_email: user.email });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['favorites'] });
+      toast.success(isFavorite ? 'Removed from favorites' : 'Added to favorites!');
+    },
+  });
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      await navigator.share({
+        title: sale?.title,
+        text: `Check out this yard sale: ${sale?.title}`,
+        url: window.location.href,
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      toast.success('Link copied to clipboard!');
+    }
+  };
+
+  const handleGetDirections = () => {
+    const address = `${sale?.address}, ${sale?.city}, ${sale?.state} ${sale?.zip_code}`;
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
+    window.open(url, '_blank');
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#F9F9F9] flex items-center justify-center">
+        <div className="animate-pulse">
+          <MapPin className="w-12 h-12 text-[#FF6F61]" />
+        </div>
+      </div>
+    );
+  }
+
+  if (!sale) {
+    return (
+      <div className="min-h-screen bg-[#F9F9F9] flex flex-col items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-[#2E3A59] mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            Sale Not Found
+          </h2>
+          <Link to={createPageUrl('YardSales')}>
+            <Button className="bg-[#FF6F61] hover:bg-[#e55a4d]">
+              Browse All Sales
+            </Button>
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  const photos = sale.photos || [];
+
+  return (
+    <div className="min-h-screen bg-[#F9F9F9]">
+      {/* Back Button */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <Link to={createPageUrl('YardSales')}>
+          <motion.button
+            whileHover={{ x: -5 }}
+            className="flex items-center gap-2 text-gray-600 hover:text-[#FF6F61] transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            Back to Sales
+          </motion.button>
+        </Link>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* Image Gallery */}
+          <motion.div
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+          >
+            <div className="relative rounded-3xl overflow-hidden bg-white shadow-lg">
+              {photos.length > 0 ? (
+                <>
+                  <motion.div
+                    key={currentImageIndex}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="aspect-[4/3] cursor-pointer"
+                    onClick={() => setIsLightboxOpen(true)}
+                  >
+                    <img
+                      src={photos[currentImageIndex]}
+                      alt={sale.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </motion.div>
+                  
+                  {/* Navigation Arrows */}
+                  {photos.length > 1 && (
+                    <>
+                      <button
+                        onClick={() => setCurrentImageIndex(prev => prev === 0 ? photos.length - 1 : prev - 1)}
+                        className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
+                      >
+                        <ChevronLeft className="w-5 h-5 text-[#2E3A59]" />
+                      </button>
+                      <button
+                        onClick={() => setCurrentImageIndex(prev => prev === photos.length - 1 ? 0 : prev + 1)}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-lg hover:bg-white transition-colors"
+                      >
+                        <ChevronRight className="w-5 h-5 text-[#2E3A59]" />
+                      </button>
+                    </>
+                  )}
+                  
+                  {/* Dots */}
+                  {photos.length > 1 && (
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                      {photos.map((_, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setCurrentImageIndex(idx)}
+                          className={`w-2 h-2 rounded-full transition-all ${
+                            idx === currentImageIndex ? 'bg-white w-6' : 'bg-white/50'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
+                <div className="aspect-[4/3] bg-gradient-to-br from-[#FF6F61]/10 to-[#F5A623]/10 flex items-center justify-center">
+                  <MapPin className="w-16 h-16 text-[#FF6F61]/30" />
+                </div>
+              )}
+            </div>
+
+            {/* Thumbnails */}
+            {photos.length > 1 && (
+              <div className="flex gap-3 mt-4 overflow-x-auto pb-2">
+                {photos.map((photo, idx) => (
+                  <motion.button
+                    key={idx}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setCurrentImageIndex(idx)}
+                    className={`flex-shrink-0 w-20 h-20 rounded-xl overflow-hidden border-2 transition-all ${
+                      idx === currentImageIndex ? 'border-[#FF6F61]' : 'border-transparent'
+                    }`}
+                  >
+                    <img src={photo} alt="" className="w-full h-full object-cover" />
+                  </motion.button>
+                ))}
+              </div>
+            )}
+          </motion.div>
+
+          {/* Details */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="space-y-6"
+          >
+            {/* Category Badge */}
+            {sale.category && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FF6F61]/10 rounded-full text-sm font-medium text-[#FF6F61] capitalize">
+                <Tag className="w-3.5 h-3.5" />
+                {sale.category.replace('-', ' ')}
+              </span>
+            )}
+
+            {/* Title */}
+            <h1 
+              className="text-3xl md:text-4xl font-bold text-[#2E3A59]"
+              style={{ fontFamily: 'Poppins, sans-serif' }}
+            >
+              {sale.title}
+            </h1>
+
+            {/* Date & Time */}
+            <div className="flex flex-wrap gap-4">
+              <div className="flex items-center gap-3 bg-white px-4 py-3 rounded-xl shadow-sm">
+                <div className="w-10 h-10 bg-[#FF6F61]/10 rounded-lg flex items-center justify-center">
+                  <Calendar className="w-5 h-5 text-[#FF6F61]" />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Date</p>
+                  <p className="font-semibold text-[#2E3A59]">
+                    {sale.date ? format(new Date(sale.date), 'EEEE, MMMM d, yyyy') : 'Date TBD'}
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 bg-white px-4 py-3 rounded-xl shadow-sm">
+                <div className="w-10 h-10 bg-[#F5A623]/10 rounded-lg flex items-center justify-center">
+                  <Clock className="w-5 h-5 text-[#F5A623]" />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500">Time</p>
+                  <p className="font-semibold text-[#2E3A59]">
+                    {sale.start_time || '8:00 AM'} - {sale.end_time || '2:00 PM'}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Location */}
+            <div className="bg-white p-5 rounded-2xl shadow-sm">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 bg-[#2E3A59]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <MapPin className="w-5 h-5 text-[#2E3A59]" />
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 mb-1">Location</p>
+                  <p className="font-semibold text-[#2E3A59]">{sale.address}</p>
+                  <p className="text-gray-600">{sale.city}, {sale.state} {sale.zip_code}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Description */}
+            {sale.description && (
+              <div className="bg-white p-5 rounded-2xl shadow-sm">
+                <h3 className="font-semibold text-[#2E3A59] mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                  About This Sale
+                </h3>
+                <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">{sale.description}</p>
+              </div>
+            )}
+
+            {/* Action Buttons */}
+            <div className="flex flex-wrap gap-3">
+              <motion.button
+                whileHover={{ scale: 1.02, boxShadow: '0 10px 30px rgba(255, 111, 97, 0.3)' }}
+                whileTap={{ scale: 0.98 }}
+                onClick={handleGetDirections}
+                className="flex-1 min-w-[200px] flex items-center justify-center gap-2 px-6 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg"
+                style={{ fontFamily: 'Poppins, sans-serif' }}
+              >
+                <Navigation className="w-5 h-5" />
+                Get Directions
+              </motion.button>
+              
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => favoriteMutation.mutate()}
+                className={`w-14 h-14 rounded-xl flex items-center justify-center border-2 transition-all ${
+                  isFavorite 
+                    ? 'bg-[#FF6F61]/10 border-[#FF6F61] text-[#FF6F61]' 
+                    : 'bg-white border-gray-200 text-gray-400 hover:border-[#FF6F61] hover:text-[#FF6F61]'
+                }`}
+              >
+                <Heart className={`w-6 h-6 ${isFavorite ? 'fill-current' : ''}`} />
+              </motion.button>
+              
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={handleShare}
+                className="w-14 h-14 rounded-xl flex items-center justify-center bg-white border-2 border-gray-200 text-gray-400 hover:border-[#2E3A59] hover:text-[#2E3A59] transition-all"
+              >
+                <Share2 className="w-6 h-6" />
+              </motion.button>
+            </div>
+
+            {/* Views */}
+            <p className="text-sm text-gray-500 text-center">
+              {sale.views || 0} people have viewed this sale
+            </p>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {isLightboxOpen && photos.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center"
+            onClick={() => setIsLightboxOpen(false)}
+          >
+            <button
+              onClick={() => setIsLightboxOpen(false)}
+              className="absolute top-4 right-4 w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white/20"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            
+            <motion.img
+              key={currentImageIndex}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              src={photos[currentImageIndex]}
+              alt=""
+              className="max-w-[90vw] max-h-[90vh] object-contain"
+              onClick={(e) => e.stopPropagation()}
+            />
+            
+            {photos.length > 1 && (
+              <>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCurrentImageIndex(prev => prev === 0 ? photos.length - 1 : prev - 1);
+                  }}
+                  className="absolute left-4 w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white/20"
+                >
+                  <ChevronLeft className="w-6 h-6" />
+                </button>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCurrentImageIndex(prev => prev === photos.length - 1 ? 0 : prev + 1);
+                  }}
+                  className="absolute right-4 w-12 h-12 bg-white/10 rounded-full flex items-center justify-center text-white hover:bg-white/20"
+                >
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+              </>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
