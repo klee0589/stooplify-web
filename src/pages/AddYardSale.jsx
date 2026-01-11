@@ -39,11 +39,13 @@ export default function AddYardSale() {
     date: '',
     start_time: '08:00',
     end_time: '14:00',
+    general_location: '',
     address: '',
     city: '',
     state: '',
     zip_code: '',
     category: 'general',
+    address_unlock_hours: 24,
   });
 
   useEffect(() => {
@@ -111,7 +113,7 @@ export default function AddYardSale() {
   };
 
   const isStep1Valid = formData.title && formData.date && formData.category;
-  const isStep2Valid = formData.address && formData.city && formData.state && formData.zip_code;
+  const isStep2Valid = formData.general_location && formData.address && formData.city && formData.state && formData.zip_code;
 
   if (!isAuthenticated) {
     return (
@@ -319,13 +321,35 @@ export default function AddYardSale() {
 
               <div className="space-y-5">
                 <div>
-                  <Label className="text-[#2E3A59] font-medium mb-2 block">Street Address *</Label>
+                  <Label className="text-[#2E3A59] font-medium mb-2 flex items-center gap-2">
+                    General Location (Public) *
+                    <span className="text-xs text-gray-500 font-normal">(e.g., "Near Bedford Ave & N 7th St")</span>
+                  </Label>
+                  <Input
+                    placeholder="Near Main St & Oak Ave"
+                    value={formData.general_location}
+                    onChange={(e) => updateField('general_location', e.target.value)}
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    This approximate location will be shown publicly for privacy
+                  </p>
+                </div>
+
+                <div>
+                  <Label className="text-[#2E3A59] font-medium mb-2 flex items-center gap-2">
+                    Exact Street Address (Private) *
+                    <span className="text-xs text-green-600 font-normal">🔒 Protected</span>
+                  </Label>
                   <Input
                     placeholder="123 Main Street"
                     value={formData.address}
                     onChange={(e) => updateField('address', e.target.value)}
                     className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6"
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Exact address unlocks 24 hours before sale or when users click "I'm Attending"
+                  </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">

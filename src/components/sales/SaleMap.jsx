@@ -99,6 +99,7 @@ export default function SaleMap({ sales, center }) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {sales.map((sale) => {
+          // Use approximate coordinates (not exact) for map display
           if (!sale.latitude || !sale.longitude) return null;
           
           return (
