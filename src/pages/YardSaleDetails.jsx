@@ -6,11 +6,12 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { 
   MapPin, Calendar, Clock, Heart, Share2, Navigation, 
-  ChevronLeft, ChevronRight, X, ArrowLeft, Tag 
+  ChevronLeft, ChevronRight, X, ArrowLeft, Tag, UserCheck 
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { format } from 'date-fns';
 import { toast } from "sonner";
+import AddressDisplay from '../components/sales/AddressDisplay';
 
 export default function YardSaleDetails() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -20,6 +21,7 @@ export default function YardSaleDetails() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isAttending, setIsAttending] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -61,9 +63,22 @@ export default function YardSaleDetails() {
     enabled: !!user && !!saleId,
   });
 
+  const { data: attendances = [] } = useQuery({
+    queryKey: ['attendance', user?.email, saleId],
+    queryFn: async () => {
+      if (!user) return [];
+      return await base44.entities.Attendance.filter({ user_email: user.email, yard_sale_id: saleId });
+    },
+    enabled: !!user && !!saleId,
+  });
+
   useEffect(() => {
     setIsFavorite(favorites.length > 0);
   }, [favorites]);
+
+  useEffect(() => {
+    setIsAttending(attendances.length > 0);
+  }, [attendances]);
 
   const favoriteMutation = useMutation({
     mutationFn: async () => {
@@ -87,6 +102,32 @@ export default function YardSaleDetails() {
     },
   });
 
+  const attendanceMutation = useMutation({
+    mutationFn: async () => {
+      if (!user) {
+        base44.auth.redirectToLogin();
+        return;
+      }
+      
+      if (isAttending) {
+        const existing = attendances[0];
+        if (existing) {
+          await base44.entities.Attendance.delete(existing.id);
+        }
+      } else {
+        await base44.entities.Attendance.create({ 
+          yard_sale_id: saleId, 
+          user_email: user.email,
+          notify_reminder: true
+        });
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['attendance'] });
+      toast.success(isAttending ? 'No longer attending' : '🎉 Attending! Exact address unlocked.');
+    },
+  });
+
   const handleShare = async () => {
     if (navigator.share) {
       await navigator.share({
@@ -101,9 +142,30 @@ export default function YardSaleDetails() {
   };
 
   const handleGetDirections = () => {
-    const address = `${sale?.address}, ${sale?.city}, ${sale?.state} ${sale?.zip_code}`;
-    const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
-    window.open(url, '_blank');
+    // Use exact coordinates if available and unlocked, otherwise use approximate
+    if (sale?.exact_latitude && sale?.exact_longitude && (isAttending || isAddressUnlocked())) {
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${sale.exact_latitude},${sale.exact_longitude}`;
+      window.open(url, '_blank');
+    } else if (sale?.latitude && sale?.longitude) {
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${sale.latitude},${sale.longitude}`;
+      window.open(url, '_blank');
+    } else if (sale?.address && (isAttending || isAddressUnlocked())) {
+      const address = `${sale.address}, ${sale.city}, ${sale.state} ${sale.zip_code}`;
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
+      window.open(url, '_blank');
+    } else {
+      const address = `${sale?.general_location}, ${sale?.city}, ${sale?.state}`;
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
+      window.open(url, '_blank');
+    }
+  };
+
+  const isAddressUnlocked = () => {
+    if (!sale?.date || !sale?.start_time) return false;
+    const saleDateTime = new Date(`${sale.date}T${sale.start_time}`);
+    const now = new Date();
+    const hoursUntilSale = (saleDateTime - now) / (1000 * 60 * 60);
+    return hoursUntilSale <= (sale.address_unlock_hours || 24);
   };
 
   if (isLoading) {
@@ -284,16 +346,7 @@ export default function YardSaleDetails() {
 
             {/* Location */}
             <div className="bg-white p-5 rounded-2xl shadow-sm">
-              <div className="flex items-start gap-3">
-                <div className="w-10 h-10 bg-[#2E3A59]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-5 h-5 text-[#2E3A59]" />
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 mb-1">Location</p>
-                  <p className="font-semibold text-[#2E3A59]">{sale.address}</p>
-                  <p className="text-gray-600">{sale.city}, {sale.state} {sale.zip_code}</p>
-                </div>
-              </div>
+              <AddressDisplay sale={sale} isAttending={isAttending} showIcon={true} />
             </div>
 
             {/* Description */}
@@ -308,6 +361,21 @@ export default function YardSaleDetails() {
 
             {/* Action Buttons */}
             <div className="flex flex-wrap gap-3">
+              <motion.button
+                whileHover={{ scale: 1.02, boxShadow: '0 10px 30px rgba(46, 58, 89, 0.3)' }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => attendanceMutation.mutate()}
+                className={`flex-1 min-w-[200px] flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold shadow-lg transition-all ${
+                  isAttending
+                    ? 'bg-green-500 text-white hover:bg-green-600'
+                    : 'bg-[#2E3A59] text-white hover:bg-[#1a2238]'
+                }`}
+                style={{ fontFamily: 'Poppins, sans-serif' }}
+              >
+                <UserCheck className="w-5 h-5" />
+                {isAttending ? "I'm Attending ✓" : "I'm Attending"}
+              </motion.button>
+              
               <motion.button
                 whileHover={{ scale: 1.02, boxShadow: '0 10px 30px rgba(255, 111, 97, 0.3)' }}
                 whileTap={{ scale: 0.98 }}

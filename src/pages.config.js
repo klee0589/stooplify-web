@@ -1,21 +1,21 @@
-import Home from './pages/Home';
-import YardSales from './pages/YardSales';
-import YardSaleDetails from './pages/YardSaleDetails';
 import AddYardSale from './pages/AddYardSale';
-import Favorites from './pages/Favorites';
-import Profile from './pages/Profile';
 import Admin from './pages/Admin';
+import Favorites from './pages/Favorites';
+import Home from './pages/Home';
+import Profile from './pages/Profile';
+import YardSaleDetails from './pages/YardSaleDetails';
+import YardSales from './pages/YardSales';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Home": Home,
-    "YardSales": YardSales,
-    "YardSaleDetails": YardSaleDetails,
     "AddYardSale": AddYardSale,
-    "Favorites": Favorites,
-    "Profile": Profile,
     "Admin": Admin,
+    "Favorites": Favorites,
+    "Home": Home,
+    "Profile": Profile,
+    "YardSaleDetails": YardSaleDetails,
+    "YardSales": YardSales,
 }
 
 export const pagesConfig = {
