@@ -77,7 +77,7 @@ export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance 
             <div className="flex items-center gap-2 text-gray-600">
               <MapPin className="w-3.5 h-3.5 text-[#2E3A59]" />
               <span className="text-sm line-clamp-1">
-                {sale.city}, {sale.state}
+                {sale.general_location || `${sale.city}, ${sale.state}`}
                 {distance && <span className="ml-1 text-[#FF6F61]">• {distance} mi</span>}
               </span>
             </div>
