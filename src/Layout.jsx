@@ -35,8 +35,8 @@ export default function Layout({ children, currentPageName }) {
 
   const navLinks = [
     { name: 'Home', page: 'Home', icon: Home },
-    { name: 'Find Sales', page: 'YardSales', icon: MapPin },
-    { name: 'Add Sale', page: 'AddYardSale', icon: PlusCircle },
+    { name: 'Browse Yard Sales', page: 'YardSales', icon: MapPin },
+    { name: 'List a Yard Sale', page: 'AddYardSale', icon: PlusCircle },
   ];
 
   const userLinks = user ? [
