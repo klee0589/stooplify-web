@@ -6,7 +6,8 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { 
   User, Mail, MapPin, Calendar, Heart, Tag, 
-  Loader2, ArrowLeft, LogOut, Edit2, Check, X, Clock, Pencil 
+  Loader2, ArrowLeft, LogOut, Edit2, Check, X, Clock, Pencil,
+  Crown, Zap, CreditCard 
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -275,11 +276,69 @@ export default function Profile() {
           </div>
         </motion.div>
 
-        {/* Notifications Settings */}
+        {/* Subscription Plan */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
+          className="bg-gradient-to-br from-[#FF6F61] to-[#F5A623] rounded-2xl p-6 shadow-lg mb-6 text-white"
+        >
+          <div className="flex items-start justify-between mb-4">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                {user.subscription_active ? (
+                  <Crown className="w-5 h-5" />
+                ) : (
+                  <Zap className="w-5 h-5" />
+                )}
+                <h3 className="text-lg font-bold" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                  {user.subscription_active ? 'Unlimited Plan' : 'Free Plan'}
+                </h3>
+              </div>
+              <p className="text-white/90 text-sm">
+                {user.subscription_active 
+                  ? 'Post unlimited yard sales' 
+                  : `${user.free_listings_used || 0} of 1 free listing used`}
+              </p>
+            </div>
+            {user.subscription_active ? (
+              <div className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold">
+                ACTIVE
+              </div>
+            ) : null}
+          </div>
+
+          {!user.subscription_active && (
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-3">
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-semibold">Upgrade to Unlimited</span>
+                <span className="text-xl font-bold">$9<span className="text-sm font-normal">/mo</span></span>
+              </div>
+              <ul className="space-y-1 text-sm text-white/90 mb-3">
+                <li>• Post unlimited yard sales</li>
+                <li>• No per-listing fees</li>
+                <li>• Priority support</li>
+              </ul>
+              <Link to={createPageUrl('AddYardSale')}>
+                <Button className="w-full bg-white text-[#FF6F61] hover:bg-white/90 rounded-xl font-semibold">
+                  Upgrade Now
+                </Button>
+              </Link>
+            </div>
+          )}
+
+          {!user.subscription_active && (user.free_listings_used || 0) >= 1 && (
+            <p className="text-white/80 text-xs text-center">
+              Or pay $4 per listing when you create your next sale
+            </p>
+          )}
+        </motion.div>
+
+        {/* Notifications Settings */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25 }}
           className="bg-white rounded-2xl p-6 shadow-sm mb-6"
         >
           <h3 
