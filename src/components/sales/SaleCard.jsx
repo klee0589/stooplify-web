@@ -4,8 +4,9 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 import { MapPin, Calendar, Clock, Heart, ArrowRight } from 'lucide-react';
 import { format } from 'date-fns';
+import TrustBadges from './TrustBadges';
 
-export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance }) {
+export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance, seller }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -54,14 +55,17 @@ export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance 
       {/* Content */}
       <Link to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}>
         <div className="p-4">
-          <h3 
-            className="text-lg font-bold text-[#2E3A59] mb-2 line-clamp-1"
-            style={{ fontFamily: 'Poppins, sans-serif' }}
-          >
-            {sale.title}
-          </h3>
+          <div className="space-y-2 mb-3">
+            <h3 
+              className="text-lg font-bold text-[#2E3A59] line-clamp-1"
+              style={{ fontFamily: 'Poppins, sans-serif' }}
+            >
+              {sale.title}
+            </h3>
+            {seller && <TrustBadges seller={seller} size="small" />}
+          </div>
           
-          <div className="space-y-1.5 mb-3">
+          <div className="space-y-1.5 mb-2">
             <div className="flex items-center gap-2 text-gray-600">
               <Calendar className="w-3.5 h-3.5 text-[#FF6F61]" />
               <span className="text-sm">
