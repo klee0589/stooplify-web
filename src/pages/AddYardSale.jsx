@@ -40,6 +40,10 @@ export default function AddYardSale() {
   const [needsPayment, setNeedsPayment] = useState(false);
   const [isCheckingPayment, setIsCheckingPayment] = useState(false);
   const [isLoadingSale, setIsLoadingSale] = useState(isEditMode);
+  
+  // Stripe price IDs (from your Stripe products)
+  const SINGLE_LISTING_PRICE_ID = 'price_1SobQmCjpHsssawu7LrGrmDG';
+  const SUBSCRIPTION_PRICE_ID = 'price_1SobQmCjpHsssawunHMkTLY2';
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -68,7 +72,9 @@ export default function AddYardSale() {
           if (!isEditMode) {
             const freeUsed = currentUser.free_listings_used || 0;
             const hasSubscription = currentUser.subscription_active || false;
-            setNeedsPayment(freeUsed >= 1 && !hasSubscription);
+            const needsPay = freeUsed >= 1 && !hasSubscription;
+            setNeedsPayment(needsPay);
+            console.log('Payment check:', { freeUsed, hasSubscription, needsPay });
           }
           
           // Load existing sale data if editing
@@ -205,16 +211,20 @@ export default function AddYardSale() {
       // Check if running in iframe
       if (window.self !== window.top) {
         toast.error('Checkout only works from the published app. Please open in a new tab.');
+        setIsCheckingPayment(false);
         return;
       }
       
       const response = await base44.functions.invoke('createCheckout', { priceId, listingType });
       if (response.data.url) {
         window.location.href = response.data.url;
+      } else {
+        toast.error('Failed to create checkout session');
+        setIsCheckingPayment(false);
       }
     } catch (error) {
+      console.error('Checkout error:', error);
       toast.error('Failed to create checkout session');
-    } finally {
       setIsCheckingPayment(false);
     }
   };
@@ -553,7 +563,7 @@ export default function AddYardSale() {
                 <motion.div
                   whileHover={{ scale: 1.02 }}
                   className="border-2 border-gray-200 rounded-2xl p-6 cursor-pointer hover:border-[#FF6F61] transition-all"
-                  onClick={() => handleCheckout('price_1SobQmCjpHsssawu7LrGrmDG', 'single')}
+                  onClick={() => handleCheckout(SINGLE_LISTING_PRICE_ID, 'single')}
                 >
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-lg font-bold text-[#2E3A59]" style={{ fontFamily: 'Poppins, sans-serif' }}>
@@ -568,7 +578,7 @@ export default function AddYardSale() {
                 <motion.div
                   whileHover={{ scale: 1.02 }}
                   className="border-2 border-[#FF6F61] bg-[#FF6F61]/5 rounded-2xl p-6 cursor-pointer transition-all relative overflow-hidden"
-                  onClick={() => handleCheckout('price_1SobQmCjpHsssawunHMkTLY2', 'subscription')}
+                  onClick={() => handleCheckout(SUBSCRIPTION_PRICE_ID, 'subscription')}
                 >
                   <div className="absolute top-2 right-2 bg-[#F5A623] text-white text-xs font-bold px-3 py-1 rounded-full">
                     BEST VALUE

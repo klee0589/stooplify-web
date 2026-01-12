@@ -1,5 +1,5 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
-import Stripe from 'npm:stripe';
+import Stripe from 'npm:stripe@17.5.0';
 
 const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY'));
 
@@ -15,7 +15,7 @@ Deno.serve(async (req) => {
     const { priceId, listingType } = await req.json();
 
     if (!priceId || !listingType) {
-      return Response.json({ error: 'Missing required fields' }, { status: 400 });
+      return Response.json({ error: 'Missing priceId or listingType' }, { status: 400 });
     }
 
     const session = await stripe.checkout.sessions.create({
@@ -25,8 +25,8 @@ Deno.serve(async (req) => {
         quantity: 1,
       }],
       mode: listingType === 'subscription' ? 'subscription' : 'payment',
-      success_url: `${req.headers.get('origin')}/add-yard-sale?payment=success`,
-      cancel_url: `${req.headers.get('origin')}/add-yard-sale?payment=cancelled`,
+      success_url: `${req.headers.get('origin')}/AddYardSale?payment=success`,
+      cancel_url: `${req.headers.get('origin')}/AddYardSale?payment=cancelled`,
       customer_email: user.email,
       metadata: {
         base44_app_id: Deno.env.get('BASE44_APP_ID'),
