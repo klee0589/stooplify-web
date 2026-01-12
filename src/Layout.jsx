@@ -41,8 +41,7 @@ export default function Layout({ children, currentPageName }) {
 
   const userLinks = user ? [
     { name: 'Favorites', page: 'Favorites', icon: Heart },
-    { name: 'Profile', page: 'Profile', icon: User },
-    ...(user.role === 'admin' ? [{ name: 'Admin', page: 'Admin', icon: Settings }] : [])
+    { name: 'Profile', page: 'Profile', icon: User }
   ] : [];
 
   return (
