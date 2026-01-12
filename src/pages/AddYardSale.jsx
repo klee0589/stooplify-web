@@ -69,7 +69,7 @@ export default function AddYardSale() {
       return await base44.entities.YardSale.create({
         ...data,
         photos: photos,
-        status: 'pending',
+        status: user?.role === 'admin' ? 'approved' : 'pending',
         views: 0,
       });
     },
