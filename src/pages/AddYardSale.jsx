@@ -208,6 +208,8 @@ export default function AddYardSale() {
   const handleCheckout = async (priceId, listingType) => {
     setIsCheckingPayment(true);
     try {
+      console.log('Starting checkout with:', { priceId, listingType });
+      
       // Check if running in iframe
       if (window.self !== window.top) {
         toast.error('Checkout only works from the published app. Please open in a new tab.');
@@ -216,15 +218,18 @@ export default function AddYardSale() {
       }
       
       const response = await base44.functions.invoke('createCheckout', { priceId, listingType });
+      console.log('Checkout response:', response);
+      
       if (response.data.url) {
         window.location.href = response.data.url;
       } else {
+        console.error('No URL in response:', response);
         toast.error('Failed to create checkout session');
         setIsCheckingPayment(false);
       }
     } catch (error) {
       console.error('Checkout error:', error);
-      toast.error('Failed to create checkout session');
+      toast.error(error.message || 'Failed to create checkout session');
       setIsCheckingPayment(false);
     }
   };
