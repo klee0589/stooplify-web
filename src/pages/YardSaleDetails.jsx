@@ -6,12 +6,16 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { 
   MapPin, Calendar, Clock, Heart, Share2, Navigation, 
-  ChevronLeft, ChevronRight, X, ArrowLeft, Tag, UserCheck 
+  ChevronLeft, ChevronRight, X, ArrowLeft, Tag, UserCheck, Flag 
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { format } from 'date-fns';
 import { toast } from "sonner";
 import AddressDisplay from '../components/sales/AddressDisplay';
+import TrustBadges from '../components/sales/TrustBadges';
+import SellerReputation from '../components/sales/SellerReputation';
+import ReportModal from '../components/sales/ReportModal';
+import SafetyNote from '../components/sales/SafetyNote';
 
 export default function YardSaleDetails() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -22,6 +26,8 @@ export default function YardSaleDetails() {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [isAttending, setIsAttending] = useState(false);
+  const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [seller, setSeller] = useState(null);
 
   const queryClient = useQueryClient();
 
@@ -47,6 +53,15 @@ export default function YardSaleDetails() {
       if (sales.length > 0) {
         // Increment views
         await base44.entities.YardSale.update(saleId, { views: (sales[0].views || 0) + 1 });
+        
+        // Fetch seller info
+        if (sales[0].created_by) {
+          const sellers = await base44.entities.User.filter({ email: sales[0].created_by });
+          if (sellers.length > 0) {
+            setSeller(sellers[0]);
+          }
+        }
+        
         return sales[0];
       }
       return null;
@@ -302,13 +317,16 @@ export default function YardSaleDetails() {
             animate={{ opacity: 1, x: 0 }}
             className="space-y-6"
           >
-            {/* Category Badge */}
-            {sale.category && (
-              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FF6F61]/10 rounded-full text-sm font-medium text-[#FF6F61] capitalize">
-                <Tag className="w-3.5 h-3.5" />
-                {sale.category.replace('-', ' ')}
-              </span>
-            )}
+            {/* Trust Badges & Category */}
+            <div className="space-y-3">
+              {sale.category && (
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FF6F61]/10 rounded-full text-sm font-medium text-[#FF6F61] capitalize">
+                  <Tag className="w-3.5 h-3.5" />
+                  {sale.category.replace('-', ' ')}
+                </span>
+              )}
+              <TrustBadges seller={seller} />
+            </div>
 
             {/* Title */}
             <h1 
@@ -358,6 +376,12 @@ export default function YardSaleDetails() {
                 <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">{sale.description}</p>
               </div>
             )}
+
+            {/* Seller Reputation */}
+            <SellerReputation seller={seller} />
+
+            {/* Safety Note */}
+            <SafetyNote />
 
             {/* Action Buttons */}
             <div className="flex flex-wrap gap-3">
@@ -411,9 +435,19 @@ export default function YardSaleDetails() {
             </div>
 
             {/* Views */}
-            <p className="text-sm text-gray-500 text-center">
-              {sale.views || 0} people have viewed this sale
-            </p>
+            {/* Views & Report */}
+            <div className="flex items-center justify-between text-sm">
+              <p className="text-gray-500">
+                {sale.views || 0} people have viewed this sale
+              </p>
+              <button
+                onClick={() => setIsReportModalOpen(true)}
+                className="text-gray-400 hover:text-red-500 transition-colors flex items-center gap-1"
+              >
+                <Flag className="w-4 h-4" />
+                Report
+              </button>
+            </div>
           </motion.div>
         </div>
       </div>
@@ -469,7 +503,14 @@ export default function YardSaleDetails() {
             )}
           </motion.div>
         )}
-      </AnimatePresence>
-    </div>
-  );
-}
+        </AnimatePresence>
+
+        {/* Report Modal */}
+        <ReportModal
+        sale={sale}
+        isOpen={isReportModalOpen}
+        onClose={() => setIsReportModalOpen(false)}
+        />
+        </div>
+        );
+        }

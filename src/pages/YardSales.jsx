@@ -36,7 +36,19 @@ export default function YardSales() {
     queryKey: ['yardSales'],
     queryFn: async () => {
       const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
-      return allSales;
+      
+      // Fetch sellers for each sale
+      const salesWithSellers = await Promise.all(
+        allSales.map(async (sale) => {
+          if (sale.created_by) {
+            const sellers = await base44.entities.User.filter({ email: sale.created_by });
+            return { ...sale, seller: sellers[0] || null };
+          }
+          return { ...sale, seller: null };
+        })
+      );
+      
+      return salesWithSellers;
     },
   });
 
@@ -235,8 +247,9 @@ export default function YardSales() {
                       >
                         <SaleCard
                           sale={sale}
-                          isFavorite={favorites.includes(sale.id)}
-                          onToggleFavorite={handleToggleFavorite}
+                            isFavorite={favorites.includes(sale.id)}
+                            onToggleFavorite={handleToggleFavorite}
+                            seller={sale.seller}
                         />
                       </motion.div>
                     ))}
