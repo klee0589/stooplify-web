@@ -256,8 +256,8 @@ export default function Pricing() {
           <h3 className="text-xl font-semibold text-[#2E3A59] mb-4">Have questions?</h3>
           <p className="text-gray-600">
             Contact us at{' '}
-            <a href="mailto:hello@stooplify.com" className="text-[#FF6F61] hover:underline">
-              hello@stooplify.com
+            <a href="mailto:daniel@stooplify.com" className="text-[#FF6F61] hover:underline">
+              daniel@stooplify.com
             </a>
           </p>
         </motion.div>
