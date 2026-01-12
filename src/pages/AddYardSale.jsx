@@ -28,6 +28,10 @@ const categories = [
 ];
 
 export default function AddYardSale() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const editSaleId = urlParams.get('edit');
+  const isEditMode = !!editSaleId;
+  
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [step, setStep] = useState(1);
@@ -35,6 +39,7 @@ export default function AddYardSale() {
   const [isUploading, setIsUploading] = useState(false);
   const [needsPayment, setNeedsPayment] = useState(false);
   const [isCheckingPayment, setIsCheckingPayment] = useState(false);
+  const [isLoadingSale, setIsLoadingSale] = useState(isEditMode);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -59,10 +64,36 @@ export default function AddYardSale() {
           const currentUser = await base44.auth.me();
           setUser(currentUser);
           
-          // Check if payment is needed (not first listing and no subscription)
-          const freeUsed = currentUser.free_listings_used || 0;
-          const hasSubscription = currentUser.subscription_active || false;
-          setNeedsPayment(freeUsed >= 1 && !hasSubscription);
+          // Check if payment is needed (not first listing and no subscription) - only for new sales
+          if (!isEditMode) {
+            const freeUsed = currentUser.free_listings_used || 0;
+            const hasSubscription = currentUser.subscription_active || false;
+            setNeedsPayment(freeUsed >= 1 && !hasSubscription);
+          }
+          
+          // Load existing sale data if editing
+          if (isEditMode && editSaleId) {
+            const sales = await base44.entities.YardSale.filter({ id: editSaleId });
+            if (sales.length > 0) {
+              const sale = sales[0];
+              setFormData({
+                title: sale.title || '',
+                description: sale.description || '',
+                date: sale.date || '',
+                start_time: sale.start_time || '08:00',
+                end_time: sale.end_time || '14:00',
+                general_location: sale.general_location || '',
+                address: sale.address || '',
+                city: sale.city || '',
+                state: sale.state || '',
+                zip_code: sale.zip_code || '',
+                category: sale.category || 'general',
+                address_unlock_hours: sale.address_unlock_hours || 24,
+              });
+              setPhotos(sale.photos || []);
+            }
+            setIsLoadingSale(false);
+          }
         }
       } catch (e) {
         setIsAuthenticated(false);
@@ -71,7 +102,6 @@ export default function AddYardSale() {
     checkAuth();
     
     // Check for payment success/cancel
-    const urlParams = new URLSearchParams(window.location.search);
     const paymentStatus = urlParams.get('payment');
     if (paymentStatus === 'success') {
       toast.success('Payment successful! You can now list your sale.');
@@ -109,26 +139,37 @@ export default function AddYardSale() {
         }
       } catch (error) {
         console.error('Geocoding failed:', error);
-        toast.error('Could not locate address on map, but sale will still be created');
+        toast.error('Could not locate address on map, but sale will still be saved');
       }
       
-      const sale = await base44.entities.YardSale.create({
-        ...data,
-        ...coordinates,
-        photos: photos,
-        status: 'approved',
-        views: 0,
-      });
-      
-      // Increment free_listings_used
-      await base44.auth.updateMe({
-        free_listings_used: (user.free_listings_used || 0) + 1,
-      });
-      
-      return sale;
+      if (isEditMode) {
+        // Update existing sale
+        await base44.entities.YardSale.update(editSaleId, {
+          ...data,
+          ...coordinates,
+          photos: photos,
+        });
+        return { id: editSaleId };
+      } else {
+        // Create new sale
+        const sale = await base44.entities.YardSale.create({
+          ...data,
+          ...coordinates,
+          photos: photos,
+          status: 'approved',
+          views: 0,
+        });
+        
+        // Increment free_listings_used
+        await base44.auth.updateMe({
+          free_listings_used: (user.free_listings_used || 0) + 1,
+        });
+        
+        return sale;
+      }
     },
     onSuccess: () => {
-      toast.success('Your yard sale is now live!');
+      toast.success(isEditMode ? 'Your yard sale has been updated!' : 'Your yard sale is now live!');
       setStep(4); // Success step
     },
     onError: (error) => {
@@ -189,6 +230,14 @@ export default function AddYardSale() {
   const isStep1Valid = formData.title && formData.date && formData.category;
   const isStep2Valid = formData.general_location && formData.address && formData.city && formData.state && formData.zip_code;
 
+  if (isLoadingSale) {
+    return (
+      <div className="min-h-screen bg-[#F9F9F9] flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-[#FF6F61] animate-spin" />
+      </div>
+    );
+  }
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-[#F9F9F9] flex items-center justify-center p-4">
@@ -247,9 +296,9 @@ export default function AddYardSale() {
             className="text-3xl font-bold text-[#2E3A59] mb-2"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
-            Add Your Yard Sale
+            {isEditMode ? 'Edit Your Yard Sale' : 'Add Your Yard Sale'}
           </h1>
-          <p className="text-gray-600">List your sale in just a few steps</p>
+          <p className="text-gray-600">{isEditMode ? 'Update your sale details' : 'List your sale in just a few steps'}</p>
         </motion.div>
 
         {/* Progress Steps */}
@@ -674,10 +723,10 @@ export default function AddYardSale() {
                 className="text-2xl font-bold text-[#2E3A59] mb-3"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
-                Sale is Live!
+                {isEditMode ? 'Sale Updated!' : 'Sale is Live!'}
               </h2>
               <p className="text-gray-600 mb-6">
-                Your yard sale is now visible to everyone. Start getting shoppers!
+                {isEditMode ? 'Your changes have been saved successfully.' : 'Your yard sale is now visible to everyone. Start getting shoppers!'}
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">

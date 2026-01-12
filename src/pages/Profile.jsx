@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { 
   User, Mail, MapPin, Calendar, Heart, Tag, 
-  Loader2, ArrowLeft, LogOut, Edit2, Check, X, Clock 
+  Loader2, ArrowLeft, LogOut, Edit2, Check, X, Clock, Pencil 
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -361,11 +361,12 @@ export default function Profile() {
                 const saleStatus = getSaleStatus();
                 
                 return (
-                  <Link key={sale.id} to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}>
-                    <motion.div
-                      whileHover={{ x: 5 }}
-                      className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
-                    >
+                  <motion.div
+                    key={sale.id}
+                    whileHover={{ x: 5 }}
+                    className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+                  >
+                    <Link to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`} className="flex items-center gap-3 flex-1">
                       <div className="flex items-center gap-3">
                         {sale.photos && sale.photos.length > 0 ? (
                           <img 
@@ -385,6 +386,8 @@ export default function Profile() {
                           </p>
                         </div>
                       </div>
+                    </Link>
+                    <div className="flex items-center gap-2">
                       <span className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${
                         saleStatus.color === 'blue'
                           ? 'bg-blue-100 text-blue-700'
@@ -395,8 +398,18 @@ export default function Profile() {
                         <Clock className="w-3 h-3" />
                         {saleStatus.label}
                       </span>
-                    </motion.div>
-                  </Link>
+                      <Link to={createPageUrl('AddYardSale') + `?edit=${sale.id}`}>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="rounded-lg"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Pencil className="w-3 h-3" />
+                        </Button>
+                      </Link>
+                    </div>
+                  </motion.div>
                 );
               })}
             </div>
