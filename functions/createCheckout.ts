@@ -18,6 +18,8 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Missing priceId or listingType' }, { status: 400 });
     }
 
+    const origin = req.headers.get('origin') || 'https://stooplify-cba3c5d6.base44.app';
+    
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [{
@@ -25,8 +27,8 @@ Deno.serve(async (req) => {
         quantity: 1,
       }],
       mode: listingType === 'subscription' ? 'subscription' : 'payment',
-      success_url: `${req.headers.get('origin')}/AddYardSale?payment=success`,
-      cancel_url: `${req.headers.get('origin')}/AddYardSale?payment=cancelled`,
+      success_url: `${origin}/AddYardSale?payment=success`,
+      cancel_url: `${origin}/AddYardSale?payment=cancelled`,
       customer_email: user.email,
       metadata: {
         base44_app_id: Deno.env.get('BASE44_APP_ID'),
@@ -34,6 +36,8 @@ Deno.serve(async (req) => {
         listing_type: listingType,
       },
     });
+    
+    console.log('Created checkout session:', session.id);
 
     return Response.json({ url: session.url });
   } catch (error) {
