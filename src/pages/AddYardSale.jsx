@@ -565,10 +565,13 @@ export default function AddYardSale() {
 
               <div className="space-y-4 mb-6">
                 {/* Single Listing */}
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  className="border-2 border-gray-200 rounded-2xl p-6 cursor-pointer hover:border-[#FF6F61] transition-all"
-                  onClick={() => handleCheckout(SINGLE_LISTING_PRICE_ID, 'single')}
+                <motion.button
+                  whileHover={{ scale: isCheckingPayment ? 1 : 1.02 }}
+                  className={`w-full border-2 border-gray-200 rounded-2xl p-6 text-left hover:border-[#FF6F61] transition-all ${
+                    isCheckingPayment ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                  }`}
+                  onClick={() => !isCheckingPayment && handleCheckout(SINGLE_LISTING_PRICE_ID, 'single')}
+                  disabled={isCheckingPayment}
                 >
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-lg font-bold text-[#2E3A59]" style={{ fontFamily: 'Poppins, sans-serif' }}>
@@ -577,13 +580,16 @@ export default function AddYardSale() {
                     <span className="text-2xl font-bold text-[#FF6F61]">$4</span>
                   </div>
                   <p className="text-gray-600 text-sm">Pay once for this listing</p>
-                </motion.div>
+                </motion.button>
 
                 {/* Unlimited Subscription */}
-                <motion.div
-                  whileHover={{ scale: 1.02 }}
-                  className="border-2 border-[#FF6F61] bg-[#FF6F61]/5 rounded-2xl p-6 cursor-pointer transition-all relative overflow-hidden"
-                  onClick={() => handleCheckout(SUBSCRIPTION_PRICE_ID, 'subscription')}
+                <motion.button
+                  whileHover={{ scale: isCheckingPayment ? 1 : 1.02 }}
+                  className={`w-full border-2 border-[#FF6F61] bg-[#FF6F61]/5 rounded-2xl p-6 text-left transition-all relative overflow-hidden ${
+                    isCheckingPayment ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                  }`}
+                  onClick={() => !isCheckingPayment && handleCheckout(SUBSCRIPTION_PRICE_ID, 'subscription')}
+                  disabled={isCheckingPayment}
                 >
                   <div className="absolute top-2 right-2 bg-[#F5A623] text-white text-xs font-bold px-3 py-1 rounded-full">
                     BEST VALUE
@@ -598,8 +604,15 @@ export default function AddYardSale() {
                     </div>
                   </div>
                   <p className="text-gray-600 text-sm">Post as many sales as you want for 30 days</p>
-                </motion.div>
+                </motion.button>
               </div>
+
+              {isCheckingPayment && (
+                <div className="flex items-center justify-center gap-2 text-[#FF6F61] mb-4">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span className="font-medium">Redirecting to checkout...</span>
+                </div>
+              )}
 
               <div className="flex gap-4">
                 <Button
