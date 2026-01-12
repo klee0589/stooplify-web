@@ -66,8 +66,38 @@ export default function AddYardSale() {
 
   const createMutation = useMutation({
     mutationFn: async (data) => {
+      // Geocode the address to get coordinates
+      let coordinates = {};
+      try {
+        const query = `${data.address}, ${data.city}, ${data.state} ${data.zip_code}`;
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`
+        );
+        const geoData = await response.json();
+        
+        if (geoData.length > 0) {
+          const exactLat = parseFloat(geoData[0].lat);
+          const exactLon = parseFloat(geoData[0].lon);
+          
+          // Create approximate coordinates (offset by ~0.01 degrees = ~1km for privacy)
+          const latOffset = (Math.random() - 0.5) * 0.02;
+          const lonOffset = (Math.random() - 0.5) * 0.02;
+          
+          coordinates = {
+            exact_latitude: exactLat,
+            exact_longitude: exactLon,
+            latitude: exactLat + latOffset,
+            longitude: exactLon + lonOffset,
+          };
+        }
+      } catch (error) {
+        console.error('Geocoding failed:', error);
+        toast.error('Could not locate address on map, but sale will still be created');
+      }
+      
       return await base44.entities.YardSale.create({
         ...data,
+        ...coordinates,
         photos: photos,
         status: 'approved',
         views: 0,
