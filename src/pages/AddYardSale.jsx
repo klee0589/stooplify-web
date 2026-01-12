@@ -69,7 +69,7 @@ export default function AddYardSale() {
       return await base44.entities.YardSale.create({
         ...data,
         photos: photos,
-        status: user?.role === 'admin' ? 'approved' : 'pending',
+        status: 'approved',
         views: 0,
       });
     },
@@ -473,10 +473,10 @@ export default function AddYardSale() {
               )}
 
               {/* Notice */}
-              <div className="bg-[#F5A623]/10 rounded-xl p-4 mb-6 flex items-start gap-3">
-                <Info className="w-5 h-5 text-[#F5A623] flex-shrink-0 mt-0.5" />
+              <div className="bg-green-50 rounded-xl p-4 mb-6 flex items-start gap-3">
+                <Info className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                 <p className="text-sm text-gray-700">
-                  Your listing will be reviewed before going live. This usually takes less than 24 hours.
+                  Your listing will go live immediately after submission!
                 </p>
               </div>
 
@@ -530,10 +530,10 @@ export default function AddYardSale() {
                 className="text-2xl font-bold text-[#2E3A59] mb-3"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
-                Submission Successful!
+                Sale is Live!
               </h2>
               <p className="text-gray-600 mb-6">
-                Your yard sale listing has been submitted for review. We'll notify you by email once it's approved.
+                Your yard sale is now visible to everyone. Start getting shoppers!
               </p>
               
               <div className="flex flex-col sm:flex-row gap-4">
