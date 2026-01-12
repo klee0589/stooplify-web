@@ -275,7 +275,7 @@ export default function Pricing() {
           
           <div className="space-y-4 text-gray-700 leading-relaxed">
             <p>
-              Hey, I'm Daniel Lee, the founder of Stooplify.
+              Hey, I'm Daniel, the founder of Stooplify.
             </p>
             
             <p>
