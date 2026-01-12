@@ -37,6 +37,7 @@ export default function Layout({ children, currentPageName }) {
     { name: 'Home', page: 'Home', icon: Home },
     { name: 'Browse Yard Sales', page: 'YardSales', icon: MapPin },
     { name: 'List a Yard Sale', page: 'AddYardSale', icon: PlusCircle },
+    { name: 'Pricing', page: 'Pricing', icon: Settings },
   ];
 
   const userLinks = user ? [
