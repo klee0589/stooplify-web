@@ -33,6 +33,8 @@ export default function AddYardSale() {
   const [step, setStep] = useState(1);
   const [photos, setPhotos] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [needsPayment, setNeedsPayment] = useState(false);
+  const [isCheckingPayment, setIsCheckingPayment] = useState(false);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -56,12 +58,27 @@ export default function AddYardSale() {
         if (isAuth) {
           const currentUser = await base44.auth.me();
           setUser(currentUser);
+          
+          // Check if payment is needed (not first listing and no subscription)
+          const freeUsed = currentUser.free_listings_used || 0;
+          const hasSubscription = currentUser.subscription_active || false;
+          setNeedsPayment(freeUsed >= 1 && !hasSubscription);
         }
       } catch (e) {
         setIsAuthenticated(false);
       }
     };
     checkAuth();
+    
+    // Check for payment success/cancel
+    const urlParams = new URLSearchParams(window.location.search);
+    const paymentStatus = urlParams.get('payment');
+    if (paymentStatus === 'success') {
+      toast.success('Payment successful! You can now list your sale.');
+      setNeedsPayment(false);
+    } else if (paymentStatus === 'cancelled') {
+      toast.error('Payment cancelled. Please try again.');
+    }
   }, []);
 
   const createMutation = useMutation({
@@ -95,16 +112,23 @@ export default function AddYardSale() {
         toast.error('Could not locate address on map, but sale will still be created');
       }
       
-      return await base44.entities.YardSale.create({
+      const sale = await base44.entities.YardSale.create({
         ...data,
         ...coordinates,
         photos: photos,
         status: 'approved',
         views: 0,
       });
+      
+      // Increment free_listings_used
+      await base44.auth.updateMe({
+        free_listings_used: (user.free_listings_used || 0) + 1,
+      });
+      
+      return sale;
     },
     onSuccess: () => {
-      toast.success('Your yard sale has been submitted for review!');
+      toast.success('Your yard sale is now live!');
       setStep(4); // Success step
     },
     onError: (error) => {
@@ -132,6 +156,26 @@ export default function AddYardSale() {
 
   const removePhoto = (index) => {
     setPhotos(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleCheckout = async (priceId, listingType) => {
+    setIsCheckingPayment(true);
+    try {
+      // Check if running in iframe
+      if (window.self !== window.top) {
+        toast.error('Checkout only works from the published app. Please open in a new tab.');
+        return;
+      }
+      
+      const response = await base44.functions.invoke('createCheckout', { priceId, listingType });
+      if (response.data.url) {
+        window.location.href = response.data.url;
+      }
+    } catch (error) {
+      toast.error('Failed to create checkout session');
+    } finally {
+      setIsCheckingPayment(false);
+    }
   };
 
   const handleSubmit = () => {
@@ -436,8 +480,78 @@ export default function AddYardSale() {
             </motion.div>
           )}
 
+          {/* Step 3: Photos or Payment */}
+          {step === 3 && needsPayment && (
+            <motion.div
+              key="step3-payment"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              className="bg-white rounded-3xl p-6 md:p-8 shadow-lg"
+            >
+              <h2 
+                className="text-xl font-bold text-[#2E3A59] mb-2"
+                style={{ fontFamily: 'Poppins, sans-serif' }}
+              >
+                Choose Your Listing Option
+              </h2>
+              <p className="text-gray-600 mb-6 text-sm">
+                Your first listing was free! Choose how to continue:
+              </p>
+
+              <div className="space-y-4 mb-6">
+                {/* Single Listing */}
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="border-2 border-gray-200 rounded-2xl p-6 cursor-pointer hover:border-[#FF6F61] transition-all"
+                  onClick={() => handleCheckout('price_1SobQmCjpHsssawu7LrGrmDG', 'single')}
+                >
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-lg font-bold text-[#2E3A59]" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                      Single Listing
+                    </h3>
+                    <span className="text-2xl font-bold text-[#FF6F61]">$4</span>
+                  </div>
+                  <p className="text-gray-600 text-sm">Pay once for this listing</p>
+                </motion.div>
+
+                {/* Unlimited Subscription */}
+                <motion.div
+                  whileHover={{ scale: 1.02 }}
+                  className="border-2 border-[#FF6F61] bg-[#FF6F61]/5 rounded-2xl p-6 cursor-pointer transition-all relative overflow-hidden"
+                  onClick={() => handleCheckout('price_1SobQmCjpHsssawunHMkTLY2', 'subscription')}
+                >
+                  <div className="absolute top-2 right-2 bg-[#F5A623] text-white text-xs font-bold px-3 py-1 rounded-full">
+                    BEST VALUE
+                  </div>
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-lg font-bold text-[#2E3A59]" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                      Unlimited Listings
+                    </h3>
+                    <div className="text-right">
+                      <span className="text-2xl font-bold text-[#FF6F61]">$9</span>
+                      <span className="text-gray-600 text-sm ml-1">/month</span>
+                    </div>
+                  </div>
+                  <p className="text-gray-600 text-sm">Post as many sales as you want for 30 days</p>
+                </motion.div>
+              </div>
+
+              <div className="flex gap-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setStep(2)}
+                  className="flex-1 py-6 rounded-xl"
+                  disabled={isCheckingPayment}
+                >
+                  Back
+                </Button>
+              </div>
+            </motion.div>
+          )}
+
           {/* Step 3: Photos */}
-          {step === 3 && (
+          {step === 3 && !needsPayment && (
             <motion.div
               key="step3"
               initial={{ opacity: 0, x: 20 }}
