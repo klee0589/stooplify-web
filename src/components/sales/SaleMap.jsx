@@ -50,9 +50,21 @@ function MapUpdater({ center }) {
 
 export default function SaleMap({ sales, center }) {
   const [mapReady, setMapReady] = useState(false);
-  const defaultCenter = center || [39.8283, -98.5795]; // US center
+  const [userLocation, setUserLocation] = useState(null);
+  const defaultCenter = center || userLocation || [40.7128, -74.0060]; // NYC default
 
   useEffect(() => {
+    // Get user's current location
+    if (navigator.geolocation && !center) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation([position.coords.latitude, position.coords.longitude]);
+        },
+        (error) => {
+          console.log('Location access denied, using default');
+        }
+      );
+    }
     setMapReady(true);
   }, []);
 
@@ -89,7 +101,7 @@ export default function SaleMap({ sales, center }) {
       `}</style>
       <MapContainer
         center={defaultCenter}
-        zoom={4}
+        zoom={userLocation ? 12 : 11}
         style={{ height: '100%', width: '100%' }}
         scrollWheelZoom={true}
       >
