@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { 
   User, Mail, MapPin, Calendar, Heart, Tag, 
-  Loader2, ArrowLeft, LogOut, Edit2, Check, X 
+  Loader2, ArrowLeft, LogOut, Edit2, Check, X, Clock 
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -334,43 +334,82 @@ export default function Profile() {
             </div>
           ) : (
             <div className="space-y-3">
-              {mySales.map((sale) => (
-                <Link key={sale.id} to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}>
-                  <motion.div
-                    whileHover={{ x: 5 }}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
-                  >
-                    <div className="flex items-center gap-3">
-                      {sale.photos && sale.photos.length > 0 ? (
-                        <img 
-                          src={sale.photos[0]} 
-                          alt="" 
-                          className="w-12 h-12 rounded-lg object-cover"
-                        />
-                      ) : (
-                        <div className="w-12 h-12 bg-[#FF6F61]/10 rounded-lg flex items-center justify-center">
-                          <MapPin className="w-5 h-5 text-[#FF6F61]" />
+              {mySales.map((sale) => {
+                const getSaleStatus = () => {
+                  if (!sale.date) return { label: 'Date TBD', color: 'gray' };
+                  
+                  const saleDate = new Date(sale.date);
+                  const now = new Date();
+                  
+                  // Set time for comparison
+                  const saleDateStart = new Date(saleDate);
+                  saleDateStart.setHours(0, 0, 0, 0);
+                  const saleDateEnd = new Date(saleDate);
+                  saleDateEnd.setHours(23, 59, 59, 999);
+                  
+                  const nowTime = now.getTime();
+                  
+                  if (nowTime < saleDateStart.getTime()) {
+                    return { label: 'Upcoming', color: 'blue' };
+                  } else if (nowTime >= saleDateStart.getTime() && nowTime <= saleDateEnd.getTime()) {
+                    return { label: 'In Progress', color: 'green' };
+                  } else {
+                    return { label: 'Finished', color: 'gray' };
+                  }
+                };
+                
+                const saleStatus = getSaleStatus();
+                
+                return (
+                  <Link key={sale.id} to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}>
+                    <motion.div
+                      whileHover={{ x: 5 }}
+                      className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+                    >
+                      <div className="flex items-center gap-3">
+                        {sale.photos && sale.photos.length > 0 ? (
+                          <img 
+                            src={sale.photos[0]} 
+                            alt="" 
+                            className="w-12 h-12 rounded-lg object-cover"
+                          />
+                        ) : (
+                          <div className="w-12 h-12 bg-[#FF6F61]/10 rounded-lg flex items-center justify-center">
+                            <MapPin className="w-5 h-5 text-[#FF6F61]" />
+                          </div>
+                        )}
+                        <div>
+                          <p className="font-medium text-[#2E3A59]">{sale.title}</p>
+                          <p className="text-sm text-gray-500">
+                            {sale.date ? format(new Date(sale.date), 'MMM d, yyyy') : 'Date TBD'}
+                          </p>
                         </div>
-                      )}
-                      <div>
-                        <p className="font-medium text-[#2E3A59]">{sale.title}</p>
-                        <p className="text-sm text-gray-500">
-                          {sale.date ? format(new Date(sale.date), 'MMM d, yyyy') : 'Date TBD'}
-                        </p>
                       </div>
-                    </div>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      sale.status === 'approved' 
-                        ? 'bg-green-100 text-green-700'
-                        : sale.status === 'pending'
-                        ? 'bg-yellow-100 text-yellow-700'
-                        : 'bg-red-100 text-red-700'
-                    }`}>
-                      {sale.status}
-                    </span>
-                  </motion.div>
-                </Link>
-              ))}
+                      <div className="flex items-center gap-2">
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${
+                          saleStatus.color === 'blue'
+                            ? 'bg-blue-100 text-blue-700'
+                            : saleStatus.color === 'green'
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-gray-100 text-gray-700'
+                        }`}>
+                          <Clock className="w-3 h-3" />
+                          {saleStatus.label}
+                        </span>
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                          sale.status === 'approved' 
+                            ? 'bg-green-100 text-green-700'
+                            : sale.status === 'pending'
+                            ? 'bg-yellow-100 text-yellow-700'
+                            : 'bg-red-100 text-red-700'
+                        }`}>
+                          {sale.status}
+                        </span>
+                      </div>
+                    </motion.div>
+                  </Link>
+                );
+              })}
             </div>
           )}
         </motion.div>
