@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { 
   MapPin, Calendar, Clock, Image as ImageIcon, Upload, X, 
-  Check, Loader2, ArrowLeft, Plus, Info 
+  Check, Loader2, ArrowLeft, Plus, Info, Camera 
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -189,13 +189,59 @@ export default function AddYardSale() {
     
     setIsUploading(true);
     
+    const uploadedUrls = [];
     for (const file of files) {
       try {
         const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        uploadedUrls.push(file_url);
         setPhotos(prev => [...prev, file_url]);
       } catch (error) {
         toast.error(`Failed to upload ${file.name}`);
       }
+    }
+    
+    // Generate AI description if description is empty and we have photos
+    if (uploadedUrls.length > 0 && !formData.description) {
+      try {
+        const aiDescription = await base44.integrations.Core.InvokeLLM({
+          prompt: "Based on these images of yard sale items, write a brief, appealing description (2-3 sentences) of what's being sold. Focus on the main items visible and make it sound inviting to potential buyers.",
+          file_urls: uploadedUrls,
+        });
+        updateField('description', aiDescription);
+        toast.success('AI generated a description for you!');
+      } catch (error) {
+        console.error('Failed to generate AI description:', error);
+      }
+    }
+    
+    setIsUploading(false);
+  };
+
+  const handleCameraCapture = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    setIsUploading(true);
+    
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      setPhotos(prev => [...prev, file_url]);
+      
+      // Generate AI description if description is empty
+      if (!formData.description) {
+        try {
+          const aiDescription = await base44.integrations.Core.InvokeLLM({
+            prompt: "Based on this image of yard sale items, write a brief, appealing description (2-3 sentences) of what's being sold. Focus on the main items visible and make it sound inviting to potential buyers.",
+            file_urls: [file_url],
+          });
+          updateField('description', aiDescription);
+          toast.success('AI generated a description for you!');
+        } catch (error) {
+          console.error('Failed to generate AI description:', error);
+        }
+      }
+    } catch (error) {
+      toast.error('Failed to upload photo');
     }
     
     setIsUploading(false);
@@ -648,27 +694,54 @@ export default function AddYardSale() {
 
               {/* Photo Upload Area */}
               <div className="mb-6">
-                <label className="block">
-                  <div className="border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center cursor-pointer hover:border-[#FF6F61] transition-colors">
-                    {isUploading ? (
-                      <Loader2 className="w-10 h-10 text-[#FF6F61] mx-auto animate-spin" />
-                    ) : (
-                      <>
-                        <Upload className="w-10 h-10 text-gray-400 mx-auto mb-3" />
-                        <p className="text-gray-600 font-medium">Click to upload photos</p>
-                        <p className="text-gray-400 text-sm mt-1">PNG, JPG up to 10MB</p>
-                      </>
-                    )}
-                  </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handlePhotoUpload}
-                    className="hidden"
-                    disabled={isUploading}
-                  />
-                </label>
+                <div className="grid grid-cols-2 gap-3 mb-4">
+                  <label className="block">
+                    <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center cursor-pointer hover:border-[#FF6F61] transition-colors">
+                      {isUploading ? (
+                        <Loader2 className="w-8 h-8 text-[#FF6F61] mx-auto animate-spin" />
+                      ) : (
+                        <>
+                          <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                          <p className="text-gray-600 font-medium text-sm">Upload Photos</p>
+                          <p className="text-gray-400 text-xs mt-1">From gallery</p>
+                        </>
+                      )}
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handlePhotoUpload}
+                      className="hidden"
+                      disabled={isUploading}
+                    />
+                  </label>
+
+                  <label className="block">
+                    <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center cursor-pointer hover:border-[#14B8FF] transition-colors">
+                      {isUploading ? (
+                        <Loader2 className="w-8 h-8 text-[#14B8FF] mx-auto animate-spin" />
+                      ) : (
+                        <>
+                          <Camera className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                          <p className="text-gray-600 font-medium text-sm">Take Photo</p>
+                          <p className="text-gray-400 text-xs mt-1">Use camera</p>
+                        </>
+                      )}
+                    </div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      capture="environment"
+                      onChange={handleCameraCapture}
+                      className="hidden"
+                      disabled={isUploading}
+                    />
+                  </label>
+                </div>
+                <p className="text-xs text-gray-500 text-center">
+                  📸 AI will generate a description from your photos
+                </p>
               </div>
 
               {/* Uploaded Photos */}
