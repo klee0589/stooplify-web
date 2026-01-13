@@ -4,7 +4,7 @@ import { createPageUrl } from './utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Home, MapPin, PlusCircle, User, Heart, Settings, Globe } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
-import { useTranslation } from './components/translations';
+import { useTranslation } from '../components/translations';
 
 export default function Layout({ children, currentPageName }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
