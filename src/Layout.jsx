@@ -47,6 +47,8 @@ export default function Layout({ children, currentPageName }) {
     setLanguage(newLang);
     localStorage.setItem('stooplify_lang', newLang);
     document.documentElement.lang = newLang;
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new CustomEvent('languageChange', { detail: newLang }));
   };
 
   const navLinks = [
