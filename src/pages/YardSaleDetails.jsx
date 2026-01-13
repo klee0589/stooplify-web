@@ -16,6 +16,8 @@ import TrustBadges from '../components/sales/TrustBadges';
 import SellerReputation from '../components/sales/SellerReputation';
 import ReportModal from '../components/sales/ReportModal';
 import SafetyNote from '../components/sales/SafetyNote';
+import ReviewList from '../components/reviews/ReviewList';
+import ReviewForm from '../components/reviews/ReviewForm';
 
 export default function YardSaleDetails() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -87,6 +89,15 @@ export default function YardSaleDetails() {
     enabled: !!user && !!saleId,
   });
 
+  const { data: reviews = [] } = useQuery({
+    queryKey: ['reviews', saleId],
+    queryFn: async () => {
+      if (!saleId) return [];
+      return await base44.entities.YardSaleReview.filter({ yard_sale_id: saleId }, '-created_date');
+    },
+    enabled: !!saleId,
+  });
+
   useEffect(() => {
     setIsFavorite(favorites.length > 0);
   }, [favorites]);
@@ -142,6 +153,54 @@ export default function YardSaleDetails() {
       toast.success(isAttending ? 'No longer attending' : '🎉 Attending! Exact address unlocked.');
     },
   });
+
+  const reviewMutation = useMutation({
+    mutationFn: async ({ rating, comment }) => {
+      if (!user) {
+        base44.auth.redirectToLogin();
+        return;
+      }
+      
+      // Check if user has already reviewed
+      const existingReviews = await base44.entities.YardSaleReview.filter({ 
+        yard_sale_id: saleId, 
+        user_email: user.email 
+      });
+      
+      if (existingReviews.length > 0) {
+        toast.error('You have already reviewed this sale');
+        return;
+      }
+      
+      await base44.entities.YardSaleReview.create({
+        yard_sale_id: saleId,
+        user_email: user.email,
+        rating,
+        comment,
+        attended: isAttending || attendances.length > 0
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['reviews'] });
+      toast.success('Review submitted!');
+    },
+  });
+
+  const handleHelpful = async (reviewId) => {
+    if (!user) {
+      base44.auth.redirectToLogin();
+      return;
+    }
+    
+    const review = reviews.find(r => r.id === reviewId);
+    if (review) {
+      await base44.entities.YardSaleReview.update(reviewId, {
+        helpful_count: (review.helpful_count || 0) + 1
+      });
+      queryClient.invalidateQueries({ queryKey: ['reviews'] });
+      toast.success('Thanks for your feedback!');
+    }
+  };
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -447,6 +506,58 @@ export default function YardSaleDetails() {
                 <Flag className="w-4 h-4" />
                 Report
               </button>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Reviews Section */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 mt-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
+            <h2 
+              className="text-2xl font-bold text-[#2E3A59] mb-6"
+              style={{ fontFamily: 'Poppins, sans-serif' }}
+            >
+              Reviews & Ratings
+            </h2>
+
+            <div className="grid lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2">
+                <ReviewList 
+                  reviews={reviews}
+                  onHelpful={handleHelpful}
+                  currentUserEmail={user?.email}
+                />
+              </div>
+
+              <div className="lg:col-span-1">
+                {user ? (
+                  reviews.some(r => r.created_by === user.email) ? (
+                    <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 text-center">
+                      <p className="text-gray-600">You've already reviewed this sale</p>
+                    </div>
+                  ) : (
+                    <ReviewForm 
+                      onSubmit={(data) => reviewMutation.mutate(data)}
+                      isSubmitting={reviewMutation.isPending}
+                      type="sale"
+                    />
+                  )
+                ) : (
+                  <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 text-center">
+                    <p className="text-gray-600 mb-4">Sign in to leave a review</p>
+                    <Button
+                      onClick={() => base44.auth.redirectToLogin()}
+                      className="bg-[#FF6F61] hover:bg-[#e55a4d]"
+                    >
+                      Sign In
+                    </Button>
+                  </div>
+                )}
+              </div>
             </div>
           </motion.div>
         </div>
