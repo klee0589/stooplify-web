@@ -1,11 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 import { MapPin, Calendar, ArrowRight, Clock } from 'lucide-react';
 import { format } from 'date-fns';
+import { useTranslation } from '../translations';
 
 export default function FeaturedSales({ sales = [] }) {
+  const [language, setLanguage] = useState('en');
+  
+  useEffect(() => {
+    const savedLang = localStorage.getItem('stooplify_lang') || 'en';
+    setLanguage(savedLang);
+    
+    const handleStorage = () => {
+      const newLang = localStorage.getItem('stooplify_lang') || 'en';
+      setLanguage(newLang);
+    };
+    
+    window.addEventListener('storage', handleStorage);
+    const interval = setInterval(handleStorage, 100);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorage);
+      clearInterval(interval);
+    };
+  }, []);
+  
+  const t = useTranslation(language);
+  
   if (sales.length === 0) return null;
 
   return (
@@ -22,18 +45,18 @@ export default function FeaturedSales({ sales = [] }) {
               className="text-3xl md:text-4xl font-bold text-[#2E3A59] mb-2"
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
-              Featured Sales
+              {t('featuredSales')}
             </h2>
             <p className="text-gray-600 text-lg">
-              Don't miss these popular yard sales happening soon
+              {t('featuredSubtitle')}
             </p>
           </div>
           <Link to={createPageUrl('YardSales')}>
             <motion.button
               whileHover={{ x: 5 }}
-              className="flex items-center gap-2 text-[#FF6F61] font-medium"
+              className="flex items-center gap-2 text-[#14B8FF] font-medium"
             >
-              View All Sales
+              {t('viewAllSales')}
               <ArrowRight className="w-5 h-5" />
             </motion.button>
           </Link>
@@ -54,7 +77,7 @@ export default function FeaturedSales({ sales = [] }) {
                   className="bg-white rounded-3xl overflow-hidden shadow-lg transition-shadow duration-300 h-full"
                 >
                   {/* Image */}
-                  <div className="relative h-48 bg-gradient-to-br from-[#FF6F61]/20 to-[#F5A623]/20">
+                  <div className="relative h-48 bg-gradient-to-br from-[#14B8FF]/20 to-[#F5A623]/20">
                     {sale.photos && sale.photos.length > 0 ? (
                       <img
                         src={sale.photos[0]}
@@ -64,7 +87,7 @@ export default function FeaturedSales({ sales = [] }) {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
-                        <MapPin className="w-12 h-12 text-[#FF6F61]/40" />
+                        <MapPin className="w-12 h-12 text-[#14B8FF]/40" />
                       </div>
                     )}
                     {sale.category && (
@@ -85,7 +108,7 @@ export default function FeaturedSales({ sales = [] }) {
                     
                     <div className="space-y-2 mb-4">
                       <div className="flex items-center gap-2 text-gray-600">
-                        <Calendar className="w-4 h-4 text-[#FF6F61]" />
+                        <Calendar className="w-4 h-4 text-[#14B8FF]" />
                         <span className="text-sm">
                           {sale.date ? format(new Date(sale.date), 'EEEE, MMM d') : 'Date TBD'}
                         </span>
@@ -106,10 +129,10 @@ export default function FeaturedSales({ sales = [] }) {
 
                     <div className="flex items-center justify-between pt-4 border-t border-gray-100">
                       <span className="text-sm text-gray-500">
-                        {sale.views || 0} views
+                        {sale.views || 0} {t('views')}
                       </span>
-                      <span className="text-[#FF6F61] font-medium text-sm flex items-center gap-1">
-                        View Details
+                      <span className="text-[#14B8FF] font-medium text-sm flex items-center gap-1">
+                        {t('viewDetails')}
                         <ArrowRight className="w-4 h-4" />
                       </span>
                     </div>
