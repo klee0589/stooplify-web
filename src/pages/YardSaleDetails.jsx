@@ -161,6 +161,12 @@ export default function YardSaleDetails() {
         return;
       }
       
+      // Check if user marked as attending
+      if (!isAttending && attendances.length === 0) {
+        toast.error('You must mark yourself as attending to leave a review');
+        return;
+      }
+      
       // Check if user has already reviewed
       const existingReviews = await base44.entities.YardSaleReview.filter({ 
         yard_sale_id: saleId, 
@@ -172,12 +178,46 @@ export default function YardSaleDetails() {
         return;
       }
       
+      // Verify location if sale is currently happening or just finished
+      const saleDateTime = new Date(`${sale.date}T${sale.start_time || '08:00'}`);
+      const saleEndTime = new Date(`${sale.date}T${sale.end_time || '14:00'}`);
+      const now = new Date();
+      
+      // If sale is currently happening, verify location
+      if (now >= saleDateTime && now <= saleEndTime) {
+        try {
+          const position = await new Promise((resolve, reject) => {
+            navigator.geolocation.getCurrentPosition(resolve, reject);
+          });
+          
+          const userLat = position.coords.latitude;
+          const userLon = position.coords.longitude;
+          const saleLat = sale.exact_latitude || sale.latitude;
+          const saleLon = sale.exact_longitude || sale.longitude;
+          
+          // Calculate distance (rough approximation in miles)
+          const distance = Math.sqrt(
+            Math.pow((userLat - saleLat) * 69, 2) + 
+            Math.pow((userLon - saleLon) * 69, 2)
+          );
+          
+          // Must be within 1 mile
+          if (distance > 1) {
+            toast.error('You must be at the sale location to leave a review');
+            return;
+          }
+        } catch (error) {
+          toast.error('Please enable location access to verify attendance');
+          return;
+        }
+      }
+      
       await base44.entities.YardSaleReview.create({
         yard_sale_id: saleId,
         user_email: user.email,
         rating,
         comment,
-        attended: isAttending || attendances.length > 0
+        attended: true
       });
     },
     onSuccess: () => {
@@ -538,6 +578,16 @@ export default function YardSaleDetails() {
                   reviews.some(r => r.created_by === user.email) ? (
                     <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 text-center">
                       <p className="text-gray-600">You've already reviewed this sale</p>
+                    </div>
+                  ) : !isAttending && attendances.length === 0 ? (
+                    <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 text-center">
+                      <p className="text-gray-600 mb-4">Mark yourself as attending to leave a review</p>
+                      <Button
+                        onClick={() => attendanceMutation.mutate()}
+                        className="bg-[#2E3A59] hover:bg-[#1a2238]"
+                      >
+                        I'm Attending
+                      </Button>
                     </div>
                   ) : (
                     <ReviewForm 
