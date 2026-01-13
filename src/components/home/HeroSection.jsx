@@ -183,8 +183,8 @@ export default function HeroSection() {
               >
                 <div className="w-full h-full bg-gradient-to-br from-[#FF6F61]/20 to-[#F5A623]/20 rounded-[3rem] overflow-hidden">
                   <img
-                    src="https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=800&q=80"
-                    alt="Garage sale with items displayed"
+                    src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/f3b4f28f9_vintage-998419.jpg"
+                    alt="Vintage yard sale items including toy car, clock, and collectibles"
                     className="w-full h-full object-cover"
                   />
                 </div>
