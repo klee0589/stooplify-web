@@ -7,7 +7,7 @@ import { createPageUrl } from '../utils';
 import { 
   User, Mail, MapPin, Calendar, Heart, Tag, 
   Loader2, ArrowLeft, LogOut, Edit2, Check, X, Clock, Pencil,
-  Crown, Zap, CreditCard 
+  Crown, Zap, CreditCard, Star, Award 
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -70,6 +70,23 @@ export default function Profile() {
     },
     enabled: !!user,
   });
+
+  const { data: myReviews = [] } = useQuery({
+    queryKey: ['myReviews', user?.email],
+    queryFn: async () => {
+      if (!user) return [];
+      const saleIds = mySales.map(s => s.id);
+      const allReviews = await base44.entities.YardSaleReview.list();
+      return allReviews.filter(r => saleIds.includes(r.yard_sale_id));
+    },
+    enabled: !!user && mySales.length > 0,
+  });
+
+  const averageRating = myReviews.length > 0 
+    ? (myReviews.reduce((sum, r) => sum + r.rating, 0) / myReviews.length).toFixed(1)
+    : null;
+  
+  const isRepeatSeller = mySales.length >= 3;
 
   const toggleNotificationsMutation = useMutation({
     mutationFn: async () => {
@@ -222,10 +239,29 @@ export default function Profile() {
                 <Mail className="w-4 h-4" />
                 <span>{user.email}</span>
               </div>
-              {user.created_date && (
-                <p className="text-sm text-gray-500 mt-2">
-                  Member since {format(new Date(user.created_date), 'MMMM yyyy')}
-                </p>
+              <div className="flex items-center gap-3 mt-2">
+                {user.created_date && (
+                  <p className="text-sm text-gray-500">
+                    Member since {format(new Date(user.created_date), 'MMMM yyyy')}
+                  </p>
+                )}
+                {isRepeatSeller && (
+                  <div className="flex items-center gap-1 px-2 py-1 bg-[#F5A623]/20 rounded-full">
+                    <Award className="w-3 h-3 text-[#F5A623]" />
+                    <span className="text-xs font-semibold text-[#F5A623]">Repeat Seller</span>
+                  </div>
+                )}
+              </div>
+              {averageRating && (
+                <div className="flex items-center gap-2 mt-2">
+                  <div className="flex items-center gap-1">
+                    <Star className="w-4 h-4 text-[#F5A623] fill-[#F5A623]" />
+                    <span className="font-semibold text-[#2E3A59]">{averageRating}</span>
+                  </div>
+                  <span className="text-sm text-gray-600">
+                    ({myReviews.length} review{myReviews.length !== 1 ? 's' : ''})
+                  </span>
+                </div>
               )}
             </div>
 

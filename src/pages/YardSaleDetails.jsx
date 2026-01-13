@@ -98,6 +98,35 @@ export default function YardSaleDetails() {
     enabled: !!saleId,
   });
 
+  const { data: sellerReviews = [] } = useQuery({
+    queryKey: ['sellerReviews', seller?.email],
+    queryFn: async () => {
+      if (!seller?.email) return [];
+      // Get all sales by this seller
+      const sellerSales = await base44.entities.YardSale.filter({ created_by: seller.email });
+      const saleIds = sellerSales.map(s => s.id);
+      
+      // Get all reviews for seller's sales
+      const allReviews = await base44.entities.YardSaleReview.list();
+      return allReviews.filter(r => saleIds.includes(r.yard_sale_id));
+    },
+    enabled: !!seller?.email,
+  });
+
+  const { data: sellerSalesCount = 0 } = useQuery({
+    queryKey: ['sellerSalesCount', seller?.email],
+    queryFn: async () => {
+      if (!seller?.email) return 0;
+      const sales = await base44.entities.YardSale.filter({ created_by: seller.email, status: 'approved' });
+      return sales.length;
+    },
+    enabled: !!seller?.email,
+  });
+
+  const sellerAverageRating = sellerReviews.length > 0 
+    ? sellerReviews.reduce((sum, r) => sum + r.rating, 0) / sellerReviews.length 
+    : null;
+
   useEffect(() => {
     setIsFavorite(favorites.length > 0);
   }, [favorites]);
@@ -477,7 +506,12 @@ export default function YardSaleDetails() {
             )}
 
             {/* Seller Reputation */}
-            <SellerReputation seller={seller} />
+            <SellerReputation 
+              seller={seller} 
+              averageRating={sellerAverageRating}
+              totalReviews={sellerReviews.length}
+              totalSales={sellerSalesCount}
+            />
 
             {/* Safety Note */}
             <SafetyNote />
