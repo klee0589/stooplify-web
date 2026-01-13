@@ -4,14 +4,16 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
-import { Heart, Loader2, MapPin, ArrowLeft } from 'lucide-react';
+import { Heart, Loader2, MapPin, ArrowLeft, Map, List } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import SaleCard from '../components/sales/SaleCard';
+import SaleMap from '../components/sales/SaleMap';
 
 export default function Favorites() {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
+  const [viewMode, setViewMode] = useState('list');
 
   const queryClient = useQueryClient();
 
@@ -127,21 +129,52 @@ export default function Favorites() {
             </motion.button>
           </Link>
           
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-[#FF6F61]/10 rounded-xl flex items-center justify-center">
-              <Heart className="w-6 h-6 text-[#FF6F61] fill-current" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-[#FF6F61]/10 rounded-xl flex items-center justify-center">
+                <Heart className="w-6 h-6 text-[#FF6F61] fill-current" />
+              </div>
+              <div>
+                <h1 
+                  className="text-3xl font-bold text-[#2E3A59]"
+                  style={{ fontFamily: 'Poppins, sans-serif' }}
+                >
+                  My Favorites
+                </h1>
+                <p className="text-gray-600">
+                  {sales.length} saved sale{sales.length !== 1 ? 's' : ''}
+                </p>
+              </div>
             </div>
-            <div>
-              <h1 
-                className="text-3xl font-bold text-[#2E3A59]"
-                style={{ fontFamily: 'Poppins, sans-serif' }}
-              >
-                My Favorites
-              </h1>
-              <p className="text-gray-600">
-                {sales.length} saved sale{sales.length !== 1 ? 's' : ''}
-              </p>
-            </div>
+
+            {sales.length > 0 && (
+              <div className="flex items-center bg-white rounded-xl p-1 shadow-sm">
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setViewMode('list')}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                    viewMode === 'list' 
+                      ? 'bg-[#FF6F61] text-white' 
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  <List className="w-4 h-4" />
+                  <span className="hidden sm:inline text-sm font-medium">List</span>
+                </motion.button>
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setViewMode('map')}
+                  className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                    viewMode === 'map' 
+                      ? 'bg-[#FF6F61] text-white' 
+                      : 'text-gray-600 hover:bg-gray-100'
+                  }`}
+                >
+                  <Map className="w-4 h-4" />
+                  <span className="hidden sm:inline text-sm font-medium">Map</span>
+                </motion.button>
+              </div>
+            )}
           </div>
         </motion.div>
 
@@ -175,23 +208,42 @@ export default function Favorites() {
               </Button>
             </Link>
           </motion.div>
+        ) : viewMode === 'list' ? (
+          <motion.div
+            key="list"
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 20 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {sales.map((sale, index) => (
+                <motion.div
+                  key={sale.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                >
+                  <SaleCard
+                    sale={sale}
+                    isFavorite={true}
+                    onToggleFavorite={(id) => removeFavoriteMutation.mutate(id)}
+                  />
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {sales.map((sale, index) => (
-              <motion.div
-                key={sale.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-              >
-                <SaleCard
-                  sale={sale}
-                  isFavorite={true}
-                  onToggleFavorite={(id) => removeFavoriteMutation.mutate(id)}
-                />
-              </motion.div>
-            ))}
-          </div>
+          <motion.div
+            key="map"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            transition={{ duration: 0.3 }}
+            className="h-[600px] rounded-2xl overflow-hidden"
+          >
+            <SaleMap sales={sales} />
+          </motion.div>
         )}
       </div>
     </div>
