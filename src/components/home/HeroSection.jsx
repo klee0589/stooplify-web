@@ -81,8 +81,8 @@ export default function HeroSection() {
               transition={{ delay: 0.2 }}
               className="inline-flex items-center gap-2 px-4 py-2 bg-[#FF6F61]/10 rounded-full mb-6"
             >
-              <Sparkles className="w-4 h-4 text-[#FF6F61]" />
-              <span className="text-sm font-medium text-[#FF6F61]">Discover Local Treasures</span>
+              <Sparkles className="w-4 h-4 text-[#14B8FF]" />
+              <span className="text-sm font-medium text-[#14B8FF]">Discover Local Treasures</span>
             </motion.div>
 
             <motion.h1
@@ -113,9 +113,9 @@ export default function HeroSection() {
             >
               <Link to={createPageUrl('YardSales')}>
                 <motion.button
-                  whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(255, 111, 97, 0.3)' }}
+                  whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(20, 184, 255, 0.3)' }}
                   whileTap={{ scale: 0.95 }}
-                  className="w-full sm:w-auto px-8 py-4 bg-[#FF6F61] text-white rounded-2xl font-semibold flex items-center justify-center gap-2 shadow-lg shadow-[#FF6F61]/25"
+                  className="w-full sm:w-auto px-8 py-4 bg-[#14B8FF] text-white rounded-2xl font-semibold flex items-center justify-center gap-2 shadow-lg shadow-[#14B8FF]/25"
                   style={{ fontFamily: 'Poppins, sans-serif' }}
                   aria-label={t('findSales')}
                 >
@@ -146,22 +146,22 @@ export default function HeroSection() {
               className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-gray-100 max-w-md"
             >
               <p className="text-sm font-medium text-[#2E3A59] mb-3">
-                🔔 Get notified about sales in your area
+                🔔 {t('emailNotify')}
               </p>
               <form onSubmit={handleEmailSubmit} className="flex gap-3">
                 <Input
                   type="email"
-                  placeholder="Enter your email"
+                  placeholder={t('emailPlaceholder')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="flex-1 rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61]"
+                  className="flex-1 rounded-xl border-gray-200 focus:border-[#14B8FF] focus:ring-[#14B8FF]"
                 />
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-[#FF6F61] hover:bg-[#e55a4d] rounded-xl px-6"
+                  className="bg-[#14B8FF] hover:bg-[#0da3e6] rounded-xl px-6"
                 >
-                  {isSubmitting ? 'Joining...' : 'Join'}
+                  {isSubmitting ? t('joining') : t('join')}
                 </Button>
               </form>
             </motion.div>
@@ -198,12 +198,12 @@ export default function HeroSection() {
                 className="absolute -top-4 -right-4 bg-white rounded-2xl p-4 shadow-xl"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-[#FF6F61]/10 rounded-xl flex items-center justify-center">
-                    <MapPin className="w-6 h-6 text-[#FF6F61]" />
+                  <div className="w-12 h-12 bg-[#14B8FF]/10 rounded-xl flex items-center justify-center">
+                    <MapPin className="w-6 h-6 text-[#14B8FF]" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">This Weekend</p>
-                    <p className="font-semibold text-[#2E3A59]">24 Sales Nearby</p>
+                    <p className="text-xs text-gray-500">{t('thisWeekend')}</p>
+                    <p className="font-semibold text-[#2E3A59]">24 {t('salesNearby')}</p>
                   </div>
                 </div>
               </motion.div>
@@ -219,8 +219,8 @@ export default function HeroSection() {
                     <Sparkles className="w-6 h-6 text-[#F5A623]" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">Total Savings</p>
-                    <p className="font-semibold text-[#2E3A59]">Up to 90% Off</p>
+                    <p className="text-xs text-gray-500">{t('totalSavings')}</p>
+                    <p className="font-semibold text-[#2E3A59]">{t('upToOff')}</p>
                   </div>
                 </div>
               </motion.div>
