@@ -72,7 +72,8 @@ export default function AddYardSale() {
           if (!isEditMode) {
             const freeUsed = currentUser.free_listings_used || 0;
             const hasSubscription = currentUser.subscription_active || false;
-            const needsPay = freeUsed >= 1 && !hasSubscription;
+            // First listing is always free, so only require payment if they've used at least 1 free listing
+            const needsPay = freeUsed > 0 && !hasSubscription;
             setNeedsPayment(needsPay);
             console.log('Payment check:', { freeUsed, hasSubscription, needsPay });
           }
