@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Home, MapPin, PlusCircle, User, Heart, Settings } from 'lucide-react';
+import { Menu, X, Home, MapPin, PlusCircle, User, Heart, Settings, Globe } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { useTranslation } from './utils/translations';
 
 export default function Layout({ children, currentPageName }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [language, setLanguage] = useState('en');
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -23,6 +25,11 @@ export default function Layout({ children, currentPageName }) {
       }
     };
     checkAuth();
+    
+    // Load language preference
+    const savedLang = localStorage.getItem('stooplify_lang') || 'en';
+    setLanguage(savedLang);
+    document.documentElement.lang = savedLang;
   }, []);
 
   useEffect(() => {
@@ -33,20 +40,87 @@ export default function Layout({ children, currentPageName }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const t = useTranslation(language);
+  
+  const toggleLanguage = () => {
+    const newLang = language === 'en' ? 'es' : 'en';
+    setLanguage(newLang);
+    localStorage.setItem('stooplify_lang', newLang);
+    document.documentElement.lang = newLang;
+  };
+
   const navLinks = [
-    { name: 'Home', page: 'Home', icon: Home },
-    { name: 'Browse Yard Sales', page: 'YardSales', icon: MapPin },
-    { name: 'List a Yard Sale', page: 'AddYardSale', icon: PlusCircle },
-    { name: 'Pricing', page: 'Pricing', icon: Settings },
+    { name: t('home'), page: 'Home', icon: Home },
+    { name: t('browseSales'), page: 'YardSales', icon: MapPin },
+    { name: t('listSale'), page: 'AddYardSale', icon: PlusCircle },
+    { name: t('pricing'), page: 'Pricing', icon: Settings },
   ];
 
   const userLinks = user ? [
-    { name: 'Favorites', page: 'Favorites', icon: Heart },
-    { name: 'Profile', page: 'Profile', icon: User }
+    { name: t('favorites'), page: 'Favorites', icon: Heart },
+    { name: t('profile'), page: 'Profile', icon: User }
   ] : [];
 
   return (
     <div className="min-h-screen bg-white">
+      {/* SEO Meta Tags */}
+      <head>
+        <title>Stooplify - Discover Local Yard Sales & Garage Sales Near You</title>
+        <meta name="description" content="Find amazing yard sales, garage sales, and estate sales in your neighborhood. Buy and sell secondhand items, furniture, antiques, and more on Stooplify." />
+        <meta name="keywords" content="yard sale, garage sale, estate sale, secondhand, thrift, local sales, buy used items, sell items" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://stooplify.com" />
+        
+        {/* Open Graph / Social Media */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Stooplify - Find Local Yard Sales Near You" />
+        <meta property="og:description" content="Discover amazing deals at yard sales and garage sales in your neighborhood" />
+        <meta property="og:image" content="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_6963ba60866b343e03d8de8e/f9ad791a3_logo_v1.png" />
+        <meta property="og:url" content="https://stooplify.com" />
+        
+        {/* Twitter Card */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Stooplify - Find Local Yard Sales" />
+        <meta name="twitter:description" content="Discover amazing deals at yard sales near you" />
+        <meta name="twitter:image" content="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_6963ba60866b343e03d8de8e/f9ad791a3_logo_v1.png" />
+        
+        {/* Structured Data - Organization */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "name": "Stooplify",
+            "url": "https://stooplify.com",
+            "description": "Find local yard sales, garage sales, and estate sales in your neighborhood",
+            "potentialAction": {
+              "@type": "SearchAction",
+              "target": "https://stooplify.com/yard-sales?search={search_term_string}",
+              "query-input": "required name=search_term_string"
+            }
+          })}
+        </script>
+        
+        {/* Structured Data - LocalBusiness */}
+        <script type="application/ld+json">
+          {JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": "Stooplify",
+            "description": "Platform for discovering and listing local yard sales and garage sales",
+            "url": "https://stooplify.com",
+            "logo": "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_6963ba60866b343e03d8de8e/f9ad791a3_logo_v1.png",
+            "founder": {
+              "@type": "Person",
+              "name": "Daniel",
+              "email": "daniel@stooplify.com"
+            },
+            "areaServed": "United States",
+            "serviceType": "Yard Sale Listings"
+          })}
+        </script>
+      </head>
+      
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
         
@@ -139,8 +213,18 @@ export default function Layout({ children, currentPageName }) {
               ))}
             </nav>
 
-            {/* Auth Buttons */}
+            {/* Language Toggle & Auth Buttons */}
             <div className="hidden md:flex items-center gap-4">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={toggleLanguage}
+                className="px-3 py-2 text-[#2E3A59] font-medium hover:text-[#FF6F61] transition-colors flex items-center gap-2"
+                title={language === 'en' ? 'Switch to Spanish' : 'Cambiar a inglés'}
+              >
+                <Globe className="w-4 h-4" />
+                {language === 'en' ? 'ES' : 'EN'}
+              </motion.button>
               {user ? (
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -148,7 +232,7 @@ export default function Layout({ children, currentPageName }) {
                   onClick={() => base44.auth.logout()}
                   className="px-4 py-2 text-[#2E3A59] font-medium hover:text-[#FF6F61] transition-colors"
                 >
-                  Sign Out
+                  {t('signOut')}
                 </motion.button>
               ) : (
                 <>
@@ -158,7 +242,7 @@ export default function Layout({ children, currentPageName }) {
                     onClick={() => base44.auth.redirectToLogin()}
                     className="px-4 py-2 text-[#2E3A59] font-medium hover:text-[#FF6F61] transition-colors"
                   >
-                    Sign In
+                    {t('signIn')}
                   </motion.button>
                   <motion.button
                     whileHover={{ scale: 1.05, boxShadow: '0 10px 30px rgba(255, 111, 97, 0.3)' }}
@@ -166,7 +250,7 @@ export default function Layout({ children, currentPageName }) {
                     onClick={() => base44.auth.redirectToLogin()}
                     className="px-6 py-2.5 bg-[#FF6F61] text-white rounded-full font-medium shadow-lg"
                   >
-                    Get Started
+                    {t('getStarted')}
                   </motion.button>
                 </>
               )}
@@ -208,7 +292,17 @@ export default function Layout({ children, currentPageName }) {
                     <span className="font-medium">{link.name}</span>
                   </Link>
                 ))}
-                <div className="pt-4 border-t">
+                <div className="pt-4 border-t space-y-2">
+                  <button
+                    onClick={() => {
+                      toggleLanguage();
+                      setIsMenuOpen(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-[#2E3A59] font-medium hover:bg-gray-100 rounded-xl"
+                  >
+                    <Globe size={20} />
+                    <span>{language === 'en' ? 'Español' : 'English'}</span>
+                  </button>
                   {user ? (
                     <button
                       onClick={() => {
@@ -217,7 +311,7 @@ export default function Layout({ children, currentPageName }) {
                       }}
                       className="w-full px-4 py-3 text-left text-[#2E3A59] font-medium hover:bg-gray-100 rounded-xl"
                     >
-                      Sign Out
+                      {t('signOut')}
                     </button>
                   ) : (
                     <button
@@ -227,7 +321,7 @@ export default function Layout({ children, currentPageName }) {
                       }}
                       className="w-full px-4 py-3 bg-[#FF6F61] text-white text-center rounded-xl font-medium"
                     >
-                      Sign In / Get Started
+                      {t('signIn')} / {t('getStarted')}
                     </button>
                   )}
                 </div>
@@ -257,24 +351,24 @@ export default function Layout({ children, currentPageName }) {
               </p>
             </div>
             <div>
-              <h4 className="font-semibold text-lg mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>Quick Links</h4>
+              <h4 className="font-semibold text-lg mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>{t('quickLinks')}</h4>
               <ul className="space-y-2 text-white/70">
-                <li><Link to={createPageUrl('YardSales')} className="hover:text-[#FF6F61] transition-colors">Find Sales</Link></li>
-                <li><Link to={createPageUrl('AddYardSale')} className="hover:text-[#FF6F61] transition-colors">List Your Sale</Link></li>
-                <li><Link to={createPageUrl('Home')} className="hover:text-[#FF6F61] transition-colors">How It Works</Link></li>
+                <li><Link to={createPageUrl('YardSales')} className="hover:text-[#FF6F61] transition-colors">{t('findSales')}</Link></li>
+                <li><Link to={createPageUrl('AddYardSale')} className="hover:text-[#FF6F61] transition-colors">{t('listYourSale')}</Link></li>
+                <li><Link to={createPageUrl('Home')} className="hover:text-[#FF6F61] transition-colors">{t('howItWorks')}</Link></li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold text-lg mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>Legal</h4>
+              <h4 className="font-semibold text-lg mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>{t('legal')}</h4>
               <ul className="space-y-2 text-white/70">
-                <li><a href="#" className="hover:text-[#FF6F61] transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-[#FF6F61] transition-colors">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-[#FF6F61] transition-colors">Contact Us</a></li>
+                <li><a href="#" className="hover:text-[#FF6F61] transition-colors">{t('privacyPolicy')}</a></li>
+                <li><a href="#" className="hover:text-[#FF6F61] transition-colors">{t('termsOfService')}</a></li>
+                <li><a href="#" className="hover:text-[#FF6F61] transition-colors">{t('contactUs')}</a></li>
               </ul>
             </div>
           </div>
           <div className="border-t border-white/20 mt-8 pt-8 text-center text-white/60">
-            <p>© {new Date().getFullYear()} Stooplify. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Stooplify. {t('allRightsReserved')}.</p>
           </div>
         </div>
       </footer>
