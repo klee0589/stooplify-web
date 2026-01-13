@@ -42,8 +42,8 @@ export default function AddYardSale() {
   const [isLoadingSale, setIsLoadingSale] = useState(isEditMode);
   
   // Stripe price IDs (from your Stripe products)
-  const SINGLE_LISTING_PRICE_ID = 'price_1SoqU5CjpHsssawuCPu2dfiA';
-  const SUBSCRIPTION_PRICE_ID = 'price_1SoqU5CjpHsssawuN2F670L4';
+  const SINGLE_LISTING_PRICE_ID = 'price_1Sp0DuEBgBmaTVQEKO1W2NrG';
+  const SUBSCRIPTION_PRICE_ID = 'price_1Sp0DuEBgBmaTVQE0iSg1m5n';
   const [formData, setFormData] = useState({
     title: '',
     description: '',
