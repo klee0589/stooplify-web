@@ -125,7 +125,7 @@ export default function Layout({ children, currentPageName }) {
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
         
         :root {
-          --primary: #FF6F61;
+          --primary: #14B8FF;
           --secondary: #2E3A59;
           --accent: #F5A623;
           --bg-light: #F9F9F9;
@@ -148,7 +148,7 @@ export default function Layout({ children, currentPageName }) {
         }
         
         .btn-primary:hover {
-          background: #e55a4d;
+          background: #0da3e6;
         }
         
         .btn-secondary {
@@ -219,7 +219,7 @@ export default function Layout({ children, currentPageName }) {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={toggleLanguage}
-                className="px-3 py-2 text-[#2E3A59] font-medium hover:text-[#FF6F61] transition-colors flex items-center gap-2"
+                className="px-3 py-2 text-[#2E3A59] font-medium hover:text-[#14B8FF] transition-colors flex items-center gap-2"
                 title={language === 'en' ? 'Switch to Spanish' : 'Cambiar a inglés'}
               >
                 <Globe className="w-4 h-4" />
@@ -230,7 +230,7 @@ export default function Layout({ children, currentPageName }) {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => base44.auth.logout()}
-                  className="px-4 py-2 text-[#2E3A59] font-medium hover:text-[#FF6F61] transition-colors"
+                  className="px-4 py-2 text-[#2E3A59] font-medium hover:text-[#14B8FF] transition-colors"
                 >
                   {t('signOut')}
                 </motion.button>
@@ -240,15 +240,15 @@ export default function Layout({ children, currentPageName }) {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => base44.auth.redirectToLogin()}
-                    className="px-4 py-2 text-[#2E3A59] font-medium hover:text-[#FF6F61] transition-colors"
+                    className="px-4 py-2 text-[#2E3A59] font-medium hover:text-[#14B8FF] transition-colors"
                   >
                     {t('signIn')}
                   </motion.button>
                   <motion.button
-                    whileHover={{ scale: 1.05, boxShadow: '0 10px 30px rgba(255, 111, 97, 0.3)' }}
+                    whileHover={{ scale: 1.05, boxShadow: '0 10px 30px rgba(20, 184, 255, 0.3)' }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => base44.auth.redirectToLogin()}
-                    className="px-6 py-2.5 bg-[#FF6F61] text-white rounded-full font-medium shadow-lg"
+                    className="px-6 py-2.5 bg-[#14B8FF] text-white rounded-full font-medium shadow-lg"
                   >
                     {t('getStarted')}
                   </motion.button>
@@ -284,7 +284,7 @@ export default function Layout({ children, currentPageName }) {
                     onClick={() => setIsMenuOpen(false)}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
                       currentPageName === link.page
-                        ? 'bg-[#FF6F61]/10 text-[#FF6F61]'
+                        ? 'bg-[#14B8FF]/10 text-[#14B8FF]'
                         : 'text-[#2E3A59] hover:bg-gray-100'
                     }`}
                   >
@@ -319,7 +319,7 @@ export default function Layout({ children, currentPageName }) {
                         base44.auth.redirectToLogin();
                         setIsMenuOpen(false);
                       }}
-                      className="w-full px-4 py-3 bg-[#FF6F61] text-white text-center rounded-xl font-medium"
+                      className="w-full px-4 py-3 bg-[#14B8FF] text-white text-center rounded-xl font-medium"
                     >
                       {t('signIn')} / {t('getStarted')}
                     </button>
@@ -353,17 +353,17 @@ export default function Layout({ children, currentPageName }) {
             <div>
               <h4 className="font-semibold text-lg mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>{t('quickLinks')}</h4>
               <ul className="space-y-2 text-white/70">
-                <li><Link to={createPageUrl('YardSales')} className="hover:text-[#FF6F61] transition-colors">{t('findSales')}</Link></li>
-                <li><Link to={createPageUrl('AddYardSale')} className="hover:text-[#FF6F61] transition-colors">{t('listYourSale')}</Link></li>
-                <li><Link to={createPageUrl('Home')} className="hover:text-[#FF6F61] transition-colors">{t('howItWorks')}</Link></li>
+                <li><Link to={createPageUrl('YardSales')} className="hover:text-[#14B8FF] transition-colors">{t('findSales')}</Link></li>
+                <li><Link to={createPageUrl('AddYardSale')} className="hover:text-[#14B8FF] transition-colors">{t('listYourSale')}</Link></li>
+                <li><Link to={createPageUrl('Home')} className="hover:text-[#14B8FF] transition-colors">{t('howItWorks')}</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="font-semibold text-lg mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>{t('legal')}</h4>
               <ul className="space-y-2 text-white/70">
-                <li><a href="#" className="hover:text-[#FF6F61] transition-colors">{t('privacyPolicy')}</a></li>
-                <li><a href="#" className="hover:text-[#FF6F61] transition-colors">{t('termsOfService')}</a></li>
-                <li><a href="#" className="hover:text-[#FF6F61] transition-colors">{t('contactUs')}</a></li>
+                <li><a href="#" className="hover:text-[#14B8FF] transition-colors">{t('privacyPolicy')}</a></li>
+                <li><a href="#" className="hover:text-[#14B8FF] transition-colors">{t('termsOfService')}</a></li>
+                <li><a href="#" className="hover:text-[#14B8FF] transition-colors">{t('contactUs')}</a></li>
               </ul>
             </div>
           </div>

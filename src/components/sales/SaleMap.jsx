@@ -15,11 +15,11 @@ const customIcon = new L.DivIcon({
     <div style="
       width: 40px;
       height: 40px;
-      background: #FF6F61;
+      background: #14B8FF;
       border-radius: 50% 50% 50% 0;
       transform: rotate(-45deg);
       border: 3px solid white;
-      box-shadow: 0 4px 15px rgba(255, 111, 97, 0.4);
+      box-shadow: 0 4px 15px rgba(20, 184, 255, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -72,7 +72,7 @@ export default function SaleMap({ sales, center }) {
     return (
       <div className="w-full h-full bg-gray-100 rounded-2xl flex items-center justify-center">
         <div className="animate-pulse flex flex-col items-center gap-2">
-          <MapPin className="w-8 h-8 text-[#FF6F61]" />
+          <MapPin className="w-8 h-8 text-[#14B8FF]" />
           <span className="text-gray-500">Loading map...</span>
         </div>
       </div>
@@ -143,7 +143,7 @@ export default function SaleMap({ sales, center }) {
                   </h3>
                   <div className="space-y-1 text-sm text-gray-600 mb-3">
                     <div className="flex items-center gap-2">
-                      <Calendar className="w-3.5 h-3.5 text-[#FF6F61]" />
+                      <Calendar className="w-3.5 h-3.5 text-[#14B8FF]" />
                       <span>
                         {sale.date ? format(new Date(sale.date), 'EEE, MMM d') : 'Date TBD'}
                       </span>
@@ -155,7 +155,7 @@ export default function SaleMap({ sales, center }) {
                   </div>
                   <Link 
                     to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}
-                    className="flex items-center justify-center gap-1 w-full py-2 bg-[#FF6F61] text-white rounded-xl text-sm font-medium hover:bg-[#e55a4d] transition-colors"
+                    className="flex items-center justify-center gap-1 w-full py-2 bg-[#14B8FF] text-white rounded-xl text-sm font-medium hover:bg-[#0da3e6] transition-colors"
                   >
                     View Details
                     <ArrowRight className="w-3.5 h-3.5" />
