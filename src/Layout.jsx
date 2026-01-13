@@ -193,8 +193,8 @@ export default function Layout({ children, currentPageName }) {
                 <Link
                   key={link.page}
                   to={createPageUrl(link.page)}
-                  className={`font-medium transition-colors hover:text-[#FF6F61] ${
-                    currentPageName === link.page ? 'text-[#FF6F61]' : 'text-[#2E3A59]'
+                  className={`font-medium transition-colors hover:text-[#14B8FF] ${
+                    currentPageName === link.page ? 'text-[#14B8FF]' : 'text-[#2E3A59]'
                   }`}
                 >
                   {link.name}
@@ -204,8 +204,8 @@ export default function Layout({ children, currentPageName }) {
                 <Link
                   key={link.page}
                   to={createPageUrl(link.page)}
-                  className={`font-medium transition-colors hover:text-[#FF6F61] ${
-                    currentPageName === link.page ? 'text-[#FF6F61]' : 'text-[#2E3A59]'
+                  className={`font-medium transition-colors hover:text-[#14B8FF] ${
+                    currentPageName === link.page ? 'text-[#14B8FF]' : 'text-[#2E3A59]'
                   }`}
                 >
                   {link.name}
