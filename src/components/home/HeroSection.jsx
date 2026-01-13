@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
@@ -7,10 +7,19 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { base44 } from '@/api/base44Client';
 import { toast } from "sonner";
+import { useTranslation } from '../translations';
 
 export default function HeroSection() {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [language, setLanguage] = useState('en');
+  
+  useEffect(() => {
+    const savedLang = localStorage.getItem('stooplify_lang') || 'en';
+    setLanguage(savedLang);
+  }, []);
+  
+  const t = useTranslation(language);
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
@@ -83,26 +92,7 @@ export default function HeroSection() {
               className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#2E3A59] leading-tight mb-6"
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
-              Find Amazing{' '}
-              <span className="relative">
-                <span className="text-[#FF6F61]">Yard Sales</span>
-                <motion.svg
-                  initial={{ pathLength: 0 }}
-                  animate={{ pathLength: 1 }}
-                  transition={{ delay: 0.8, duration: 0.8 }}
-                  className="absolute -bottom-2 left-0 w-full"
-                  viewBox="0 0 200 12"
-                  fill="none"
-                >
-                  <motion.path
-                    d="M2 10C40 2 120 2 198 10"
-                    stroke="#F5A623"
-                    strokeWidth="4"
-                    strokeLinecap="round"
-                  />
-                </motion.svg>
-              </span>
-              {' '}Near You
+              {t('heroTitle')}
             </motion.h1>
 
             <motion.p
@@ -111,8 +101,7 @@ export default function HeroSection() {
               transition={{ delay: 0.4 }}
               className="text-lg text-gray-600 mb-8 max-w-lg"
             >
-              Connect with your community, discover hidden gems, and turn your unused items into cash. 
-              Join thousands of neighbors finding amazing deals every weekend.
+              {t('heroSubtitle')}
             </motion.p>
 
             {/* CTA Buttons */}
@@ -128,9 +117,10 @@ export default function HeroSection() {
                   whileTap={{ scale: 0.95 }}
                   className="w-full sm:w-auto px-8 py-4 bg-[#FF6F61] text-white rounded-2xl font-semibold flex items-center justify-center gap-2 shadow-lg shadow-[#FF6F61]/25"
                   style={{ fontFamily: 'Poppins, sans-serif' }}
+                  aria-label={t('findSales')}
                 >
                   <MapPin className="w-5 h-5" />
-                  Find Sales Near You
+                  {t('findSales')}
                   <ArrowRight className="w-5 h-5" />
                 </motion.button>
               </Link>
@@ -140,9 +130,10 @@ export default function HeroSection() {
                   whileTap={{ scale: 0.95 }}
                   className="w-full sm:w-auto px-8 py-4 bg-[#2E3A59] text-white rounded-2xl font-semibold flex items-center justify-center gap-2"
                   style={{ fontFamily: 'Poppins, sans-serif' }}
+                  aria-label={t('listYourSale')}
                 >
                   <Plus className="w-5 h-5" />
-                  Add Your Sale
+                  {t('listYourSale')}
                 </motion.button>
               </Link>
             </motion.div>
