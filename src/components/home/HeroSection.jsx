@@ -17,6 +17,16 @@ export default function HeroSection() {
   useEffect(() => {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
     setLanguage(savedLang);
+
+    const handleLanguageChange = (e) => {
+      setLanguage(e.detail);
+    };
+
+    window.addEventListener('languageChange', handleLanguageChange);
+
+    return () => {
+      window.removeEventListener('languageChange', handleLanguageChange);
+    };
   }, []);
   
   const t = useTranslation(language);

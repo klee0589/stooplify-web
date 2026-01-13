@@ -10,17 +10,14 @@ export default function HowItWorks() {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
     setLanguage(savedLang);
     
-    const handleStorage = () => {
-      const newLang = localStorage.getItem('stooplify_lang') || 'en';
-      setLanguage(newLang);
+    const handleLanguageChange = (e) => {
+      setLanguage(e.detail);
     };
-    
-    window.addEventListener('storage', handleStorage);
-    const interval = setInterval(handleStorage, 100);
+
+    window.addEventListener('languageChange', handleLanguageChange);
     
     return () => {
-      window.removeEventListener('storage', handleStorage);
-      clearInterval(interval);
+      window.removeEventListener('languageChange', handleLanguageChange);
     };
   }, []);
   
