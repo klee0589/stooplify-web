@@ -15,6 +15,7 @@ import AddressDisplay from '../components/sales/AddressDisplay';
 import TrustBadges from '../components/sales/TrustBadges';
 import SellerReputation from '../components/sales/SellerReputation';
 import ReportModal from '../components/sales/ReportModal';
+import ShareModal from '../components/sales/ShareModal';
 import SafetyNote from '../components/sales/SafetyNote';
 import ReviewList from '../components/reviews/ReviewList';
 import ReviewForm from '../components/reviews/ReviewForm';
@@ -29,6 +30,7 @@ export default function YardSaleDetails() {
   const [isFavorite, setIsFavorite] = useState(false);
   const [isAttending, setIsAttending] = useState(false);
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [seller, setSeller] = useState(null);
 
   const queryClient = useQueryClient();
@@ -271,17 +273,8 @@ export default function YardSaleDetails() {
     }
   };
 
-  const handleShare = async () => {
-    if (navigator.share) {
-      await navigator.share({
-        title: sale?.title,
-        text: `Check out this yard sale: ${sale?.title}`,
-        url: window.location.href,
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      toast.success('Link copied to clipboard!');
-    }
+  const handleShare = () => {
+    setIsShareModalOpen(true);
   };
 
   const handleGetDirections = () => {
@@ -702,10 +695,17 @@ export default function YardSaleDetails() {
 
         {/* Report Modal */}
         <ReportModal
-        sale={sale}
-        isOpen={isReportModalOpen}
-        onClose={() => setIsReportModalOpen(false)}
+          sale={sale}
+          isOpen={isReportModalOpen}
+          onClose={() => setIsReportModalOpen(false)}
         />
-        </div>
-        );
-        }
+
+        {/* Share Modal */}
+        <ShareModal
+          sale={sale}
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+        />
+      </div>
+    );
+  }
