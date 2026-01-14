@@ -361,7 +361,7 @@ export default function AddYardSale() {
       const response = await base44.functions.invoke('createCheckout', { priceId, listingType });
       console.log('Checkout response:', response);
       
-      if (response.data.url) {
+      if (response.data?.url) {
         window.location.href = response.data.url;
       } else {
         console.error('No URL in response:', response);
