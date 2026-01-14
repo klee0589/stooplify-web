@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from '../components/translations';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -14,6 +15,21 @@ export default function YardSales() {
   const [filters, setFilters] = useState({ category: 'all', date: 'all', distance: 'all', search: '' });
   const [favorites, setFavorites] = useState([]);
   const [user, setUser] = useState(null);
+  const [language, setLanguage] = useState('en');
+  
+  useEffect(() => {
+    const savedLang = localStorage.getItem('stooplify_lang') || 'en';
+    setLanguage(savedLang);
+    
+    const handleLanguageChange = (e) => {
+      setLanguage(e.detail);
+    };
+    
+    window.addEventListener('languageChange', handleLanguageChange);
+    return () => window.removeEventListener('languageChange', handleLanguageChange);
+  }, []);
+  
+  const t = useTranslation(language);
 
   const queryClient = useQueryClient();
 
@@ -154,10 +170,10 @@ export default function YardSales() {
             className="text-3xl md:text-4xl font-bold text-[#2E3A59] dark:text-white mb-2"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
-            Find Yard Sales
+            {t('findYardSales')}
           </h1>
           <p className="text-gray-600 dark:text-gray-300">
-            Discover amazing deals at local yard sales near you
+            {t('findYardSalesDesc')}
           </p>
         </motion.div>
 
@@ -177,7 +193,7 @@ export default function YardSales() {
           className="flex items-center justify-between mb-6"
         >
           <p className="text-gray-600 dark:text-gray-300">
-            <span className="font-semibold text-[#2E3A59] dark:text-white">{filteredSales.length}</span> sales found
+            <span className="font-semibold text-[#2E3A59] dark:text-white">{filteredSales.length}</span> {t('salesFound')}
           </p>
           
           <div className="flex items-center bg-white dark:bg-gray-800 rounded-xl p-1 shadow-sm">
@@ -191,7 +207,7 @@ export default function YardSales() {
               }`}
             >
               <List className="w-4 h-4" />
-              <span className="hidden sm:inline text-sm font-medium">List</span>
+              <span className="hidden sm:inline text-sm font-medium">{t('listView')}</span>
             </motion.button>
             <motion.button
               whileTap={{ scale: 0.95 }}
@@ -203,7 +219,7 @@ export default function YardSales() {
               }`}
             >
               <Map className="w-4 h-4" />
-              <span className="hidden sm:inline text-sm font-medium">Map</span>
+              <span className="hidden sm:inline text-sm font-medium">{t('mapView')}</span>
             </motion.button>
           </div>
         </motion.div>
@@ -229,11 +245,11 @@ export default function YardSales() {
                       <Map className="w-10 h-10 text-[#FF6F61]" />
                     </div>
                     <h3 className="text-xl font-semibold text-[#2E3A59] dark:text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                      No sales found
+                      {t('noSalesFound')}
                     </h3>
-                    <p className="text-gray-600 dark:text-gray-300 mb-4">Try adjusting your filters or check back later.</p>
+                    <p className="text-gray-600 dark:text-gray-300 mb-4">{t('tryAdjustingFilters')}</p>
                     <Button onClick={resetFilters} className="bg-[#FF6F61] hover:bg-[#e55a4d]">
-                      Reset Filters
+                      {t('resetFilters')}
                     </Button>
                   </div>
                 ) : (

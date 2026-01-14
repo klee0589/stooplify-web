@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useTranslation } from '../components/translations';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
@@ -6,6 +7,22 @@ import { Check, Store, Zap, TrendingUp, MapPin, Star, Users } from 'lucide-react
 import { Button } from "@/components/ui/button";
 
 export default function Pricing() {
+  const [language, setLanguage] = useState('en');
+  
+  useEffect(() => {
+    const savedLang = localStorage.getItem('stooplify_lang') || 'en';
+    setLanguage(savedLang);
+    
+    const handleLanguageChange = (e) => {
+      setLanguage(e.detail);
+    };
+    
+    window.addEventListener('languageChange', handleLanguageChange);
+    return () => window.removeEventListener('languageChange', handleLanguageChange);
+  }, []);
+  
+  const t = useTranslation(language);
+  
   const individualPlans = [
     {
       name: 'Free',
@@ -98,10 +115,10 @@ export default function Pricing() {
             className="text-4xl md:text-5xl font-bold text-[#2E3A59] mb-4"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
-            Simple, Transparent Pricing
+            {t('simplePricing')}
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Choose the perfect plan for your needs. Start free, upgrade anytime.
+            {t('pricingDesc')}
           </p>
         </motion.div>
 
@@ -111,7 +128,7 @@ export default function Pricing() {
             className="text-2xl font-bold text-[#2E3A59] mb-8 text-center"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
-            For Individual Sellers
+            {t('forIndividualSellers')}
           </h2>
           <div className="grid md:grid-cols-3 gap-8">
             {individualPlans.map((plan, index) => (
@@ -127,7 +144,7 @@ export default function Pricing() {
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                     <span className="bg-[#FF6F61] text-white px-6 py-1 rounded-full text-sm font-semibold">
-                      Most Popular
+                      {t('mostPopular')}
                     </span>
                   </div>
                 )}
@@ -185,14 +202,14 @@ export default function Pricing() {
             className="text-2xl font-bold text-[#2E3A59] mb-8 text-center"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
-            For Businesses & Shops
+            {t('forBusinesses')}
           </h2>
           
           <div className="bg-gradient-to-r from-[#FF6F61] to-[#F5A623] rounded-3xl p-8 md:p-12 shadow-2xl text-white relative overflow-hidden">
             <div className="absolute top-4 right-4">
               <span className="bg-white/20 backdrop-blur-sm px-4 py-1 rounded-full text-sm font-semibold flex items-center gap-2">
                 <Star className="w-4 h-4" />
-                {businessPlan.badge}
+                {t('mostVisible')}
               </span>
             </div>
 
@@ -215,8 +232,7 @@ export default function Pricing() {
 
                 <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-6">
                   <p className="text-sm text-white/90 leading-relaxed">
-                    <strong>Perfect for:</strong> Thrift stores, consignment shops, antique stores, flea markets, 
-                    and any permanent location that wants consistent visibility to treasure hunters in their area.
+                    <strong>{t('perfectFor')}:</strong> {t('perfectForDesc')}
                   </p>
                 </div>
 
@@ -230,7 +246,7 @@ export default function Pricing() {
               </div>
 
               <div>
-                <h4 className="text-xl font-semibold mb-4">Everything you need to grow:</h4>
+                <h4 className="text-xl font-semibold mb-4">{t('everythingYouNeed')}:</h4>
                 <ul className="space-y-3">
                   {businessPlan.features.map((feature) => (
                     <li key={feature} className="flex items-start gap-3">
@@ -253,9 +269,9 @@ export default function Pricing() {
           transition={{ delay: 0.6 }}
           className="text-center"
         >
-          <h3 className="text-xl font-semibold text-[#2E3A59] mb-4">Have questions?</h3>
+          <h3 className="text-xl font-semibold text-[#2E3A59] mb-4">{t('haveQuestions')}</h3>
           <p className="text-gray-600">
-            Contact us at{' '}
+            {t('contactUs')}{' '}
             <a href="mailto:daniel@stooplify.com" className="text-[#FF6F61] hover:underline">
               daniel@stooplify.com
             </a>
