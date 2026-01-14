@@ -21,15 +21,22 @@ export default function GuidesPermit() {
         <motion.article
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-3xl p-8 md:p-12 shadow-lg"
+          className="bg-white rounded-3xl overflow-hidden shadow-lg"
         >
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-2xl mb-6">
-            <FileText className="w-8 h-8 text-green-600" />
-          </div>
+          <img 
+            src="https://images.unsplash.com/photo-1518391846015-55a9cc003b25?w=1200&h=400&fit=crop" 
+            alt="New York City neighborhood street"
+            className="w-full h-64 object-cover"
+          />
+          
+          <div className="p-8 md:p-12">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-green-100 rounded-2xl mb-6">
+              <FileText className="w-8 h-8 text-green-600" />
+            </div>
 
-          <h1 className="text-3xl md:text-4xl font-bold text-[#2E3A59] mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            Do You Need a Permit for a Yard Sale in New York?
-          </h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-[#2E3A59] mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              Do You Need a Permit for a Yard Sale in New York?
+            </h1>
 
           <div className="prose prose-lg max-w-none">
             <p className="text-gray-700 leading-relaxed mb-6">
@@ -76,16 +83,17 @@ export default function GuidesPermit() {
               Stooplify helps keep things local, calm, and community-friendly.
             </p>
 
-            <div className="mt-12 pt-8 border-t border-gray-200">
-              <Link to={createPageUrl('YardSales')}>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full md:w-auto px-8 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg"
-                >
-                  👉 View yard sales happening this weekend
-                </motion.button>
-              </Link>
+              <div className="mt-12 pt-8 border-t border-gray-200">
+                <Link to={createPageUrl('YardSales')}>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full md:w-auto px-8 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg"
+                  >
+                    👉 View yard sales happening this weekend
+                  </motion.button>
+                </Link>
+              </div>
             </div>
           </div>
         </motion.article>

@@ -21,15 +21,22 @@ export default function GuidesPricing() {
         <motion.article
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-3xl p-8 md:p-12 shadow-lg"
+          className="bg-white rounded-3xl overflow-hidden shadow-lg"
         >
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-100 rounded-2xl mb-6">
-            <DollarSign className="w-8 h-8 text-yellow-600" />
-          </div>
+          <img 
+            src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&h=400&fit=crop" 
+            alt="Items with price tags at yard sale"
+            className="w-full h-64 object-cover"
+          />
+          
+          <div className="p-8 md:p-12">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-yellow-100 rounded-2xl mb-6">
+              <DollarSign className="w-8 h-8 text-yellow-600" />
+            </div>
 
-          <h1 className="text-3xl md:text-4xl font-bold text-[#2E3A59] mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            How to Price Items for a Yard Sale
-          </h1>
+            <h1 className="text-3xl md:text-4xl font-bold text-[#2E3A59] mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              How to Price Items for a Yard Sale
+            </h1>
 
           <div className="prose prose-lg max-w-none">
             <p className="text-gray-700 leading-relaxed mb-6">
@@ -61,16 +68,17 @@ export default function GuidesPricing() {
               Photos on your Stooplify listing help buyers decide before they arrive, saving everyone time.
             </p>
 
-            <div className="mt-12 pt-8 border-t border-gray-200">
-              <Link to={createPageUrl('AddYardSale')}>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full md:w-auto px-8 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg"
-                >
-                  👉 List your yard sale with photos
-                </motion.button>
-              </Link>
+              <div className="mt-12 pt-8 border-t border-gray-200">
+                <Link to={createPageUrl('AddYardSale')}>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full md:w-auto px-8 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg"
+                  >
+                    👉 List your yard sale with photos
+                  </motion.button>
+                </Link>
+              </div>
             </div>
           </div>
         </motion.article>
