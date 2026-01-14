@@ -187,7 +187,7 @@ export default function YardSales() {
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
                 viewMode === 'list' 
                   ? 'bg-[#FF6F61] text-white' 
-                  : 'text-gray-600 hover:bg-gray-100'
+                  : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               <List className="w-4 h-4" />
@@ -199,7 +199,7 @@ export default function YardSales() {
               className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
                 viewMode === 'map' 
                   ? 'bg-[#FF6F61] text-white' 
-                  : 'text-gray-600 hover:bg-gray-100'
+                  : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
               <Map className="w-4 h-4" />
