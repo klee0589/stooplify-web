@@ -14,23 +14,39 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
+import { useTranslation } from '../components/translations';
 
-const categories = [
-  { value: 'general', label: 'General' },
-  { value: 'furniture', label: 'Furniture' },
-  { value: 'clothing', label: 'Clothing' },
-  { value: 'electronics', label: 'Electronics' },
-  { value: 'toys', label: 'Toys & Kids' },
-  { value: 'antiques', label: 'Antiques' },
-  { value: 'books', label: 'Books & Media' },
-  { value: 'sports', label: 'Sports & Outdoors' },
-  { value: 'multi-family', label: 'Multi-Family' },
-];
+const getCategoryLabels = (t) => [
+        { value: 'general', label: t('general') },
+        { value: 'furniture', label: t('furniture') },
+        { value: 'clothing', label: t('clothing') },
+        { value: 'electronics', label: t('electronics') },
+        { value: 'toys', label: t('toysKids') },
+        { value: 'antiques', label: t('antiques') },
+        { value: 'books', label: t('booksMedia') },
+        { value: 'sports', label: t('sportsOutdoors') },
+        { value: 'multi-family', label: t('multiFamily') },
+      ];
 
 export default function AddYardSale() {
   const urlParams = new URLSearchParams(window.location.search);
   const editSaleId = urlParams.get('edit');
   const isEditMode = !!editSaleId;
+  const [language, setLanguage] = useState('en');
+
+  useEffect(() => {
+    const savedLang = localStorage.getItem('stooplify_lang') || 'en';
+    setLanguage(savedLang);
+
+    const handleLanguageChange = (e) => {
+      setLanguage(e.detail);
+    };
+
+    window.addEventListener('languageChange', handleLanguageChange);
+    return () => window.removeEventListener('languageChange', handleLanguageChange);
+  }, []);
+
+  const t = useTranslation(language);
   
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -478,10 +494,10 @@ export default function AddYardSale() {
             className="text-2xl font-bold text-[#2E3A59] mb-3"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
-            Sign In to List Your Sale
+            {t('signInToListYourSale')}
           </h2>
           <p className="text-gray-600 mb-6">
-            Create an account to list your yard sale and reach thousands of local shoppers.
+            {t('createAccountToList')}
           </p>
           <motion.button
             whileHover={{ scale: 1.02 }}
@@ -490,7 +506,7 @@ export default function AddYardSale() {
             className="w-full py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
-            Sign In or Create Account
+            {t('signInOrCreateAccount')}
           </motion.button>
         </motion.div>
       </div>
@@ -512,11 +528,11 @@ export default function AddYardSale() {
             className="text-2xl font-bold text-[#2E3A59] mb-3"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
-            You've Reached Your Limit
+            {t('youveReachedYourLimit')}
           </h2>
           <p className="text-gray-600 mb-6">
-            You currently have {maxSalesAllowed} active sale{maxSalesAllowed > 1 ? 's' : ''}. 
-            {maxSalesAllowed === 1 ? ' Upgrade to post up to 3 concurrent sales!' : ' Delete an existing sale to post a new one, or wait for one to expire.'}
+            {t('youCurrentlyHave')} {maxSalesAllowed} {maxSalesAllowed === 1 ? t('sale') : t('sales')}. 
+            {maxSalesAllowed === 1 ? ' ' + t('upgradeToPostMore') : ' ' + t('deleteExistingSale')}
           </p>
           <div className="flex flex-col gap-3">
             {maxSalesAllowed === 1 && (
@@ -533,7 +549,7 @@ export default function AddYardSale() {
             )}
             <Link to={createPageUrl('Profile')}>
               <Button variant="outline" className="w-full py-6 rounded-xl">
-                Manage My Sales
+                {t('manageMyYourSales')}
               </Button>
             </Link>
           </div>
@@ -547,14 +563,14 @@ export default function AddYardSale() {
       <div className="max-w-2xl mx-auto px-4">
         {/* Back Button */}
         <Link to={createPageUrl('Home')}>
-          <motion.button
-            whileHover={{ x: -5 }}
-            className="flex items-center gap-2 text-gray-600 hover:text-[#FF6F61] transition-colors mb-6"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Back
-          </motion.button>
-        </Link>
+            <motion.button
+              whileHover={{ x: -5 }}
+              className="flex items-center gap-2 text-gray-600 hover:text-[#FF6F61] transition-colors mb-6"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              {t('back')}
+            </motion.button>
+          </Link>
 
         {/* Header */}
         <motion.div
@@ -566,9 +582,9 @@ export default function AddYardSale() {
             className="text-3xl font-bold text-[#2E3A59] mb-2"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
-            {isEditMode ? 'Edit Your Yard Sale' : 'Add Your Yard Sale'}
+            {isEditMode ? t('editYourYardSale') : t('addYourYardSale')}
           </h1>
-          <p className="text-gray-600">{isEditMode ? 'Update your sale details' : 'List your sale in just a few steps'}</p>
+          <p className="text-gray-600">{isEditMode ? t('updateYourSaleDetails') : t('listYourSaleInJustSteps')}</p>
         </motion.div>
 
         {/* Progress Steps */}
@@ -609,14 +625,14 @@ export default function AddYardSale() {
                 className="text-xl font-bold text-[#2E3A59] mb-6"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
-                Sale Details
+                {t('saleDetails')}
               </h2>
 
               <div className="space-y-5">
                 <div>
-                  <Label className="text-[#2E3A59] font-medium mb-2 block">Title *</Label>
+                  <Label className="text-[#2E3A59] font-medium mb-2 block">{t('title')} *</Label>
                   <Input
-                    placeholder="e.g., Big Family Yard Sale!"
+                    placeholder={t('titlePlaceholder')}
                     value={formData.title}
                     onChange={(e) => updateField('title', e.target.value)}
                     className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6"
@@ -625,7 +641,7 @@ export default function AddYardSale() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-[#2E3A59] font-medium mb-2 block">Date *</Label>
+                    <Label className="text-[#2E3A59] font-medium mb-2 block">{t('date')} *</Label>
                     <Input
                       type="date"
                       value={formData.date}
@@ -643,7 +659,7 @@ export default function AddYardSale() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        {categories.map((cat) => (
+                        {getCategoryLabels(t).map((cat) => (
                           <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
                         ))}
                       </SelectContent>
@@ -653,7 +669,7 @@ export default function AddYardSale() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-[#2E3A59] font-medium mb-2 block">Start Time</Label>
+                    <Label className="text-[#2E3A59] font-medium mb-2 block">{t('startTime')}</Label>
                     <Input
                       type="time"
                       value={formData.start_time}
@@ -662,7 +678,7 @@ export default function AddYardSale() {
                     />
                   </div>
                   <div>
-                    <Label className="text-[#2E3A59] font-medium mb-2 block">End Time</Label>
+                    <Label className="text-[#2E3A59] font-medium mb-2 block">{t('endTime')}</Label>
                     <Input
                       type="time"
                       value={formData.end_time}
@@ -673,9 +689,9 @@ export default function AddYardSale() {
                 </div>
 
                 <div>
-                  <Label className="text-[#2E3A59] font-medium mb-2 block">Description</Label>
+                  <Label className="text-[#2E3A59] font-medium mb-2 block">{t('description')}</Label>
                   <Textarea
-                    placeholder="What items will you be selling? Any special deals?"
+                    placeholder={t('descriptionPlaceholder')}
                     value={formData.description}
                     onChange={(e) => updateField('description', e.target.value)}
                     className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] min-h-[120px]"
@@ -732,7 +748,7 @@ export default function AddYardSale() {
                 className="w-full mt-6 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
-                Continue
+                {t('continue')}
               </motion.button>
             </motion.div>
           )}
@@ -750,34 +766,34 @@ export default function AddYardSale() {
                 className="text-xl font-bold text-[#2E3A59] mb-6"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
-                Location
+                {t('location')}
               </h2>
 
               <div className="space-y-5">
                 <div>
                   <Label className="text-[#2E3A59] font-medium mb-2 flex items-center gap-2">
-                    General Location (Public) *
-                    <span className="text-xs text-gray-500 font-normal">(e.g., "Near Bedford Ave & N 7th St")</span>
+                    {t('generalLocationPublic')} *
+                    <span className="text-xs text-gray-500 font-normal">{t('generalLocationHint')}</span>
                   </Label>
                   <Input
-                    placeholder="Near Main St & Oak Ave"
+                    placeholder={t('generalLocationPlaceholder')}
                     value={formData.general_location}
                     onChange={(e) => updateField('general_location', e.target.value)}
                     className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6"
                   />
                   <p className="text-xs text-gray-500 mt-1">
-                    This approximate location will be shown publicly for privacy
+                    {t('approximateLocationPrivacy')}
                   </p>
                 </div>
 
                 <div>
                   <Label className="text-[#2E3A59] font-medium mb-2 flex items-center gap-2">
-                    Exact Street Address (Private) *
-                    <span className="text-xs text-green-600 font-normal">🔒 Protected</span>
+                    {t('exactStreetAddressPrivate')} *
+                    <span className="text-xs text-green-600 font-normal">🔒 {t('protected')}</span>
                   </Label>
                   <div className="relative">
                     <Input
-                      placeholder="123 Main Street"
+                      placeholder={t('exactAddressPlaceholder')}
                       value={formData.address}
                       onChange={(e) => updateField('address', e.target.value)}
                       className={`rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 ${
@@ -803,24 +819,24 @@ export default function AddYardSale() {
                     </motion.p>
                   )}
                   <p className="text-xs text-gray-500 mt-1">
-                    Exact address unlocks 24 hours before sale or when users click "I'm Attending"
+                    {t('exactAddressUnlocksHint')}
                   </p>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-[#2E3A59] font-medium mb-2 block">City *</Label>
+                    <Label className="text-[#2E3A59] font-medium mb-2 block">{t('city')} *</Label>
                     <Input
-                      placeholder="City"
+                      placeholder={t('cityPlaceholder')}
                       value={formData.city}
                       onChange={(e) => updateField('city', e.target.value)}
                       className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6"
                     />
                   </div>
                   <div>
-                    <Label className="text-[#2E3A59] font-medium mb-2 block">State *</Label>
+                    <Label className="text-[#2E3A59] font-medium mb-2 block">{t('state')} *</Label>
                     <Input
-                      placeholder="State"
+                      placeholder={t('statePlaceholder')}
                       value={formData.state}
                       onChange={(e) => updateField('state', e.target.value)}
                       className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6"
@@ -829,9 +845,9 @@ export default function AddYardSale() {
                 </div>
 
                 <div>
-                  <Label className="text-[#2E3A59] font-medium mb-2 block">ZIP Code *</Label>
+                  <Label className="text-[#2E3A59] font-medium mb-2 block">{t('zipCode')} *</Label>
                   <Input
-                    placeholder="12345"
+                    placeholder={t('zipCodePlaceholder')}
                     value={formData.zip_code}
                     onChange={(e) => updateField('zip_code', e.target.value)}
                     className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 max-w-[200px]"
@@ -845,7 +861,7 @@ export default function AddYardSale() {
                   onClick={() => setStep(1)}
                   className="flex-1 py-6 rounded-xl"
                 >
-                  Back
+                  {t('back')}
                 </Button>
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -855,7 +871,7 @@ export default function AddYardSale() {
                   className="flex-1 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ fontFamily: 'Poppins, sans-serif' }}
                 >
-                  Continue
+                  {t('continue')}
                 </motion.button>
               </div>
             </motion.div>
@@ -874,10 +890,10 @@ export default function AddYardSale() {
                 className="text-xl font-bold text-[#2E3A59] mb-2"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
-                Choose Your Listing Option
+                {t('paymentRequired')}
               </h2>
               <p className="text-gray-600 mb-6 text-sm">
-                Your first listing was free! Choose how to continue:
+                {t('firstListingFree')}
               </p>
 
               <div className="space-y-4 mb-6">
@@ -892,11 +908,11 @@ export default function AddYardSale() {
                 >
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-lg font-bold text-[#2E3A59]" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                      Single Listing
+                      {t('singleListing')}
                     </h3>
                     <span className="text-2xl font-bold text-[#FF6F61]">$4</span>
                   </div>
-                  <p className="text-gray-600 text-sm">Pay once for this listing</p>
+                  <p className="text-gray-600 text-sm">{t('payOnceForThisListing')}</p>
                 </motion.button>
 
                 {/* Unlimited Subscription */}
@@ -909,25 +925,25 @@ export default function AddYardSale() {
                   disabled={isCheckingPayment}
                 >
                   <div className="absolute top-2 right-2 bg-[#F5A623] text-white text-xs font-bold px-3 py-1 rounded-full">
-                    BEST VALUE
+                    {t('bestValue')}
                   </div>
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-lg font-bold text-[#2E3A59]" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                      Unlimited Listings
+                      {t('unlimitedListings')}
                     </h3>
                     <div className="text-right">
                       <span className="text-2xl font-bold text-[#FF6F61]">$9</span>
                       <span className="text-gray-600 text-sm ml-1">/month</span>
                     </div>
                   </div>
-                  <p className="text-gray-600 text-sm">Post as many sales as you want for 30 days</p>
+                  <p className="text-gray-600 text-sm">{t('postAsManySalesAsYouWant')}</p>
                 </motion.button>
               </div>
 
               {isCheckingPayment && (
                 <div className="flex items-center justify-center gap-2 text-[#FF6F61] mb-4">
                   <Loader2 className="w-5 h-5 animate-spin" />
-                  <span className="font-medium">Redirecting to checkout...</span>
+                  <span className="font-medium">{t('redirectingToCheckout')}</span>
                 </div>
               )}
 
@@ -938,7 +954,7 @@ export default function AddYardSale() {
                   className="flex-1 py-6 rounded-xl"
                   disabled={isCheckingPayment}
                 >
-                  Back
+                  {t('back')}
                 </Button>
               </div>
             </motion.div>
@@ -957,10 +973,10 @@ export default function AddYardSale() {
                 className="text-xl font-bold text-[#2E3A59] mb-2"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
-                Add Photos (Optional)
+                {t('addPhotosOptional')}
               </h2>
               <p className="text-gray-600 mb-6 text-sm">
-                Photos help attract more buyers to your sale
+                {t('photosHelpAttractBuyers')}
               </p>
 
               {/* Photo Upload Area */}
@@ -973,8 +989,8 @@ export default function AddYardSale() {
                       ) : (
                         <>
                           <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                          <p className="text-gray-600 font-medium text-sm">Upload Photos</p>
-                          <p className="text-gray-400 text-xs mt-1">From gallery</p>
+                          <p className="text-gray-600 font-medium text-sm">{t('uploadPhotos')}</p>
+                          <p className="text-gray-400 text-xs mt-1">{t('fromGallery')}</p>
                         </>
                       )}
                     </div>
@@ -995,8 +1011,8 @@ export default function AddYardSale() {
                       ) : (
                         <>
                           <Camera className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                          <p className="text-gray-600 font-medium text-sm">Take Photo</p>
-                          <p className="text-gray-400 text-xs mt-1">Use camera</p>
+                          <p className="text-gray-600 font-medium text-sm">{t('takePhoto')}</p>
+                          <p className="text-gray-400 text-xs mt-1">{t('useCamera')}</p>
                         </>
                       )}
                     </div>
@@ -1011,7 +1027,7 @@ export default function AddYardSale() {
                   </label>
                 </div>
                 <p className="text-xs text-gray-500 text-center">
-                  📸 AI will generate a description from your photos
+                  📸 {t('aiWillGenerateDescription')}
                 </p>
               </div>
 
@@ -1027,7 +1043,7 @@ export default function AddYardSale() {
                       <Check className="w-5 h-5 text-white" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-semibold text-[#2E3A59] mb-2">AI Generated Description</h4>
+                      <h4 className="font-semibold text-[#2E3A59] mb-2">{t('aiGeneratedDescription')}</h4>
                       <Textarea
                         value={editableDescription}
                         onChange={(e) => setEditableDescription(e.target.value)}
@@ -1044,7 +1060,7 @@ export default function AddYardSale() {
                       }}
                       className="flex-1 bg-blue-500 hover:bg-blue-600"
                     >
-                      Use This Description
+                      {t('useThisDescription')}
                     </Button>
                     <Button
                       variant="outline"
@@ -1054,7 +1070,7 @@ export default function AddYardSale() {
                       }}
                       className="flex-1"
                     >
-                      Skip for Now
+                      {t('editManually')}
                     </Button>
                   </div>
                 </motion.div>
@@ -1086,7 +1102,7 @@ export default function AddYardSale() {
               <div className="bg-green-50 rounded-xl p-4 mb-6 flex items-start gap-3">
                 <Info className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
                 <p className="text-sm text-gray-700">
-                  Your listing will go live immediately after submission!
+                  {t('listingWillGoLive')}
                 </p>
               </div>
 
@@ -1096,7 +1112,7 @@ export default function AddYardSale() {
                   onClick={() => setStep(2)}
                   className="flex-1 py-6 rounded-xl"
                 >
-                  Back
+                  {t('back')}
                 </Button>
                 <motion.button
                   whileHover={{ scale: 1.02 }}
@@ -1109,10 +1125,10 @@ export default function AddYardSale() {
                   {createMutation.isPending ? (
                     <>
                       <Loader2 className="w-5 h-5 animate-spin" />
-                      Submitting...
+                      {t('submitting')}...
                     </>
                   ) : (
-                    'Submit Listing'
+                    t('submitListing')
                   )}
                 </motion.button>
               </div>
@@ -1135,15 +1151,15 @@ export default function AddYardSale() {
               >
                 <Check className="w-10 h-10 text-green-500" />
               </motion.div>
-              
+
               <h2 
                 className="text-2xl font-bold text-[#2E3A59] mb-3"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
-                {isEditMode ? 'Sale Updated!' : 'Sale is Live!'}
+                {isEditMode ? t('saleUpdated') : t('saleIsLive')}
               </h2>
               <p className="text-gray-600 mb-6">
-                Redirecting to your sale page...
+                {t('redirectingToSalePage')}
               </p>
               
               <Loader2 className="w-8 h-8 text-[#FF6F61] animate-spin mx-auto" />
