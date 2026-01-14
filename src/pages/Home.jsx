@@ -35,7 +35,7 @@ export default function Home() {
             </p>
             
             <p>
-              I'm a New York local—born and raised between Queens and Brooklyn—and I've always loved the thrift, stoop, and garage sale scene. Growing up here, weekend walks meant discovering random yard sales, sidewalk finds, and hidden gems you'd never see online.
+              I was born in Korea and raised in Queens and Brooklyn. I've always loved the thrift, stoop, and garage sale scene. Growing up here, weekend walks meant discovering random yard sales, sidewalk finds, and hidden gems you'd never see online.
             </p>
             
             <p>
