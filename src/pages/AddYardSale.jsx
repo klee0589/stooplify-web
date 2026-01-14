@@ -51,8 +51,8 @@ export default function AddYardSale() {
   const navigate = useNavigate();
   
   // Stripe price IDs (from your Stripe products)
-  const SINGLE_LISTING_PRICE_ID = 'price_1TmZMVZFTA2a81M'; // $4 one-time
-  const SUBSCRIPTION_PRICE_ID = 'price_1TmZMzQ81c18uAH'; // $9/month
+  const SINGLE_LISTING_PRICE_ID = 'price_1Sp0DuEBgBmaTVQEKO1W2NrG'; // $4 one-time
+  const SUBSCRIPTION_PRICE_ID = 'price_1Sp0DuEBgBmaTVQE0iSg1m5n'; // $9/month
   const [formData, setFormData] = useState({
     title: '',
     description: '',
