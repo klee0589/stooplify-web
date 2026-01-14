@@ -42,6 +42,8 @@ export default function AddYardSale() {
   const [isLoadingSale, setIsLoadingSale] = useState(isEditMode);
   const [hasActiveSale, setHasActiveSale] = useState(false);
   const [maxSalesAllowed, setMaxSalesAllowed] = useState(1);
+  const [aiDescription, setAiDescription] = useState(null);
+  const [showAiPreview, setShowAiPreview] = useState(false);
   
   const navigate = useNavigate();
   
@@ -238,12 +240,13 @@ export default function AddYardSale() {
     if (uploadedUrls.length > 0) {
       const toastId = toast.loading('Generating description from photos...');
       try {
-        const aiDescription = await base44.integrations.Core.InvokeLLM({
+        const generatedDescription = await base44.integrations.Core.InvokeLLM({
           prompt: "Based on these images of yard sale items, write a brief, appealing description (2-3 sentences) of what's being sold. Focus on the main items visible and make it sound inviting to potential buyers.",
           file_urls: uploadedUrls,
         });
         toast.dismiss(toastId);
-        updateField('description', aiDescription);
+        setAiDescription(generatedDescription);
+        setShowAiPreview(true);
         toast.success('AI generated a description!');
       } catch (error) {
         toast.dismiss(toastId);
@@ -268,12 +271,13 @@ export default function AddYardSale() {
       // Generate AI description from photo
       const toastId = toast.loading('Generating description from photo...');
       try {
-        const aiDescription = await base44.integrations.Core.InvokeLLM({
+        const generatedDescription = await base44.integrations.Core.InvokeLLM({
           prompt: "Based on this image of yard sale items, write a brief, appealing description (2-3 sentences) of what's being sold. Focus on the main items visible and make it sound inviting to potential buyers.",
           file_urls: [file_url],
         });
         toast.dismiss(toastId);
-        updateField('description', aiDescription);
+        setAiDescription(generatedDescription);
+        setShowAiPreview(true);
         toast.success('AI generated a description!');
       } catch (error) {
         toast.dismiss(toastId);
@@ -557,6 +561,47 @@ export default function AddYardSale() {
                     className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] min-h-[120px]"
                   />
                 </div>
+
+                {/* AI Description Preview Modal */}
+                {showAiPreview && aiDescription && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4"
+                  >
+                    <div className="flex items-start gap-3 mb-3">
+                      <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Check className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-[#2E3A59] mb-1">AI Generated Description</h4>
+                        <p className="text-sm text-gray-700">{aiDescription}</p>
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <Button
+                        onClick={() => {
+                          updateField('description', aiDescription);
+                          setShowAiPreview(false);
+                          toast.success('Description added!');
+                        }}
+                        className="flex-1 bg-blue-500 hover:bg-blue-600"
+                      >
+                        Use This Description
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setShowAiPreview(false);
+                          toast('You can edit the description above');
+                        }}
+                        className="flex-1"
+                      >
+                        Edit Manually
+                      </Button>
+                    </div>
+                  </motion.div>
+                )}
               </div>
 
               <motion.button

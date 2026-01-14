@@ -1,4 +1,3 @@
-import AddYardSale from './pages/AddYardSale';
 import ApplyAsShop from './pages/ApplyAsShop';
 import Favorites from './pages/Favorites';
 import Guides from './pages/Guides';
@@ -13,11 +12,11 @@ import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
 import YardSaleDetails from './pages/YardSaleDetails';
 import YardSales from './pages/YardSales';
+import AddYardSale from './pages/AddYardSale';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "AddYardSale": AddYardSale,
     "ApplyAsShop": ApplyAsShop,
     "Favorites": Favorites,
     "Guides": Guides,
@@ -32,6 +31,7 @@ export const PAGES = {
     "Profile": Profile,
     "YardSaleDetails": YardSaleDetails,
     "YardSales": YardSales,
+    "AddYardSale": AddYardSale,
 }
 
 export const pagesConfig = {
