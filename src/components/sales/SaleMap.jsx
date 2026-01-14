@@ -157,64 +157,112 @@ export default function SaleMap({ sales, center }) {
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
         />
-        {sales.map((sale) => {
-          // Use approximate coordinates (not exact) for map display
-          if (!sale.latitude || !sale.longitude) {
-            console.log('Sale missing coordinates:', sale.title, sale);
-            return null;
-          }
-          
-          return (
-            <Marker
-              key={sale.id}
-              position={[sale.latitude, sale.longitude]}
-              icon={customIcon}
-            >
-              <Popup>
-                <motion.div
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="p-4"
-                >
-                  {sale.photos && sale.photos.length > 0 && (
-                    <div className="w-full h-28 rounded-xl overflow-hidden mb-3">
-                      <img
-                        src={sale.photos[0]}
-                        alt={sale.title}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
-                  <h3 
-                    className="font-bold text-[#2E3A59] mb-2"
-                    style={{ fontFamily: 'Poppins, sans-serif' }}
-                  >
-                    {sale.title}
-                  </h3>
-                  <div className="space-y-1 text-sm text-gray-600 mb-3">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-3.5 h-3.5 text-[#14B8FF]" />
-                      <span>
-                        {sale.date ? format(new Date(sale.date), 'EEE, MMM d') : 'Date TBD'}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-3.5 h-3.5 text-[#F5A623]" />
-                      <span>{sale.start_time || '8 AM'} - {sale.end_time || '2 PM'}</span>
-                    </div>
-                  </div>
-                  <Link 
-                    to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}
-                    className="flex items-center justify-center gap-1 w-full py-2 bg-[#14B8FF] text-white rounded-xl text-sm font-medium hover:bg-[#0da3e6] transition-colors"
-                  >
-                    View Details
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </motion.div>
-              </Popup>
-            </Marker>
-          );
-        })}
+        {Object.entries(groupedByLocation).map(([location, locationSales]) => {
+           if (locationSales.length === 0) return null;
+
+           // Calculate average coordinates for this location
+           const avgLat = locationSales.reduce((sum, s) => sum + s.latitude, 0) / locationSales.length;
+           const avgLon = locationSales.reduce((sum, s) => sum + s.longitude, 0) / locationSales.length;
+
+           // If only one sale, show it directly
+           if (locationSales.length === 1) {
+             const sale = locationSales[0];
+             return (
+               <Marker
+                 key={sale.id}
+                 position={[sale.latitude, sale.longitude]}
+                 icon={customIcon}
+               >
+                 <Popup>
+                   <motion.div
+                     initial={{ opacity: 0, scale: 0.9 }}
+                     animate={{ opacity: 1, scale: 1 }}
+                     className="p-4"
+                   >
+                     {sale.photos && sale.photos.length > 0 && (
+                       <div className="w-full h-28 rounded-xl overflow-hidden mb-3">
+                         <img
+                           src={sale.photos[0]}
+                           alt={sale.title}
+                           className="w-full h-full object-cover"
+                         />
+                       </div>
+                     )}
+                     <h3 
+                       className="font-bold text-[#2E3A59] mb-2"
+                       style={{ fontFamily: 'Poppins, sans-serif' }}
+                     >
+                       {sale.title}
+                     </h3>
+                     <div className="space-y-1 text-sm text-gray-600 mb-3">
+                       <div className="flex items-center gap-2">
+                         <Calendar className="w-3.5 h-3.5 text-[#14B8FF]" />
+                         <span>
+                           {sale.date ? format(new Date(sale.date), 'EEE, MMM d') : 'Date TBD'}
+                         </span>
+                       </div>
+                       <div className="flex items-center gap-2">
+                         <Clock className="w-3.5 h-3.5 text-[#F5A623]" />
+                         <span>{sale.start_time || '8 AM'} - {sale.end_time || '2 PM'}</span>
+                       </div>
+                     </div>
+                     <Link 
+                       to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}
+                       className="flex items-center justify-center gap-1 w-full py-2 bg-[#14B8FF] text-white rounded-xl text-sm font-medium hover:bg-[#0da3e6] transition-colors"
+                     >
+                       View Details
+                       <ArrowRight className="w-3.5 h-3.5" />
+                     </Link>
+                   </motion.div>
+                 </Popup>
+               </Marker>
+             );
+           }
+
+           // If multiple sales, show cluster marker
+           return (
+             <Marker
+               key={`cluster-${location}`}
+               position={[avgLat, avgLon]}
+               icon={createClusterIcon(locationSales.length)}
+               eventHandlers={{
+                 click: () => setExpandedLocation(expandedLocation === location ? null : location)
+               }}
+             >
+               <Popup>
+                 <motion.div
+                   initial={{ opacity: 0, scale: 0.9 }}
+                   animate={{ opacity: 1, scale: 1 }}
+                   className="p-4 max-w-sm"
+                 >
+                   <h3 
+                     className="font-bold text-[#2E3A59] mb-4"
+                     style={{ fontFamily: 'Poppins, sans-serif' }}
+                   >
+                     {locationSales.length} Sales in {location}
+                   </h3>
+                   <div className="space-y-3 max-h-80 overflow-y-auto">
+                     {locationSales.map((sale) => (
+                       <Link
+                         key={sale.id}
+                         to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}
+                         className="block p-2 bg-gray-50 rounded-lg hover:bg-blue-50 transition-colors"
+                       >
+                         <p className="font-medium text-[#2E3A59] text-sm mb-1">
+                           {sale.title}
+                         </p>
+                         <p className="text-xs text-gray-600 flex items-center gap-1">
+                           <Calendar className="w-3 h-3" />
+                           {sale.date ? format(new Date(sale.date), 'MMM d') : 'Date TBD'}
+                         </p>
+                       </Link>
+                     ))}
+                   </div>
+                 </motion.div>
+               </Popup>
+             </Marker>
+           );
+         })}
       </MapContainer>
     </div>
   );
