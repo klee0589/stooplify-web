@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
 import { Book, Calendar, FileText, DollarSign, Users, MapPin, ArrowRight } from 'lucide-react';
+import { useTranslation } from '../components/translations';
 
 const guides = [
   {
@@ -56,6 +57,22 @@ const guides = [
 ];
 
 export default function Guides() {
+  const [language, setLanguage] = useState('en');
+
+  useEffect(() => {
+    const savedLang = localStorage.getItem('stooplify_lang') || 'en';
+    setLanguage(savedLang);
+
+    const handleLanguageChange = (e) => {
+      setLanguage(e.detail);
+    };
+
+    window.addEventListener('languageChange', handleLanguageChange);
+    return () => window.removeEventListener('languageChange', handleLanguageChange);
+  }, []);
+
+  const t = useTranslation(language);
+
   return (
     <div className="min-h-screen bg-[#F9F9F9]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -72,10 +89,10 @@ export default function Guides() {
             className="text-3xl md:text-4xl font-bold text-[#2E3A59] mb-4"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
-            Yard Sale Guides
+            {t('guides.title')}
           </h1>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Everything you need to know about hosting and finding great yard sales in your neighborhood
+            {t('guides.subtitle')}
           </p>
         </motion.div>
 
@@ -103,7 +120,7 @@ export default function Guides() {
                     {guide.description}
                   </p>
                   <div className="flex items-center text-[#FF6F61] font-medium group-hover:gap-2 transition-all">
-                    Read more
+                    {t('guides.readMore')}
                     <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                   </div>
                 </div>
@@ -120,10 +137,10 @@ export default function Guides() {
           className="mt-16 bg-gradient-to-r from-[#FF6F61] to-[#14B8FF] rounded-3xl p-8 md:p-12 text-center text-white"
         >
           <h2 className="text-2xl md:text-3xl font-bold mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            Ready to Start?
+            {t('cta.ready')}
           </h2>
           <p className="text-white/90 mb-6 text-lg">
-            List your yard sale or browse sales happening this weekend
+            {t('cta.subtitle')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to={createPageUrl('AddYardSale')}>
@@ -132,7 +149,7 @@ export default function Guides() {
                 whileTap={{ scale: 0.95 }}
                 className="px-8 py-4 bg-white text-[#FF6F61] rounded-xl font-semibold shadow-lg"
               >
-                List Your Sale
+                {t('cta.listSale')}
               </motion.button>
             </Link>
             <Link to={createPageUrl('YardSales')}>
@@ -141,7 +158,7 @@ export default function Guides() {
                 whileTap={{ scale: 0.95 }}
                 className="px-8 py-4 bg-[#2E3A59] text-white rounded-xl font-semibold shadow-lg"
               >
-                Browse Sales
+                {t('browseSales')}
               </motion.button>
             </Link>
           </div>
