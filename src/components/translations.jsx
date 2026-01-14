@@ -81,6 +81,39 @@ export const translations = {
     upToOff: 'Up to 90% Off',
     views: 'views',
     viewDetails: 'View Details',
+    
+    // Guides
+    guides: {
+      title: 'Yard Sale Guides',
+      subtitle: 'Everything you need to know about hosting and finding great yard sales in your neighborhood',
+      readMore: 'Read more',
+      cards: {
+        advertise: {
+          title: 'How to Advertise a Yard Sale in NYC',
+          description: 'Free and easy ways to reach local buyers and get more foot traffic'
+        },
+        timing: {
+          title: 'Best Days & Times to Host a Yard Sale',
+          description: 'When to host for maximum turnout and sales'
+        },
+        permit: {
+          title: 'Do You Need a Permit in New York?',
+          description: 'Simple rules about yard sale permits in NYC'
+        },
+        pricing: {
+          title: 'How to Price Items for a Yard Sale',
+          description: 'Simple pricing rules to help your items sell'
+        },
+        seniors: {
+          title: 'How Seniors Can Post a Yard Sale Online',
+          description: 'Easy steps to list your sale without tech stress'
+        },
+        find: {
+          title: 'Where to Find Yard Sales Near You',
+          description: 'How to discover the best local sales this weekend'
+        }
+      }
+    }
   },
   es: {
     // Header
@@ -164,6 +197,39 @@ export const translations = {
     upToOff: 'Hasta 90% de Descuento',
     views: 'vistas',
     viewDetails: 'Ver Detalles',
+    
+    // Guides
+    guides: {
+      title: 'Guías de Ventas de Garaje',
+      subtitle: 'Todo lo que necesitas saber sobre organizar y encontrar ventas de garaje en tu vecindario',
+      readMore: 'Leer más',
+      cards: {
+        advertise: {
+          title: 'Cómo Anunciar una Venta de Garaje en NYC',
+          description: 'Formas gratis y fáciles de llegar a compradores locales y obtener más tráfico'
+        },
+        timing: {
+          title: 'Mejores Días y Horarios para Organizar una Venta',
+          description: 'Cuándo organizar para máxima asistencia y ventas'
+        },
+        permit: {
+          title: '¿Necesitas un Permiso en Nueva York?',
+          description: 'Reglas simples sobre permisos para ventas de garaje en NYC'
+        },
+        pricing: {
+          title: 'Cómo Poner Precios a los Artículos',
+          description: 'Reglas simples de precios para ayudar a vender tus artículos'
+        },
+        seniors: {
+          title: 'Cómo los Adultos Mayores Pueden Publicar en Línea',
+          description: 'Pasos fáciles para listar tu venta sin estrés tecnológico'
+        },
+        find: {
+          title: 'Dónde Encontrar Ventas de Garaje Cerca de Ti',
+          description: 'Cómo descubrir las mejores ventas locales este fin de semana'
+        }
+      }
+    }
   }
 };
 
