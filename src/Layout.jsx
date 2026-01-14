@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Home, MapPin, PlusCircle, User, Heart, Settings, Globe, Moon, Sun } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useTranslation } from '../components/translations';
-import { useTheme } from '../components/ThemeProvider';
+import { useTheme, ThemeProvider } from '../components/ThemeProvider';
 
 function LayoutContent({ children, currentPageName }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
