@@ -116,7 +116,39 @@ export const translations = {
     
     // Discover Local Treasures banner
     discoverLocalTreasures: 'Discover Local Treasures',
-    
+
+    // Profile Page
+    signInToViewProfile: 'Sign In to View Profile',
+    accessYourProfile: 'Access your profile and manage your yard sales.',
+    yourName: 'Your name',
+    setYourName: 'Set your name',
+    memberSince: 'Member since',
+    repeatSeller: 'Repeat Seller',
+    notificationSettingsUpdated: 'Notification settings updated',
+    nameUpdatedSuccessfully: 'Name updated successfully',
+    mySales: 'My Sales',
+    unlimitedPlan: 'Unlimited Plan',
+    freePlan: 'Free Plan',
+    postUnlimitedYardSales: 'Post unlimited yard sales',
+    of: 'of',
+    freeListingUsed: 'free listing used',
+    active: 'ACTIVE',
+    upgradeToUnlimited: 'Upgrade to Unlimited',
+    noPerListingFees: 'No per-listing fees',
+    prioritySupport: 'Priority support',
+    upgradeNow: 'Upgrade Now',
+    orPayPerListing: 'Or pay $4 per listing when you create your next sale',
+    notifications: 'Notifications',
+    emailNotifications: 'Email notifications',
+    getNotifiedAboutNewSales: 'Get notified about new yard sales in your area',
+    myYardSales: 'My Yard Sales',
+    addNewSale: 'Add New Sale',
+    dateTBD: 'Date TBD',
+    upcoming: 'Upcoming',
+    inProgress: 'In Progress',
+    finished: 'Finished',
+    noYardSalesYet: 'You haven\'t listed any yard sales yet.',
+
     guides: {
       title: 'Yard Sale Guides',
       subtitle: 'Everything you need to know about hosting and finding great yard sales in your neighborhood',
