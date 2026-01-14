@@ -155,50 +155,71 @@ export default function AddYardSale() {
     mutationFn: async (data) => {
       // Geocode the address to get coordinates
       let coordinates = {};
-      try {
-        const query = `${data.address}, ${data.city}, ${data.state} ${data.zip_code}`;
-        console.log('🌍 Geocoding address:', query);
-
-        const response = await fetch(
-          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`,
-          {
-            headers: {
-              'User-Agent': 'Stooplify/1.0'
+      
+      // Try multiple query formats for better geocoding results
+      const queries = [
+        `${data.address}, ${data.city}, ${data.state} ${data.zip_code}`,
+        `${data.address}, ${data.zip_code}`, // Try with just zip code
+        `${data.address}, Brooklyn, NY ${data.zip_code}`, // Try with Brooklyn for NYC neighborhoods
+        `${data.address}, New York, NY ${data.zip_code}`, // Try with New York City
+      ];
+      
+      for (let i = 0; i < queries.length; i++) {
+        const query = queries[i];
+        console.log(`🌍 Geocoding attempt ${i + 1}:`, query);
+        
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`,
+            {
+              headers: {
+                'User-Agent': 'Stooplify/1.0'
+              }
             }
+          );
+
+          if (!response.ok) {
+            console.warn(`Geocoding attempt ${i + 1} failed: ${response.status}`);
+            continue;
           }
-        );
 
-        if (!response.ok) {
-          throw new Error(`Geocoding failed: ${response.status}`);
+          const geoData = await response.json();
+          console.log(`🌍 Geocoding response ${i + 1}:`, geoData);
+
+          if (geoData.length > 0) {
+            const exactLat = parseFloat(geoData[0].lat);
+            const exactLon = parseFloat(geoData[0].lon);
+
+            console.log('✅ Coordinates found:', { exactLat, exactLon });
+
+            // Create approximate coordinates (offset by ~0.01 degrees = ~1km for privacy)
+            const latOffset = (Math.random() - 0.5) * 0.02;
+            const lonOffset = (Math.random() - 0.5) * 0.02;
+
+            coordinates = {
+              exact_latitude: exactLat,
+              exact_longitude: exactLon,
+              latitude: exactLat + latOffset,
+              longitude: exactLon + lonOffset,
+            };
+
+            console.log('📍 Final coordinates:', coordinates);
+            break; // Success, exit loop
+          } else {
+            console.warn(`⚠️ No results for attempt ${i + 1}`);
+          }
+          
+          // Wait a bit between requests to respect rate limits
+          if (i < queries.length - 1) {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+          }
+        } catch (error) {
+          console.error(`❌ Geocoding attempt ${i + 1} error:`, error);
         }
-
-        const geoData = await response.json();
-        console.log('🌍 Geocoding response:', geoData);
-
-        if (geoData.length > 0) {
-          const exactLat = parseFloat(geoData[0].lat);
-          const exactLon = parseFloat(geoData[0].lon);
-
-          console.log('✅ Coordinates found:', { exactLat, exactLon });
-
-          // Create approximate coordinates (offset by ~0.01 degrees = ~1km for privacy)
-          const latOffset = (Math.random() - 0.5) * 0.02;
-          const lonOffset = (Math.random() - 0.5) * 0.02;
-
-          coordinates = {
-            exact_latitude: exactLat,
-            exact_longitude: exactLon,
-            latitude: exactLat + latOffset,
-            longitude: exactLon + lonOffset,
-          };
-
-          console.log('📍 Final coordinates:', coordinates);
-        } else {
-          console.warn('⚠️ No geocoding results found');
-          toast.error('Could not locate address on map, but sale will still be saved');
-        }
-      } catch (error) {
-        console.error('❌ Geocoding error:', error);
+      }
+      
+      if (!coordinates.latitude) {
+        console.error('❌ All geocoding attempts failed');
         toast.error('Could not locate address on map, but sale will still be saved');
       }
       
