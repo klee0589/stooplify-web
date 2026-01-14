@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { 
   MapPin, Calendar, Clock, Heart, Share2, Navigation, 
-  ChevronLeft, ChevronRight, X, ArrowLeft, Tag, UserCheck, Flag 
+  ChevronLeft, ChevronRight, X, ArrowLeft, Tag, UserCheck, Flag, Trash2, Edit 
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { format } from 'date-fns';
@@ -34,6 +34,7 @@ export default function YardSaleDetails() {
   const [seller, setSeller] = useState(null);
 
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -256,6 +257,25 @@ export default function YardSaleDetails() {
       toast.success('Review submitted!');
     },
   });
+
+  const deleteMutation = useMutation({
+    mutationFn: async () => {
+      await base44.entities.YardSale.delete(saleId);
+    },
+    onSuccess: () => {
+      toast.success('Sale deleted successfully');
+      navigate(createPageUrl('YardSales'));
+    },
+    onError: () => {
+      toast.error('Failed to delete sale');
+    },
+  });
+
+  const handleDelete = () => {
+    if (window.confirm('Are you sure you want to delete this sale? This action cannot be undone.')) {
+      deleteMutation.mutate();
+    }
+  };
 
   const handleHelpful = async (reviewId) => {
     if (!user) {
@@ -508,6 +528,32 @@ export default function YardSaleDetails() {
 
             {/* Safety Note */}
             <SafetyNote />
+
+            {/* Seller Actions (Edit/Delete) */}
+            {user && sale.created_by === user.email && (
+              <div className="flex gap-3">
+                <Link to={createPageUrl('AddYardSale') + `?edit=${saleId}`} className="flex-1">
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors"
+                  >
+                    <Edit className="w-4 h-4" />
+                    Edit Sale
+                  </motion.button>
+                </Link>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={handleDelete}
+                  disabled={deleteMutation.isPending}
+                  className="flex items-center justify-center gap-2 px-4 py-3 bg-red-50 text-red-600 rounded-xl font-medium hover:bg-red-100 transition-colors disabled:opacity-50"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  Delete
+                </motion.button>
+              </div>
+            )}
 
             {/* Action Buttons */}
             <div className="flex flex-wrap gap-3">
