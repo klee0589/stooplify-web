@@ -551,14 +551,11 @@ export default function AddYardSale() {
                 <div>
                   <Label className="text-[#2E3A59] font-medium mb-2 block">Description</Label>
                   <Textarea
-                    placeholder="What items will you be selling? Any special deals? (Or upload photos and AI will generate one!)"
+                    placeholder="What items will you be selling? Any special deals?"
                     value={formData.description}
                     onChange={(e) => updateField('description', e.target.value)}
                     className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] min-h-[120px]"
                   />
-                  {formData.description && (
-                    <p className="text-xs text-green-600 mt-1">✨ Feel free to edit the description above</p>
-                  )}
                 </div>
               </div>
 
