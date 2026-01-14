@@ -249,6 +249,7 @@ export default function AddYardSale() {
         console.log('🤖 AI response:', generatedDescription);
         toast.dismiss(toastId);
         setAiDescription(generatedDescription);
+        setEditableDescription(generatedDescription);
         setShowAiPreview(true);
         toast.success('AI generated a description!');
       } catch (error) {
@@ -283,6 +284,7 @@ export default function AddYardSale() {
         console.log('🤖 AI response:', generatedDescription);
         toast.dismiss(toastId);
         setAiDescription(generatedDescription);
+        setEditableDescription(generatedDescription);
         setShowAiPreview(true);
         toast.success('AI generated a description!');
       } catch (error) {
