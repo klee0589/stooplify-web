@@ -104,19 +104,19 @@ export default function FeaturedSales({ sales = [] }) {
                     </h3>
                     
                     <div className="space-y-2 mb-4">
-                      <div className="flex items-center gap-2 text-gray-600">
+                      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
                         <Calendar className="w-4 h-4 text-[#14B8FF]" />
                         <span className="text-sm">
                           {sale.date ? format(new Date(sale.date), 'EEEE, MMM d') : 'Date TBD'}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-600">
+                      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
                         <Clock className="w-4 h-4 text-[#F5A623]" />
                         <span className="text-sm">
                           {sale.start_time || '8:00 AM'} - {sale.end_time || '2:00 PM'}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 text-gray-600">
+                      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
                         <MapPin className="w-4 h-4 text-[#2E3A59]" />
                         <span className="text-sm line-clamp-1">
                           {sale.city}, {sale.state}
