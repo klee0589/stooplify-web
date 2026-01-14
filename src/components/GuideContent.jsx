@@ -55,7 +55,7 @@ export const guideContent = {
         },
         {
           type: 'text',
-          content: 'Between busy NYC streets, crowded neighborhoods, and disappearing flyers, many great yard sales get missed. That's why advertising your sale the right way matters for reaching local buyers.'
+          content: `Between busy NYC streets, crowded neighborhoods, and disappearing flyers, many great yard sales get missed. That's why advertising your sale the right way matters for reaching local buyers.`
         },
         {
           type: 'heading',
@@ -71,7 +71,7 @@ export const guideContent = {
         },
         {
           type: 'text',
-          content: 'These work… sometimes. But signs get taken down, posts get buried, and not everyone checks social media every day.'
+          content: `These work… sometimes. But signs get taken down, posts get buried, and not everyone checks social media every day.`
         },
         {
           type: 'heading',
@@ -151,7 +151,7 @@ export const guideContent = {
         },
         {
           type: 'text',
-          content: 'If you're in Queens, Brooklyn, or dense areas, buyers often walk — so visibility and timing matter even more.'
+          content: `If you're in Queens, Brooklyn, or dense areas, buyers often walk — so visibility and timing matter even more.`
         },
         {
           type: 'text',
@@ -179,7 +179,7 @@ export const guideContent = {
         },
         {
           type: 'list',
-          items: ['You're not blocking sidewalks', 'You're not creating noise issues', 'You're selling personal items']
+          items: [`You're not blocking sidewalks`, `You're not creating noise issues`, `You're selling personal items`]
         },
         {
           type: 'heading',
@@ -191,7 +191,7 @@ export const guideContent = {
         },
         {
           type: 'text',
-          content: 'If you're unsure, keeping your sale simple and low-key is the safest approach.'
+          content: `If you're unsure, keeping your sale simple and low-key is the safest approach.`
         },
         {
           type: 'heading',
@@ -231,7 +231,7 @@ export const guideContent = {
         },
         {
           type: 'list',
-          items: ['Round prices make cash easier', 'Expect negotiation — it's part of the fun', 'Lower prices later in the day']
+          items: ['Round prices make cash easier', `Expect negotiation — it's part of the fun`, 'Lower prices later in the day']
         },
         {
           type: 'text',
@@ -247,7 +247,7 @@ export const guideContent = {
       sections: [
         {
           type: 'text',
-          content: 'You don't need to be tech-savvy to post a yard sale.'
+          content: `You don't need to be tech-savvy to post a yard sale.`
         },
         {
           type: 'text',
@@ -287,7 +287,7 @@ export const guideContent = {
       sections: [
         {
           type: 'text',
-          content: 'Finding yard sales shouldn't feel like a scavenger hunt.'
+          content: `Finding yard sales shouldn't feel like a scavenger hunt.`
         },
         {
           type: 'heading',
