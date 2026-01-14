@@ -240,18 +240,21 @@ export default function AddYardSale() {
     if (uploadedUrls.length > 0) {
       const toastId = toast.loading('Generating description from photos...');
       try {
+        console.log('🤖 Calling AI with file URLs:', uploadedUrls);
         const generatedDescription = await base44.integrations.Core.InvokeLLM({
           prompt: "Based on these images of yard sale items, write a brief, appealing description (2-3 sentences) of what's being sold. Focus on the main items visible and make it sound inviting to potential buyers.",
           file_urls: uploadedUrls,
         });
+        console.log('🤖 AI response:', generatedDescription);
         toast.dismiss(toastId);
         setAiDescription(generatedDescription);
         setShowAiPreview(true);
         toast.success('AI generated a description!');
       } catch (error) {
         toast.dismiss(toastId);
-        console.error('Failed to generate AI description:', error);
-        toast.error('Could not generate description from photos');
+        console.error('❌ AI generation failed:', error);
+        console.error('Error details:', error.message, error.stack);
+        toast.error(`AI Error: ${error.message || 'Could not generate description'}`);
       }
     }
     
@@ -271,18 +274,21 @@ export default function AddYardSale() {
       // Generate AI description from photo
       const toastId = toast.loading('Generating description from photo...');
       try {
+        console.log('🤖 Calling AI with photo URL:', file_url);
         const generatedDescription = await base44.integrations.Core.InvokeLLM({
           prompt: "Based on this image of yard sale items, write a brief, appealing description (2-3 sentences) of what's being sold. Focus on the main items visible and make it sound inviting to potential buyers.",
           file_urls: [file_url],
         });
+        console.log('🤖 AI response:', generatedDescription);
         toast.dismiss(toastId);
         setAiDescription(generatedDescription);
         setShowAiPreview(true);
         toast.success('AI generated a description!');
       } catch (error) {
         toast.dismiss(toastId);
-        console.error('Failed to generate AI description:', error);
-        toast.error('Could not generate description from photo');
+        console.error('❌ AI generation failed:', error);
+        console.error('Error details:', error.message, error.stack);
+        toast.error(`AI Error: ${error.message || 'Could not generate description'}`);
       }
     } catch (error) {
       toast.error('Failed to upload photo');
