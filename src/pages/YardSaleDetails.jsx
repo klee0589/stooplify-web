@@ -272,9 +272,29 @@ export default function YardSaleDetails() {
   });
 
   const handleDelete = () => {
+    // Check if sale is more than 2 hours away
+    if (sale?.date && sale?.start_time) {
+      const saleDateTime = new Date(`${sale.date}T${sale.start_time}`);
+      const now = new Date();
+      const hoursUntilSale = (saleDateTime - now) / (1000 * 60 * 60);
+      
+      if (hoursUntilSale < 2) {
+        toast.error('Cannot delete sale within 2 hours of start time');
+        return;
+      }
+    }
+    
     if (window.confirm('Are you sure you want to delete this sale? This action cannot be undone.')) {
       deleteMutation.mutate();
     }
+  };
+  
+  const canDeleteSale = () => {
+    if (!sale?.date || !sale?.start_time) return true;
+    const saleDateTime = new Date(`${sale.date}T${sale.start_time}`);
+    const now = new Date();
+    const hoursUntilSale = (saleDateTime - now) / (1000 * 60 * 60);
+    return hoursUntilSale >= 2;
   };
 
   const handleHelpful = async (reviewId) => {
@@ -543,11 +563,12 @@ export default function YardSaleDetails() {
                   </motion.button>
                 </Link>
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={{ scale: canDeleteSale() ? 1.02 : 1 }}
+                  whileTap={{ scale: canDeleteSale() ? 0.98 : 1 }}
                   onClick={handleDelete}
-                  disabled={deleteMutation.isPending}
-                  className="flex items-center justify-center gap-2 px-4 py-3 bg-red-50 text-red-600 rounded-xl font-medium hover:bg-red-100 transition-colors disabled:opacity-50"
+                  disabled={deleteMutation.isPending || !canDeleteSale()}
+                  className="flex items-center justify-center gap-2 px-4 py-3 bg-red-50 text-red-600 rounded-xl font-medium hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  title={!canDeleteSale() ? 'Cannot delete within 2 hours of start time' : ''}
                 >
                   <Trash2 className="w-4 h-4" />
                   Delete
