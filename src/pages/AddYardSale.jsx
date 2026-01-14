@@ -45,6 +45,8 @@ export default function AddYardSale() {
   const [aiDescription, setAiDescription] = useState(null);
   const [showAiPreview, setShowAiPreview] = useState(false);
   const [editableDescription, setEditableDescription] = useState('');
+  const [addressValidation, setAddressValidation] = useState({ status: 'idle', message: '' });
+  const [isValidatingAddress, setIsValidatingAddress] = useState(false);
   
   const navigate = useNavigate();
   
@@ -380,7 +382,63 @@ export default function AddYardSale() {
 
   const updateField = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+    
+    // Trigger address validation when relevant fields change
+    if (['address', 'city', 'state', 'zip_code'].includes(field)) {
+      validateAddressDebounced();
+    }
   };
+
+  const validateAddress = async () => {
+    const { address, city, state, zip_code } = formData;
+    
+    // Skip if not enough info
+    if (!address || !zip_code) {
+      setAddressValidation({ status: 'idle', message: '' });
+      return;
+    }
+    
+    setIsValidatingAddress(true);
+    setAddressValidation({ status: 'checking', message: 'Checking address...' });
+    
+    try {
+      const query = `${address}, ${city || ''}, ${state || ''} ${zip_code}`;
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`,
+        { headers: { 'User-Agent': 'Stooplify/1.0' } }
+      );
+      
+      const geoData = await response.json();
+      
+      if (geoData.length > 0) {
+        setAddressValidation({ 
+          status: 'valid', 
+          message: `✓ Address found: ${geoData[0].display_name}` 
+        });
+      } else {
+        setAddressValidation({ 
+          status: 'invalid', 
+          message: '⚠️ Address not found - please check spelling' 
+        });
+      }
+    } catch (error) {
+      setAddressValidation({ 
+        status: 'error', 
+        message: '⚠️ Could not verify address' 
+      });
+    } finally {
+      setIsValidatingAddress(false);
+    }
+  };
+
+  // Debounce address validation
+  const validateAddressDebounced = (() => {
+    let timeout;
+    return () => {
+      clearTimeout(timeout);
+      timeout = setTimeout(validateAddress, 1000);
+    };
+  })();
 
   const isStep1Valid = formData.title && formData.date && formData.category;
   const isStep2Valid = formData.general_location && formData.address && formData.city && formData.state && formData.zip_code;
@@ -705,12 +763,33 @@ export default function AddYardSale() {
                     Exact Street Address (Private) *
                     <span className="text-xs text-green-600 font-normal">🔒 Protected</span>
                   </Label>
-                  <Input
-                    placeholder="123 Main Street"
-                    value={formData.address}
-                    onChange={(e) => updateField('address', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6"
-                  />
+                  <div className="relative">
+                    <Input
+                      placeholder="123 Main Street"
+                      value={formData.address}
+                      onChange={(e) => updateField('address', e.target.value)}
+                      className={`rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 ${
+                        addressValidation.status === 'valid' ? 'border-green-500' : 
+                        addressValidation.status === 'invalid' ? 'border-red-500' : ''
+                      }`}
+                    />
+                    {isValidatingAddress && (
+                      <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 animate-spin" />
+                    )}
+                  </div>
+                  {addressValidation.message && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className={`text-xs mt-1 ${
+                        addressValidation.status === 'valid' ? 'text-green-600' :
+                        addressValidation.status === 'invalid' ? 'text-red-600' :
+                        'text-gray-500'
+                      }`}
+                    >
+                      {addressValidation.message}
+                    </motion.p>
+                  )}
                   <p className="text-xs text-gray-500 mt-1">
                     Exact address unlocks 24 hours before sale or when users click "I'm Attending"
                   </p>
