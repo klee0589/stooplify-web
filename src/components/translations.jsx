@@ -266,6 +266,38 @@ export const translations = {
     // Discover Local Treasures banner
     discoverLocalTreasures: 'Descubre Tesoros Locales',
     
+    // Profile Page
+    signInToViewProfile: 'Inicia sesión para ver tu perfil',
+    accessYourProfile: 'Accede a tu perfil y administra tus ventas de garaje.',
+    yourName: 'Tu nombre',
+    setYourName: 'Establece tu nombre',
+    memberSince: 'Miembro desde',
+    repeatSeller: 'Vendedor Recurrente',
+    notificationSettingsUpdated: 'Configuración de notificaciones actualizada',
+    nameUpdatedSuccessfully: 'Nombre actualizado exitosamente',
+    mySales: 'Mis Ventas',
+    unlimitedPlan: 'Plan Ilimitado',
+    freePlan: 'Plan Gratuito',
+    postUnlimitedYardSales: 'Publica ventas de garaje ilimitadas',
+    of: 'de',
+    freeListingUsed: 'publicación gratuita usada',
+    active: 'ACTIVO',
+    upgradeToUnlimited: 'Actualizar a Ilimitado',
+    noPerListingFees: 'Sin cargos por publicación',
+    prioritySupport: 'Soporte prioritario',
+    upgradeNow: 'Actualizar Ahora',
+    orPayPerListing: 'O paga $4 por publicación cuando crees tu próxima venta',
+    notifications: 'Notificaciones',
+    emailNotifications: 'Notificaciones por correo',
+    getNotifiedAboutNewSales: 'Recibe notificaciones sobre nuevas ventas de garaje en tu área',
+    myYardSales: 'Mis Ventas de Garaje',
+    addNewSale: 'Añadir Nueva Venta',
+    dateTBD: 'Fecha TBD',
+    upcoming: 'Próxima',
+    inProgress: 'En Progreso',
+    finished: 'Finalizada',
+    noYardSalesYet: 'Aún no has publicado ninguna venta de garaje.',
+
     // Guides
     guides: {
       title: 'Guías de Ventas de Garaje',
