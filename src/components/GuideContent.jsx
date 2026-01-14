@@ -119,7 +119,7 @@ export const guideContent = {
       sections: [
         {
           type: 'text',
-          content: 'Timing can make or break a yard sale. Even great items won't sell if no one shows up.'
+          content: `Timing can make or break a yard sale. Even great items won't sell if no one shows up.`
         },
         {
           type: 'heading',
@@ -291,7 +291,7 @@ export const guideContent = {
         },
         {
           type: 'heading',
-          content: 'Why They're Hard to Find'
+          content: `Why They're Hard to Find`
         },
         {
           type: 'list',
@@ -307,7 +307,7 @@ export const guideContent = {
         },
         {
           type: 'text',
-          content: 'Whether you're hunting deals or just love thrifting, Stooplify keeps everything in one place.'
+          content: `Whether you're hunting deals or just love thrifting, Stooplify keeps everything in one place.`
         }
       ],
       cta: '👉 Browse yard sales near you',
@@ -485,7 +485,7 @@ export const guideContent = {
       sections: [
         {
           type: 'text',
-          content: 'Poner precios no tiene que ser estresante.'
+          content: `Poner precios no tiene que ser estresante.`
         },
         {
           type: 'heading',
@@ -521,7 +521,7 @@ export const guideContent = {
         },
         {
           type: 'text',
-          content: 'Stooplify está diseñado para ser simple.'
+          content: `Stooplify está diseñado para ser simple.`
         },
         {
           type: 'heading',
