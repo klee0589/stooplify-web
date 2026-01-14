@@ -40,6 +40,10 @@ export default function AddYardSale() {
   const [needsPayment, setNeedsPayment] = useState(false);
   const [isCheckingPayment, setIsCheckingPayment] = useState(false);
   const [isLoadingSale, setIsLoadingSale] = useState(isEditMode);
+  const [hasActiveSale, setHasActiveSale] = useState(false);
+  const [maxSalesAllowed, setMaxSalesAllowed] = useState(1);
+  
+  const navigate = useNavigate();
   
   // Stripe price IDs (from your Stripe products)
   const SINGLE_LISTING_PRICE_ID = 'price_1Sp0DuEBgBmaTVQEKO1W2NrG';
@@ -76,10 +80,23 @@ export default function AddYardSale() {
               status: 'approved' 
             });
             const hasSubscription = currentUser.subscription_active || false;
+            
+            // Determine max sales allowed based on subscription
+            let maxSales = 1; // Free tier: 1 concurrent sale
+            if (hasSubscription) {
+              maxSales = 3; // Premium tier: 3 concurrent sales
+            }
+            setMaxSalesAllowed(maxSales);
+            
+            // Check if user is at their limit
+            if (existingSales.length >= maxSales) {
+              setHasActiveSale(true);
+            }
+            
             // First listing is always free, so only require payment if they already have at least 1 sale
             const needsPay = existingSales.length >= 1 && !hasSubscription;
             setNeedsPayment(needsPay);
-            console.log('Payment check:', { existingSalesCount: existingSales.length, hasSubscription, needsPay });
+            console.log('Payment check:', { existingSalesCount: existingSales.length, hasSubscription, needsPay, maxSales });
           }
           
           // Load existing sale data if editing
@@ -179,9 +196,12 @@ export default function AddYardSale() {
         return sale;
       }
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success(isEditMode ? 'Your yard sale has been updated!' : 'Your yard sale is now live!');
-      setStep(4); // Success step
+      // Redirect to the sale details page
+      setTimeout(() => {
+        navigate(createPageUrl('YardSaleDetails') + `?id=${data.id}`);
+      }, 1000);
     },
     onError: (error) => {
       toast.error('Failed to submit. Please try again.');
@@ -333,6 +353,51 @@ export default function AddYardSale() {
           >
             Sign In or Create Account
           </motion.button>
+        </motion.div>
+      </div>
+    );
+  }
+
+  if (hasActiveSale && !isEditMode) {
+    return (
+      <div className="min-h-screen bg-[#F9F9F9] flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white rounded-3xl p-8 shadow-xl max-w-md w-full text-center"
+        >
+          <div className="w-20 h-20 bg-[#F5A623]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Info className="w-10 h-10 text-[#F5A623]" />
+          </div>
+          <h2 
+            className="text-2xl font-bold text-[#2E3A59] mb-3"
+            style={{ fontFamily: 'Poppins, sans-serif' }}
+          >
+            You've Reached Your Limit
+          </h2>
+          <p className="text-gray-600 mb-6">
+            You currently have {maxSalesAllowed} active sale{maxSalesAllowed > 1 ? 's' : ''}. 
+            {maxSalesAllowed === 1 ? ' Upgrade to post up to 3 concurrent sales!' : ' Delete an existing sale to post a new one, or wait for one to expire.'}
+          </p>
+          <div className="flex flex-col gap-3">
+            {maxSalesAllowed === 1 && (
+              <Link to={createPageUrl('Pricing')}>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg"
+                  style={{ fontFamily: 'Poppins, sans-serif' }}
+                >
+                  Upgrade to Premium
+                </motion.button>
+              </Link>
+            )}
+            <Link to={createPageUrl('Profile')}>
+              <Button variant="outline" className="w-full py-6 rounded-xl">
+                Manage My Sales
+              </Button>
+            </Link>
+          </div>
         </motion.div>
       </div>
     );
@@ -808,7 +873,7 @@ export default function AddYardSale() {
             </motion.div>
           )}
 
-          {/* Step 4: Success */}
+          {/* Step 4: Success - This is just a brief loading state before redirect */}
           {step === 4 && (
             <motion.div
               key="step4"
@@ -832,21 +897,10 @@ export default function AddYardSale() {
                 {isEditMode ? 'Sale Updated!' : 'Sale is Live!'}
               </h2>
               <p className="text-gray-600 mb-6">
-                {isEditMode ? 'Your changes have been saved successfully.' : 'Your yard sale is now visible to everyone. Start getting shoppers!'}
+                Redirecting to your sale page...
               </p>
               
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link to={createPageUrl('Home')} className="flex-1">
-                  <Button variant="outline" className="w-full py-6 rounded-xl">
-                    Go Home
-                  </Button>
-                </Link>
-                <Link to={createPageUrl('YardSales')} className="flex-1">
-                  <Button className="w-full py-6 rounded-xl bg-[#FF6F61] hover:bg-[#e55a4d]">
-                    Browse Sales
-                  </Button>
-                </Link>
-              </div>
+              <Loader2 className="w-8 h-8 text-[#FF6F61] animate-spin mx-auto" />
             </motion.div>
           )}
         </AnimatePresence>
