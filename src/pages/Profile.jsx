@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from '../components/translations';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
@@ -22,6 +23,21 @@ export default function Profile() {
   const [isChecking, setIsChecking] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState('');
+  const [language, setLanguage] = useState('en');
+  
+  useEffect(() => {
+    const savedLang = localStorage.getItem('stooplify_lang') || 'en';
+    setLanguage(savedLang);
+    
+    const handleLanguageChange = (e) => {
+      setLanguage(e.detail);
+    };
+    
+    window.addEventListener('languageChange', handleLanguageChange);
+    return () => window.removeEventListener('languageChange', handleLanguageChange);
+  }, []);
+  
+  const t = useTranslation(language);
 
   const queryClient = useQueryClient();
 
@@ -103,7 +119,7 @@ export default function Profile() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['emailSubscription'] });
-      toast.success('Notification settings updated');
+      toast.success(t('notificationSettingsUpdated'));
     },
   });
 
@@ -114,7 +130,7 @@ export default function Profile() {
     onSuccess: () => {
       setUser(prev => ({ ...prev, full_name: editedName }));
       setIsEditing(false);
-      toast.success('Name updated successfully');
+      toast.success(t('nameUpdatedSuccessfully'));
     },
   });
 
@@ -141,10 +157,10 @@ export default function Profile() {
             className="text-2xl font-bold text-[#2E3A59] mb-3"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
-            Sign In to View Profile
+            {t('signInToViewProfile')}
           </h2>
           <p className="text-gray-600 mb-6">
-            Access your profile and manage your yard sales.
+            {t('accessYourProfile')}
           </p>
           <motion.button
             whileHover={{ scale: 1.02 }}
@@ -153,7 +169,7 @@ export default function Profile() {
             className="w-full py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
-            Sign In
+            {t('signIn')}
           </motion.button>
         </motion.div>
       </div>
@@ -173,7 +189,7 @@ export default function Profile() {
             className="flex items-center gap-2 text-gray-600 hover:text-[#FF6F61] transition-colors mb-6"
           >
             <ArrowLeft className="w-5 h-5" />
-            Back
+            {t('back')}
           </motion.button>
         </Link>
 
@@ -197,7 +213,7 @@ export default function Profile() {
                     value={editedName}
                     onChange={(e) => setEditedName(e.target.value)}
                     className="max-w-[250px] rounded-xl"
-                    placeholder="Your name"
+                    placeholder={t('yourName')}
                   />
                   <Button
                     size="icon"
@@ -225,7 +241,7 @@ export default function Profile() {
                     className="text-2xl font-bold text-[#2E3A59] dark:text-white"
                     style={{ fontFamily: 'Poppins, sans-serif' }}
                   >
-                    {user.full_name || 'Set your name'}
+                    {user.full_name || t('setYourName')}
                   </h1>
                   <button
                     onClick={() => setIsEditing(true)}
@@ -242,13 +258,13 @@ export default function Profile() {
               <div className="flex items-center gap-3 mt-2">
                 {user.created_date && (
                   <p className="text-sm text-gray-500">
-                    Member since {format(new Date(user.created_date), 'MMMM yyyy')}
+                    {t('memberSince')} {format(new Date(user.created_date), 'MMMM yyyy')}
                   </p>
                 )}
                 {isRepeatSeller && (
                   <div className="flex items-center gap-1 px-2 py-1 bg-[#F5A623]/20 rounded-full">
                     <Award className="w-3 h-3 text-[#F5A623]" />
-                    <span className="text-xs font-semibold text-[#F5A623]">Repeat Seller</span>
+                    <span className="text-xs font-semibold text-[#F5A623]">{t('repeatSeller')}</span>
                   </div>
                 )}
               </div>
@@ -271,7 +287,7 @@ export default function Profile() {
               className="flex items-center gap-2 rounded-xl"
             >
               <LogOut className="w-4 h-4" />
-              Sign Out
+              {t('signOut')}
             </Button>
           </div>
         </motion.div>
@@ -290,7 +306,7 @@ export default function Profile() {
             <p className="text-2xl font-bold text-[#2E3A59] dark:text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>
               {mySales.length}
             </p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">My Sales</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{t('mySales')}</p>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm text-center">
             <div className="w-10 h-10 bg-[#F5A623]/10 rounded-xl flex items-center justify-center mx-auto mb-2">
@@ -299,7 +315,7 @@ export default function Profile() {
             <p className="text-2xl font-bold text-[#2E3A59] dark:text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>
               {favorites.length}
             </p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Favorites</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{t('favorites')}</p>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm text-center">
             <div className="w-10 h-10 bg-[#2E3A59]/10 rounded-xl flex items-center justify-center mx-auto mb-2">
@@ -308,7 +324,7 @@ export default function Profile() {
             <p className="text-2xl font-bold text-[#2E3A59] dark:text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>
               {approvedSales}
             </p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Active Sales</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{t('activeSales')}</p>
           </div>
         </motion.div>
 
@@ -328,44 +344,44 @@ export default function Profile() {
                   <Zap className="w-5 h-5" />
                 )}
                 <h3 className="text-lg font-bold" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                  {user.subscription_active ? 'Unlimited Plan' : 'Free Plan'}
+                  {user.subscription_active ? t('unlimitedPlan') : t('freePlan')}
                 </h3>
               </div>
               <p className="text-white/90 text-sm">
                 {user.subscription_active 
-                  ? 'Post unlimited yard sales' 
-                  : `${user.free_listings_used || 0} of 1 free listing used`}
+                   ? t('postUnlimitedYardSales') 
+                   : `${user.free_listings_used || 0} ${t('of')} 1 ${t('freeListingUsed')}`}
               </p>
             </div>
             {user.subscription_active ? (
               <div className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold">
-                ACTIVE
+                {t('active')}
               </div>
             ) : null}
           </div>
 
           {!user.subscription_active && (
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-3">
-              <div className="flex items-center justify-between mb-2">
-                <span className="font-semibold">Upgrade to Unlimited</span>
-                <span className="text-xl font-bold">$9<span className="text-sm font-normal">/mo</span></span>
-              </div>
-              <ul className="space-y-1 text-sm text-white/90 mb-3">
-                <li>• Post unlimited yard sales</li>
-                <li>• No per-listing fees</li>
-                <li>• Priority support</li>
-              </ul>
-              <Link to={createPageUrl('AddYardSale')}>
-                <Button className="w-full bg-white text-[#FF6F61] hover:bg-white/90 rounded-xl font-semibold">
-                  Upgrade Now
-                </Button>
-              </Link>
+            <div className="flex items-center justify-between mb-2">
+              <span className="font-semibold">{t('upgradeToUnlimited')}</span>
+              <span className="text-xl font-bold">$9<span className="text-sm font-normal">/mo</span></span>
+            </div>
+            <ul className="space-y-1 text-sm text-white/90 mb-3">
+              <li>• {t('postUnlimitedYardSales')}</li>
+              <li>• {t('noPerListingFees')}</li>
+              <li>• {t('prioritySupport')}</li>
+            </ul>
+            <Link to={createPageUrl('AddYardSale')}>
+              <Button className="w-full bg-white text-[#FF6F61] hover:bg-white/90 rounded-xl font-semibold">
+                {t('upgradeNow')}
+              </Button>
+            </Link>
             </div>
           )}
 
           {!user.subscription_active && (user.free_listings_used || 0) >= 1 && (
             <p className="text-white/80 text-xs text-center">
-              Or pay $4 per listing when you create your next sale
+              {t('orPayPerListing')}
             </p>
           )}
         </motion.div>
@@ -381,12 +397,12 @@ export default function Profile() {
             className="text-lg font-bold text-[#2E3A59] dark:text-white mb-4"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
-            Notifications
+            {t('notifications')}
           </h3>
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium text-[#2E3A59] dark:text-white">Email notifications</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Get notified about new yard sales in your area</p>
+              <p className="font-medium text-[#2E3A59] dark:text-white">{t('emailNotifications')}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{t('getNotifiedAboutNewSales')}</p>
             </div>
             <Switch
               checked={subscription?.notify_new_sales || false}
@@ -407,11 +423,11 @@ export default function Profile() {
               className="text-lg font-bold text-[#2E3A59] dark:text-white"
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
-              My Yard Sales
+              {t('myYardSales')}
             </h3>
             <Link to={createPageUrl('AddYardSale')}>
               <Button className="bg-[#FF6F61] hover:bg-[#e55a4d] rounded-xl">
-                Add New Sale
+                {t('addNewSale')}
               </Button>
             </Link>
           </div>
@@ -425,32 +441,32 @@ export default function Profile() {
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Tag className="w-8 h-8 text-gray-400" />
               </div>
-              <p className="text-gray-500 dark:text-gray-400">You haven't listed any yard sales yet.</p>
+              <p className="text-gray-500 dark:text-gray-400">{t('noYardSalesYet')}</p>
             </div>
           ) : (
             <div className="space-y-3">
               {mySales.map((sale) => {
                 const getSaleStatus = () => {
-                  if (!sale.date) return { label: 'Date TBD', color: 'gray' };
-                  
-                  const saleDate = new Date(sale.date);
-                  const now = new Date();
-                  
-                  // Set time for comparison
-                  const saleDateStart = new Date(saleDate);
-                  saleDateStart.setHours(0, 0, 0, 0);
-                  const saleDateEnd = new Date(saleDate);
-                  saleDateEnd.setHours(23, 59, 59, 999);
-                  
-                  const nowTime = now.getTime();
-                  
-                  if (nowTime < saleDateStart.getTime()) {
-                    return { label: 'Upcoming', color: 'blue' };
-                  } else if (nowTime >= saleDateStart.getTime() && nowTime <= saleDateEnd.getTime()) {
-                    return { label: 'In Progress', color: 'green' };
-                  } else {
-                    return { label: 'Finished', color: 'gray' };
-                  }
+                  if (!sale.date) return { label: t('dateTBD'), color: 'gray' };
+
+                   const saleDate = new Date(sale.date);
+                   const now = new Date();
+
+                   // Set time for comparison
+                   const saleDateStart = new Date(saleDate);
+                   saleDateStart.setHours(0, 0, 0, 0);
+                   const saleDateEnd = new Date(saleDate);
+                   saleDateEnd.setHours(23, 59, 59, 999);
+
+                   const nowTime = now.getTime();
+
+                   if (nowTime < saleDateStart.getTime()) {
+                     return { label: t('upcoming'), color: 'blue' };
+                   } else if (nowTime >= saleDateStart.getTime() && nowTime <= saleDateEnd.getTime()) {
+                     return { label: t('inProgress'), color: 'green' };
+                   } else {
+                     return { label: t('finished'), color: 'gray' };
+                   }
                 };
                 
                 const saleStatus = getSaleStatus();
