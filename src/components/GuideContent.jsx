@@ -263,7 +263,7 @@ export const guideContent = {
         },
         {
           type: 'text',
-          content: 'That's it.'
+          content: `That's it.`
         },
         {
           type: 'heading',
@@ -533,7 +533,7 @@ export const guideContent = {
         },
         {
           type: 'text',
-          content: 'Eso es todo.'
+          content: `Eso es todo.`
         },
         {
           type: 'heading',
