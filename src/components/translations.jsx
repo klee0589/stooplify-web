@@ -83,6 +83,40 @@ export const translations = {
     viewDetails: 'View Details',
     
     // Guides
+    // Home & General
+    fromTheFounder: 'From the Founder',
+    founderIntro: 'Hey, I\'m Daniel, the founder of Stooplify.',
+    founderBackground: 'I was born in Korea and raised in Queens and Brooklyn. I\'ve always loved the thrift, stoop, and garage sale scene. Growing up here, weekend walks meant discovering random yard sales, sidewalk finds, and hidden gems you\'d never see online.',
+    founderVision: 'Stooplify came from that simple idea: why should great local sales be invisible unless you happen to walk by at the right time?',
+    founderMission: 'I wanted to build something that makes it easier for neighbors to share their sales and for others to find them—without spam, sketchy listings, or big platforms getting in the way. Just real people, real neighborhoods, and real finds.',
+    founderContact: 'If you have questions, ideas, or just want to say hi, I\'d genuinely love to hear from you.',
+    
+    // Yard Sales Page
+    findYardSales: 'Find Yard Sales',
+    findYardSalesDesc: 'Discover amazing deals at local yard sales near you',
+    salesFound: 'sales found',
+    listView: 'List',
+    mapView: 'Map',
+    noSalesFound: 'No sales found',
+    tryAdjustingFilters: 'Try adjusting your filters or check back later.',
+    resetFilters: 'Reset Filters',
+    
+    // Pricing Page
+    simplePricing: 'Simple, Transparent Pricing',
+    pricingDesc: 'Choose the perfect plan for your needs. Start free, upgrade anytime.',
+    forIndividualSellers: 'For Individual Sellers',
+    forBusinesses: 'For Businesses & Shops',
+    mostPopular: 'Most Popular',
+    mostVisible: 'Most Visible',
+    perfectFor: 'Perfect for',
+    perfectForDesc: 'Thrift stores, consignment shops, antique stores, flea markets, and any permanent location that wants consistent visibility to treasure hunters in their area.',
+    everythingYouNeed: 'Everything you need to grow',
+    haveQuestions: 'Have questions?',
+    contactUs: 'Contact us at',
+    
+    // Discover Local Treasures banner
+    discoverLocalTreasures: 'Discover Local Treasures',
+    
     guides: {
       title: 'Yard Sale Guides',
       subtitle: 'Everything you need to know about hosting and finding great yard sales in your neighborhood',
@@ -197,6 +231,40 @@ export const translations = {
     upToOff: 'Hasta 90% de Descuento',
     views: 'vistas',
     viewDetails: 'Ver Detalles',
+    
+    // Home & General
+    fromTheFounder: 'Del Fundador',
+    founderIntro: 'Hola, soy Daniel, el fundador de Stooplify.',
+    founderBackground: 'Nací en Corea y crecí en Queens y Brooklyn. Siempre me han encantado las tiendas de segunda mano, las ventas de garaje. Crecer aquí significaba descubrir ventas de garaje aleatorias, hallazgos en las aceras, y gemas ocultas que nunca verías en línea.',
+    founderVision: 'Stooplify surgió de una idea simple: ¿por qué las grandes ventas locales deberían ser invisibles a menos que pasaras por el lugar en el momento correcto?',
+    founderMission: 'Quería crear algo que facilitara a los vecinos compartir sus ventas y a otros encontrarlas, sin spam, listados sospechosos o plataformas grandes entrometiéndose. Solo gente real, vecindarios reales y hallazgos reales.',
+    founderContact: 'Si tienes preguntas, ideas o solo quieres saludar, me encantaría escucharte.',
+    
+    // Yard Sales Page
+    findYardSales: 'Buscar Ventas de Garaje',
+    findYardSalesDesc: 'Descubre ofertas increíbles en ventas de garaje locales cerca de ti',
+    salesFound: 'ventas encontradas',
+    listView: 'Lista',
+    mapView: 'Mapa',
+    noSalesFound: 'No se encontraron ventas',
+    tryAdjustingFilters: 'Intenta ajustar tus filtros o vuelve más tarde.',
+    resetFilters: 'Restablecer Filtros',
+    
+    // Pricing Page
+    simplePricing: 'Precios Simples y Transparentes',
+    pricingDesc: 'Elige el plan perfecto para tus necesidades. Comienza gratis, actualiza en cualquier momento.',
+    forIndividualSellers: 'Para Vendedores Individuales',
+    forBusinesses: 'Para Negocios y Tiendas',
+    mostPopular: 'Más Popular',
+    mostVisible: 'Más Visible',
+    perfectFor: 'Perfecto para',
+    perfectForDesc: 'Tiendas de segunda mano, tiendas de consignación, tiendas de antigüedades, mercados de pulgas, y cualquier ubicación permanente que desee visibilidad consistente para cazadores de tesoros en su área.',
+    everythingYouNeed: 'Todo lo que necesitas para crecer',
+    haveQuestions: '¿Tienes preguntas?',
+    contactUs: 'Contáctanos en',
+    
+    // Discover Local Treasures banner
+    discoverLocalTreasures: 'Descubre Tesoros Locales',
     
     // Guides
     guides: {
