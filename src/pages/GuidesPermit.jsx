@@ -1,22 +1,49 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
-import { ArrowLeft, FileText } from 'lucide-react';
+import { ArrowLeft, FileText, Home, ChevronRight } from 'lucide-react';
 
 export default function GuidesPermit() {
+  useEffect(() => {
+    document.title = 'Do You Need a Permit for a Yard Sale in NYC? | Stooplify';
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', 'Do you need a permit to host a yard sale in New York City? Learn NYC yard sale rules and regulations for Brooklyn, Queens, and Manhattan.');
+    }
+    
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [{
+        "@type": "Question",
+        "name": "Do you need a permit for a yard sale in New York City?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Most small, casual yard sales in NYC do not require a permit if you're not blocking sidewalks, creating noise issues, or selling as a recurring business."
+        }
+      }]
+    });
+    document.head.appendChild(script);
+    
+    return () => document.head.removeChild(script);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#F9F9F9]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <Link to={createPageUrl('Guides')}>
-          <motion.button
-            whileHover={{ x: -5 }}
-            className="flex items-center gap-2 text-gray-600 hover:text-[#FF6F61] transition-colors mb-6"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Back to Guides
-          </motion.button>
-        </Link>
+        <nav className="flex items-center gap-2 text-sm text-gray-600 mb-6">
+          <Link to={createPageUrl('Home')} className="hover:text-[#FF6F61] flex items-center gap-1">
+            <Home className="w-4 h-4" />
+            Home
+          </Link>
+          <ChevronRight className="w-4 h-4" />
+          <Link to={createPageUrl('Guides')} className="hover:text-[#FF6F61]">Guides</Link>
+          <ChevronRight className="w-4 h-4" />
+          <span className="text-[#2E3A59] font-medium">NYC Permits</span>
+        </nav>
 
         <motion.article
           initial={{ opacity: 0, y: 20 }}

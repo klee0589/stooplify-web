@@ -1,22 +1,47 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
-import { ArrowLeft, MapPin } from 'lucide-react';
+import { ArrowLeft, MapPin, Home, ChevronRight } from 'lucide-react';
 
 export default function GuidesFindSales() {
+  useEffect(() => {
+    document.title = 'Where to Find Yard Sales Near Me This Weekend | Stooplify NYC';
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', 'Find yard sales near you in NYC this weekend. Browse local sales in Brooklyn, Queens, Manhattan on a map. Discover estate sales and garage sales near me.');
+    }
+    
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "Where to Find Yard Sales Near You This Weekend",
+      "description": "How to discover local yard sales happening near you",
+      "image": "https://images.unsplash.com/photo-1524661135-423995f22d0b",
+      "author": {"@type": "Organization", "name": "Stooplify"},
+      "publisher": {"@type": "Organization", "name": "Stooplify"},
+      "datePublished": "2026-01-14"
+    });
+    document.head.appendChild(script);
+    
+    return () => document.head.removeChild(script);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#F9F9F9]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <Link to={createPageUrl('Guides')}>
-          <motion.button
-            whileHover={{ x: -5 }}
-            className="flex items-center gap-2 text-gray-600 hover:text-[#FF6F61] transition-colors mb-6"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Back to Guides
-          </motion.button>
-        </Link>
+        <nav className="flex items-center gap-2 text-sm text-gray-600 mb-6">
+          <Link to={createPageUrl('Home')} className="hover:text-[#FF6F61] flex items-center gap-1">
+            <Home className="w-4 h-4" />
+            Home
+          </Link>
+          <ChevronRight className="w-4 h-4" />
+          <Link to={createPageUrl('Guides')} className="hover:text-[#FF6F61]">Guides</Link>
+          <ChevronRight className="w-4 h-4" />
+          <span className="text-[#2E3A59] font-medium">Find Sales</span>
+        </nav>
 
         <motion.article
           initial={{ opacity: 0, y: 20 }}

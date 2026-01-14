@@ -1,22 +1,67 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Megaphone } from 'lucide-react';
+import { ArrowLeft, Megaphone, Home, ChevronRight } from 'lucide-react';
 
 export default function GuidesAdvertise() {
+  useEffect(() => {
+    document.title = 'How to Advertise a Yard Sale in NYC - Free & Easy | Stooplify';
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', 'Learn how to advertise your yard sale in NYC for free. Reach local buyers in Brooklyn, Queens, and Manhattan without printed signs or Facebook groups.');
+    }
+    
+    // Add JSON-LD structured data
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": "How to Advertise a Yard Sale in NYC (Free & Easy)",
+      "description": "Learn how to advertise your yard sale in New York City for free and reach local buyers effectively",
+      "image": "https://images.unsplash.com/photo-1556228578-8c89e6adf883",
+      "author": {
+        "@type": "Organization",
+        "name": "Stooplify"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "Stooplify",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_6963ba60866b343e03d8de8e/f9ad791a3_logo_v1.png"
+        }
+      },
+      "datePublished": "2026-01-14",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": window.location.href
+      }
+    });
+    document.head.appendChild(script);
+    
+    return () => {
+      document.head.removeChild(script);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#F9F9F9]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <Link to={createPageUrl('Guides')}>
-          <motion.button
-            whileHover={{ x: -5 }}
-            className="flex items-center gap-2 text-gray-600 hover:text-[#FF6F61] transition-colors mb-6"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Back to Guides
-          </motion.button>
-        </Link>
+        {/* Breadcrumbs */}
+        <nav className="flex items-center gap-2 text-sm text-gray-600 mb-6">
+          <Link to={createPageUrl('Home')} className="hover:text-[#FF6F61] flex items-center gap-1">
+            <Home className="w-4 h-4" />
+            Home
+          </Link>
+          <ChevronRight className="w-4 h-4" />
+          <Link to={createPageUrl('Guides')} className="hover:text-[#FF6F61]">
+            Guides
+          </Link>
+          <ChevronRight className="w-4 h-4" />
+          <span className="text-[#2E3A59] font-medium">Advertise Your Sale</span>
+        </nav>
 
         <motion.article
           initial={{ opacity: 0, y: 20 }}
@@ -40,11 +85,11 @@ export default function GuidesAdvertise() {
 
           <div className="prose prose-lg max-w-none">
             <p className="text-gray-700 leading-relaxed mb-6">
-              Hosting a yard sale in New York City is a great way to clean out your home and make extra cash — but getting people to actually show up can be tough.
+              Hosting a yard sale in New York City — whether in Brooklyn, Queens, Manhattan, or the Bronx — is a great way to clean out your home and make extra cash. But getting people to actually show up can be tough.
             </p>
 
             <p className="text-gray-700 leading-relaxed mb-6">
-              Between busy streets, crowded neighborhoods, and disappearing flyers, many great yard sales get missed. That's why advertising your sale the right way matters.
+              Between busy NYC streets, crowded neighborhoods, and disappearing flyers, many great yard sales get missed. That's why advertising your sale the right way matters for reaching local buyers.
             </p>
 
             <h2 className="text-2xl font-bold text-[#2E3A59] mt-8 mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>

@@ -1,22 +1,49 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Users } from 'lucide-react';
+import { ArrowLeft, Users, Home, ChevronRight } from 'lucide-react';
 
 export default function GuidesSeniors() {
+  useEffect(() => {
+    document.title = 'How Seniors Can Post a Yard Sale Online - Easy Guide | Stooplify';
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute('content', 'Simple guide for seniors to post yard sales online in NYC. No tech skills needed - list your sale in minutes in Brooklyn, Queens, or anywhere in New York.');
+    }
+    
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How Seniors Can Post a Yard Sale Online",
+      "description": "Simple steps for seniors to list yard sales online",
+      "step": [
+        {"@type": "HowToStep", "text": "Gather your address or nearest intersection"},
+        {"@type": "HowToStep", "text": "Choose your date and time"},
+        {"@type": "HowToStep", "text": "Add a short description (optional)"},
+        {"@type": "HowToStep", "text": "Upload photos (optional but helpful)"}
+      ]
+    });
+    document.head.appendChild(script);
+    
+    return () => document.head.removeChild(script);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#F9F9F9]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <Link to={createPageUrl('Guides')}>
-          <motion.button
-            whileHover={{ x: -5 }}
-            className="flex items-center gap-2 text-gray-600 hover:text-[#FF6F61] transition-colors mb-6"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            Back to Guides
-          </motion.button>
-        </Link>
+        <nav className="flex items-center gap-2 text-sm text-gray-600 mb-6">
+          <Link to={createPageUrl('Home')} className="hover:text-[#FF6F61] flex items-center gap-1">
+            <Home className="w-4 h-4" />
+            Home
+          </Link>
+          <ChevronRight className="w-4 h-4" />
+          <Link to={createPageUrl('Guides')} className="hover:text-[#FF6F61]">Guides</Link>
+          <ChevronRight className="w-4 h-4" />
+          <span className="text-[#2E3A59] font-medium">For Seniors</span>
+        </nav>
 
         <motion.article
           initial={{ opacity: 0, y: 20 }}
