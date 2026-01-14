@@ -74,12 +74,19 @@ export default function AddYardSale() {
           
           // Check if payment is needed (not first listing and no subscription) - only for new sales
           if (!isEditMode) {
-            // Check actual number of existing sales for this user
+            // Check actual number of existing sales for this user (not just counter)
             const existingSales = await base44.entities.YardSale.filter({ 
               created_by: currentUser.email,
               status: 'approved' 
             });
             const hasSubscription = currentUser.subscription_active || false;
+            
+            console.log('🔍 Payment Check:', { 
+              userEmail: currentUser.email,
+              existingSalesCount: existingSales.length, 
+              hasSubscription,
+              freeListingsUsed: currentUser.free_listings_used
+            });
             
             // Determine max sales allowed based on subscription
             let maxSales = 1; // Free tier: 1 concurrent sale
@@ -90,13 +97,15 @@ export default function AddYardSale() {
             
             // Check if user is at their limit
             if (existingSales.length >= maxSales) {
+              console.log('❌ User at sale limit:', existingSales.length, '>=', maxSales);
               setHasActiveSale(true);
             }
             
-            // First listing is always free, so only require payment if they already have at least 1 sale
-            const needsPay = existingSales.length >= 1 && !hasSubscription;
+            // Payment only needed if they have NO existing sales AND no subscription
+            // First sale is always free
+            const needsPay = existingSales.length > 0 && !hasSubscription;
             setNeedsPayment(needsPay);
-            console.log('Payment check:', { existingSalesCount: existingSales.length, hasSubscription, needsPay, maxSales });
+            console.log(needsPay ? '💳 Payment required' : '✅ No payment needed');
           }
           
           // Load existing sale data if editing
@@ -225,17 +234,19 @@ export default function AddYardSale() {
       }
     }
     
-    // Generate AI description if description is empty and we have photos
-    if (uploadedUrls.length > 0 && !formData.description) {
+    // Generate AI description if we have photos
+    if (uploadedUrls.length > 0) {
       try {
+        toast.loading('Generating description from photos...');
         const aiDescription = await base44.integrations.Core.InvokeLLM({
           prompt: "Based on these images of yard sale items, write a brief, appealing description (2-3 sentences) of what's being sold. Focus on the main items visible and make it sound inviting to potential buyers.",
           file_urls: uploadedUrls,
         });
         updateField('description', aiDescription);
-        toast.success('AI generated a description for you!');
+        toast.success('AI generated a description!');
       } catch (error) {
         console.error('Failed to generate AI description:', error);
+        toast.error('Could not generate description from photos');
       }
     }
     
@@ -252,18 +263,18 @@ export default function AddYardSale() {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
       setPhotos(prev => [...prev, file_url]);
       
-      // Generate AI description if description is empty
-      if (!formData.description) {
-        try {
-          const aiDescription = await base44.integrations.Core.InvokeLLM({
-            prompt: "Based on this image of yard sale items, write a brief, appealing description (2-3 sentences) of what's being sold. Focus on the main items visible and make it sound inviting to potential buyers.",
-            file_urls: [file_url],
-          });
-          updateField('description', aiDescription);
-          toast.success('AI generated a description for you!');
-        } catch (error) {
-          console.error('Failed to generate AI description:', error);
-        }
+      // Generate AI description from photo
+      try {
+        toast.loading('Generating description from photo...');
+        const aiDescription = await base44.integrations.Core.InvokeLLM({
+          prompt: "Based on this image of yard sale items, write a brief, appealing description (2-3 sentences) of what's being sold. Focus on the main items visible and make it sound inviting to potential buyers.",
+          file_urls: [file_url],
+        });
+        updateField('description', aiDescription);
+        toast.success('AI generated a description!');
+      } catch (error) {
+        console.error('Failed to generate AI description:', error);
+        toast.error('Could not generate description from photo');
       }
     } catch (error) {
       toast.error('Failed to upload photo');
