@@ -24,12 +24,12 @@ export default function Home() {
       
       {/* From the Founder */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="bg-white rounded-3xl p-8 md:p-12 shadow-lg max-w-3xl mx-auto">
-          <h3 className="text-2xl font-bold text-[#2E3A59] mb-6 flex items-center justify-center gap-2">
+        <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 md:p-12 shadow-lg max-w-3xl mx-auto">
+          <h3 className="text-2xl font-bold text-[#2E3A59] dark:text-white mb-6 flex items-center justify-center gap-2">
             <span>👋</span> From the Founder
           </h3>
           
-          <div className="space-y-4 text-gray-700 leading-relaxed">
+          <div className="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
             <p>
               Hey, I'm Daniel, the founder of Stooplify.
             </p>

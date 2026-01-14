@@ -49,7 +49,7 @@ export default function HeroSection() {
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden">
       {/* Background with animated gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#FFF5F4] via-white to-[#F5F7FF]">
+      <div className="absolute inset-0 bg-gradient-to-br from-[#FFF5F4] via-white to-[#F5F7FF] dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         {/* Animated floating shapes */}
         <motion.div
           animate={{ 
@@ -99,7 +99,7 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#2E3A59] leading-tight mb-6"
+              className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#2E3A59] dark:text-white leading-tight mb-6"
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
               {t('heroTitle')}
@@ -109,7 +109,7 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-lg text-gray-600 mb-8 max-w-lg"
+              className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-lg"
             >
               {t('heroSubtitle')}
             </motion.p>
@@ -153,9 +153,9 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6 }}
-              className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-gray-100 max-w-md"
+              className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-gray-100 dark:border-gray-700 max-w-md"
             >
-              <p className="text-sm font-medium text-[#2E3A59] mb-3">
+              <p className="text-sm font-medium text-[#2E3A59] dark:text-white mb-3">
                 🔔 {t('emailNotify')}
               </p>
               <form onSubmit={handleEmailSubmit} className="flex gap-3">
@@ -205,15 +205,15 @@ export default function HeroSection() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1, y: [0, -5, 0] }}
                 transition={{ delay: 0.8, duration: 3, repeat: Infinity, repeatType: "reverse" }}
-                className="absolute -top-4 -right-4 bg-white rounded-2xl p-4 shadow-xl"
+                className="absolute -top-4 -right-4 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-xl"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-[#14B8FF]/10 rounded-xl flex items-center justify-center">
                     <MapPin className="w-6 h-6 text-[#14B8FF]" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">{t('thisWeekend')}</p>
-                    <p className="font-semibold text-[#2E3A59]">24 {t('salesNearby')}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{t('thisWeekend')}</p>
+                    <p className="font-semibold text-[#2E3A59] dark:text-white">24 {t('salesNearby')}</p>
                   </div>
                 </div>
               </motion.div>
@@ -222,15 +222,15 @@ export default function HeroSection() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1, y: [0, 5, 0] }}
                 transition={{ delay: 1, duration: 3.5, repeat: Infinity, repeatType: "reverse" }}
-                className="absolute -bottom-4 -left-4 bg-white rounded-2xl p-4 shadow-xl"
+                className="absolute -bottom-4 -left-4 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-xl"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-[#F5A623]/10 rounded-xl flex items-center justify-center">
                     <Sparkles className="w-6 h-6 text-[#F5A623]" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500">{t('totalSavings')}</p>
-                    <p className="font-semibold text-[#2E3A59]">{t('upToOff')}</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">{t('totalSavings')}</p>
+                    <p className="font-semibold text-[#2E3A59] dark:text-white">{t('upToOff')}</p>
                   </div>
                 </div>
               </motion.div>
