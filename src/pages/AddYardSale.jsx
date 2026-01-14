@@ -350,14 +350,16 @@ export default function AddYardSale() {
     setIsCheckingPayment(true);
     try {
       console.log('Starting checkout with:', { priceId, listingType });
-      
+      console.log('iframe check - window.self:', window.self === window.top);
+
       // Check if running in iframe
       if (window.self !== window.top) {
+        console.log('IN IFRAME - blocking checkout');
         toast.error('Checkout only works from the published app. Please open in a new tab.');
         setIsCheckingPayment(false);
         return;
       }
-      
+
       console.log('🟠 About to call function...');
             const response = await base44.functions.invoke('createCheckout', { priceId, listingType });
             console.log('🟢 Function returned!');
