@@ -358,11 +358,13 @@ export default function AddYardSale() {
         return;
       }
       
-      const response = await base44.functions.invoke('createCheckout', { priceId, listingType });
-      console.log('Full response:', response);
-      console.log('Response keys:', Object.keys(response || {}));
-      console.log('Response.data:', response?.data);
-      console.log('Response.data.url:', response?.data?.url);
+      console.log('🟠 About to call function...');
+            const response = await base44.functions.invoke('createCheckout', { priceId, listingType });
+            console.log('🟢 Function returned!');
+            console.log('Full response:', response);
+            console.log('Response keys:', Object.keys(response || {}));
+            console.log('Response.data:', response?.data);
+            console.log('Response.data.url:', response?.data?.url);
       
       const checkoutUrl = response?.data?.url;
       if (checkoutUrl) {
