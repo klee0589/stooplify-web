@@ -236,15 +236,17 @@ export default function AddYardSale() {
     
     // Generate AI description if we have photos
     if (uploadedUrls.length > 0) {
+      const toastId = toast.loading('Generating description from photos...');
       try {
-        toast.loading('Generating description from photos...');
         const aiDescription = await base44.integrations.Core.InvokeLLM({
           prompt: "Based on these images of yard sale items, write a brief, appealing description (2-3 sentences) of what's being sold. Focus on the main items visible and make it sound inviting to potential buyers.",
           file_urls: uploadedUrls,
         });
+        toast.dismiss(toastId);
         updateField('description', aiDescription);
         toast.success('AI generated a description!');
       } catch (error) {
+        toast.dismiss(toastId);
         console.error('Failed to generate AI description:', error);
         toast.error('Could not generate description from photos');
       }
@@ -264,15 +266,17 @@ export default function AddYardSale() {
       setPhotos(prev => [...prev, file_url]);
       
       // Generate AI description from photo
+      const toastId = toast.loading('Generating description from photo...');
       try {
-        toast.loading('Generating description from photo...');
         const aiDescription = await base44.integrations.Core.InvokeLLM({
           prompt: "Based on this image of yard sale items, write a brief, appealing description (2-3 sentences) of what's being sold. Focus on the main items visible and make it sound inviting to potential buyers.",
           file_urls: [file_url],
         });
+        toast.dismiss(toastId);
         updateField('description', aiDescription);
         toast.success('AI generated a description!');
       } catch (error) {
+        toast.dismiss(toastId);
         console.error('Failed to generate AI description:', error);
         toast.error('Could not generate description from photo');
       }
