@@ -223,7 +223,7 @@ function LayoutContent({ children, currentPageName }) {
                   key={link.page}
                   to={createPageUrl(link.page)}
                   className={`font-medium transition-colors hover:text-[#14B8FF] ${
-                    currentPageName === link.page ? 'text-[#14B8FF]' : 'text-[#2E3A59]'
+                    currentPageName === link.page ? 'text-[#14B8FF]' : 'text-[#2E3A59] dark:text-white'
                   }`}
                 >
                   {link.name}
@@ -234,7 +234,7 @@ function LayoutContent({ children, currentPageName }) {
                   key={link.page}
                   to={createPageUrl(link.page)}
                   className={`font-medium transition-colors hover:text-[#14B8FF] ${
-                    currentPageName === link.page ? 'text-[#14B8FF]' : 'text-[#2E3A59]'
+                    currentPageName === link.page ? 'text-[#14B8FF]' : 'text-[#2E3A59] dark:text-white'
                   }`}
                 >
                   {link.name}
