@@ -360,20 +360,25 @@ export default function AddYardSale() {
       
       const response = await base44.functions.invoke('createCheckout', { priceId, listingType });
       console.log('Full response:', response);
+      console.log('Response keys:', Object.keys(response || {}));
+      console.log('Response.data:', response?.data);
+      console.log('Response.data.url:', response?.data?.url);
       
       const checkoutUrl = response?.data?.url;
       if (checkoutUrl) {
         console.log('Redirecting to:', checkoutUrl);
         window.location.href = checkoutUrl;
       } else {
-        console.error('No URL in response:', response);
+        console.error('No URL in response - response was:', JSON.stringify(response));
         toast.error('Failed to create checkout session');
         setIsCheckingPayment(false);
       }
     } catch (error) {
-      console.error('Checkout error:', error);
+      console.error('Checkout error caught:', error);
+      console.error('Error type:', typeof error);
       console.error('Error message:', error?.message);
       console.error('Error response:', error?.response);
+      console.error('Full error:', JSON.stringify(error));
       toast.error(error?.message || 'Failed to create checkout session');
       setIsCheckingPayment(false);
     }
