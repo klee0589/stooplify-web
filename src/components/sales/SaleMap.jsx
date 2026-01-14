@@ -191,6 +191,38 @@ export default function SaleMap({ sales, center }) {
           attribution='&copy; <a href="https://carto.com/">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
         />
+        {/* Community Locations */}
+        {communityLocations.map((location) => (
+          <Marker
+            key={`community-${location.id}`}
+            position={[location.latitude, location.longitude]}
+            icon={createCommunityIcon(location.icon)}
+          >
+            <Popup>
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="p-4"
+              >
+                <h3 
+                  className="font-bold text-[#2E3A59] mb-2 text-lg"
+                  style={{ fontFamily: 'Poppins, sans-serif' }}
+                >
+                  {location.name}
+                </h3>
+                <p className="text-sm text-gray-600 mb-2">{location.description}</p>
+                <p className="text-xs text-gray-500">
+                  {location.address}, {location.city}
+                </p>
+                <div className="mt-2 inline-block text-xs bg-gray-100 px-2 py-1 rounded">
+                  {location.category.replace(/_/g, ' ')}
+                </div>
+              </motion.div>
+            </Popup>
+          </Marker>
+        ))}
+
+        {/* Sales Locations */}
         {Object.entries(groupedByLocation).map(([location, locationSales]) => {
            if (locationSales.length === 0) return null;
 
