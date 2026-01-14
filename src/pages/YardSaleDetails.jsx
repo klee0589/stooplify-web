@@ -8,6 +8,8 @@ import {
   MapPin, Calendar, Clock, Heart, Share2, Navigation, 
   ChevronLeft, ChevronRight, X, ArrowLeft, Tag, UserCheck, Flag, Trash2, Edit 
 } from 'lucide-react';
+import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
 import { Button } from "@/components/ui/button";
 import { format } from 'date-fns';
 import { toast } from "sonner";
@@ -344,6 +346,14 @@ export default function YardSaleDetails() {
     return hoursUntilSale <= (sale.address_unlock_hours || 24);
   };
 
+  const isExactLocationVisible = () => {
+    if (!sale?.date || !sale?.start_time) return false;
+    const saleDateTime = new Date(`${sale.date}T${sale.start_time}`);
+    const now = new Date();
+    const hoursUntilSale = (saleDateTime - now) / (1000 * 60 * 60);
+    return hoursUntilSale <= 1 || isAttending;
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#F9F9F9] flex items-center justify-center">
@@ -527,6 +537,55 @@ export default function YardSaleDetails() {
             <div className="bg-white p-5 rounded-2xl shadow-sm">
               <AddressDisplay sale={sale} isAttending={isAttending} showIcon={true} />
             </div>
+
+            {/* Map */}
+            {(sale.latitude && sale.longitude) && (
+              <div className="bg-white p-5 rounded-2xl shadow-sm">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold text-[#2E3A59]" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                    Location Map
+                  </h3>
+                  {!isExactLocationVisible() && (
+                    <span className="text-xs text-gray-500 flex items-center gap-1">
+                      <MapPin className="w-3 h-3" />
+                      Approximate area
+                    </span>
+                  )}
+                </div>
+                <div className="h-64 rounded-xl overflow-hidden">
+                  <MapContainer
+                    center={[
+                      isExactLocationVisible() ? (sale.exact_latitude || sale.latitude) : sale.latitude,
+                      isExactLocationVisible() ? (sale.exact_longitude || sale.longitude) : sale.longitude
+                    ]}
+                    zoom={isExactLocationVisible() ? 16 : 14}
+                    style={{ height: '100%', width: '100%' }}
+                    scrollWheelZoom={false}
+                  >
+                    <TileLayer
+                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                    />
+                    {isExactLocationVisible() ? (
+                      <Marker position={[sale.exact_latitude || sale.latitude, sale.exact_longitude || sale.longitude]}>
+                        <Popup>{sale.title}</Popup>
+                      </Marker>
+                    ) : (
+                      <Circle
+                        center={[sale.latitude, sale.longitude]}
+                        radius={500}
+                        pathOptions={{ color: '#FF6F61', fillColor: '#FF6F61', fillOpacity: 0.2 }}
+                      />
+                    )}
+                  </MapContainer>
+                </div>
+                {!isExactLocationVisible() && (
+                  <p className="text-xs text-gray-500 mt-2 text-center">
+                    Exact location shows 1 hour before sale or when you mark attending
+                  </p>
+                )}
+              </div>
+            )}
 
             {/* Description */}
             {sale.description && (
