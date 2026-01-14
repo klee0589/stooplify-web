@@ -100,16 +100,16 @@ export default function AddYardSale() {
             }
             setMaxSalesAllowed(maxSales);
             
-            // Check if user is at their limit
-            if (existingSales.length >= maxSales) {
-              console.log('❌ User at sale limit:', existingSales.length, '>=', maxSales);
-              setHasActiveSale(true);
-            }
-            
             // Payment only needed if they have existing sales and don't have subscription
             const needsPay = existingSales.length > 0 && !hasSubscription;
             setNeedsPayment(needsPay);
             console.log(needsPay ? '💳 Payment required' : '✅ No payment needed');
+            
+            // Only block if they're at their limit AND they've already paid (no payment needed)
+            if (existingSales.length >= maxSales && !needsPay) {
+              console.log('❌ User at sale limit:', existingSales.length, '>=', maxSales);
+              setHasActiveSale(true);
+            }
           }
           
           // Load existing sale data if editing
