@@ -157,28 +157,48 @@ export default function AddYardSale() {
       let coordinates = {};
       try {
         const query = `${data.address}, ${data.city}, ${data.state} ${data.zip_code}`;
+        console.log('🌍 Geocoding address:', query);
+
         const response = await fetch(
-          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`,
+          {
+            headers: {
+              'User-Agent': 'Stooplify/1.0'
+            }
+          }
         );
+
+        if (!response.ok) {
+          throw new Error(`Geocoding failed: ${response.status}`);
+        }
+
         const geoData = await response.json();
-        
+        console.log('🌍 Geocoding response:', geoData);
+
         if (geoData.length > 0) {
           const exactLat = parseFloat(geoData[0].lat);
           const exactLon = parseFloat(geoData[0].lon);
-          
+
+          console.log('✅ Coordinates found:', { exactLat, exactLon });
+
           // Create approximate coordinates (offset by ~0.01 degrees = ~1km for privacy)
           const latOffset = (Math.random() - 0.5) * 0.02;
           const lonOffset = (Math.random() - 0.5) * 0.02;
-          
+
           coordinates = {
             exact_latitude: exactLat,
             exact_longitude: exactLon,
             latitude: exactLat + latOffset,
             longitude: exactLon + lonOffset,
           };
+
+          console.log('📍 Final coordinates:', coordinates);
+        } else {
+          console.warn('⚠️ No geocoding results found');
+          toast.error('Could not locate address on map, but sale will still be saved');
         }
       } catch (error) {
-        console.error('Geocoding failed:', error);
+        console.error('❌ Geocoding error:', error);
         toast.error('Could not locate address on map, but sale will still be saved');
       }
       
