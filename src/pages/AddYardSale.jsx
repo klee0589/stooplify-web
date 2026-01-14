@@ -70,12 +70,16 @@ export default function AddYardSale() {
           
           // Check if payment is needed (not first listing and no subscription) - only for new sales
           if (!isEditMode) {
-            const freeUsed = currentUser.free_listings_used || 0;
+            // Check actual number of existing sales for this user
+            const existingSales = await base44.entities.YardSale.filter({ 
+              created_by: currentUser.email,
+              status: 'approved' 
+            });
             const hasSubscription = currentUser.subscription_active || false;
-            // First listing is always free, so only require payment if they've used at least 1 free listing
-            const needsPay = freeUsed >= 1 && !hasSubscription;
+            // First listing is always free, so only require payment if they already have at least 1 sale
+            const needsPay = existingSales.length >= 1 && !hasSubscription;
             setNeedsPayment(needsPay);
-            console.log('Payment check:', { freeUsed, hasSubscription, needsPay });
+            console.log('Payment check:', { existingSalesCount: existingSales.length, hasSubscription, needsPay });
           }
           
           // Load existing sale data if editing
