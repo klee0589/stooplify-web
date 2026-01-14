@@ -902,7 +902,7 @@ export default function AddYardSale() {
                 {/* Unlimited Subscription */}
                 <motion.button
                   whileHover={{ scale: isCheckingPayment ? 1 : 1.02 }}
-                  className={`w-full border-2 border-[#FF6F61] bg-[#FF6F61]/5 rounded-2xl p-6 text-left transition-all relative overflow-hidden ${
+                  className={`w-full border-2 border-gray-200 bg-[#FF6F61]/5 rounded-2xl p-6 text-left hover:border-[#FF6F61] transition-all relative overflow-hidden ${
                     isCheckingPayment ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
                   }`}
                   onClick={() => !isCheckingPayment && handleCheckout(SUBSCRIPTION_PRICE_ID, 'subscription')}
