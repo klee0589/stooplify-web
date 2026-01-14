@@ -168,5 +168,18 @@ export const translations = {
 };
 
 export const useTranslation = (lang = 'en') => {
-  return (key) => translations[lang]?.[key] || translations.en[key] || key;
+  return (key) => {
+    const keys = key.split('.');
+    let value = translations[lang];
+    
+    for (const k of keys) {
+      if (value && typeof value === 'object') {
+        value = value[k];
+      } else {
+        return key;
+      }
+    }
+    
+    return value || key;
+  };
 };

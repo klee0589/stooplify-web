@@ -114,10 +114,10 @@ export default function Guides() {
                     className="text-xl font-bold text-[#2E3A59] mb-3 group-hover:text-[#FF6F61] transition-colors"
                     style={{ fontFamily: 'Poppins, sans-serif' }}
                   >
-                    {guide.title}
+                    {t(`guides.cards.${guide.id}.title`)}
                   </h3>
                   <p className="text-gray-600 mb-4">
-                    {guide.description}
+                    {t(`guides.cards.${guide.id}.description`)}
                   </p>
                   <div className="flex items-center text-[#FF6F61] font-medium group-hover:gap-2 transition-all">
                     {t('guides.readMore')}
