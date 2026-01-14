@@ -111,7 +111,7 @@ export default function Favorites() {
   const isLoading = favoritesLoading || salesLoading;
 
   return (
-    <div className="min-h-screen bg-[#F9F9F9]">
+    <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <motion.div
@@ -136,19 +136,19 @@ export default function Favorites() {
               </div>
               <div>
                 <h1 
-                  className="text-3xl font-bold text-[#2E3A59]"
+                  className="text-3xl font-bold text-[#2E3A59] dark:text-white"
                   style={{ fontFamily: 'Poppins, sans-serif' }}
                 >
                   My Favorites
                 </h1>
-                <p className="text-gray-600">
+                <p className="text-gray-600 dark:text-gray-300">
                   {sales.length} saved sale{sales.length !== 1 ? 's' : ''}
                 </p>
               </div>
             </div>
 
             {sales.length > 0 && (
-              <div className="flex items-center bg-white rounded-xl p-1 shadow-sm">
+              <div className="flex items-center bg-white dark:bg-gray-800 rounded-xl p-1 shadow-sm">
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => setViewMode('list')}
@@ -193,12 +193,12 @@ export default function Favorites() {
               <Heart className="w-10 h-10 text-[#FF6F61]" />
             </div>
             <h3 
-              className="text-xl font-semibold text-[#2E3A59] mb-2"
+              className="text-xl font-semibold text-[#2E3A59] dark:text-white mb-2"
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
               No favorites yet
             </h3>
-            <p className="text-gray-600 mb-6">
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
               Browse yard sales and tap the heart to save your favorites.
             </p>
             <Link to={createPageUrl('YardSales')}>

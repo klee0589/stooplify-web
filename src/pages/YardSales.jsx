@@ -151,12 +151,12 @@ export default function YardSales() {
           className="mb-6"
         >
           <h1 
-            className="text-3xl md:text-4xl font-bold text-[#2E3A59] mb-2"
+            className="text-3xl md:text-4xl font-bold text-[#2E3A59] dark:text-white mb-2"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
             Find Yard Sales
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-300">
             Discover amazing deals at local yard sales near you
           </p>
         </motion.div>
@@ -176,11 +176,11 @@ export default function YardSales() {
           animate={{ opacity: 1 }}
           className="flex items-center justify-between mb-6"
         >
-          <p className="text-gray-600">
-            <span className="font-semibold text-[#2E3A59]">{filteredSales.length}</span> sales found
+          <p className="text-gray-600 dark:text-gray-300">
+            <span className="font-semibold text-[#2E3A59] dark:text-white">{filteredSales.length}</span> sales found
           </p>
           
-          <div className="flex items-center bg-white rounded-xl p-1 shadow-sm">
+          <div className="flex items-center bg-white dark:bg-gray-800 rounded-xl p-1 shadow-sm">
             <motion.button
               whileTap={{ scale: 0.95 }}
               onClick={() => setViewMode('list')}
@@ -228,10 +228,10 @@ export default function YardSales() {
                     <div className="w-20 h-20 bg-[#FF6F61]/10 rounded-full flex items-center justify-center mx-auto mb-4">
                       <Map className="w-10 h-10 text-[#FF6F61]" />
                     </div>
-                    <h3 className="text-xl font-semibold text-[#2E3A59] mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                    <h3 className="text-xl font-semibold text-[#2E3A59] dark:text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
                       No sales found
                     </h3>
-                    <p className="text-gray-600 mb-4">Try adjusting your filters or check back later.</p>
+                    <p className="text-gray-600 dark:text-gray-300 mb-4">Try adjusting your filters or check back later.</p>
                     <Button onClick={resetFilters} className="bg-[#FF6F61] hover:bg-[#e55a4d]">
                       Reset Filters
                     </Button>

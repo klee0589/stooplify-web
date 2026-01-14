@@ -164,7 +164,7 @@ export default function Profile() {
   const approvedSales = mySales.filter(s => s.status === 'approved').length;
 
   return (
-    <div className="min-h-screen bg-[#F9F9F9]">
+    <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back Button */}
         <Link to={createPageUrl('Home')}>
@@ -181,7 +181,7 @@ export default function Profile() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-3xl p-6 md:p-8 shadow-lg mb-6"
+          className="bg-white dark:bg-gray-800 rounded-3xl p-6 md:p-8 shadow-lg mb-6"
         >
           <div className="flex flex-col md:flex-row md:items-center gap-6">
             <div className="w-20 h-20 bg-gradient-to-br from-[#FF6F61] to-[#F5A623] rounded-2xl flex items-center justify-center flex-shrink-0">
@@ -222,7 +222,7 @@ export default function Profile() {
               ) : (
                 <div className="flex items-center gap-3">
                   <h1 
-                    className="text-2xl font-bold text-[#2E3A59]"
+                    className="text-2xl font-bold text-[#2E3A59] dark:text-white"
                     style={{ fontFamily: 'Poppins, sans-serif' }}
                   >
                     {user.full_name || 'Set your name'}
@@ -235,7 +235,7 @@ export default function Profile() {
                   </button>
                 </div>
               )}
-              <div className="flex items-center gap-2 text-gray-600 mt-1">
+              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300 mt-1">
                 <Mail className="w-4 h-4" />
                 <span>{user.email}</span>
               </div>
@@ -283,32 +283,32 @@ export default function Profile() {
           transition={{ delay: 0.1 }}
           className="grid grid-cols-3 gap-4 mb-6"
         >
-          <div className="bg-white rounded-2xl p-5 shadow-sm text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm text-center">
             <div className="w-10 h-10 bg-[#FF6F61]/10 rounded-xl flex items-center justify-center mx-auto mb-2">
               <Tag className="w-5 h-5 text-[#FF6F61]" />
             </div>
-            <p className="text-2xl font-bold text-[#2E3A59]" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            <p className="text-2xl font-bold text-[#2E3A59] dark:text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>
               {mySales.length}
             </p>
-            <p className="text-sm text-gray-500">My Sales</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">My Sales</p>
           </div>
-          <div className="bg-white rounded-2xl p-5 shadow-sm text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm text-center">
             <div className="w-10 h-10 bg-[#F5A623]/10 rounded-xl flex items-center justify-center mx-auto mb-2">
               <Heart className="w-5 h-5 text-[#F5A623]" />
             </div>
-            <p className="text-2xl font-bold text-[#2E3A59]" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            <p className="text-2xl font-bold text-[#2E3A59] dark:text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>
               {favorites.length}
             </p>
-            <p className="text-sm text-gray-500">Favorites</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Favorites</p>
           </div>
-          <div className="bg-white rounded-2xl p-5 shadow-sm text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm text-center">
             <div className="w-10 h-10 bg-[#2E3A59]/10 rounded-xl flex items-center justify-center mx-auto mb-2">
               <Calendar className="w-5 h-5 text-[#2E3A59]" />
             </div>
-            <p className="text-2xl font-bold text-[#2E3A59]" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            <p className="text-2xl font-bold text-[#2E3A59] dark:text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>
               {approvedSales}
             </p>
-            <p className="text-sm text-gray-500">Active Sales</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Active Sales</p>
           </div>
         </motion.div>
 
@@ -375,18 +375,18 @@ export default function Profile() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25 }}
-          className="bg-white rounded-2xl p-6 shadow-sm mb-6"
+          className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm mb-6"
         >
           <h3 
-            className="text-lg font-bold text-[#2E3A59] mb-4"
+            className="text-lg font-bold text-[#2E3A59] dark:text-white mb-4"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
             Notifications
           </h3>
           <div className="flex items-center justify-between">
             <div>
-              <p className="font-medium text-[#2E3A59]">Email notifications</p>
-              <p className="text-sm text-gray-500">Get notified about new yard sales in your area</p>
+              <p className="font-medium text-[#2E3A59] dark:text-white">Email notifications</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Get notified about new yard sales in your area</p>
             </div>
             <Switch
               checked={subscription?.notify_new_sales || false}
@@ -400,11 +400,11 @@ export default function Profile() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-white rounded-2xl p-6 shadow-sm"
+          className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
         >
           <div className="flex items-center justify-between mb-4">
             <h3 
-              className="text-lg font-bold text-[#2E3A59]"
+              className="text-lg font-bold text-[#2E3A59] dark:text-white"
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
               My Yard Sales
@@ -425,7 +425,7 @@ export default function Profile() {
               <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Tag className="w-8 h-8 text-gray-400" />
               </div>
-              <p className="text-gray-500">You haven't listed any yard sales yet.</p>
+              <p className="text-gray-500 dark:text-gray-400">You haven't listed any yard sales yet.</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -459,7 +459,7 @@ export default function Profile() {
                   <motion.div
                     key={sale.id}
                     whileHover={{ x: 5 }}
-                    className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
+                    className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
                   >
                     <Link to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`} className="flex items-center gap-3 flex-1">
                       <div className="flex items-center gap-3">
@@ -475,8 +475,8 @@ export default function Profile() {
                           </div>
                         )}
                         <div>
-                          <p className="font-medium text-[#2E3A59]">{sale.title}</p>
-                          <p className="text-sm text-gray-500">
+                          <p className="font-medium text-[#2E3A59] dark:text-white">{sale.title}</p>
+                          <p className="text-sm text-gray-500 dark:text-gray-400">
                             {sale.date ? format(new Date(sale.date), 'MMM d, yyyy') : 'Date TBD'}
                           </p>
                         </div>

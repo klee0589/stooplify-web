@@ -74,7 +74,7 @@ export default function Guides() {
   const t = useTranslation(language);
 
   return (
-    <div className="min-h-screen bg-[#F9F9F9]">
+    <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <motion.div
@@ -86,12 +86,12 @@ export default function Guides() {
             <Book className="w-8 h-8 text-[#FF6F61]" />
           </div>
           <h1 
-            className="text-3xl md:text-4xl font-bold text-[#2E3A59] mb-4"
+            className="text-3xl md:text-4xl font-bold text-[#2E3A59] dark:text-white mb-4"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
             {t('guides.title')}
           </h1>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
             {t('guides.subtitle')}
           </p>
         </motion.div>
@@ -106,17 +106,17 @@ export default function Guides() {
               transition={{ delay: index * 0.1 }}
             >
               <Link to={createPageUrl(guide.page)}>
-                <div className="bg-white rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 group h-full">
+                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 group h-full">
                   <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl ${guide.color} mb-4`}>
                     <guide.icon className="w-6 h-6" />
                   </div>
                   <h3 
-                    className="text-xl font-bold text-[#2E3A59] mb-3 group-hover:text-[#FF6F61] transition-colors"
+                    className="text-xl font-bold text-[#2E3A59] dark:text-white mb-3 group-hover:text-[#FF6F61] transition-colors"
                     style={{ fontFamily: 'Poppins, sans-serif' }}
                   >
                     {t(`guides.cards.${guide.id}.title`)}
                   </h3>
-                  <p className="text-gray-600 mb-4">
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">
                     {t(`guides.cards.${guide.id}.description`)}
                   </p>
                   <div className="flex items-center text-[#FF6F61] font-medium group-hover:gap-2 transition-all">
