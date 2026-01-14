@@ -12,7 +12,7 @@ export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance,
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -5, boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}
-      className="bg-white rounded-2xl overflow-hidden shadow-md transition-all duration-300"
+      className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md transition-all duration-300"
     >
       {/* Image */}
       <div className="relative h-40 bg-gradient-to-br from-[#FF6F61]/10 to-[#F5A623]/10">
@@ -57,7 +57,7 @@ export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance,
         <div className="p-4">
           <div className="space-y-2 mb-3">
             <h3 
-              className="text-lg font-bold text-[#2E3A59] line-clamp-1"
+              className="text-lg font-bold text-[#2E3A59] dark:text-white line-clamp-1"
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
               {sale.title}
@@ -66,19 +66,19 @@ export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance,
           </div>
           
           <div className="space-y-1.5 mb-2">
-            <div className="flex items-center gap-2 text-gray-600">
+            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
               <Calendar className="w-3.5 h-3.5 text-[#FF6F61]" />
               <span className="text-sm">
                 {sale.date ? format(new Date(sale.date), 'EEE, MMM d') : 'Date TBD'}
               </span>
             </div>
-            <div className="flex items-center gap-2 text-gray-600">
+            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
               <Clock className="w-3.5 h-3.5 text-[#F5A623]" />
               <span className="text-sm">
                 {sale.start_time || '8 AM'} - {sale.end_time || '2 PM'}
               </span>
             </div>
-            <div className="flex items-center gap-2 text-gray-600">
+            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
               <MapPin className="w-3.5 h-3.5 text-[#2E3A59]" />
               <span className="text-sm line-clamp-1">
                 {sale.general_location || `${sale.city}, ${sale.state}`}
