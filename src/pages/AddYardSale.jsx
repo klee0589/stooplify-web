@@ -44,6 +44,7 @@ export default function AddYardSale() {
   const [maxSalesAllowed, setMaxSalesAllowed] = useState(1);
   const [aiDescription, setAiDescription] = useState(null);
   const [showAiPreview, setShowAiPreview] = useState(false);
+  const [editableDescription, setEditableDescription] = useState('');
   
   const navigate = useNavigate();
   
@@ -888,18 +889,22 @@ export default function AddYardSale() {
                   className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 mb-6"
                 >
                   <div className="flex items-start gap-3 mb-3">
-                    <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
                       <Check className="w-5 h-5 text-white" />
                     </div>
                     <div className="flex-1">
-                      <h4 className="font-semibold text-[#2E3A59] mb-1">AI Generated Description</h4>
-                      <p className="text-sm text-gray-700">{aiDescription}</p>
+                      <h4 className="font-semibold text-[#2E3A59] mb-2">AI Generated Description</h4>
+                      <Textarea
+                        value={editableDescription}
+                        onChange={(e) => setEditableDescription(e.target.value)}
+                        className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 min-h-[100px] bg-white"
+                      />
                     </div>
                   </div>
                   <div className="flex gap-2">
                     <Button
                       onClick={() => {
-                        updateField('description', aiDescription);
+                        updateField('description', editableDescription);
                         setShowAiPreview(false);
                         toast.success('Description added!');
                       }}
