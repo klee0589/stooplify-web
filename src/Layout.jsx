@@ -2,15 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Home, MapPin, PlusCircle, User, Heart, Settings, Globe } from 'lucide-react';
+import { Menu, X, Home, MapPin, PlusCircle, User, Heart, Settings, Globe, Moon, Sun } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useTranslation } from '../components/translations';
+import { useTheme } from '../components/ThemeProvider';
 
 export default function Layout({ children, currentPageName }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [language, setLanguage] = useState('en');
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -64,15 +66,21 @@ export default function Layout({ children, currentPageName }) {
   ] : [];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
       {/* SEO Meta Tags */}
       <head>
         <title>Stooplify - Discover Local Yard Sales & Garage Sales Near You</title>
         <meta name="description" content="Find amazing yard sales, garage sales, and estate sales in your neighborhood. Buy and sell secondhand items, furniture, antiques, and more on Stooplify." />
-        <meta name="keywords" content="yard sale, garage sale, estate sale, secondhand, thrift, local sales, buy used items, sell items" />
+        <meta name="keywords" content="yard sale, garage sale, estate sale, secondhand, thrift, local sales, buy used items, sell items, neighborhood sales" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="robots" content="index, follow" />
+        <meta name="theme-color" content="#14B8FF" />
         <link rel="canonical" href="https://stooplify.com" />
+
+        {/* Performance optimizations */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://nominatim.openstreetmap.org" />
         
         {/* Open Graph / Social Media */}
         <meta property="og:type" content="website" />
@@ -125,7 +133,7 @@ export default function Layout({ children, currentPageName }) {
       
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
-        
+
         :root {
           --primary: #14B8FF;
           --secondary: #2E3A59;
@@ -133,33 +141,47 @@ export default function Layout({ children, currentPageName }) {
           --bg-light: #F9F9F9;
           --text-dark: #333333;
         }
-        
+
+        .dark {
+          --primary: #14B8FF;
+          --secondary: #1a2238;
+          --accent: #F5A623;
+          --bg-light: #111827;
+          --text-dark: #f3f4f6;
+        }
+
         body {
           font-family: 'Inter', sans-serif;
+          transition: background-color 0.3s ease, color 0.3s ease;
         }
-        
+
+        .dark body {
+          background: #0f172a;
+          color: #f3f4f6;
+        }
+
         h1, h2, h3, h4, h5, h6 {
           font-family: 'Poppins', sans-serif;
         }
-        
+
         .btn-primary {
           background: var(--primary);
           color: white;
           font-family: 'Poppins', sans-serif;
           font-weight: 500;
         }
-        
+
         .btn-primary:hover {
           background: #0da3e6;
         }
-        
+
         .btn-secondary {
           background: var(--secondary);
           color: white;
           font-family: 'Poppins', sans-serif;
           font-weight: 500;
         }
-        
+
         .text-primary { color: var(--primary); }
         .text-secondary { color: var(--secondary); }
         .text-accent { color: var(--accent); }
@@ -167,6 +189,11 @@ export default function Layout({ children, currentPageName }) {
         .bg-secondary { background: var(--secondary); }
         .bg-accent { background: var(--accent); }
         .bg-light { background: var(--bg-light); }
+
+        /* Optimize image loading */
+        img {
+          content-visibility: auto;
+        }
       `}</style>
 
       {/* Header */}
@@ -174,7 +201,7 @@ export default function Layout({ children, currentPageName }) {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled ? 'bg-white/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
+          isScrolled ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -215,13 +242,22 @@ export default function Layout({ children, currentPageName }) {
               ))}
             </nav>
 
-            {/* Language Toggle & Auth Buttons */}
+            {/* Language & Theme Toggle & Auth Buttons */}
             <div className="hidden md:flex items-center gap-4">
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={toggleTheme}
+                className="px-3 py-2 text-[#2E3A59] dark:text-white font-medium hover:text-[#14B8FF] transition-colors"
+                title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+              >
+                {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
+              </motion.button>
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={toggleLanguage}
-                className="px-3 py-2 text-[#2E3A59] font-medium hover:text-[#14B8FF] transition-colors flex items-center gap-2"
+                className="px-3 py-2 text-[#2E3A59] dark:text-white font-medium hover:text-[#14B8FF] transition-colors flex items-center gap-2"
                 title={language === 'en' ? 'Switch to Spanish' : 'Cambiar a inglés'}
               >
                 <Globe className="w-4 h-4" />
@@ -276,8 +312,8 @@ export default function Layout({ children, currentPageName }) {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-white border-t shadow-lg"
-            >
+              className="md:hidden bg-white dark:bg-gray-900 border-t shadow-lg"
+              >
               <div className="px-4 py-4 space-y-2">
                 {[...navLinks, ...userLinks].map((link) => (
                   <Link
@@ -297,10 +333,20 @@ export default function Layout({ children, currentPageName }) {
                 <div className="pt-4 border-t space-y-2">
                   <button
                     onClick={() => {
+                      toggleTheme();
+                      setIsMenuOpen(false);
+                    }}
+                    className="w-full flex items-center gap-3 px-4 py-3 text-[#2E3A59] dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl"
+                  >
+                    {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
+                    <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
+                  </button>
+                  <button
+                    onClick={() => {
                       toggleLanguage();
                       setIsMenuOpen(false);
                     }}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-[#2E3A59] font-medium hover:bg-gray-100 rounded-xl"
+                    className="w-full flex items-center gap-3 px-4 py-3 text-[#2E3A59] dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl"
                   >
                     <Globe size={20} />
                     <span>{language === 'en' ? 'Español' : 'English'}</span>
@@ -339,7 +385,7 @@ export default function Layout({ children, currentPageName }) {
       </main>
 
       {/* Footer */}
-      <footer className="bg-[#2E3A59] text-white mt-20">
+      <footer className="bg-[#2E3A59] dark:bg-gray-950 text-white mt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2">

@@ -445,7 +445,7 @@ export default function AddYardSale() {
 
   if (isLoadingSale) {
     return (
-      <div className="min-h-screen bg-[#F9F9F9] flex items-center justify-center">
+      <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900 flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-[#FF6F61] animate-spin" />
       </div>
     );
