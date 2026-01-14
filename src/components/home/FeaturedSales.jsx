@@ -39,12 +39,12 @@ export default function FeaturedSales({ sales = [] }) {
         >
           <div>
             <h2 
-              className="text-3xl md:text-4xl font-bold text-[#2E3A59] mb-2"
+              className="text-3xl md:text-4xl font-bold text-[#2E3A59] dark:text-white mb-2"
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
               {t('featuredSales')}
             </h2>
-            <p className="text-gray-600 text-lg">
+            <p className="text-gray-600 dark:text-gray-300 text-lg">
               {t('featuredSubtitle')}
             </p>
           </div>
@@ -71,7 +71,7 @@ export default function FeaturedSales({ sales = [] }) {
               <Link to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}>
                 <motion.div
                   whileHover={{ y: -8, boxShadow: '0 25px 50px rgba(0,0,0,0.12)' }}
-                  className="bg-white rounded-3xl overflow-hidden shadow-lg transition-shadow duration-300 h-full"
+                  className="bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg transition-shadow duration-300 h-full"
                 >
                   {/* Image */}
                   <div className="relative h-48 bg-gradient-to-br from-[#14B8FF]/20 to-[#F5A623]/20">
@@ -97,7 +97,7 @@ export default function FeaturedSales({ sales = [] }) {
                   {/* Content */}
                   <div className="p-6">
                     <h3 
-                      className="text-xl font-bold text-[#2E3A59] mb-2 line-clamp-1"
+                      className="text-xl font-bold text-[#2E3A59] dark:text-white mb-2 line-clamp-1"
                       style={{ fontFamily: 'Poppins, sans-serif' }}
                     >
                       {sale.title}
@@ -124,8 +124,8 @@ export default function FeaturedSales({ sales = [] }) {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                      <span className="text-sm text-gray-500">
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700">
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
                         {sale.views || 0} {t('views')}
                       </span>
                       <span className="text-[#14B8FF] font-medium text-sm flex items-center gap-1">

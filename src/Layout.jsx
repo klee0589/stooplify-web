@@ -268,7 +268,7 @@ function LayoutContent({ children, currentPageName }) {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => base44.auth.logout()}
-                  className="px-4 py-2 text-[#2E3A59] font-medium hover:text-[#14B8FF] transition-colors"
+                  className="px-4 py-2 text-[#2E3A59] dark:text-white font-medium hover:text-[#14B8FF] transition-colors"
                 >
                   {t('signOut')}
                 </motion.button>
@@ -278,7 +278,7 @@ function LayoutContent({ children, currentPageName }) {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => base44.auth.redirectToLogin()}
-                    className="px-4 py-2 text-[#2E3A59] font-medium hover:text-[#14B8FF] transition-colors"
+                    className="px-4 py-2 text-[#2E3A59] dark:text-white font-medium hover:text-[#14B8FF] transition-colors"
                   >
                     {t('signIn')}
                   </motion.button>
@@ -323,7 +323,7 @@ function LayoutContent({ children, currentPageName }) {
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
                       currentPageName === link.page
                         ? 'bg-[#14B8FF]/10 text-[#14B8FF]'
-                        : 'text-[#2E3A59] hover:bg-gray-100'
+                        : 'text-[#2E3A59] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
                     }`}
                   >
                     <link.icon size={20} />
@@ -357,10 +357,10 @@ function LayoutContent({ children, currentPageName }) {
                         base44.auth.logout();
                         setIsMenuOpen(false);
                       }}
-                      className="w-full px-4 py-3 text-left text-[#2E3A59] font-medium hover:bg-gray-100 rounded-xl"
-                    >
+                      className="w-full px-4 py-3 text-left text-[#2E3A59] dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl"
+                      >
                       {t('signOut')}
-                    </button>
+                      </button>
                   ) : (
                     <button
                       onClick={() => {

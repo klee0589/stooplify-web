@@ -55,7 +55,7 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section className="py-20 bg-[#F9F9F9]">
+    <section className="py-20 bg-[#F9F9F9] dark:bg-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -65,12 +65,12 @@ export default function HowItWorks() {
           className="text-center mb-16"
         >
           <h2 
-            className="text-3xl md:text-4xl font-bold text-[#2E3A59] mb-4"
+            className="text-3xl md:text-4xl font-bold text-[#2E3A59] dark:text-white mb-4"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
             {t('howItWorks')}
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto text-lg">
+          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-lg">
             {t('howItWorksSubtitle')}
           </p>
         </motion.div>
@@ -86,7 +86,7 @@ export default function HowItWorks() {
             >
               <motion.div
                 whileHover={{ y: -10, boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}
-                className="bg-white rounded-3xl p-8 h-full transition-shadow duration-300"
+                className="bg-white dark:bg-gray-800 rounded-3xl p-8 h-full transition-shadow duration-300"
               >
                 <motion.div
                   initial={{ scale: 0 }}
@@ -105,12 +105,12 @@ export default function HowItWorks() {
                   {t('step1')} {index + 1}
                 </span>
                 <h3 
-                  className="text-xl font-bold text-[#2E3A59] mb-3"
+                  className="text-xl font-bold text-[#2E3A59] dark:text-white mb-3"
                   style={{ fontFamily: 'Poppins, sans-serif' }}
                 >
                   {step.title}
                 </h3>
-                <p className="text-gray-600">
+                <p className="text-gray-600 dark:text-gray-300">
                   {step.description}
                 </p>
               </motion.div>
