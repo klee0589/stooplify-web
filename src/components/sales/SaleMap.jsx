@@ -66,6 +66,30 @@ const createClusterIcon = (count) => new L.DivIcon({
   popupAnchor: [0, -25],
 });
 
+// Community location icon
+const createCommunityIcon = (emoji) => new L.DivIcon({
+  className: 'community-marker',
+  html: `
+    <div style="
+      width: 45px;
+      height: 45px;
+      background: #2E3A59;
+      border-radius: 50%;
+      border: 3px solid gold;
+      box-shadow: 0 4px 15px rgba(46, 58, 89, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    ">
+      ${emoji}
+    </div>
+  `,
+  iconSize: [45, 45],
+  iconAnchor: [22, 45],
+  popupAnchor: [0, -45],
+});
+
 function MapUpdater({ center }) {
   const map = useMap();
   useEffect(() => {
