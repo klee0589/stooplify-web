@@ -55,7 +55,7 @@ export default function Layout({ children, currentPageName }) {
     { name: t('home'), page: 'Home', icon: Home },
     { name: t('browseSales'), page: 'YardSales', icon: MapPin },
     { name: t('listSale'), page: 'AddYardSale', icon: PlusCircle },
-    { name: t('pricing'), page: 'Pricing', icon: Settings },
+    { name: 'Guides', page: 'Guides', icon: Settings },
   ];
 
   const userLinks = user ? [
