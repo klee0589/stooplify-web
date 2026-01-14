@@ -7,7 +7,7 @@ import { base44 } from '@/api/base44Client';
 import { useTranslation } from '../components/translations';
 import { useTheme } from '../components/ThemeProvider';
 
-export default function Layout({ children, currentPageName }) {
+function LayoutContent({ children, currentPageName }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -421,5 +421,13 @@ export default function Layout({ children, currentPageName }) {
         </div>
       </footer>
     </div>
-  );
-}
+    );
+    }
+
+    export default function Layout({ children, currentPageName }) {
+    return (
+    <ThemeProvider>
+    <LayoutContent children={children} currentPageName={currentPageName} />
+    </ThemeProvider>
+    );
+    }
