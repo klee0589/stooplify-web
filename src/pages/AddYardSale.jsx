@@ -880,6 +880,47 @@ export default function AddYardSale() {
                 </p>
               </div>
 
+              {/* AI Description Preview */}
+              {showAiPreview && aiDescription && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 mb-6"
+                >
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Check className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-[#2E3A59] mb-1">AI Generated Description</h4>
+                      <p className="text-sm text-gray-700">{aiDescription}</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => {
+                        updateField('description', aiDescription);
+                        setShowAiPreview(false);
+                        toast.success('Description added!');
+                      }}
+                      className="flex-1 bg-blue-500 hover:bg-blue-600"
+                    >
+                      Use This Description
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setShowAiPreview(false);
+                        toast('You can add your own description in step 1');
+                      }}
+                      className="flex-1"
+                    >
+                      Skip for Now
+                    </Button>
+                  </div>
+                </motion.div>
+              )}
+
               {/* Uploaded Photos */}
               {photos.length > 0 && (
                 <div className="grid grid-cols-3 gap-3 mb-6">
