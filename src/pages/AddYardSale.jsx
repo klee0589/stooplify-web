@@ -359,18 +359,24 @@ export default function AddYardSale() {
       }
       
       const response = await base44.functions.invoke('createCheckout', { priceId, listingType });
-      console.log('Checkout response:', response);
+      console.log('Full checkout response:', response);
+      console.log('Response data:', response?.data);
+      console.log('Response data.url:', response?.data?.url);
       
-      if (response.data?.url) {
-        window.location.href = response.data.url;
+      const checkoutUrl = response?.data?.url;
+      if (checkoutUrl) {
+        console.log('Redirecting to:', checkoutUrl);
+        window.location.href = checkoutUrl;
       } else {
-        console.error('No URL in response:', response);
-        toast.error('Failed to create checkout session');
+        console.error('No checkout URL in response:', response);
+        toast.error('Failed to create checkout session - no URL returned');
         setIsCheckingPayment(false);
       }
     } catch (error) {
       console.error('Checkout error:', error);
-      toast.error(error.message || 'Failed to create checkout session');
+      console.error('Error message:', error?.message);
+      console.error('Error response:', error?.response);
+      toast.error(error?.message || 'Failed to create checkout session');
       setIsCheckingPayment(false);
     }
   };
