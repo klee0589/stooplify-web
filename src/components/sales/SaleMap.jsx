@@ -8,7 +8,7 @@ import { format } from 'date-fns';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
-// Custom marker icon
+// Custom marker icon for single sale
 const customIcon = new L.DivIcon({
   className: 'custom-marker',
   html: `
@@ -36,6 +36,32 @@ const customIcon = new L.DivIcon({
   iconSize: [40, 40],
   iconAnchor: [20, 40],
   popupAnchor: [0, -40],
+});
+
+// Cluster icon for multiple sales at same location
+const createClusterIcon = (count) => new L.DivIcon({
+  className: 'cluster-marker',
+  html: `
+    <div style="
+      width: 50px;
+      height: 50px;
+      background: #FF6F61;
+      border-radius: 50%;
+      border: 3px solid white;
+      box-shadow: 0 4px 15px rgba(255, 111, 97, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      color: white;
+      font-size: 18px;
+    ">
+      ${count}
+    </div>
+  `,
+  iconSize: [50, 50],
+  iconAnchor: [25, 25],
+  popupAnchor: [0, -25],
 });
 
 function MapUpdater({ center }) {
