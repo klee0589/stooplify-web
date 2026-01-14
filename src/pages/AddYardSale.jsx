@@ -93,8 +93,21 @@ export default function AddYardSale() {
               freeListingsUsed: currentUser.free_listings_used
             });
             
-            // Payment only needed if they already used their free listing and don't have subscription
-            const needsPay = (currentUser.free_listings_used || 0) > 0 && !hasSubscription;
+            // Determine max sales allowed based on subscription
+            let maxSales = 1; // Free tier: 1 concurrent sale
+            if (hasSubscription) {
+              maxSales = 3; // Premium tier: 3 concurrent sales
+            }
+            setMaxSalesAllowed(maxSales);
+            
+            // Check if user is at their limit
+            if (existingSales.length >= maxSales) {
+              console.log('❌ User at sale limit:', existingSales.length, '>=', maxSales);
+              setHasActiveSale(true);
+            }
+            
+            // Payment only needed if they have existing sales and don't have subscription
+            const needsPay = existingSales.length > 0 && !hasSubscription;
             setNeedsPayment(needsPay);
             console.log(needsPay ? '💳 Payment required' : '✅ No payment needed');
           }
