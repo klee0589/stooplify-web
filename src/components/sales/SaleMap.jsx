@@ -82,6 +82,14 @@ export default function SaleMap({ sales, center }) {
    const [expandedLocation, setExpandedLocation] = useState(null);
    const defaultCenter = center || userLocation || [40.7128, -74.0060]; // NYC default
 
+   // Fetch community locations
+   const { data: communityLocations = [] } = useQuery({
+     queryKey: ['communityLocations'],
+     queryFn: async () => {
+       return await base44.entities.CommunityLocation.filter({ is_active: true });
+     },
+   });
+
    // Group sales by general location
    const groupedByLocation = sales.reduce((acc, sale) => {
      if (!sale.latitude || !sale.longitude) return acc;
