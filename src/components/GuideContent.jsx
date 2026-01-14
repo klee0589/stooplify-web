@@ -215,7 +215,7 @@ export const guideContent = {
       sections: [
         {
           type: 'text',
-          content: 'Pricing doesn't have to be stressful.'
+          content: `Pricing doesn't have to be stressful.`
         },
         {
           type: 'heading',
@@ -485,7 +485,7 @@ export const guideContent = {
       sections: [
         {
           type: 'text',
-          content: `Poner precios no tiene que ser estresante.`
+          content: 'Poner precios no tiene que ser estresante.'
         },
         {
           type: 'heading',
@@ -521,7 +521,7 @@ export const guideContent = {
         },
         {
           type: 'text',
-          content: `Stooplify está diseñado para ser simple.`
+          content: 'Stooplify está diseñado para ser simple.'
         },
         {
           type: 'heading',
