@@ -49,18 +49,30 @@ function MapUpdater({ center }) {
 }
 
 export default function SaleMap({ sales, center }) {
-  const [mapReady, setMapReady] = useState(false);
-  const [userLocation, setUserLocation] = useState(null);
-  const defaultCenter = center || userLocation || [40.7128, -74.0060]; // NYC default
+   const [mapReady, setMapReady] = useState(false);
+   const [userLocation, setUserLocation] = useState(null);
+   const [expandedLocation, setExpandedLocation] = useState(null);
+   const defaultCenter = center || userLocation || [40.7128, -74.0060]; // NYC default
 
-  // Debug: Log sales data
-  useEffect(() => {
-    console.log('🗺️ SaleMap received sales:', sales.length);
-    console.log('Sales with coordinates:', sales.filter(s => s.latitude && s.longitude).length);
-    sales.forEach(sale => {
-      console.log(`Sale: ${sale.title} - Lat: ${sale.latitude}, Lon: ${sale.longitude}`);
-    });
-  }, [sales]);
+   // Group sales by general location
+   const groupedByLocation = sales.reduce((acc, sale) => {
+     if (!sale.latitude || !sale.longitude) return acc;
+     const key = sale.general_location || 'Unknown';
+     if (!acc[key]) {
+       acc[key] = [];
+     }
+     acc[key].push(sale);
+     return acc;
+   }, {});
+
+   // Debug: Log sales data
+   useEffect(() => {
+     console.log('🗺️ SaleMap received sales:', sales.length);
+     console.log('Sales with coordinates:', sales.filter(s => s.latitude && s.longitude).length);
+     sales.forEach(sale => {
+       console.log(`Sale: ${sale.title} - Lat: ${sale.latitude}, Lon: ${sale.longitude}`);
+     });
+   }, [sales]);
 
   useEffect(() => {
     // Get user's current location
