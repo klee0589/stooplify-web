@@ -38,7 +38,7 @@ Deno.serve(async (req) => {
         quantity: 1,
       }],
       mode: listingType === 'subscription' ? 'subscription' : 'payment',
-      success_url: `${baseUrl}/AddYardSale?payment=success`,
+      success_url: `${baseUrl}/Profile?payment=success`,
       cancel_url: `${baseUrl}/AddYardSale?payment=cancelled`,
       customer_email: user.email,
       metadata: {
