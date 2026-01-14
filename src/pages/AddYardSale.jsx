@@ -661,15 +661,27 @@ export default function AddYardSale() {
                 </div>
               )}
 
-              <div className="flex gap-4">
-                <Button
-                  variant="outline"
-                  onClick={() => setStep(2)}
-                  className="flex-1 py-6 rounded-xl"
-                  disabled={isCheckingPayment}
-                >
-                  Back
-                </Button>
+              <div className="flex flex-col gap-3">
+                <div className="flex gap-4">
+                  <Button
+                    variant="outline"
+                    onClick={() => setStep(2)}
+                    className="flex-1 py-6 rounded-xl"
+                    disabled={isCheckingPayment}
+                  >
+                    Back
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setNeedsPayment(false);
+                      toast.success('Payment skipped for testing');
+                    }}
+                    className="flex-1 py-6 rounded-xl bg-gray-600 hover:bg-gray-700 text-white"
+                    disabled={isCheckingPayment}
+                  >
+                    Skip Payment (Testing)
+                  </Button>
+                </div>
               </div>
             </motion.div>
           )}
