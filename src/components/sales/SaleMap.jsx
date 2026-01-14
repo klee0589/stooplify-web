@@ -112,7 +112,10 @@ export default function SaleMap({ sales, center }) {
         />
         {sales.map((sale) => {
           // Use approximate coordinates (not exact) for map display
-          if (!sale.latitude || !sale.longitude) return null;
+          if (!sale.latitude || !sale.longitude) {
+            console.log('Sale missing coordinates:', sale.title, sale);
+            return null;
+          }
           
           return (
             <Marker
