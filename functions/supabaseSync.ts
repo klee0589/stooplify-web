@@ -131,37 +131,8 @@ Deno.serve(async (req) => {
           console.log(`📤 Upserting ${listings.length} listings to Supabase...`);
           console.log('Sample listing:', JSON.stringify(listings[0], null, 2));
 
-          // Try inserting one at a time to find the problematic record
           let successCount = 0;
           let failedRecords = [];
-
-          // Test with just the first listing
-          const testListing = listings[0];
-          console.log('🧪 Testing with first listing:', JSON.stringify(testListing, null, 2));
-          
-          // Try simple insert first
-          const { data: insertData, error: insertError } = await supabase
-            .from('listings')
-            .insert([testListing])
-            .select();
-
-          if (insertError) {
-            console.error('❌ Insert test failed:');
-            console.error('Code:', insertError.code);
-            console.error('Message:', insertError.message);
-            console.error('Details:', insertError.details);
-            console.error('Hint:', insertError.hint);
-            
-            return Response.json({ 
-              error: 'Insert test failed', 
-              code: insertError.code,
-              message: insertError.message,
-              details: insertError.details,
-              hint: insertError.hint
-            }, { status: 500 });
-          }
-
-          console.log('✅ Insert test succeeded!', insertData);
 
           for (const listing of listings) {
             const { data, error } = await supabase
