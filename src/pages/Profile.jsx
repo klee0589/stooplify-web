@@ -109,10 +109,9 @@ export default function Profile() {
   const toggleNotificationSetting = useMutation({
     mutationFn: async (data) => {
       await base44.auth.updateMe(data);
+      return await base44.auth.me();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['user'] });
-      const updatedUser = await base44.auth.me();
+    onSuccess: (updatedUser) => {
       setUser(updatedUser);
       toast.success(t('notificationSettingsUpdated'));
     },
@@ -124,9 +123,9 @@ export default function Profile() {
         full_name: editedName,
         phone: editedPhone 
       });
+      return await base44.auth.me();
     },
-    onSuccess: async () => {
-      const updatedUser = await base44.auth.me();
+    onSuccess: (updatedUser) => {
       setUser(updatedUser);
       setIsEditing(false);
       toast.success(t('nameUpdatedSuccessfully'));
