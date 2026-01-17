@@ -23,6 +23,7 @@ export default function Profile() {
   const [isChecking, setIsChecking] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [editedName, setEditedName] = useState('');
+  const [editedPhone, setEditedPhone] = useState('');
   const [language, setLanguage] = useState('en');
   
   useEffect(() => {
