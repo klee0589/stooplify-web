@@ -135,6 +135,38 @@ Deno.serve(async (req) => {
           let successCount = 0;
           let failedRecords = [];
 
+          // Test with just the first listing
+          const testListing = listings[0];
+          console.log('🧪 Testing with first listing:', JSON.stringify(testListing, null, 2));
+          
+          // Try simple insert first
+          const { data: insertData, error: insertError } = await supabase
+            .from('listings')
+            .insert([testListing])
+            .select();
+
+          if (insertError) {
+            console.error('❌ Insert test failed:', insertError);
+            console.error('Error string:', String(insertError));
+            console.error('Error type:', typeof insertError);
+            
+            // Try to get more info
+            try {
+              console.error('Error JSON:', JSON.stringify(insertError, Object.getOwnPropertyNames(insertError)));
+            } catch (e) {
+              console.error('Could not stringify error');
+            }
+            
+            return Response.json({ 
+              error: 'Insert test failed', 
+              insertError: String(insertError),
+              errorKeys: Object.keys(insertError),
+              errorProps: Object.getOwnPropertyNames(insertError)
+            }, { status: 500 });
+          }
+
+          console.log('✅ Insert test succeeded!', insertData);
+
           for (const listing of listings) {
             const { data, error } = await supabase
               .from('listings')
@@ -143,8 +175,6 @@ Deno.serve(async (req) => {
 
             if (error) {
               console.error(`❌ Failed to upsert ${listing.id}:`, JSON.stringify(error, null, 2));
-              console.error('Full error object keys:', Object.keys(error));
-              console.error('Error details:', error.details, 'Code:', error.code, 'Hint:', error.hint);
               failedRecords.push({ 
                 id: listing.id, 
                 error: error.message || error.code || 'Unknown error',
