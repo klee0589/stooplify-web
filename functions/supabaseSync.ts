@@ -105,36 +105,45 @@ Deno.serve(async (req) => {
       }
 
       case 'sync_all': {
-        // Sync all Base44 sales to Supabase (no user_id for existing sales)
-        const sales = await base44.asServiceRole.entities.YardSale.filter({ status: 'approved' });
-        console.log(`📊 Syncing ${sales.length} sales to Supabase...`);
+        // Sync all Base44 sales to Supabase
+        try {
+          const sales = await base44.asServiceRole.entities.YardSale.filter({ status: 'approved' });
+          console.log(`📊 Found ${sales.length} sales to sync`);
 
-        const listings = sales.map(sale => ({
-          id: sale.id,
-          title: sale.title,
-          description: sale.description,
-          location_lat: sale.latitude,
-          location_lng: sale.longitude,
-          start_time: `${sale.date}T${sale.start_time || '08:00'}`,
-          end_time: `${sale.date}T${sale.end_time || '14:00'}`,
-          photos: sale.photos || [],
-          created_at: sale.created_date || new Date().toISOString(),
-          updated_at: sale.updated_date || new Date().toISOString(),
-          user_id: null, // No user mapping for bulk sync
-        }));
+          const listings = sales
+            .filter(sale => sale.latitude && sale.longitude) // Only sync sales with coordinates
+            .map(sale => ({
+              id: sale.id,
+              title: sale.title || 'Untitled Sale',
+              description: sale.description || '',
+              location_lat: sale.latitude,
+              location_lng: sale.longitude,
+              start_time: `${sale.date}T${sale.start_time || '08:00'}`,
+              end_time: `${sale.date}T${sale.end_time || '14:00'}`,
+              photos: sale.photos || [],
+              created_at: sale.created_date || new Date().toISOString(),
+              updated_at: sale.updated_date || new Date().toISOString(),
+              user_id: null,
+            }));
 
-        const { data, error } = await supabase
-          .from('listings')
-          .upsert(listings, { onConflict: 'id' })
-          .select();
+          console.log(`📤 Upserting ${listings.length} listings to Supabase...`);
 
-        if (error) {
-          console.error('❌ Supabase sync error:', error);
-          return Response.json({ error: error.message }, { status: 500 });
+          const { data, error } = await supabase
+            .from('listings')
+            .upsert(listings, { onConflict: 'id' })
+            .select();
+
+          if (error) {
+            console.error('❌ Supabase upsert error:', error);
+            return Response.json({ error: error.message, details: error }, { status: 500 });
+          }
+
+          console.log(`✅ Synced ${data?.length || 0} listings to Supabase`);
+          return Response.json({ success: true, synced: data?.length || 0 });
+        } catch (err) {
+          console.error('❌ Sync exception:', err);
+          return Response.json({ error: err.message, stack: err.stack }, { status: 500 });
         }
-
-        console.log(`✅ Synced ${data.length} listings to Supabase`);
-        return Response.json({ success: true, synced: data.length });
       }
 
       default:
