@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
           photos: saleData.photos || [],
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
-          user_id: user.id,
+          user_id: null,
         };
 
         const { data, error } = await supabase
