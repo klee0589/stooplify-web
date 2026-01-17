@@ -146,22 +146,18 @@ Deno.serve(async (req) => {
             .select();
 
           if (insertError) {
-            console.error('❌ Insert test failed:', insertError);
-            console.error('Error string:', String(insertError));
-            console.error('Error type:', typeof insertError);
-            
-            // Try to get more info
-            try {
-              console.error('Error JSON:', JSON.stringify(insertError, Object.getOwnPropertyNames(insertError)));
-            } catch (e) {
-              console.error('Could not stringify error');
-            }
+            console.error('❌ Insert test failed:');
+            console.error('Code:', insertError.code);
+            console.error('Message:', insertError.message);
+            console.error('Details:', insertError.details);
+            console.error('Hint:', insertError.hint);
             
             return Response.json({ 
               error: 'Insert test failed', 
-              insertError: String(insertError),
-              errorKeys: Object.keys(insertError),
-              errorProps: Object.getOwnPropertyNames(insertError)
+              code: insertError.code,
+              message: insertError.message,
+              details: insertError.details,
+              hint: insertError.hint
             }, { status: 500 });
           }
 
