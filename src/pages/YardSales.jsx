@@ -54,9 +54,16 @@ export default function YardSales() {
     queryFn: async () => {
       const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
       
+      // Filter out past sales
+      const now = new Date();
+      const upcomingSales = allSales.filter(sale => {
+        const saleDateTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
+        return saleDateTime >= now;
+      });
+      
       // Fetch sellers for each sale
       const salesWithSellers = await Promise.all(
-        allSales.map(async (sale) => {
+        upcomingSales.map(async (sale) => {
           if (sale.created_by) {
             const sellers = await base44.entities.User.filter({ email: sale.created_by });
             return { ...sale, seller: sellers[0] || null };
