@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import SaleCard from '../components/sales/SaleCard';
 import SaleFilters from '../components/sales/SaleFilters';
 import SaleMap from '../components/sales/SaleMap';
+import SupabaseSync from '../components/SupabaseSync';
 import { startOfDay, endOfDay, startOfWeek, endOfWeek, addDays, isWithinInterval } from 'date-fns';
 
 export default function YardSales() {
@@ -48,7 +49,7 @@ export default function YardSales() {
     checkAuth();
   }, []);
 
-  const { data: sales = [], isLoading } = useQuery({
+  const { data: sales = [], isLoading, refetch } = useQuery({
     queryKey: ['yardSales'],
     queryFn: async () => {
       const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
