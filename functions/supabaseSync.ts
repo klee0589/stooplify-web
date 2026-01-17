@@ -112,21 +112,24 @@ Deno.serve(async (req) => {
 
           const listings = sales
             .filter(sale => sale.latitude && sale.longitude) // Only sync sales with coordinates
-            .map(sale => ({
-              id: sale.id,
-              title: sale.title || 'Untitled Sale',
-              description: sale.description || '',
-              location_lat: sale.latitude,
-              location_lng: sale.longitude,
-              start_time: `${sale.date}T${sale.start_time || '08:00'}`,
-              end_time: `${sale.date}T${sale.end_time || '14:00'}`,
-              photos: sale.photos || [],
-              created_at: sale.created_date || new Date().toISOString(),
-              updated_at: sale.updated_date || new Date().toISOString(),
-              user_id: null,
-            }));
+            .map(sale => {
+              const listing = {
+                id: sale.id,
+                title: sale.title || 'Untitled Sale',
+                description: sale.description || '',
+                location_lat: parseFloat(sale.latitude),
+                location_lng: parseFloat(sale.longitude),
+                start_time: `${sale.date}T${sale.start_time || '08:00'}:00`,
+                end_time: `${sale.date}T${sale.end_time || '14:00'}:00`,
+                photos: Array.isArray(sale.photos) ? sale.photos : [],
+                created_at: sale.created_date || new Date().toISOString(),
+                updated_at: sale.updated_date || new Date().toISOString(),
+              };
+              return listing;
+            });
 
           console.log(`📤 Upserting ${listings.length} listings to Supabase...`);
+          console.log('Sample listing:', listings[0]);
 
           const { data, error } = await supabase
             .from('listings')
