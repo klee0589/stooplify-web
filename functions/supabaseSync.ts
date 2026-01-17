@@ -105,7 +105,7 @@ Deno.serve(async (req) => {
       }
 
       case 'sync_all': {
-        // Sync all Base44 sales to Supabase
+        // Sync all Base44 sales to Supabase (no user_id for existing sales)
         const sales = await base44.asServiceRole.entities.YardSale.filter({ status: 'approved' });
         console.log(`📊 Syncing ${sales.length} sales to Supabase...`);
 
@@ -120,7 +120,7 @@ Deno.serve(async (req) => {
           photos: sale.photos || [],
           created_at: sale.created_date || new Date().toISOString(),
           updated_at: sale.updated_date || new Date().toISOString(),
-          user_id: user.id,
+          user_id: null, // No user mapping for bulk sync
         }));
 
         const { data, error } = await supabase
