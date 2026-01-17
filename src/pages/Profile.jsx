@@ -543,24 +543,17 @@ export default function Profile() {
                 const getSaleStatus = () => {
                   if (!sale.date) return { label: t('dateTBD'), color: 'gray' };
 
-                   const saleDate = new Date(sale.date);
-                   const now = new Date();
+                  const now = new Date();
+                  const saleDateTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
+                  const saleStartTime = new Date(`${sale.date}T${sale.start_time || '00:00'}`);
 
-                   // Set time for comparison
-                   const saleDateStart = new Date(saleDate);
-                   saleDateStart.setHours(0, 0, 0, 0);
-                   const saleDateEnd = new Date(saleDate);
-                   saleDateEnd.setHours(23, 59, 59, 999);
-
-                   const nowTime = now.getTime();
-
-                   if (nowTime < saleDateStart.getTime()) {
-                     return { label: t('upcoming'), color: 'blue' };
-                   } else if (nowTime >= saleDateStart.getTime() && nowTime <= saleDateEnd.getTime()) {
-                     return { label: t('inProgress'), color: 'green' };
-                   } else {
-                     return { label: t('finished'), color: 'gray' };
-                   }
+                  if (now < saleStartTime) {
+                    return { label: t('upcoming'), color: 'blue' };
+                  } else if (now >= saleStartTime && now < saleDateTime) {
+                    return { label: t('inProgress'), color: 'green' };
+                  } else {
+                    return { label: t('finished'), color: 'gray' };
+                  }
                 };
                 
                 const saleStatus = getSaleStatus();
