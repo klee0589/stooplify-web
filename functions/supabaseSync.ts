@@ -129,22 +129,36 @@ Deno.serve(async (req) => {
             });
 
           console.log(`📤 Upserting ${listings.length} listings to Supabase...`);
-          console.log('Sample listing:', listings[0]);
+          console.log('Sample listing:', JSON.stringify(listings[0], null, 2));
 
-          const { data, error } = await supabase
-            .from('listings')
-            .upsert(listings, { onConflict: 'id' })
-            .select();
+          // Try inserting one at a time to find the problematic record
+          let successCount = 0;
+          let failedRecords = [];
 
-          if (error) {
-            console.error('❌ Supabase upsert error:', JSON.stringify(error, null, 2));
+          for (const listing of listings) {
+            const { data, error } = await supabase
+              .from('listings')
+              .upsert([listing], { onConflict: 'id' })
+              .select();
+
+            if (error) {
+              console.error(`❌ Failed to upsert ${listing.id}:`, error);
+              failedRecords.push({ id: listing.id, error: error.message || 'Unknown error' });
+            } else {
+              successCount++;
+            }
+          }
+
+          console.log(`✅ Successfully synced ${successCount}/${listings.length} listings`);
+          
+          if (failedRecords.length > 0) {
+            console.error('Failed records:', failedRecords);
             return Response.json({ 
-              error: error.message || 'Unknown Supabase error',
-              code: error.code,
-              hint: error.hint,
-              details: error.details,
-              fullError: JSON.stringify(error)
-            }, { status: 500 });
+              success: true, 
+              synced: successCount,
+              failed: failedRecords.length,
+              errors: failedRecords
+            }, { status: 200 });
           }
 
           console.log(`✅ Synced ${data?.length || 0} listings to Supabase`);
