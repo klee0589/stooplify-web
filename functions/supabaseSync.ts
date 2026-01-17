@@ -9,14 +9,23 @@ const supabase = createClient(
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    
-    // Verify user is authenticated
-    const user = await base44.auth.me();
-    if (!user) {
-      return Response.json({ error: 'Unauthorized' }, { status: 401 });
-    }
+    const body = await req.json();
 
-    const { action, saleId, saleData } = await req.json();
+    // Check if this is an automation event or direct API call
+    let action, saleId, saleData;
+    
+    if (body.event) {
+      // Automation event format
+      console.log('🤖 Automation triggered:', body.event.type);
+      action = body.event.type; // 'create', 'update', or 'delete'
+      saleId = body.event.entity_id;
+      saleData = body.data;
+    } else {
+      // Direct API call format
+      action = body.action;
+      saleId = body.saleId;
+      saleData = body.saleData;
+    }
 
     console.log(`🔄 Supabase Sync - Action: ${action}, SaleID: ${saleId}`);
 
