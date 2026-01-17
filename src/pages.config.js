@@ -1,5 +1,6 @@
 import AddYardSale from './pages/AddYardSale';
 import AdminCommunityLocations from './pages/AdminCommunityLocations';
+import AdminSupabaseSync from './pages/AdminSupabaseSync';
 import ApplyAsShop from './pages/ApplyAsShop';
 import Favorites from './pages/Favorites';
 import Guides from './pages/Guides';
@@ -14,13 +15,13 @@ import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
 import YardSaleDetails from './pages/YardSaleDetails';
 import YardSales from './pages/YardSales';
-import AdminSupabaseSync from './pages/AdminSupabaseSync';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
     "AddYardSale": AddYardSale,
     "AdminCommunityLocations": AdminCommunityLocations,
+    "AdminSupabaseSync": AdminSupabaseSync,
     "ApplyAsShop": ApplyAsShop,
     "Favorites": Favorites,
     "Guides": Guides,
@@ -35,7 +36,6 @@ export const PAGES = {
     "Profile": Profile,
     "YardSaleDetails": YardSaleDetails,
     "YardSales": YardSales,
-    "AdminSupabaseSync": AdminSupabaseSync,
 }
 
 export const pagesConfig = {

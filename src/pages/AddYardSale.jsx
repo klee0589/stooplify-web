@@ -247,6 +247,14 @@ export default function AddYardSale() {
           ...coordinates,
           photos: photos,
         });
+        
+        // Trigger Supabase sync for update
+        await base44.functions.invoke('supabaseSync', {
+          action: 'update',
+          saleId: editSaleId,
+          saleData: { ...data, ...coordinates, photos: photos }
+        });
+        
         return { id: editSaleId };
       } else {
         // Create new sale
@@ -256,6 +264,13 @@ export default function AddYardSale() {
           photos: photos,
           status: 'approved',
           views: 0,
+        });
+        
+        // Trigger Supabase sync for new sale
+        await base44.functions.invoke('supabaseSync', {
+          action: 'create',
+          saleId: sale.id,
+          saleData: { ...data, ...coordinates, photos: photos, id: sale.id }
         });
         
         // Increment free_listings_used
