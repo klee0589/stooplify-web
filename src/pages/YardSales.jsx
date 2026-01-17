@@ -159,6 +159,9 @@ export default function YardSales() {
 
   return (
     <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
+      {/* Supabase Realtime Sync */}
+      <SupabaseSync onUpdate={() => refetch()} />
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <motion.div
