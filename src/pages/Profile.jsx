@@ -51,6 +51,7 @@ export default function Profile() {
           const currentUser = await base44.auth.me();
           setUser(currentUser);
           setEditedName(currentUser.full_name || '');
+          setEditedPhone(currentUser.phone || '');
         }
       } catch (e) {
         setIsAuthenticated(false);
@@ -105,31 +106,28 @@ export default function Profile() {
   
   const isRepeatSeller = mySales.length >= 3;
 
-  const toggleNotificationsMutation = useMutation({
-    mutationFn: async () => {
-      if (subscription) {
-        await base44.entities.EmailSubscriber.update(subscription.id, { 
-          notify_new_sales: !subscription.notify_new_sales 
-        });
-      } else {
-        await base44.entities.EmailSubscriber.create({
-          email: user.email,
-          notify_new_sales: true,
-        });
-      }
+  const toggleNotificationSetting = useMutation({
+    mutationFn: async (data) => {
+      await base44.auth.updateMe(data);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['emailSubscription'] });
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+      const updatedUser = await base44.auth.me();
+      setUser(updatedUser);
       toast.success(t('notificationSettingsUpdated'));
     },
   });
 
   const updateNameMutation = useMutation({
     mutationFn: async () => {
-      await base44.auth.updateMe({ full_name: editedName });
+      await base44.auth.updateMe({ 
+        full_name: editedName,
+        phone: editedPhone 
+      });
     },
-    onSuccess: () => {
-      setUser(prev => ({ ...prev, full_name: editedName }));
+    onSuccess: async () => {
+      const updatedUser = await base44.auth.me();
+      setUser(updatedUser);
       setIsEditing(false);
       toast.success(t('nameUpdatedSuccessfully'));
     },
@@ -209,32 +207,46 @@ export default function Profile() {
             
             <div className="flex-1">
               {isEditing ? (
-                <div className="flex items-center gap-3">
-                  <Input
-                    value={editedName}
-                    onChange={(e) => setEditedName(e.target.value)}
-                    className="max-w-[250px] rounded-xl"
-                    placeholder={t('yourName')}
-                  />
-                  <Button
-                    size="icon"
-                    onClick={() => updateNameMutation.mutate()}
-                    className="bg-green-500 hover:bg-green-600 rounded-xl"
-                    disabled={updateNameMutation.isPending}
-                  >
-                    <Check className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    onClick={() => {
-                      setIsEditing(false);
-                      setEditedName(user.full_name || '');
-                    }}
-                    className="rounded-xl"
-                  >
-                    <X className="w-4 h-4" />
-                  </Button>
+                <div className="space-y-3 w-full">
+                  <div>
+                    <Label className="text-sm text-gray-600 mb-1 block">Name</Label>
+                    <Input
+                      value={editedName}
+                      onChange={(e) => setEditedName(e.target.value)}
+                      className="rounded-xl"
+                      placeholder={t('yourName')}
+                    />
+                  </div>
+                  <div>
+                    <Label className="text-sm text-gray-600 mb-1 block">Phone (for SMS)</Label>
+                    <Input
+                      type="tel"
+                      value={editedPhone}
+                      onChange={(e) => setEditedPhone(e.target.value)}
+                      className="rounded-xl"
+                      placeholder="+1 (555) 123-4567"
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        setIsEditing(false);
+                        setEditedName(user.full_name || '');
+                        setEditedPhone(user.phone || '');
+                      }}
+                      className="flex-1 rounded-xl"
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      onClick={() => updateNameMutation.mutate()}
+                      className="flex-1 bg-green-500 hover:bg-green-600 rounded-xl"
+                      disabled={updateNameMutation.isPending}
+                    >
+                      {updateNameMutation.isPending ? 'Saving...' : 'Save'}
+                    </Button>
+                  </div>
                 </div>
               ) : (
                 <div className="flex items-center gap-3">
@@ -400,15 +412,97 @@ export default function Profile() {
           >
             {t('notifications')}
           </h3>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="font-medium text-[#2E3A59] dark:text-white">{t('emailNotifications')}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">{t('getNotifiedAboutNewSales')}</p>
+          
+          <div className="space-y-4">
+            {/* Master Toggle */}
+            <div className="flex items-center justify-between py-3 border-b dark:border-gray-700">
+              <div>
+                <p className="font-semibold text-[#2E3A59] dark:text-white">Enable Notifications</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Master switch for all notifications</p>
+              </div>
+              <Switch
+                checked={user.notification_enabled ?? true}
+                onCheckedChange={(checked) => toggleNotificationSetting.mutate({ notification_enabled: checked })}
+              />
             </div>
-            <Switch
-              checked={subscription?.notify_new_sales || false}
-              onCheckedChange={() => toggleNotificationsMutation.mutate()}
-            />
+
+            {user.notification_enabled !== false && (
+              <>
+                {/* Notification Methods */}
+                <div className="space-y-3">
+                  <p className="font-medium text-[#2E3A59] dark:text-white text-sm">Notification Methods</p>
+                  
+                  <div className="flex items-center justify-between py-2 pl-4">
+                    <div>
+                      <p className="font-medium text-[#2E3A59] dark:text-white">Email</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Receive notifications via email</p>
+                    </div>
+                    <Switch
+                      checked={user.notification_email ?? true}
+                      onCheckedChange={(checked) => toggleNotificationSetting.mutate({ notification_email: checked })}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between py-2 pl-4">
+                    <div>
+                      <p className="font-medium text-[#2E3A59] dark:text-white">SMS</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                        {user.phone ? 'Receive notifications via text' : 'Add phone number to enable'}
+                      </p>
+                    </div>
+                    <Switch
+                      checked={user.notification_sms ?? false}
+                      onCheckedChange={(checked) => {
+                        if (!user.phone) {
+                          toast.error('Please add a phone number first');
+                          return;
+                        }
+                        toggleNotificationSetting.mutate({ notification_sms: checked });
+                      }}
+                      disabled={!user.phone}
+                    />
+                  </div>
+                </div>
+
+                {/* Notification Types */}
+                <div className="space-y-3 border-t dark:border-gray-700 pt-4">
+                  <p className="font-medium text-[#2E3A59] dark:text-white text-sm">What to Notify About</p>
+                  
+                  <div className="flex items-center justify-between py-2 pl-4">
+                    <div>
+                      <p className="font-medium text-[#2E3A59] dark:text-white">New sales</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">New yard sales in your area</p>
+                    </div>
+                    <Switch
+                      checked={user.notify_new_sales ?? true}
+                      onCheckedChange={(checked) => toggleNotificationSetting.mutate({ notify_new_sales: checked })}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between py-2 pl-4">
+                    <div>
+                      <p className="font-medium text-[#2E3A59] dark:text-white">Favorites</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Updates to your favorited sales</p>
+                    </div>
+                    <Switch
+                      checked={user.notify_favorites ?? true}
+                      onCheckedChange={(checked) => toggleNotificationSetting.mutate({ notify_favorites: checked })}
+                    />
+                  </div>
+
+                  <div className="flex items-center justify-between py-2 pl-4">
+                    <div>
+                      <p className="font-medium text-[#2E3A59] dark:text-white">Reminders</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">Reminders before sales you're attending</p>
+                    </div>
+                    <Switch
+                      checked={user.notify_reminders ?? true}
+                      onCheckedChange={(checked) => toggleNotificationSetting.mutate({ notify_reminders: checked })}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
           </div>
         </motion.div>
 
