@@ -202,8 +202,7 @@ Deno.serve(async (req) => {
             }, { status: 200 });
           }
 
-          console.log(`✅ Synced ${data?.length || 0} listings to Supabase`);
-          return Response.json({ success: true, synced: data?.length || 0 });
+          return Response.json({ success: true, synced: successCount });
         } catch (err) {
           console.error('❌ Sync exception:', err);
           return Response.json({ error: err.message, stack: err.stack }, { status: 500 });
