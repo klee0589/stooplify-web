@@ -142,8 +142,15 @@ Deno.serve(async (req) => {
               .select();
 
             if (error) {
-              console.error(`❌ Failed to upsert ${listing.id}:`, error);
-              failedRecords.push({ id: listing.id, error: error.message || 'Unknown error' });
+              console.error(`❌ Failed to upsert ${listing.id}:`, JSON.stringify(error, null, 2));
+              console.error('Full error object keys:', Object.keys(error));
+              console.error('Error details:', error.details, 'Code:', error.code, 'Hint:', error.hint);
+              failedRecords.push({ 
+                id: listing.id, 
+                error: error.message || error.code || 'Unknown error',
+                details: error.details,
+                hint: error.hint
+              });
             } else {
               successCount++;
             }
