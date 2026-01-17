@@ -137,8 +137,14 @@ Deno.serve(async (req) => {
             .select();
 
           if (error) {
-            console.error('❌ Supabase upsert error:', error);
-            return Response.json({ error: error.message, details: error }, { status: 500 });
+            console.error('❌ Supabase upsert error:', JSON.stringify(error, null, 2));
+            return Response.json({ 
+              error: error.message || 'Unknown Supabase error',
+              code: error.code,
+              hint: error.hint,
+              details: error.details,
+              fullError: JSON.stringify(error)
+            }, { status: 500 });
           }
 
           console.log(`✅ Synced ${data?.length || 0} listings to Supabase`);
