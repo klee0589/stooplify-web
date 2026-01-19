@@ -92,7 +92,7 @@ export default function HeroSection() {
               className="inline-flex items-center gap-2 px-4 py-2 bg-[#FF6F61]/10 rounded-full mb-6"
             >
               <Sparkles className="w-4 h-4 text-[#14B8FF]" />
-              <span className="text-sm font-medium text-[#14B8FF]">Discover Local Treasures</span>
+              <span className="text-sm font-medium text-[#14B8FF]">Bushwick yard & stoop sales, all in one place.</span>
             </motion.div>
 
             <motion.h1
