@@ -10,35 +10,9 @@ const supabase = createClient(
   import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_c5QCq6-iXelaBtg-8WZ-bw_t655ZwzR'
 );
 
-// Global flag to ensure sync only happens once per session
-let hasInitialSynced = false;
-
 export default function SupabaseSync({ onUpdate }) {
   const [isConnected, setIsConnected] = useState(false);
   const [recentUpdates, setRecentUpdates] = useState([]);
-
-  // One-time sync on first mount only
-  useEffect(() => {
-    const initialSync = async () => {
-      if (hasInitialSynced) {
-        console.log('⏭️ Initial sync already done, skipping');
-        return;
-      }
-      hasInitialSynced = true;
-      
-      try {
-        console.log('🔄 Initial sync from Supabase...');
-        await base44.functions.invoke('supabasePullUpdates', {});
-        console.log('✅ Initial sync complete');
-        if (onUpdate) onUpdate();
-      } catch (error) {
-        console.error('❌ Initial sync error:', error);
-        hasInitialSynced = false; // Reset on error to allow retry
-      }
-    };
-
-    initialSync();
-  }, []);
 
   useEffect(() => {
     console.log('🔌 Setting up Supabase realtime subscription...');
