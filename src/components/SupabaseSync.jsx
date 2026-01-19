@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
@@ -10,16 +10,21 @@ const supabase = createClient(
   import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_c5QCq6-iXelaBtg-8WZ-bw_t655ZwzR'
 );
 
+// Global flag to ensure sync only happens once per session
+let hasInitialSynced = false;
+
 export default function SupabaseSync({ onUpdate }) {
   const [isConnected, setIsConnected] = useState(false);
   const [recentUpdates, setRecentUpdates] = useState([]);
-  const hasSyncedRef = useRef(false);
 
-  // One-time sync on mount
+  // One-time sync on first mount only
   useEffect(() => {
     const initialSync = async () => {
-      if (hasSyncedRef.current) return;
-      hasSyncedRef.current = true;
+      if (hasInitialSynced) {
+        console.log('⏭️ Initial sync already done, skipping');
+        return;
+      }
+      hasInitialSynced = true;
       
       try {
         console.log('🔄 Initial sync from Supabase...');
@@ -28,6 +33,7 @@ export default function SupabaseSync({ onUpdate }) {
         if (onUpdate) onUpdate();
       } catch (error) {
         console.error('❌ Initial sync error:', error);
+        hasInitialSynced = false; // Reset on error to allow retry
       }
     };
 
