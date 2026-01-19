@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import SaleCard from '../components/sales/SaleCard';
 import SaleFilters from '../components/sales/SaleFilters';
 import SaleMap from '../components/sales/SaleMap';
+import SupabaseSync from '../components/SupabaseSync';
 import { startOfDay, endOfDay, startOfWeek, endOfWeek, addDays, isWithinInterval } from 'date-fns';
 
 export default function YardSales() {
@@ -51,40 +52,31 @@ export default function YardSales() {
   const { data: sales = [], isLoading, refetch } = useQuery({
     queryKey: ['yardSales'],
     queryFn: async () => {
-      // Fetch from Supabase via backend function
-      const response = await base44.functions.invoke('supabasePullUpdates');
-      const supabaseSales = response.data?.listings || [];
+      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
       
-      // Filter out sales older than 7 days
+      // Filter out sales older than 7 days (keep recent past sales + upcoming)
       const now = new Date();
       const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      const recentSales = supabaseSales.filter(sale => {
+      const upcomingSales = allSales.filter(sale => {
         const saleDateTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
         return saleDateTime >= sevenDaysAgo;
       });
       
-      // Map Supabase data to match expected format and mark if past
-      const salesWithMetadata = await Promise.all(
-        recentSales.map(async (sale) => {
+      // Fetch sellers for each sale and mark if past
+      const salesWithSellers = await Promise.all(
+        upcomingSales.map(async (sale) => {
           const saleDateTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
           const isPast = saleDateTime < now;
           
-          // Fetch seller info if available
-          let seller = null;
           if (sale.created_by) {
             const sellers = await base44.entities.User.filter({ email: sale.created_by });
-            seller = sellers[0] || null;
+            return { ...sale, seller: sellers[0] || null, isPast };
           }
-          
-          return {
-            ...sale,
-            seller,
-            isPast
-          };
+          return { ...sale, seller: null, isPast };
         })
       );
       
-      return salesWithMetadata;
+      return salesWithSellers;
     },
   });
 
@@ -179,6 +171,9 @@ export default function YardSales() {
 
   return (
     <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
+      {/* Supabase Realtime Sync */}
+      <SupabaseSync onUpdate={() => refetch()} />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <motion.div
