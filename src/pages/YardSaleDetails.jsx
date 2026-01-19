@@ -36,6 +36,8 @@ export default function YardSaleDetails() {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [seller, setSeller] = useState(null);
   const [language, setLanguage] = useState('en');
+  const [translatedDescription, setTranslatedDescription] = useState(null);
+  const [isTranslating, setIsTranslating] = useState(false);
 
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -48,11 +50,34 @@ export default function YardSaleDetails() {
     
     const handleLanguageChange = (e) => {
       setLanguage(e.detail);
+      setTranslatedDescription(null); // Reset translation on language change
     };
     
     window.addEventListener('languageChange', handleLanguageChange);
     return () => window.removeEventListener('languageChange', handleLanguageChange);
   }, []);
+
+  // Translate description when language is Spanish
+  useEffect(() => {
+    const translateDescription = async () => {
+      if (language === 'es' && sale?.description && !translatedDescription && !isTranslating) {
+        setIsTranslating(true);
+        try {
+          const response = await base44.integrations.Core.InvokeLLM({
+            prompt: `Translate the following yard sale description to Spanish. Only return the translation, nothing else:\n\n${sale.description}`,
+            add_context_from_internet: false
+          });
+          setTranslatedDescription(response);
+        } catch (error) {
+          console.error('Translation failed:', error);
+        } finally {
+          setIsTranslating(false);
+        }
+      }
+    };
+
+    translateDescription();
+  }, [language, sale?.description, translatedDescription, isTranslating]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -609,7 +634,12 @@ export default function YardSaleDetails() {
                 <h3 className="font-semibold text-[#2E3A59] mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
                   {t('aboutThisSale')}
                 </h3>
-                <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">{sale.description}</p>
+                <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">
+                  {language === 'es' && translatedDescription ? translatedDescription : sale.description}
+                  {language === 'es' && isTranslating && !translatedDescription && (
+                    <span className="text-gray-400 italic"> (Traduciendo...)</span>
+                  )}
+                </p>
               </div>
             )}
 
