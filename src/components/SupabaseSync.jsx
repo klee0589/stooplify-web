@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { createClient } from '@supabase/supabase-js';
 import { base44 } from '@/api/base44Client';
 import { toast } from 'sonner';
@@ -13,6 +13,26 @@ const supabase = createClient(
 export default function SupabaseSync({ onUpdate }) {
   const [isConnected, setIsConnected] = useState(false);
   const [recentUpdates, setRecentUpdates] = useState([]);
+  const hasSyncedRef = useRef(false);
+
+  // One-time sync on mount
+  useEffect(() => {
+    const initialSync = async () => {
+      if (hasSyncedRef.current) return;
+      hasSyncedRef.current = true;
+      
+      try {
+        console.log('🔄 Initial sync from Supabase...');
+        await base44.functions.invoke('supabasePullUpdates', {});
+        console.log('✅ Initial sync complete');
+        if (onUpdate) onUpdate();
+      } catch (error) {
+        console.error('❌ Initial sync error:', error);
+      }
+    };
+
+    initialSync();
+  }, []);
 
   useEffect(() => {
     console.log('🔌 Setting up Supabase realtime subscription...');
@@ -29,6 +49,13 @@ export default function SupabaseSync({ onUpdate }) {
           const event = payload.eventType;
           const listing = payload.new || payload.old;
 
+          // Sync after realtime event
+          try {
+            await base44.functions.invoke('supabasePullUpdates', {});
+          } catch (error) {
+            console.error('❌ Sync error:', error);
+          }
+
           // Show toast notification
           if (event === 'INSERT') {
             toast.success(`🆕 New sale: ${listing.title}`, {
@@ -43,7 +70,7 @@ export default function SupabaseSync({ onUpdate }) {
             setRecentUpdates(prev => [...prev.slice(-4), { type: 'delete', title: listing.title, time: new Date() }]);
           }
 
-          // Trigger refresh in parent component only
+          // Trigger refresh in parent component
           if (onUpdate) {
             onUpdate();
           }
@@ -59,9 +86,6 @@ export default function SupabaseSync({ onUpdate }) {
       supabase.removeChannel(channel);
     };
   }, [onUpdate]);
-
-  // Initial pull disabled - rely on realtime only to prevent duplicates
-  // Manual sync can be triggered from admin panel if needed
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
