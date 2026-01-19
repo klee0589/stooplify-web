@@ -1,12 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 import { MapPin, Calendar, Clock, Heart, ArrowRight } from 'lucide-react';
 import { format } from 'date-fns';
 import TrustBadges from './TrustBadges';
+import { useTranslation } from '../translations';
 
 export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance, seller, isPast }) {
+  const [language, setLanguage] = useState('en');
+  
+  useEffect(() => {
+    const savedLang = localStorage.getItem('stooplify_lang') || 'en';
+    setLanguage(savedLang);
+    
+    const handleLanguageChange = (e) => {
+      setLanguage(e.detail);
+    };
+    
+    window.addEventListener('languageChange', handleLanguageChange);
+    return () => window.removeEventListener('languageChange', handleLanguageChange);
+  }, []);
+  
+  const t = useTranslation(language);
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -32,7 +48,7 @@ export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance,
         {/* Past Sale Badge */}
         {isPast ? (
           <span className="absolute top-3 left-3 px-2.5 py-1 bg-gray-500/90 backdrop-blur-sm rounded-full text-xs font-medium text-white">
-            Ended
+            {t('ended')}
           </span>
         ) : sale.category && (
           <span className="absolute top-3 left-3 px-2.5 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-medium text-[#2E3A59] capitalize">
@@ -73,7 +89,7 @@ export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance,
             <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
               <Calendar className="w-3.5 h-3.5 text-[#FF6F61]" />
               <span className="text-sm">
-                {sale.date ? format(new Date(sale.date), 'EEE, MMM d') : 'Date TBD'}
+                {sale.date ? format(new Date(sale.date), 'EEE, MMM d') : t('dateTBD')}
               </span>
             </div>
             <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
@@ -93,7 +109,7 @@ export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance,
 
           <div className="flex items-center justify-end pt-3 border-t border-gray-100">
             <span className="text-[#FF6F61] font-medium text-sm flex items-center gap-1">
-              Details
+              {t('details')}
               <ArrowRight className="w-3.5 h-3.5" />
             </span>
           </div>

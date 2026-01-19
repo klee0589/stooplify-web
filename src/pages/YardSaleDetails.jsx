@@ -21,6 +21,7 @@ import ShareModal from '../components/sales/ShareModal';
 import SafetyNote from '../components/sales/SafetyNote';
 import ReviewList from '../components/reviews/ReviewList';
 import ReviewForm from '../components/reviews/ReviewForm';
+import { useTranslation } from '../components/translations';
 
 export default function YardSaleDetails() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -34,9 +35,24 @@ export default function YardSaleDetails() {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [seller, setSeller] = useState(null);
+  const [language, setLanguage] = useState('en');
 
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  
+  const t = useTranslation(language);
+
+  useEffect(() => {
+    const savedLang = localStorage.getItem('stooplify_lang') || 'en';
+    setLanguage(savedLang);
+    
+    const handleLanguageChange = (e) => {
+      setLanguage(e.detail);
+    };
+    
+    window.addEventListener('languageChange', handleLanguageChange);
+    return () => window.removeEventListener('languageChange', handleLanguageChange);
+  }, []);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -158,7 +174,7 @@ export default function YardSaleDetails() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['favorites'] });
-      toast.success(isFavorite ? 'Removed from favorites' : 'Added to favorites!');
+      toast.success(isFavorite ? t('removedFromFavorites') : t('addedToFavorites'));
     },
   });
 
@@ -286,7 +302,7 @@ export default function YardSaleDetails() {
       }
     }
     
-    if (window.confirm('Are you sure you want to delete this sale? This action cannot be undone.')) {
+    if (window.confirm(t('confirmDelete'))) {
       deleteMutation.mutate();
     }
   };
@@ -369,11 +385,11 @@ export default function YardSaleDetails() {
       <div className="min-h-screen bg-[#F9F9F9] flex flex-col items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-[#2E3A59] mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            Sale Not Found
+            {t('saleNotFound')}
           </h2>
           <Link to={createPageUrl('YardSales')}>
             <Button className="bg-[#FF6F61] hover:bg-[#e55a4d]">
-              Browse All Sales
+              {t('browseAllSales')}
             </Button>
           </Link>
         </div>
@@ -393,7 +409,7 @@ export default function YardSaleDetails() {
             className="flex items-center gap-2 text-gray-600 hover:text-[#FF6F61] transition-colors"
           >
             <ArrowLeft className="w-5 h-5" />
-            Back to Sales
+            {t('backToSales')}
           </motion.button>
         </Link>
       </div>
@@ -514,9 +530,9 @@ export default function YardSaleDetails() {
                   <Calendar className="w-5 h-5 text-[#FF6F61]" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500">Date</p>
+                  <p className="text-xs text-gray-500">{t('date')}</p>
                   <p className="font-semibold text-[#2E3A59]">
-                    {sale.date ? format(new Date(sale.date), 'EEEE, MMMM d, yyyy') : 'Date TBD'}
+                    {sale.date ? format(new Date(sale.date), 'EEEE, MMMM d, yyyy') : t('dateTBD')}
                   </p>
                 </div>
               </div>
@@ -525,7 +541,7 @@ export default function YardSaleDetails() {
                   <Clock className="w-5 h-5 text-[#F5A623]" />
                 </div>
                 <div>
-                  <p className="text-xs text-gray-500">Time</p>
+                  <p className="text-xs text-gray-500">{t('time')}</p>
                   <p className="font-semibold text-[#2E3A59]">
                     {sale.start_time || '8:00 AM'} - {sale.end_time || '2:00 PM'}
                   </p>
@@ -543,12 +559,12 @@ export default function YardSaleDetails() {
               <div className="bg-white p-5 rounded-2xl shadow-sm">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-semibold text-[#2E3A59]" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                    Location Map
+                    {t('locationMap')}
                   </h3>
                   {!isExactLocationVisible() && (
                     <span className="text-xs text-gray-500 flex items-center gap-1">
                       <MapPin className="w-3 h-3" />
-                      Approximate area
+                      {t('approximateArea')}
                     </span>
                   )}
                 </div>
@@ -581,7 +597,7 @@ export default function YardSaleDetails() {
                 </div>
                 {!isExactLocationVisible() && (
                   <p className="text-xs text-gray-500 mt-2 text-center">
-                    Exact location shows 1 hour before sale or when you mark attending
+                    {t('exactLocationNote')}
                   </p>
                 )}
               </div>
@@ -591,7 +607,7 @@ export default function YardSaleDetails() {
             {sale.description && (
               <div className="bg-white p-5 rounded-2xl shadow-sm">
                 <h3 className="font-semibold text-[#2E3A59] mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                  About This Sale
+                  {t('aboutThisSale')}
                 </h3>
                 <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">{sale.description}</p>
               </div>
@@ -618,7 +634,7 @@ export default function YardSaleDetails() {
                     className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-colors"
                   >
                     <Edit className="w-4 h-4" />
-                    Edit Sale
+                    {t('editSale')}
                   </motion.button>
                 </Link>
                 <motion.button
@@ -627,10 +643,10 @@ export default function YardSaleDetails() {
                   onClick={handleDelete}
                   disabled={deleteMutation.isPending || !canDeleteSale()}
                   className="flex items-center justify-center gap-2 px-4 py-3 bg-red-50 text-red-600 rounded-xl font-medium hover:bg-red-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  title={!canDeleteSale() ? 'Cannot delete within 2 hours of start time' : ''}
+                  title={!canDeleteSale() ? t('cannotDeleteWithin2Hours') : ''}
                 >
                   <Trash2 className="w-4 h-4" />
-                  Delete
+                  {t('deleteSale')}
                 </motion.button>
               </div>
             )}
@@ -649,7 +665,7 @@ export default function YardSaleDetails() {
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
                 <UserCheck className="w-5 h-5" />
-                {isAttending ? "I'm Attending ✓" : "I'm Attending"}
+                {isAttending ? t('imAttendingConfirmed') : t('imAttending')}
               </motion.button>
               
               <motion.button
@@ -660,7 +676,7 @@ export default function YardSaleDetails() {
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
                 <Navigation className="w-5 h-5" />
-                Get Directions
+                {t('getDirections')}
               </motion.button>
               
               <motion.button
@@ -690,14 +706,14 @@ export default function YardSaleDetails() {
             {/* Views & Report */}
             <div className="flex items-center justify-between text-sm">
               <p className="text-gray-500">
-                {sale.views || 0} people have viewed this sale
+                {sale.views || 0} {t('peopleViewed')}
               </p>
               <button
                 onClick={() => setIsReportModalOpen(true)}
                 className="text-gray-400 hover:text-red-500 transition-colors flex items-center gap-1"
               >
                 <Flag className="w-4 h-4" />
-                Report
+                {t('report')}
               </button>
             </div>
           </motion.div>
@@ -714,7 +730,7 @@ export default function YardSaleDetails() {
               className="text-2xl font-bold text-[#2E3A59] mb-6"
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
-              Reviews & Ratings
+              {t('reviewsAndRatings')}
             </h2>
 
             <div className="grid lg:grid-cols-3 gap-6">
@@ -730,16 +746,16 @@ export default function YardSaleDetails() {
                 {user ? (
                   reviews.some(r => r.created_by === user.email) ? (
                     <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 text-center">
-                      <p className="text-gray-600">You've already reviewed this sale</p>
+                      <p className="text-gray-600">{t('youAlreadyReviewed')}</p>
                     </div>
                   ) : !isAttending && attendances.length === 0 ? (
                     <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 text-center">
-                      <p className="text-gray-600 mb-4">Mark yourself as attending to leave a review</p>
+                      <p className="text-gray-600 mb-4">{t('markAttendingToReview')}</p>
                       <Button
                         onClick={() => attendanceMutation.mutate()}
                         className="bg-[#2E3A59] hover:bg-[#1a2238]"
                       >
-                        I'm Attending
+                        {t('imAttending')}
                       </Button>
                     </div>
                   ) : (
@@ -751,12 +767,12 @@ export default function YardSaleDetails() {
                   )
                 ) : (
                   <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 text-center">
-                    <p className="text-gray-600 mb-4">Sign in to leave a review</p>
+                    <p className="text-gray-600 mb-4">{t('signInToReview')}</p>
                     <Button
                       onClick={() => base44.auth.redirectToLogin()}
                       className="bg-[#FF6F61] hover:bg-[#e55a4d]"
                     >
-                      Sign In
+                      {t('signIn')}
                     </Button>
                   </div>
                 )}
