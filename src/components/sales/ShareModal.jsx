@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Facebook, Twitter, Linkedin, MessageCircle, Link as LinkIcon } from 'lucide-react';
+import { X, Facebook, Twitter, Linkedin, MessageCircle, Link as LinkIcon, Instagram } from 'lucide-react';
 import { toast } from "sonner";
 
 export default function ShareModal({ sale, isOpen, onClose }) {
@@ -24,7 +24,7 @@ export default function ShareModal({ sale, isOpen, onClose }) {
       }
     },
     {
-      name: 'Twitter',
+      name: 'X',
       icon: Twitter,
       color: 'bg-[#000000]',
       hoverColor: 'hover:bg-[#333333]',
@@ -34,6 +34,30 @@ export default function ShareModal({ sale, isOpen, onClose }) {
           '_blank',
           'width=600,height=400'
         );
+      }
+    },
+    {
+      name: 'Instagram',
+      icon: Instagram,
+      color: 'bg-gradient-to-br from-[#F58529] via-[#DD2A7B] to-[#515BD4]',
+      hoverColor: 'hover:opacity-90',
+      action: () => {
+        navigator.clipboard.writeText(shareUrl);
+        toast.success('Link copied! Open Instagram and paste in your story or post');
+      }
+    },
+    {
+      name: 'TikTok',
+      icon: () => (
+        <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+        </svg>
+      ),
+      color: 'bg-[#000000]',
+      hoverColor: 'hover:bg-[#333333]',
+      action: () => {
+        navigator.clipboard.writeText(shareUrl);
+        toast.success('Link copied! Open TikTok and paste in your video description');
       }
     },
     {
@@ -119,7 +143,7 @@ export default function ShareModal({ sale, isOpen, onClose }) {
                   onClick={option.action}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl text-white font-medium ${option.color} ${option.hoverColor} transition-all shadow-sm`}
                 >
-                  <option.icon className="w-5 h-5" />
+                  {typeof option.icon === 'function' ? <option.icon /> : <option.icon className="w-5 h-5" />}
                   <span>{option.name}</span>
                 </motion.button>
               ))}
