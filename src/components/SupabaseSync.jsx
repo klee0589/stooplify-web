@@ -55,13 +55,6 @@ export default function SupabaseSync({ onUpdate }) {
           const event = payload.eventType;
           const listing = payload.new || payload.old;
 
-          // Sync after realtime event
-          try {
-            await base44.functions.invoke('supabasePullUpdates', {});
-          } catch (error) {
-            console.error('❌ Sync error:', error);
-          }
-
           // Show toast notification
           if (event === 'INSERT') {
             toast.success(`🆕 New sale: ${listing.title}`, {
@@ -76,7 +69,7 @@ export default function SupabaseSync({ onUpdate }) {
             setRecentUpdates(prev => [...prev.slice(-4), { type: 'delete', title: listing.title, time: new Date() }]);
           }
 
-          // Trigger refresh in parent component
+          // Only trigger UI refresh - no backend sync
           if (onUpdate) {
             onUpdate();
           }
