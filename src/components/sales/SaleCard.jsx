@@ -6,13 +6,13 @@ import { MapPin, Calendar, Clock, Heart, ArrowRight } from 'lucide-react';
 import { format } from 'date-fns';
 import TrustBadges from './TrustBadges';
 
-export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance, seller }) {
+export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance, seller, isPast }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ y: -5, boxShadow: '0 20px 40px rgba(0,0,0,0.1)' }}
-      className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md transition-all duration-300"
+      className={`bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md transition-all duration-300 ${isPast ? 'opacity-50' : ''}`}
     >
       {/* Image */}
       <div className="relative h-40 bg-gradient-to-br from-[#FF6F61]/10 to-[#F5A623]/10">
@@ -20,7 +20,7 @@ export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance,
           <img
             src={sale.photos[0]}
             alt={sale.title}
-            className="w-full h-full object-cover"
+            className={`w-full h-full object-cover ${isPast ? 'grayscale' : ''}`}
             loading="lazy"
           />
         ) : (
@@ -29,8 +29,12 @@ export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance,
           </div>
         )}
         
-        {/* Category Badge */}
-        {sale.category && (
+        {/* Past Sale Badge */}
+        {isPast ? (
+          <span className="absolute top-3 left-3 px-2.5 py-1 bg-gray-500/90 backdrop-blur-sm rounded-full text-xs font-medium text-white">
+            Ended
+          </span>
+        ) : sale.category && (
           <span className="absolute top-3 left-3 px-2.5 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-medium text-[#2E3A59] capitalize">
             {sale.category.replace('-', ' ')}
           </span>

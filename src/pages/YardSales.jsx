@@ -62,14 +62,17 @@ export default function YardSales() {
         return saleDateTime >= sevenDaysAgo;
       });
       
-      // Fetch sellers for each sale
+      // Fetch sellers for each sale and mark if past
       const salesWithSellers = await Promise.all(
         upcomingSales.map(async (sale) => {
+          const saleDateTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
+          const isPast = saleDateTime < now;
+          
           if (sale.created_by) {
             const sellers = await base44.entities.User.filter({ email: sale.created_by });
-            return { ...sale, seller: sellers[0] || null };
+            return { ...sale, seller: sellers[0] || null, isPast };
           }
-          return { ...sale, seller: null };
+          return { ...sale, seller: null, isPast };
         })
       );
       
@@ -278,6 +281,7 @@ export default function YardSales() {
                             isFavorite={favorites.includes(sale.id)}
                             onToggleFavorite={handleToggleFavorite}
                             seller={sale.seller}
+                            isPast={sale.isPast}
                         />
                       </motion.div>
                     ))}
