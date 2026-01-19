@@ -175,6 +175,11 @@ Deno.serve(async (req) => {
             } else {
               successCount++;
               console.log(`✅ Upserted ${listing.id}`);
+              
+              // Update Base44 YardSale with supabase_id
+              await base44.asServiceRole.entities.YardSale.update(listing.id, {
+                supabase_id: listing.id
+              });
             }
           }
 
