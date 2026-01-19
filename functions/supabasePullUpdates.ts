@@ -55,22 +55,20 @@ Deno.serve(async (req) => {
           photos: listing.photos || [],
           status: 'approved',
           updated_date: listing.updated_at,
+          supabase_id: listing.id,
         };
 
-        // Check if sale exists in Base44
-        const existingSales = await base44.asServiceRole.entities.YardSale.filter({ id: listing.id });
-        
+        // Check if sale exists in Base44 by supabase_id
+        const existingSales = await base44.asServiceRole.entities.YardSale.filter({ supabase_id: listing.id });
+
         if (existingSales.length > 0) {
           // Update existing
-          await base44.asServiceRole.entities.YardSale.update(listing.id, saleData);
+          await base44.asServiceRole.entities.YardSale.update(existingSales[0].id, saleData);
           console.log('✅ Updated:', listing.id);
           updates.push({ action: 'updated', id: listing.id });
         } else {
           // Create new
-          await base44.asServiceRole.entities.YardSale.create({
-            id: listing.id,
-            ...saleData,
-          });
+          await base44.asServiceRole.entities.YardSale.create(saleData);
           console.log('✅ Created:', listing.id);
           updates.push({ action: 'created', id: listing.id });
         }
