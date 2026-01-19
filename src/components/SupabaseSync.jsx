@@ -60,24 +60,8 @@ export default function SupabaseSync({ onUpdate }) {
     };
   }, [onUpdate]);
 
-  // Pull updates from Supabase on mount
-  useEffect(() => {
-    const pullUpdates = async () => {
-      try {
-        console.log('🔄 Pulling latest updates from Supabase...');
-        await base44.functions.invoke('supabasePullUpdates', { since: null });
-        console.log('✅ Updates pulled successfully');
-      } catch (error) {
-        console.error('❌ Error pulling updates:', error);
-      }
-    };
-
-    pullUpdates();
-    
-    // Pull updates every 5 minutes as backup
-    const interval = setInterval(pullUpdates, 5 * 60 * 1000);
-    return () => clearInterval(interval);
-  }, []);
+  // Initial pull disabled - rely on realtime only to prevent duplicates
+  // Manual sync can be triggered from admin panel if needed
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
