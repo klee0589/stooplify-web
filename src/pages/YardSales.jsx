@@ -51,31 +51,40 @@ export default function YardSales() {
   const { data: sales = [], isLoading, refetch } = useQuery({
     queryKey: ['yardSales'],
     queryFn: async () => {
-      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
+      // Fetch from Supabase via backend function
+      const response = await base44.functions.invoke('supabasePullUpdates');
+      const supabaseSales = response.data?.listings || [];
       
-      // Filter out sales older than 7 days (keep recent past sales + upcoming)
+      // Filter out sales older than 7 days
       const now = new Date();
       const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      const upcomingSales = allSales.filter(sale => {
+      const recentSales = supabaseSales.filter(sale => {
         const saleDateTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
         return saleDateTime >= sevenDaysAgo;
       });
       
-      // Fetch sellers for each sale and mark if past
-      const salesWithSellers = await Promise.all(
-        upcomingSales.map(async (sale) => {
+      // Map Supabase data to match expected format and mark if past
+      const salesWithMetadata = await Promise.all(
+        recentSales.map(async (sale) => {
           const saleDateTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
           const isPast = saleDateTime < now;
           
+          // Fetch seller info if available
+          let seller = null;
           if (sale.created_by) {
             const sellers = await base44.entities.User.filter({ email: sale.created_by });
-            return { ...sale, seller: sellers[0] || null, isPast };
+            seller = sellers[0] || null;
           }
-          return { ...sale, seller: null, isPast };
+          
+          return {
+            ...sale,
+            seller,
+            isPast
+          };
         })
       );
       
-      return salesWithSellers;
+      return salesWithMetadata;
     },
   });
 
