@@ -54,11 +54,12 @@ export default function YardSales() {
     queryFn: async () => {
       const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
       
-      // Filter out past sales
+      // Filter out sales older than 7 days (keep recent past sales + upcoming)
       const now = new Date();
+      const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
       const upcomingSales = allSales.filter(sale => {
         const saleDateTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
-        return saleDateTime >= now;
+        return saleDateTime >= sevenDaysAgo;
       });
       
       // Fetch sellers for each sale
