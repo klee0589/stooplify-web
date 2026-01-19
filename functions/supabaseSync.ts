@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
       case 'create': {
         // Create listing in Supabase
         const listing = {
-          id: saleData.id,
+          id: saleId, // Use entity_id from the event
           title: saleData.title,
           description: saleData.description,
           location_lat: saleData.latitude,
@@ -62,6 +62,12 @@ Deno.serve(async (req) => {
         }
 
         console.log('✅ Created in Supabase:', data);
+        
+        // Update Base44 YardSale with supabase_id
+        await base44.asServiceRole.entities.YardSale.update(saleId, {
+          supabase_id: saleId
+        });
+        
         return Response.json({ success: true, data });
       }
 
