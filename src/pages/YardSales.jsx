@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import SaleCard from '../components/sales/SaleCard';
 import SaleFilters from '../components/sales/SaleFilters';
 import SaleMap from '../components/sales/SaleMap';
-import SupabaseSync from '../components/SupabaseSync';
 import { startOfDay, endOfDay, startOfWeek, endOfWeek, addDays, isWithinInterval } from 'date-fns';
 
 export default function YardSales() {
@@ -171,9 +170,6 @@ export default function YardSales() {
 
   return (
     <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
-      {/* Supabase Realtime Sync */}
-      <SupabaseSync onUpdate={() => refetch()} />
-      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <motion.div
