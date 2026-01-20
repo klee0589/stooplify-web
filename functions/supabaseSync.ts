@@ -31,9 +31,9 @@ Deno.serve(async (req) => {
 
     switch (action) {
       case 'create': {
-        // Create listing in Supabase
+        // Create listing in Supabase using upsert to prevent duplicates
         const listing = {
-          id: saleId, // Use entity_id from the event
+          id: saleId,
           title: saleData.title,
           description: saleData.description,
           location_lat: saleData.latitude,
@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
 
         const { data, error } = await supabase
           .from('listings')
-          .insert([listing])
+          .upsert([listing], { onConflict: 'id' })
           .select();
 
         if (error) {
@@ -72,8 +72,9 @@ Deno.serve(async (req) => {
       }
 
       case 'update': {
-        // Update listing in Supabase
+        // Update listing in Supabase using upsert to handle edge cases
         const updateData = {
+          id: saleId,
           title: saleData.title,
           description: saleData.description,
           location_lat: saleData.latitude,
@@ -91,8 +92,7 @@ Deno.serve(async (req) => {
 
         const { data, error } = await supabase
           .from('listings')
-          .update(updateData)
-          .eq('id', saleId)
+          .upsert([updateData], { onConflict: 'id' })
           .select();
 
         if (error) {
