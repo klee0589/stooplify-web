@@ -267,12 +267,15 @@ export default function YardSales() {
             <p className="text-gray-600 dark:text-gray-300">
               <span className="font-semibold text-[#2E3A59] dark:text-white">{filteredSales.length}</span> {t('salesFound')}
             </p>
-            <button
-              onClick={() => setShowEndedSales(!showEndedSales)}
-              className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#FF6F61] transition-colors"
-            >
-              {showEndedSales ? '✓ Showing ended' : 'Show ended sales'}
-            </button>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={showEndedSales}
+                onChange={(e) => setShowEndedSales(e.target.checked)}
+                className="w-4 h-4 text-[#FF6F61] border-gray-300 rounded focus:ring-[#FF6F61]"
+              />
+              <span className="text-sm text-gray-600 dark:text-gray-300">Show ended sales</span>
+            </label>
           </div>
           
           <div className="flex items-center bg-white dark:bg-gray-800 rounded-xl p-1 shadow-sm">
