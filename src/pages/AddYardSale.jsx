@@ -255,11 +255,24 @@ export default function AddYardSale() {
   const handlePhotoUpload = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
-    
+
+    const photoLimit = user?.subscription_active ? 10 : 3;
+    const remainingSlots = photoLimit - photos.length;
+
+    if (remainingSlots <= 0) {
+      toast.error(user?.subscription_active ? 'Maximum 10 photos allowed' : 'Maximum 3 photos for free users. Upgrade to Premium for up to 10 photos.');
+      return;
+    }
+
+    const filesToUpload = files.slice(0, remainingSlots);
+    if (files.length > remainingSlots) {
+      toast.warning(`Only ${remainingSlots} photo${remainingSlots === 1 ? '' : 's'} remaining. ${user?.subscription_active ? '' : 'Upgrade for more.'}`);
+    }
+
     setIsUploading(true);
-    
+
     const uploadedUrls = [];
-    for (const file of files) {
+    for (const file of filesToUpload) {
       try {
         const { file_url } = await base44.integrations.Core.UploadFile({ file });
         uploadedUrls.push(file_url);
@@ -298,7 +311,13 @@ export default function AddYardSale() {
   const handleCameraCapture = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    
+
+    const photoLimit = user?.subscription_active ? 10 : 3;
+    if (photos.length >= photoLimit) {
+      toast.error(user?.subscription_active ? 'Maximum 10 photos allowed' : 'Maximum 3 photos for free users. Upgrade to Premium for up to 10 photos.');
+      return;
+    }
+
     setIsUploading(true);
     
     try {
@@ -910,6 +929,16 @@ export default function AddYardSale() {
 
               {/* Photo Upload Area */}
               <div className="mb-6">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-sm text-gray-600">
+                    {photos.length} / {user?.subscription_active ? '10' : '3'} {t('photos')}
+                  </p>
+                  {!user?.subscription_active && photos.length >= 3 && (
+                    <p className="text-xs text-[#FF6F61]">
+                      {t('upgradeForMorePhotos')}
+                    </p>
+                  )}
+                </div>
                 <div className="grid grid-cols-2 gap-3 mb-4">
                   <label className="block">
                     <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center cursor-pointer hover:border-[#FF6F61] transition-colors">
