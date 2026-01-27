@@ -1,0 +1,171 @@
+import React, { useState, useEffect } from 'react';
+import { base44 } from '@/api/base44Client';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Send, MessageCircle, Loader2 } from 'lucide-react';
+import { toast } from "sonner";
+import { motion, AnimatePresence } from 'framer-motion';
+
+export default function MessageThread({ yardSale, seller }) {
+  const [user, setUser] = useState(null);
+  const [messageText, setMessageText] = useState('');
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
+      } catch (e) {
+        console.log('Not authenticated');
+      }
+    };
+    checkAuth();
+  }, []);
+
+  const { data: messages = [], isLoading } = useQuery({
+    queryKey: ['messages', yardSale.id, user?.email],
+    queryFn: async () => {
+      if (!user) return [];
+      
+      const allMessages = await base44.entities.Message.filter({
+        yard_sale_id: yardSale.id,
+      }, '-created_date');
+      
+      // Filter messages for current conversation
+      return allMessages.filter(m => 
+        (m.sender_email === user.email && m.recipient_email === seller.email) ||
+        (m.sender_email === seller.email && m.recipient_email === user.email)
+      );
+    },
+    enabled: !!user && !!yardSale.id && !!seller.email,
+  });
+
+  const sendMessageMutation = useMutation({
+    mutationFn: async (content) => {
+      return await base44.entities.Message.create({
+        yard_sale_id: yardSale.id,
+        sender_email: user.email,
+        recipient_email: seller.email,
+        content,
+        read: false,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['messages', yardSale.id, user?.email] });
+      setMessageText('');
+      toast.success('Message sent!');
+    },
+    onError: () => {
+      toast.error('Failed to send message');
+    },
+  });
+
+  const handleSend = () => {
+    if (!messageText.trim()) return;
+    sendMessageMutation.mutate(messageText);
+  };
+
+  if (!user) {
+    return (
+      <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 text-center">
+        <MessageCircle className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+        <p className="text-gray-600 dark:text-gray-400 mb-4">
+          Sign in to message the seller
+        </p>
+        <Button onClick={() => base44.auth.redirectToLogin()}>
+          Sign In
+        </Button>
+      </div>
+    );
+  }
+
+  if (user.email === seller.email) {
+    return null; // Don't show messaging to the seller on their own listing
+  }
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-2xl p-6">
+      <div className="flex items-center gap-2 mb-4">
+        <MessageCircle className="w-5 h-5 text-[#14B8FF]" />
+        <h3 className="text-lg font-semibold text-[#2E3A59] dark:text-white">
+          Message Seller
+        </h3>
+      </div>
+
+      {/* Messages */}
+      <div className="space-y-3 mb-4 max-h-64 overflow-y-auto">
+        {isLoading ? (
+          <div className="flex justify-center py-4">
+            <Loader2 className="w-6 h-6 text-gray-400 animate-spin" />
+          </div>
+        ) : messages.length === 0 ? (
+          <p className="text-gray-500 text-sm text-center py-4">
+            No messages yet. Start the conversation!
+          </p>
+        ) : (
+          <AnimatePresence>
+            {messages.map((message) => {
+              const isOwn = message.sender_email === user.email;
+              return (
+                <motion.div
+                  key={message.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-[80%] rounded-2xl px-4 py-2 ${
+                      isOwn
+                        ? 'bg-[#14B8FF] text-white'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+                    }`}
+                  >
+                    <p className="text-sm">{message.content}</p>
+                    <p className={`text-xs mt-1 ${isOwn ? 'text-white/70' : 'text-gray-500'}`}>
+                      {new Date(message.created_date).toLocaleString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        hour: 'numeric',
+                        minute: '2-digit',
+                      })}
+                    </p>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        )}
+      </div>
+
+      {/* Input */}
+      <div className="flex gap-2">
+        <Textarea
+          value={messageText}
+          onChange={(e) => setMessageText(e.target.value)}
+          placeholder="Ask about items, prices, or details..."
+          className="rounded-xl resize-none"
+          rows={2}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault();
+              handleSend();
+            }
+          }}
+        />
+        <Button
+          onClick={handleSend}
+          disabled={!messageText.trim() || sendMessageMutation.isPending}
+          className="bg-[#14B8FF] hover:bg-[#0da3e6] self-end"
+        >
+          {sendMessageMutation.isPending ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <Send className="w-4 h-4" />
+          )}
+        </Button>
+      </div>
+    </div>
+  );
+}
