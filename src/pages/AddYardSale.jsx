@@ -695,6 +695,59 @@ export default function AddYardSale() {
                     </div>
                   </motion.div>
                 )}
+
+                {/* Payment Methods */}
+                <div>
+                  <Label className="text-[#2E3A59] font-medium mb-3 block">Payment Methods Accepted</Label>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                      <Checkbox
+                        id="payment_cash"
+                        checked={formData.payment_cash}
+                        onCheckedChange={(checked) => updateField('payment_cash', checked)}
+                      />
+                      <Label htmlFor="payment_cash" className="flex items-center gap-2 cursor-pointer flex-1">
+                        <DollarSign className="w-4 h-4 text-green-600" />
+                        <span>Cash</span>
+                      </Label>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                      <Checkbox
+                        id="payment_card"
+                        checked={formData.payment_card}
+                        onCheckedChange={(checked) => updateField('payment_card', checked)}
+                      />
+                      <Label htmlFor="payment_card" className="flex items-center gap-2 cursor-pointer flex-1">
+                        <CreditCard className="w-4 h-4 text-blue-600" />
+                        <span>Credit/Debit Cards</span>
+                      </Label>
+                    </div>
+                    <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
+                      <Checkbox
+                        id="payment_digital"
+                        checked={formData.payment_digital}
+                        onCheckedChange={(checked) => updateField('payment_digital', checked)}
+                      />
+                      <Label htmlFor="payment_digital" className="flex items-center gap-2 cursor-pointer flex-1">
+                        <Smartphone className="w-4 h-4 text-purple-600" />
+                        <span>Digital (Venmo, PayPal, etc.)</span>
+                      </Label>
+                    </div>
+                    {formData.payment_cash && (formData.payment_card || formData.payment_digital) && (
+                      <div className="flex items-center gap-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl">
+                        <Checkbox
+                          id="cash_preferred"
+                          checked={formData.cash_preferred}
+                          onCheckedChange={(checked) => updateField('cash_preferred', checked)}
+                        />
+                        <Label htmlFor="cash_preferred" className="cursor-pointer flex-1 text-sm">
+                          <span className="font-medium">Cash Preferred</span>
+                          <span className="text-gray-600 dark:text-gray-400 block">Other methods accepted but cash is easier</span>
+                        </Label>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
 
               <motion.button
