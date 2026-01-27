@@ -6,13 +6,14 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { 
   MapPin, Calendar, Clock, Image as ImageIcon, Upload, X, 
-  Check, Loader2, ArrowLeft, Plus, Info, Camera 
+  Check, Loader2, ArrowLeft, Plus, Info, Camera, DollarSign, CreditCard, Smartphone 
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { useTranslation } from '../components/translations';
 
@@ -80,6 +81,10 @@ export default function AddYardSale() {
     zip_code: '',
     category: 'general',
     address_unlock_hours: 24,
+    payment_cash: true,
+    payment_card: false,
+    payment_digital: false,
+    cash_preferred: false,
   });
 
   useEffect(() => {
@@ -120,6 +125,10 @@ export default function AddYardSale() {
                 zip_code: sale.zip_code || '',
                 category: sale.category || 'general',
                 address_unlock_hours: sale.address_unlock_hours || 24,
+                payment_cash: sale.payment_cash ?? true,
+                payment_card: sale.payment_card ?? false,
+                payment_digital: sale.payment_digital ?? false,
+                cash_preferred: sale.cash_preferred ?? false,
               });
               setPhotos(sale.photos || []);
             }

@@ -34,6 +34,13 @@ const dateOptions = [
   { value: 'week', label: 'This Week' },
 ];
 
+const paymentOptions = [
+  { value: 'all', label: 'Any Payment' },
+  { value: 'cash', label: 'Cash' },
+  { value: 'card', label: 'Cards' },
+  { value: 'digital', label: 'Digital' },
+];
+
 export default function SaleFilters({ filters, onFilterChange, onReset }) {
   return (
     <motion.div
@@ -47,7 +54,7 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
           <span className="font-medium text-sm" style={{ fontFamily: 'Poppins, sans-serif' }}>Filters</span>
         </div>
         
-        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
           {/* Search */}
           <Input
             placeholder="Search sales..."
@@ -97,6 +104,21 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
             <SelectContent>
               {distances.map((dist) => (
                 <SelectItem key={dist.value} value={dist.value}>{dist.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          
+          {/* Payment */}
+          <Select 
+            value={filters.payment || 'all'} 
+            onValueChange={(value) => onFilterChange({ ...filters, payment: value })}
+          >
+            <SelectTrigger className="rounded-xl border-gray-200">
+              <SelectValue placeholder="Payment" />
+            </SelectTrigger>
+            <SelectContent>
+              {paymentOptions.map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
               ))}
             </SelectContent>
           </Select>

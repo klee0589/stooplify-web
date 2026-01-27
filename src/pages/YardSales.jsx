@@ -12,7 +12,7 @@ import { startOfDay, endOfDay, startOfWeek, endOfWeek, addDays, isWithinInterval
 
 export default function YardSales() {
   const [viewMode, setViewMode] = useState('list');
-  const [filters, setFilters] = useState({ category: 'all', date: 'all', distance: 'all', search: '' });
+  const [filters, setFilters] = useState({ category: 'all', date: 'all', distance: 'all', payment: 'all', search: '' });
   const [favorites, setFavorites] = useState([]);
   const [user, setUser] = useState(null);
   const [language, setLanguage] = useState('en');
@@ -173,11 +173,18 @@ export default function YardSales() {
       return true;
     }
     
+    // Payment filtering
+    if (filters.payment !== 'all') {
+      if (filters.payment === 'cash' && !sale.payment_cash) return false;
+      if (filters.payment === 'card' && !sale.payment_card) return false;
+      if (filters.payment === 'digital' && !sale.payment_digital) return false;
+    }
+    
     return true;
   });
 
   const resetFilters = () => {
-    setFilters({ category: 'all', date: 'all', distance: 'all', search: '' });
+    setFilters({ category: 'all', date: 'all', distance: 'all', payment: 'all', search: '' });
   };
 
   return (
