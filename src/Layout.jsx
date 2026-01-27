@@ -59,7 +59,6 @@ function LayoutContent({ children, currentPageName }) {
     { name: t('browseSales'), page: 'YardSales', icon: MapPin },
     { name: t('listSale'), page: 'AddYardSale', icon: PlusCircle },
     { name: 'Guides', page: 'Guides', icon: Settings },
-    { name: 'FAQ', page: 'FAQ', icon: Settings },
   ];
 
   return (
