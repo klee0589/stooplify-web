@@ -139,12 +139,34 @@ export default function MessageThread({ yardSale, seller }) {
         )}
       </div>
 
+      {/* Quick Actions */}
+      <div className="flex flex-wrap gap-2 mb-3">
+        <button
+          onClick={() => setMessageText("Is this still available?")}
+          className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+        >
+          Is this available?
+        </button>
+        <button
+          onClick={() => setMessageText("What time is best to visit?")}
+          className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+        >
+          What time is best?
+        </button>
+        <button
+          onClick={() => setMessageText("Can you hold this for me?")}
+          className="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+        >
+          Can you hold this?
+        </button>
+      </div>
+
       {/* Input */}
       <div className="flex gap-2">
         <Textarea
           value={messageText}
           onChange={(e) => setMessageText(e.target.value)}
-          placeholder="Ask about items, prices, or details..."
+          placeholder="Ask a question..."
           className="rounded-xl resize-none"
           rows={2}
           onKeyDown={(e) => {
