@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useTranslation } from '../components/translations';
 import { Input } from "@/components/ui/input";
+import SEO from '../components/SEO';
 import {
   Accordion,
   AccordionContent,
@@ -111,8 +112,27 @@ export default function Guides() {
     }
   }, [searchTerm, faqData]);
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": filteredFaqs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer
+      }
+    }))
+  };
+
   return (
     <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
+      <SEO 
+        title="Yard Sale Guides & FAQ | Stooplify"
+        description="Complete guides on hosting yard sales, pricing items, advertising, and frequently asked questions about using Stooplify."
+        keywords="yard sale guide, how to host yard sale, yard sale pricing, yard sale tips, garage sale FAQ"
+        structuredData={structuredData}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <motion.div

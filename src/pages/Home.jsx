@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../components/translations';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import SEO from '../components/SEO';
 import HeroSection from '../components/home/HeroSection';
 import HowItWorks from '../components/home/HowItWorks';
 import FeaturedSales from '../components/home/FeaturedSales';

@@ -5,6 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Map, List, Loader2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import SEO from '../components/SEO';
 import SaleCard from '../components/sales/SaleCard';
 import SaleFilters from '../components/sales/SaleFilters';
 import SaleMap from '../components/sales/SaleMap';
@@ -187,8 +188,38 @@ export default function YardSales() {
     setFilters({ category: 'all', date: 'all', distance: 'all', payment: 'all', search: '' });
   };
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Yard Sales Near You",
+    "numberOfItems": filteredSales.length,
+    "itemListElement": filteredSales.slice(0, 10).map((sale, index) => ({
+      "@type": "Event",
+      "position": index + 1,
+      "name": sale.title,
+      "description": sale.description,
+      "startDate": `${sale.date}T${sale.start_time}`,
+      "endDate": `${sale.date}T${sale.end_time}`,
+      "location": {
+        "@type": "Place",
+        "name": sale.general_location,
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": sale.city,
+          "addressRegion": sale.state
+        }
+      }
+    }))
+  };
+
   return (
     <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
+      <SEO 
+        title="Browse Yard Sales Near You | Stooplify"
+        description={`Find ${filteredSales.length} yard sales, garage sales, and estate sales happening near you. Filter by date, category, and payment method.`}
+        keywords="yard sales near me, garage sales today, weekend yard sales, estate sales, local sales map, find yard sales"
+        structuredData={structuredData}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <motion.div

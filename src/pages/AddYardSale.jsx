@@ -16,6 +16,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { useTranslation } from '../components/translations';
+import SEO from '../components/SEO';
 
 const getCategoryLabels = (t) => [
         { value: 'general', label: t('general') },
