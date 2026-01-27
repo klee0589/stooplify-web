@@ -21,6 +21,8 @@ import ShareModal from '../components/sales/ShareModal';
 import SafetyNote from '../components/sales/SafetyNote';
 import ReviewList from '../components/reviews/ReviewList';
 import ReviewForm from '../components/reviews/ReviewForm';
+import PrintableFlyer from '../components/sales/PrintableFlyer';
+import MessageThread from '../components/messaging/MessageThread';
 import { useTranslation } from '../components/translations';
 
 export default function YardSaleDetails() {
@@ -654,6 +656,9 @@ export default function YardSaleDetails() {
             {/* Safety Note */}
             <SafetyNote />
 
+            {/* Message Seller */}
+            {seller && <MessageThread yardSale={sale} seller={seller} />}
+
             {/* Seller Actions (Edit/Delete) */}
             {user && sale.created_by === user.email && (
               <div className="flex gap-3">
@@ -748,6 +753,25 @@ export default function YardSaleDetails() {
             </div>
           </motion.div>
         </div>
+
+        {/* Printable Flyer Section */}
+        {user && sale.created_by === user.email && (
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 mt-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+            >
+              <h2 
+                className="text-2xl font-bold text-[#2E3A59] dark:text-white mb-6"
+                style={{ fontFamily: 'Poppins, sans-serif' }}
+              >
+                Printable Flyer
+              </h2>
+              <PrintableFlyer sale={sale} />
+            </motion.div>
+          </div>
+        )}
 
         {/* Reviews Section */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 mt-12">
