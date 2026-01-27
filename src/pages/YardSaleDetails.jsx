@@ -14,6 +14,7 @@ import 'leaflet/dist/leaflet.css';
 import { Button } from "@/components/ui/button";
 import { format } from 'date-fns';
 import { toast } from "sonner";
+import SEO from '../components/SEO';
 import AddressDisplay from '../components/sales/AddressDisplay';
 import TrustBadges from '../components/sales/TrustBadges';
 import SellerReputation from '../components/sales/SellerReputation';
@@ -427,8 +428,59 @@ export default function YardSaleDetails() {
 
   const photos = sale.photos || [];
 
+  const averageRating = reviews.length > 0 
+    ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length 
+    : null;
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": sale.title,
+    "description": sale.description,
+    "startDate": `${sale.date}T${sale.start_time}`,
+    "endDate": `${sale.date}T${sale.end_time}`,
+    "location": {
+      "@type": "Place",
+      "name": sale.general_location,
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": sale.city,
+        "addressRegion": sale.state,
+        "postalCode": sale.zip_code
+      },
+      ...(sale.exact_latitude && sale.exact_longitude ? {
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": sale.exact_latitude,
+          "longitude": sale.exact_longitude
+        }
+      } : {})
+    },
+    "image": photos.length > 0 ? photos : undefined,
+    "organizer": seller ? {
+      "@type": "Person",
+      "name": seller.full_name || seller.email
+    } : undefined,
+    ...(averageRating ? {
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": averageRating.toFixed(1),
+        "reviewCount": reviews.length
+      }
+    } : {})
+  };
+
   return (
     <div className="min-h-screen bg-[#F9F9F9]">
+      <SEO 
+        title={`${sale.title} - Yard Sale | Stooplify`}
+        description={sale.description || `${sale.title} happening on ${format(new Date(sale.date), 'MMMM d, yyyy')} in ${sale.city}, ${sale.state}. Find details and get directions.`}
+        keywords={`${sale.title}, yard sale ${sale.city}, ${sale.category} sale, ${sale.city} ${sale.state} yard sale`}
+        image={photos[0]}
+        url={window.location.href}
+        type="event"
+        structuredData={structuredData}
+      />
       {/* Back Button */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <Link to={createPageUrl('YardSales')}>
