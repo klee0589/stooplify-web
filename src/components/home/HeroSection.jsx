@@ -35,6 +35,10 @@ export default function HeroSection() {
     e.preventDefault();
     if (!email) return;
     
+    base44.analytics.track({
+      eventName: 'email_subscription_started'
+    });
+    
     setIsSubmitting(true);
     try {
       await base44.entities.EmailSubscriber.create({ email, notify_new_sales: true });

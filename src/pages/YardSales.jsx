@@ -36,6 +36,14 @@ export default function YardSales() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
+    // Track page view
+    base44.analytics.track({
+      eventName: 'yard_sales_page_viewed',
+      properties: { view_mode: viewMode }
+    });
+  }, []);
+
+  useEffect(() => {
     const checkAuth = async () => {
       try {
         const isAuth = await base44.auth.isAuthenticated();
@@ -116,6 +124,11 @@ export default function YardSales() {
   });
 
   const handleToggleFavorite = (saleId) => {
+    const isFavorited = favorites.includes(saleId);
+    base44.analytics.track({
+      eventName: isFavorited ? 'sale_unfavorited' : 'sale_favorited',
+      properties: { sale_id: saleId }
+    });
     favoriteMutation.mutate(saleId);
   };
 
@@ -195,8 +208,32 @@ export default function YardSales() {
   });
 
   const resetFilters = () => {
+    base44.analytics.track({ eventName: 'filters_reset' });
     setFilters({ category: 'all', date: 'all', distance: 'all', payment: 'all', search: '' });
   };
+
+  // Track filter changes
+  useEffect(() => {
+    if (filters.category !== 'all' || filters.date !== 'all' || filters.payment !== 'all' || filters.search) {
+      base44.analytics.track({
+        eventName: 'sales_filtered',
+        properties: {
+          category: filters.category,
+          date: filters.date,
+          payment: filters.payment,
+          has_search: !!filters.search
+        }
+      });
+    }
+  }, [filters]);
+
+  // Track view mode changes
+  useEffect(() => {
+    base44.analytics.track({
+      eventName: 'view_mode_changed',
+      properties: { view_mode: viewMode }
+    });
+  }, [viewMode]);
 
   const structuredData = {
     "@context": "https://schema.org",

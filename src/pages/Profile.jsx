@@ -44,6 +44,10 @@ export default function Profile() {
   const queryClient = useQueryClient();
 
   useEffect(() => {
+    base44.analytics.track({ eventName: 'profile_page_viewed' });
+  }, []);
+
+  useEffect(() => {
     const checkAuth = async () => {
       try {
         const isAuth = await base44.auth.isAuthenticated();

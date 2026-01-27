@@ -89,6 +89,13 @@ export default function AddYardSale() {
   });
 
   useEffect(() => {
+    // Track page view
+    base44.analytics.track({
+      eventName: isEditMode ? 'edit_sale_page_viewed' : 'add_sale_page_viewed'
+    });
+  }, []);
+
+  useEffect(() => {
     const checkAuth = async () => {
       try {
         const isAuth = await base44.auth.isAuthenticated();
@@ -266,6 +273,11 @@ export default function AddYardSale() {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
+    base44.analytics.track({
+      eventName: 'photos_uploaded',
+      properties: { count: files.length }
+    });
+
     const photoLimit = user?.subscription_active ? 10 : 3;
     const remainingSlots = photoLimit - photos.length;
 
@@ -367,6 +379,10 @@ export default function AddYardSale() {
 
   const handleCheckout = async (priceId, listingType) => {
     setIsCheckingPayment(true);
+    base44.analytics.track({
+      eventName: 'checkout_initiated',
+      properties: { listing_type: listingType }
+    });
     try {
       console.log('Starting checkout with:', { priceId, listingType });
       console.log('iframe check - window.self:', window.self === window.top);
@@ -408,6 +424,14 @@ export default function AddYardSale() {
   };
 
   const handleSubmit = () => {
+    base44.analytics.track({
+      eventName: isEditMode ? 'sale_updated' : 'sale_created',
+      properties: {
+        category: formData.category,
+        has_photos: photos.length > 0,
+        photo_count: photos.length
+      }
+    });
     createMutation.mutate(formData);
   };
 
