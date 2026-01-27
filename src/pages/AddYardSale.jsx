@@ -56,8 +56,6 @@ export default function AddYardSale() {
   const [needsPayment, setNeedsPayment] = useState(false);
   const [isCheckingPayment, setIsCheckingPayment] = useState(false);
   const [isLoadingSale, setIsLoadingSale] = useState(isEditMode);
-  const [hasActiveSale, setHasActiveSale] = useState(false);
-  const [maxSalesAllowed, setMaxSalesAllowed] = useState(1);
   const [aiDescription, setAiDescription] = useState(null);
   const [showAiPreview, setShowAiPreview] = useState(false);
   const [editableDescription, setEditableDescription] = useState('');
@@ -95,39 +93,13 @@ export default function AddYardSale() {
           
           // Check if payment is needed (not first listing and no subscription) - only for new sales
           if (!isEditMode) {
-            // Check actual number of existing sales for this user (not just counter)
-            const existingSales = await base44.entities.YardSale.filter({ 
-              created_by: currentUser.email,
-              status: 'approved' 
-            });
             const hasSubscription = currentUser.subscription_active || false;
             const hasUsedFreeListing = (currentUser.free_listings_used || 0) >= 1;
-            
-            console.log('🔍 Payment Check:', { 
-              userEmail: currentUser.email,
-              existingSalesCount: existingSales.length, 
-              hasSubscription,
-              hasUsedFreeListing,
-              freeListingsUsed: currentUser.free_listings_used
-            });
-            
-            // Determine max sales allowed based on subscription
-            let maxSales = 1; // Free tier: 1 concurrent sale
-            if (hasSubscription) {
-              maxSales = 3; // Premium tier: 3 concurrent sales
-            }
-            setMaxSalesAllowed(maxSales);
-            
+
             // Payment needed if: they've used free listing AND don't have subscription
             const needsPay = hasUsedFreeListing && !hasSubscription;
             setNeedsPayment(needsPay);
             console.log(needsPay ? '💳 Payment required' : '✅ No payment needed (first listing free!)');
-            
-            // Only block if they're at their limit AND they've already paid (no payment needed)
-            if (existingSales.length >= maxSales && !needsPay) {
-              console.log('❌ User at sale limit:', existingSales.length, '>=', maxSales);
-              setHasActiveSale(true);
-            }
           }
           
           // Load existing sale data if editing
@@ -513,54 +485,9 @@ export default function AddYardSale() {
         </motion.div>
       </div>
     );
-  }
+    }
 
-  if (hasActiveSale && !isEditMode) {
     return (
-      <div className="min-h-screen bg-[#F9F9F9] flex items-center justify-center p-4">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-3xl p-8 shadow-xl max-w-md w-full text-center"
-        >
-          <div className="w-20 h-20 bg-[#F5A623]/10 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Info className="w-10 h-10 text-[#F5A623]" />
-          </div>
-          <h2 
-            className="text-2xl font-bold text-[#2E3A59] mb-3"
-            style={{ fontFamily: 'Poppins, sans-serif' }}
-          >
-            {t('youveReachedYourLimit')}
-          </h2>
-          <p className="text-gray-600 mb-6">
-            {t('youCurrentlyHave')} {maxSalesAllowed} {maxSalesAllowed === 1 ? t('sale') : t('sales')}. 
-            {maxSalesAllowed === 1 ? ' ' + t('upgradeToPostMore') : ' ' + t('deleteExistingSale')}
-          </p>
-          <div className="flex flex-col gap-3">
-            {maxSalesAllowed === 1 && (
-              <Link to={createPageUrl('Pricing')}>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg"
-                  style={{ fontFamily: 'Poppins, sans-serif' }}
-                >
-                  Upgrade to Premium
-                </motion.button>
-              </Link>
-            )}
-            <Link to={createPageUrl('Profile')}>
-              <Button variant="outline" className="w-full py-6 rounded-xl">
-                {t('manageMyYourSales')}
-              </Button>
-            </Link>
-          </div>
-        </motion.div>
-      </div>
-    );
-  }
-
-  return (
     <div className="min-h-screen bg-[#F9F9F9] py-8">
       <div className="max-w-2xl mx-auto px-4">
         {/* Back Button */}
