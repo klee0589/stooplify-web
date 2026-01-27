@@ -101,11 +101,13 @@ export default function AddYardSale() {
               status: 'approved' 
             });
             const hasSubscription = currentUser.subscription_active || false;
+            const hasUsedFreeListing = (currentUser.free_listings_used || 0) >= 1;
             
             console.log('🔍 Payment Check:', { 
               userEmail: currentUser.email,
               existingSalesCount: existingSales.length, 
               hasSubscription,
+              hasUsedFreeListing,
               freeListingsUsed: currentUser.free_listings_used
             });
             
@@ -116,10 +118,10 @@ export default function AddYardSale() {
             }
             setMaxSalesAllowed(maxSales);
             
-            // Payment only needed if they have existing sales and don't have subscription
-            const needsPay = existingSales.length > 0 && !hasSubscription;
+            // Payment needed if: they've used free listing AND don't have subscription
+            const needsPay = hasUsedFreeListing && !hasSubscription;
             setNeedsPayment(needsPay);
-            console.log(needsPay ? '💳 Payment required' : '✅ No payment needed');
+            console.log(needsPay ? '💳 Payment required' : '✅ No payment needed (first listing free!)');
             
             // Only block if they're at their limit AND they've already paid (no payment needed)
             if (existingSales.length >= maxSales && !needsPay) {
