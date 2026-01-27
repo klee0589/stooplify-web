@@ -57,28 +57,6 @@ export default function YardSaleDetails() {
     return () => window.removeEventListener('languageChange', handleLanguageChange);
   }, []);
 
-  // Translate description when language is Spanish
-  useEffect(() => {
-    const translateDescription = async () => {
-      if (language === 'es' && sale?.description && !translatedDescription && !isTranslating) {
-        setIsTranslating(true);
-        try {
-          const response = await base44.integrations.Core.InvokeLLM({
-            prompt: `Translate the following yard sale description to Spanish. Only return the translation, nothing else:\n\n${sale.description}`,
-            add_context_from_internet: false
-          });
-          setTranslatedDescription(response);
-        } catch (error) {
-          console.error('Translation failed:', error);
-        } finally {
-          setIsTranslating(false);
-        }
-      }
-    };
-
-    translateDescription();
-  }, [language, sale?.description, translatedDescription, isTranslating]);
-
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -172,6 +150,28 @@ export default function YardSaleDetails() {
   const sellerAverageRating = sellerReviews.length > 0 
     ? sellerReviews.reduce((sum, r) => sum + r.rating, 0) / sellerReviews.length 
     : null;
+
+  // Translate description when language is Spanish
+  useEffect(() => {
+    const translateDescription = async () => {
+      if (language === 'es' && sale?.description && !translatedDescription && !isTranslating) {
+        setIsTranslating(true);
+        try {
+          const response = await base44.integrations.Core.InvokeLLM({
+            prompt: `Translate the following yard sale description to Spanish. Only return the translation, nothing else:\n\n${sale.description}`,
+            add_context_from_internet: false
+          });
+          setTranslatedDescription(response);
+        } catch (error) {
+          console.error('Translation failed:', error);
+        } finally {
+          setIsTranslating(false);
+        }
+      }
+    };
+
+    translateDescription();
+  }, [language, sale?.description, translatedDescription, isTranslating]);
 
   useEffect(() => {
     setIsFavorite(favorites.length > 0);
