@@ -66,52 +66,24 @@ const guides = [
   },
 ];
 
-const faqData = [
-  {
-    question: "What is Stooplify?",
-    answer: "Stooplify is an app that helps you list, find, and buy items from garage sales, estate sales, and local sellers—all in one place. Think of it as a digital garage sale with built-in foot traffic."
-  },
-  {
-    question: "How do I list an item?",
-    answer: "Simply open the app, click 'List a Sale,' upload photos, add a description, select date/time, and specify your location. You can also choose which payment methods you accept."
-  },
-  {
-    question: "Can I sell furniture and large items?",
-    answer: "Yes! Stooplify supports furniture, plants, electronics, collectibles, and basically anything you'd normally see at a garage or estate sale."
-  },
-  {
-    question: "Can I specify payment types?",
-    answer: "Absolutely. Sellers can mark which payment methods they accept: cash, credit/debit cards, or digital payments (Venmo, PayPal, etc.). You can even mark cash as preferred if you accept multiple methods."
-  },
-  {
-    question: "How do buyers find my listings?",
-    answer: "Buyers can search by category, location, date, and even filter by payment methods. Stooplify also has a Smart Alerts feature that notifies users of new sales in their followed neighborhoods and categories."
-  },
-  {
-    question: "How do I handle pickup or delivery?",
-    answer: "You set the exact address and date/time for your sale. Buyers can message you through the app to coordinate details. The exact address is revealed 24 hours before the sale or when someone marks they're attending."
-  },
-  {
-    question: "Is Stooplify free to use?",
-    answer: "Your first listing is completely free! After that, you can either pay $4 per listing or upgrade to our Unlimited plan for $9/month to post as many sales as you want with no per-listing fees."
-  },
-  {
-    question: "Can I schedule a garage sale in the app?",
-    answer: "Yes! You can list an upcoming garage sale with date, time, and location. Buyers can favorite your sale and get reminders. You can also generate a printable flyer with a QR code to promote it locally."
-  },
-  {
-    question: "What makes Stooplify different from Facebook Marketplace or Craigslist?",
-    answer: "Stooplify is centralized, local, and focused on yard sales specifically. Unlike general marketplaces, we offer features like printable flyers with QR codes, smart neighborhood alerts, payment method filtering, and a trust system with seller ratings. Plus, you don't need to spam social groups or rely on chance."
-  },
-  {
-    question: "I don't have a garage. Can I still sell?",
-    answer: "Totally. Stooplify lets you list yard sales, stoop sales, sidewalk sales, or any type of local sale. You don't need your own yard - as long as you have a location and items to sell, you're good to go!"
-  }
+const getFaqData = (t) => [
+  { question: t('faq.questions.whatIs.q'), answer: t('faq.questions.whatIs.a') },
+  { question: t('faq.questions.howToList.q'), answer: t('faq.questions.howToList.a') },
+  { question: t('faq.questions.furniture.q'), answer: t('faq.questions.furniture.a') },
+  { question: t('faq.questions.payment.q'), answer: t('faq.questions.payment.a') },
+  { question: t('faq.questions.howBuyersFind.q'), answer: t('faq.questions.howBuyersFind.a') },
+  { question: t('faq.questions.pickup.q'), answer: t('faq.questions.pickup.a') },
+  { question: t('faq.questions.free.q'), answer: t('faq.questions.free.a') },
+  { question: t('faq.questions.schedule.q'), answer: t('faq.questions.schedule.a') },
+  { question: t('faq.questions.difference.q'), answer: t('faq.questions.difference.a') },
+  { question: t('faq.questions.noGarage.q'), answer: t('faq.questions.noGarage.a') }
 ];
 
 export default function Guides() {
   const [language, setLanguage] = useState('en');
   const [searchTerm, setSearchTerm] = useState('');
+  const t = useTranslation(language);
+  const faqData = getFaqData(t);
   const [filteredFaqs, setFilteredFaqs] = useState(faqData);
 
   useEffect(() => {
@@ -137,9 +109,7 @@ export default function Guides() {
     } else {
       setFilteredFaqs(faqData);
     }
-  }, [searchTerm]);
-
-  const t = useTranslation(language);
+  }, [searchTerm, faqData]);
 
   return (
     <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
@@ -208,10 +178,10 @@ export default function Guides() {
             className="text-3xl font-bold text-[#2E3A59] dark:text-white mb-3 text-center"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
-            Frequently Asked Questions
+            {t('faq.title')}
           </h2>
           <p className="text-gray-600 dark:text-gray-300 text-center mb-8 max-w-2xl mx-auto">
-            Everything you need to know about using Stooplify
+            {t('faq.subtitle')}
           </p>
 
           {/* Search */}
@@ -220,7 +190,7 @@ export default function Guides() {
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
               <Input
                 type="text"
-                placeholder="Search FAQs..."
+                placeholder={t('faq.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-12 py-6 rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
@@ -232,7 +202,7 @@ export default function Guides() {
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             {filteredFaqs.length === 0 ? (
               <div className="text-center py-8">
-                <p className="text-gray-500 dark:text-gray-400">No FAQs match your search.</p>
+                <p className="text-gray-500 dark:text-gray-400">{t('faq.noResults')}</p>
               </div>
             ) : (
               <Accordion type="single" collapsible className="space-y-2">
@@ -265,16 +235,16 @@ export default function Guides() {
           className="bg-gradient-to-br from-[#14B8FF] to-[#2E3A59] rounded-2xl p-8 text-center text-white"
         >
           <h3 className="text-2xl font-bold mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            Still have questions?
+            {t('faq.contactTitle')}
           </h3>
           <p className="mb-4 opacity-90">
-            Can't find what you're looking for? Reach out directly.
+            {t('faq.contactSubtitle')}
           </p>
           <a 
             href="mailto:daniel@stooplify.com"
             className="inline-block px-6 py-3 bg-white text-[#14B8FF] rounded-xl font-semibold hover:bg-gray-100 transition-colors"
           >
-            Contact Support
+            {t('faq.contactButton')}
           </a>
         </motion.div>
       </div>

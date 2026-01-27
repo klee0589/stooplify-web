@@ -287,6 +287,57 @@ export const translations = {
           description: 'How to discover the best local sales this weekend'
         }
       }
+    },
+    faq: {
+      title: 'Frequently Asked Questions',
+      subtitle: 'Everything you need to know about using Stooplify',
+      searchPlaceholder: 'Search FAQs...',
+      noResults: 'No FAQs match your search.',
+      contactTitle: 'Still have questions?',
+      contactSubtitle: 'Can\'t find what you\'re looking for? Reach out directly.',
+      contactButton: 'Contact Support',
+      questions: {
+        whatIs: {
+          q: 'What is Stooplify?',
+          a: 'Stooplify is an app that helps you list, find, and buy items from garage sales, estate sales, and local sellers—all in one place. Think of it as a digital garage sale with built-in foot traffic.'
+        },
+        howToList: {
+          q: 'How do I list an item?',
+          a: 'Simply open the app, click \'List a Sale,\' upload photos, add a description, select date/time, and specify your location. You can also choose which payment methods you accept.'
+        },
+        furniture: {
+          q: 'Can I sell furniture and large items?',
+          a: 'Yes! Stooplify supports furniture, plants, electronics, collectibles, and basically anything you\'d normally see at a garage or estate sale.'
+        },
+        payment: {
+          q: 'Can I specify payment types?',
+          a: 'Absolutely. Sellers can mark which payment methods they accept: cash, credit/debit cards, or digital payments (Venmo, PayPal, etc.). You can even mark cash as preferred if you accept multiple methods.'
+        },
+        howBuyersFind: {
+          q: 'How do buyers find my listings?',
+          a: 'Buyers can search by category, location, date, and even filter by payment methods. Stooplify also has a Smart Alerts feature that notifies users of new sales in their followed neighborhoods and categories.'
+        },
+        pickup: {
+          q: 'How do I handle pickup or delivery?',
+          a: 'You set the exact address and date/time for your sale. Buyers can message you through the app to coordinate details. The exact address is revealed 24 hours before the sale or when someone marks they\'re attending.'
+        },
+        free: {
+          q: 'Is Stooplify free to use?',
+          a: 'Your first listing is completely free! After that, you can either pay $4 per listing or upgrade to our Unlimited plan for $9/month to post as many sales as you want with no per-listing fees.'
+        },
+        schedule: {
+          q: 'Can I schedule a garage sale in the app?',
+          a: 'Yes! You can list an upcoming garage sale with date, time, and location. Buyers can favorite your sale and get reminders. You can also generate a printable flyer with a QR code to promote it locally.'
+        },
+        difference: {
+          q: 'What makes Stooplify different from Facebook Marketplace or Craigslist?',
+          a: 'Stooplify is centralized, local, and focused on yard sales specifically. Unlike general marketplaces, we offer features like printable flyers with QR codes, smart neighborhood alerts, payment method filtering, and a trust system with seller ratings. Plus, you don\'t need to spam social groups or rely on chance.'
+        },
+        noGarage: {
+          q: 'I don\'t have a garage. Can I still sell?',
+          a: 'Totally. Stooplify lets you list yard sales, stoop sales, sidewalk sales, or any type of local sale. You don\'t need your own yard - as long as you have a location and items to sell, you\'re good to go!'
+        }
+      }
     }
   },
   es: {
@@ -575,6 +626,57 @@ export const translations = {
         find: {
           title: 'Dónde Encontrar Ventas de Garaje Cerca de Ti',
           description: 'Cómo descubrir las mejores ventas locales este fin de semana'
+        }
+      }
+    },
+    faq: {
+      title: 'Preguntas Frecuentes',
+      subtitle: 'Todo lo que necesitas saber sobre usar Stooplify',
+      searchPlaceholder: 'Buscar preguntas...',
+      noResults: 'No se encontraron preguntas.',
+      contactTitle: '¿Aún tienes preguntas?',
+      contactSubtitle: '¿No encuentras lo que buscas? Contáctanos directamente.',
+      contactButton: 'Contactar Soporte',
+      questions: {
+        whatIs: {
+          q: '¿Qué es Stooplify?',
+          a: 'Stooplify es una aplicación que te ayuda a listar, encontrar y comprar artículos de ventas de garaje, ventas de bienes raíces y vendedores locales, todo en un solo lugar. Piénsalo como una venta de garaje digital con tráfico incorporado.'
+        },
+        howToList: {
+          q: '¿Cómo publico un artículo?',
+          a: 'Simplemente abre la aplicación, haz clic en \'Publicar una Venta\', sube fotos, agrega una descripción, selecciona fecha/hora y especifica tu ubicación. También puedes elegir qué métodos de pago aceptas.'
+        },
+        furniture: {
+          q: '¿Puedo vender muebles y artículos grandes?',
+          a: '¡Sí! Stooplify admite muebles, plantas, electrónica, coleccionables y básicamente cualquier cosa que normalmente verías en una venta de garaje o de bienes raíces.'
+        },
+        payment: {
+          q: '¿Puedo especificar tipos de pago?',
+          a: 'Absolutamente. Los vendedores pueden marcar qué métodos de pago aceptan: efectivo, tarjetas de crédito/débito o pagos digitales (Venmo, PayPal, etc.). Incluso puedes marcar efectivo como preferido si aceptas múltiples métodos.'
+        },
+        howBuyersFind: {
+          q: '¿Cómo encuentran los compradores mis listados?',
+          a: 'Los compradores pueden buscar por categoría, ubicación, fecha e incluso filtrar por métodos de pago. Stooplify también tiene una función de Alertas Inteligentes que notifica a los usuarios sobre nuevas ventas en sus vecindarios y categorías seguidas.'
+        },
+        pickup: {
+          q: '¿Cómo manejo la recogida o entrega?',
+          a: 'Estableces la dirección exacta y la fecha/hora de tu venta. Los compradores pueden enviarte mensajes a través de la aplicación para coordinar detalles. La dirección exacta se revela 24 horas antes de la venta o cuando alguien marca que asistirá.'
+        },
+        free: {
+          q: '¿Stooplify es gratuito?',
+          a: '¡Tu primera publicación es completamente gratis! Después de eso, puedes pagar $4 por publicación o actualizar a nuestro plan Ilimitado por $9/mes para publicar tantas ventas como quieras sin cargos por publicación.'
+        },
+        schedule: {
+          q: '¿Puedo programar una venta de garaje en la aplicación?',
+          a: '¡Sí! Puedes listar una próxima venta de garaje con fecha, hora y ubicación. Los compradores pueden marcar tu venta como favorita y recibir recordatorios. También puedes generar un volante imprimible con código QR para promocionarlo localmente.'
+        },
+        difference: {
+          q: '¿Qué hace diferente a Stooplify de Facebook Marketplace o Craigslist?',
+          a: 'Stooplify está centralizado, es local y se enfoca específicamente en ventas de garaje. A diferencia de los mercados generales, ofrecemos funciones como volantes imprimibles con códigos QR, alertas inteligentes de vecindario, filtrado por método de pago y un sistema de confianza con calificaciones de vendedores. Además, no necesitas enviar spam a grupos sociales ni depender de la suerte.'
+        },
+        noGarage: {
+          q: 'No tengo garaje. ¿Aún puedo vender?',
+          a: 'Totalmente. Stooplify te permite listar ventas de garaje, ventas de porche, ventas en acera o cualquier tipo de venta local. No necesitas tu propio patio: siempre que tengas una ubicación y artículos para vender, ¡estás listo!'
         }
       }
     }
