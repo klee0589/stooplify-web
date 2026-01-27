@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
-import { MapPin, Calendar, Clock, Heart, ArrowRight } from 'lucide-react';
+import { MapPin, Calendar, Clock, Heart, ArrowRight, DollarSign, CreditCard, Smartphone } from 'lucide-react';
 import { format } from 'date-fns';
 import TrustBadges from './TrustBadges';
 import { useTranslation } from '../translations';
@@ -107,7 +107,29 @@ export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance,
             </div>
           </div>
 
-          <div className="flex items-center justify-end pt-3 border-t border-gray-100">
+          {/* Payment Methods */}
+          {(sale.payment_cash || sale.payment_card || sale.payment_digital) && (
+            <div className="flex items-center gap-1.5 pt-2 pb-1">
+              {sale.payment_cash && (
+                <div className="flex items-center gap-1 px-2 py-0.5 bg-green-50 dark:bg-green-900/20 rounded-md" title="Cash accepted">
+                  <DollarSign className="w-3 h-3 text-green-600" />
+                  {sale.cash_preferred && <span className="text-[8px] text-green-700 font-semibold">✓</span>}
+                </div>
+              )}
+              {sale.payment_card && (
+                <div className="flex items-center gap-1 px-2 py-0.5 bg-blue-50 dark:bg-blue-900/20 rounded-md" title="Cards accepted">
+                  <CreditCard className="w-3 h-3 text-blue-600" />
+                </div>
+              )}
+              {sale.payment_digital && (
+                <div className="flex items-center gap-1 px-2 py-0.5 bg-purple-50 dark:bg-purple-900/20 rounded-md" title="Digital payments accepted">
+                  <Smartphone className="w-3 h-3 text-purple-600" />
+                </div>
+              )}
+            </div>
+          )}
+
+          <div className="flex items-center justify-end pt-3 border-t border-gray-100 dark:border-gray-700">
             <span className="text-[#FF6F61] font-medium text-sm flex items-center gap-1">
               {t('details')}
               <ArrowRight className="w-3.5 h-3.5" />

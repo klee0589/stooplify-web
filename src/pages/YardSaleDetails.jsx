@@ -6,7 +6,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { 
   MapPin, Calendar, Clock, Heart, Share2, Navigation, 
-  ChevronLeft, ChevronRight, X, ArrowLeft, Tag, UserCheck, Flag, Trash2, Edit 
+  ChevronLeft, ChevronRight, X, ArrowLeft, Tag, UserCheck, Flag, Trash2, Edit,
+  DollarSign, CreditCard, Smartphone
 } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -632,16 +633,51 @@ export default function YardSaleDetails() {
 
             {/* Description */}
             {sale.description && (
-              <div className="bg-white p-5 rounded-2xl shadow-sm">
-                <h3 className="font-semibold text-[#2E3A59] mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              <div className="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm">
+                <h3 className="font-semibold text-[#2E3A59] dark:text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
                   {t('aboutThisSale')}
                 </h3>
-                <p className="text-gray-600 leading-relaxed whitespace-pre-wrap">
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
                   {language === 'es' && translatedDescription ? translatedDescription : sale.description}
                   {language === 'es' && isTranslating && !translatedDescription && (
                     <span className="text-gray-400 italic"> (Traduciendo...)</span>
                   )}
                 </p>
+              </div>
+            )}
+
+            {/* Payment Methods */}
+            {(sale.payment_cash || sale.payment_card || sale.payment_digital) && (
+              <div className="bg-white dark:bg-gray-800 p-5 rounded-2xl shadow-sm">
+                <h3 className="font-semibold text-[#2E3A59] dark:text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                  Payment Options
+                </h3>
+                <div className="flex flex-wrap gap-3">
+                  {sale.payment_cash && (
+                    <div className={`flex items-center gap-2 px-4 py-2 rounded-xl ${
+                      sale.cash_preferred 
+                        ? 'bg-green-100 dark:bg-green-900/30 border-2 border-green-500' 
+                        : 'bg-green-50 dark:bg-green-900/20'
+                    }`}>
+                      <DollarSign className="w-5 h-5 text-green-600" />
+                      <span className="font-medium text-gray-700 dark:text-gray-300">
+                        Cash {sale.cash_preferred && '(Preferred)'}
+                      </span>
+                    </div>
+                  )}
+                  {sale.payment_card && (
+                    <div className="flex items-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
+                      <CreditCard className="w-5 h-5 text-blue-600" />
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Credit/Debit</span>
+                    </div>
+                  )}
+                  {sale.payment_digital && (
+                    <div className="flex items-center gap-2 px-4 py-2 bg-purple-50 dark:bg-purple-900/20 rounded-xl">
+                      <Smartphone className="w-5 h-5 text-purple-600" />
+                      <span className="font-medium text-gray-700 dark:text-gray-300">Digital Payments</span>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
 
