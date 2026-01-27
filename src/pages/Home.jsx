@@ -24,6 +24,10 @@ export default function Home() {
   }, []);
   
   const t = useTranslation(language);
+
+  useEffect(() => {
+    base44.analytics.track({ eventName: 'home_page_viewed' });
+  }, []);
   
   const { data: sales = [] } = useQuery({
     queryKey: ['featuredSales'],

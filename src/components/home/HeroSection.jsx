@@ -42,9 +42,17 @@ export default function HeroSection() {
     setIsSubmitting(true);
     try {
       await base44.entities.EmailSubscriber.create({ email, notify_new_sales: true });
+      base44.analytics.track({
+        eventName: 'email_subscribed',
+        properties: { success: true }
+      });
       toast.success('Thanks for subscribing! We\'ll notify you about new sales.');
       setEmail('');
     } catch (error) {
+      base44.analytics.track({
+        eventName: 'email_subscribed',
+        properties: { success: false }
+      });
       toast.error('Something went wrong. Please try again.');
     }
     setIsSubmitting(false);

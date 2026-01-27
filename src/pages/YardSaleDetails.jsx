@@ -62,6 +62,15 @@ export default function YardSaleDetails() {
   }, []);
 
   useEffect(() => {
+    if (saleId) {
+      base44.analytics.track({
+        eventName: 'sale_details_viewed',
+        properties: { sale_id: saleId }
+      });
+    }
+  }, [saleId]);
+
+  useEffect(() => {
     const checkAuth = async () => {
       try {
         const isAuth = await base44.auth.isAuthenticated();
@@ -191,6 +200,11 @@ export default function YardSaleDetails() {
         base44.auth.redirectToLogin();
         return;
       }
+
+      base44.analytics.track({
+        eventName: isFavorite ? 'sale_unfavorited' : 'sale_favorited',
+        properties: { sale_id: saleId }
+      });
       
       if (isFavorite) {
         const existing = favorites[0];
@@ -213,6 +227,11 @@ export default function YardSaleDetails() {
         base44.auth.redirectToLogin();
         return;
       }
+
+      base44.analytics.track({
+        eventName: isAttending ? 'attendance_removed' : 'attendance_marked',
+        properties: { sale_id: saleId }
+      });
       
       if (isAttending) {
         const existing = attendances[0];
@@ -298,6 +317,11 @@ export default function YardSaleDetails() {
         comment,
         attended: true
       });
+
+      base44.analytics.track({
+        eventName: 'review_submitted',
+        properties: { sale_id: saleId, rating }
+      });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['reviews'] });
@@ -361,10 +385,18 @@ export default function YardSaleDetails() {
   };
 
   const handleShare = () => {
+    base44.analytics.track({
+      eventName: 'share_clicked',
+      properties: { sale_id: saleId }
+    });
     setIsShareModalOpen(true);
   };
 
   const handleGetDirections = () => {
+    base44.analytics.track({
+      eventName: 'directions_clicked',
+      properties: { sale_id: saleId }
+    });
     // Use exact coordinates if available and unlocked, otherwise use approximate
     if (sale?.exact_latitude && sale?.exact_longitude && (isAttending || isAddressUnlocked())) {
       const url = `https://www.google.com/maps/dir/?api=1&destination=${sale.exact_latitude},${sale.exact_longitude}`;
