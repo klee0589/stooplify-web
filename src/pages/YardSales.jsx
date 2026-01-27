@@ -14,6 +14,7 @@ import { startOfDay, endOfDay, startOfWeek, endOfWeek, addDays, isWithinInterval
 export default function YardSales() {
   const [viewMode, setViewMode] = useState('list');
   const [filters, setFilters] = useState({ category: 'all', date: 'all', distance: 'all', payment: 'all', search: '' });
+  const [showEndedSales, setShowEndedSales] = useState(false);
   const [favorites, setFavorites] = useState([]);
   const [user, setUser] = useState(null);
   const [language, setLanguage] = useState('en');
@@ -120,6 +121,15 @@ export default function YardSales() {
 
   // Filter sales
   const filteredSales = sales.filter(sale => {
+    // Hide ended sales by default
+    if (!showEndedSales) {
+      const saleEndDateTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
+      const now = new Date();
+      if (saleEndDateTime < now) {
+        return false;
+      }
+    }
+    
     // Search (title + description)
     if (filters.search) {
       const searchLower = filters.search.toLowerCase();
@@ -251,11 +261,19 @@ export default function YardSales() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          className="flex items-center justify-between mb-6"
+          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6"
         >
-          <p className="text-gray-600 dark:text-gray-300">
-            <span className="font-semibold text-[#2E3A59] dark:text-white">{filteredSales.length}</span> {t('salesFound')}
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-gray-600 dark:text-gray-300">
+              <span className="font-semibold text-[#2E3A59] dark:text-white">{filteredSales.length}</span> {t('salesFound')}
+            </p>
+            <button
+              onClick={() => setShowEndedSales(!showEndedSales)}
+              className="text-sm text-gray-500 dark:text-gray-400 hover:text-[#FF6F61] transition-colors"
+            >
+              {showEndedSales ? '✓ Showing ended' : 'Show ended sales'}
+            </button>
+          </div>
           
           <div className="flex items-center bg-white dark:bg-gray-800 rounded-xl p-1 shadow-sm">
             <motion.button
