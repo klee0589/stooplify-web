@@ -28,7 +28,6 @@ export default function CTASection() {
   const stats = [
     { icon: Tag, value: '1,000+', label: t('activeSales') },
     { icon: Users, value: '50K+', label: t('happyShoppers') },
-    { icon: TrendingUp, value: '$2M+', label: t('itemsSold') },
   ];
 
   return (
@@ -103,7 +102,7 @@ export default function CTASection() {
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="grid grid-cols-3 gap-4"
+            className="grid grid-cols-2 gap-4"
           >
             {stats.map((stat, index) => (
               <motion.div

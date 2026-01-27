@@ -87,8 +87,8 @@ export const translations = {
     // CTA Section
     ctaTitle: 'Ready to Host Your',
     ctaOwnSale: 'Own Sale?',
-    ctaSubtitle: 'Turn your unused items into cash. List your yard sale for free and reach thousands of local shoppers looking for their next great find.',
-    listSaleFree: 'List Your Sale Free',
+    ctaSubtitle: 'Turn your unused items into cash. Your first listing is free - reach thousands of local shoppers looking for their next great find.',
+    listSaleFree: 'List Your Sale',
     browseSalesBtn: 'Browse Sales',
     activeSales: 'Active Sales',
     happyShoppers: 'Happy Shoppers',
@@ -377,8 +377,8 @@ export const translations = {
     // CTA Section
     ctaTitle: '¿Listo para Organizar tu',
     ctaOwnSale: 'Propia Venta?',
-    ctaSubtitle: 'Convierte tus artículos no utilizados en efectivo. Publica tu venta de garaje gratis y llega a miles de compradores locales buscando su próximo gran hallazgo.',
-    listSaleFree: 'Publica tu Venta Gratis',
+    ctaSubtitle: 'Convierte tus artículos no utilizados en efectivo. Tu primera publicación es gratis - llega a miles de compradores locales buscando su próximo gran hallazgo.',
+    listSaleFree: 'Publica tu Venta',
     browseSalesBtn: 'Explorar Ventas',
     activeSales: 'Ventas Activas',
     happyShoppers: 'Compradores Felices',
