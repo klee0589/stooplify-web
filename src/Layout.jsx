@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Home, MapPin, PlusCircle, User, Heart, Settings, Globe, Moon, Sun } from 'lucide-react';
+import { Menu, X, Home, MapPin, PlusCircle, User, Heart, Settings, Globe, Moon, Sun, LogOut, ChevronDown } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useTranslation } from '../components/translations';
 import { useTheme, ThemeProvider } from '../components/ThemeProvider';
 
 function LayoutContent({ children, currentPageName }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isAvatarMenuOpen, setIsAvatarMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [language, setLanguage] = useState('en');
@@ -59,11 +60,6 @@ function LayoutContent({ children, currentPageName }) {
     { name: t('listSale'), page: 'AddYardSale', icon: PlusCircle },
     { name: 'Guides', page: 'Guides', icon: Settings },
   ];
-
-  const userLinks = user ? [
-    { name: t('favorites'), page: 'Favorites', icon: Heart },
-    { name: t('profile'), page: 'Profile', icon: User }
-  ] : [];
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
@@ -165,30 +161,10 @@ function LayoutContent({ children, currentPageName }) {
                   {link.name}
                 </Link>
               ))}
-              {userLinks.map((link) => (
-                <Link
-                  key={link.page}
-                  to={createPageUrl(link.page)}
-                  className={`font-medium transition-colors hover:text-[#14B8FF] ${
-                    currentPageName === link.page ? 'text-[#14B8FF]' : 'text-[#2E3A59] dark:text-white'
-                  }`}
-                >
-                  {link.name}
-                </Link>
-              ))}
             </nav>
 
-            {/* Language & Theme Toggle & Auth Buttons */}
+            {/* Language Toggle & User Menu */}
             <div className="hidden md:flex items-center gap-4">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={toggleTheme}
-                className="px-3 py-2 text-[#2E3A59] dark:text-white font-medium hover:text-[#14B8FF] transition-colors"
-                title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
-              >
-                {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
-              </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -199,15 +175,79 @@ function LayoutContent({ children, currentPageName }) {
                 <Globe className="w-4 h-4" />
                 {language === 'en' ? 'ES' : 'EN'}
               </motion.button>
+              
               {user ? (
-                <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => base44.auth.logout()}
-                  className="px-4 py-2 text-[#2E3A59] dark:text-white font-medium hover:text-[#14B8FF] transition-colors"
-                >
-                  {t('signOut')}
-                </motion.button>
+                <div className="relative">
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => setIsAvatarMenuOpen(!isAvatarMenuOpen)}
+                    className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  >
+                    <div className="w-8 h-8 bg-gradient-to-br from-[#FF6F61] to-[#F5A623] rounded-full flex items-center justify-center">
+                      <span className="text-sm font-bold text-white">
+                        {(user.full_name || user.email)?.[0]?.toUpperCase()}
+                      </span>
+                    </div>
+                    <ChevronDown className={`w-4 h-4 text-gray-600 dark:text-gray-300 transition-transform ${isAvatarMenuOpen ? 'rotate-180' : ''}`} />
+                  </motion.button>
+                  
+                  <AnimatePresence>
+                    {isAvatarMenuOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50"
+                      >
+                        <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
+                          <p className="text-sm font-semibold text-[#2E3A59] dark:text-white truncate">
+                            {user.full_name || user.email}
+                          </p>
+                          <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
+                        </div>
+                        
+                        <Link
+                          to={createPageUrl('Profile')}
+                          onClick={() => setIsAvatarMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        >
+                          <User className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                          <span className="text-sm text-[#2E3A59] dark:text-white">{t('profile')}</span>
+                        </Link>
+                        
+                        <Link
+                          to={createPageUrl('Favorites')}
+                          onClick={() => setIsAvatarMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        >
+                          <Heart className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                          <span className="text-sm text-[#2E3A59] dark:text-white">{t('favorites')}</span>
+                        </Link>
+                        
+                        <button
+                          onClick={toggleTheme}
+                          className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                        >
+                          {theme === 'light' ? <Moon className="w-4 h-4 text-gray-600 dark:text-gray-300" /> : <Sun className="w-4 h-4 text-gray-600 dark:text-gray-300" />}
+                          <span className="text-sm text-[#2E3A59] dark:text-white">
+                            {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
+                          </span>
+                        </button>
+                        
+                        <div className="border-t border-gray-200 dark:border-gray-700 my-2" />
+                        
+                        <button
+                          onClick={() => base44.auth.logout()}
+                          className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-red-600 dark:text-red-400"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          <span className="text-sm font-medium">{t('signOut')}</span>
+                        </button>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               ) : (
                 <>
                   <motion.button
@@ -251,7 +291,7 @@ function LayoutContent({ children, currentPageName }) {
               className="md:hidden bg-white dark:bg-gray-900 border-t shadow-lg"
               >
               <div className="px-4 py-4 space-y-2">
-                {[...navLinks, ...userLinks].map((link) => (
+                {navLinks.map((link) => (
                   <Link
                     key={link.page}
                     to={createPageUrl(link.page)}
@@ -266,6 +306,36 @@ function LayoutContent({ children, currentPageName }) {
                     <span className="font-medium">{link.name}</span>
                   </Link>
                 ))}
+
+                {user && (
+                  <>
+                    <Link
+                      to={createPageUrl('Profile')}
+                      onClick={() => setIsMenuOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                        currentPageName === 'Profile'
+                          ? 'bg-[#14B8FF]/10 text-[#14B8FF]'
+                          : 'text-[#2E3A59] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
+                      }`}
+                    >
+                      <User size={20} />
+                      <span className="font-medium">{t('profile')}</span>
+                    </Link>
+                    <Link
+                      to={createPageUrl('Favorites')}
+                      onClick={() => setIsMenuOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                        currentPageName === 'Favorites'
+                          ? 'bg-[#14B8FF]/10 text-[#14B8FF]'
+                          : 'text-[#2E3A59] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
+                      }`}
+                    >
+                      <Heart size={20} />
+                      <span className="font-medium">{t('favorites')}</span>
+                    </Link>
+                  </>
+                )}
+
                 <div className="pt-4 border-t space-y-2">
                   <button
                     onClick={() => {
@@ -293,10 +363,11 @@ function LayoutContent({ children, currentPageName }) {
                         base44.auth.logout();
                         setIsMenuOpen(false);
                       }}
-                      className="w-full px-4 py-3 text-left text-[#2E3A59] dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl"
-                      >
-                      {t('signOut')}
-                      </button>
+                      className="w-full flex items-center gap-3 px-4 py-3 text-left text-red-600 dark:text-red-400 font-medium hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl"
+                    >
+                      <LogOut size={20} />
+                      <span>{t('signOut')}</span>
+                    </button>
                   ) : (
                     <button
                       onClick={() => {
