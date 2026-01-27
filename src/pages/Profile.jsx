@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { format } from 'date-fns';
+import AlertSettings from '../components/profile/AlertSettings';
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -398,11 +399,21 @@ export default function Profile() {
           )}
         </motion.div>
 
-        {/* Notifications Settings */}
+        {/* Smart Alerts */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25 }}
+          className="mb-6"
+        >
+          <AlertSettings userEmail={user.email} />
+        </motion.div>
+
+        {/* Notifications Settings */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
           className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm mb-6"
         >
           <h3 
@@ -509,7 +520,7 @@ export default function Profile() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.35 }}
           className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
         >
           <div className="flex items-center justify-between mb-4">
