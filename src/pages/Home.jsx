@@ -46,20 +46,27 @@ export default function Home() {
             <span>👋</span> {t('fromTheFounder')}
           </h3>
           
-          <div className="space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
-            <p>{t('founderIntro')}</p>
-            <p>{t('founderBackground')}</p>
-            <p>{t('founderVision')}</p>
-            <p>{t('founderMission')}</p>
-            <p>{t('founderContact')}</p>
-            
-            <div className="mt-6 pt-6 border-t border-gray-200">
-              <a 
-                href="mailto:daniel@stooplify.com"
-                className="inline-flex items-center gap-2 text-[#FF6F61] hover:underline font-semibold"
-              >
-                📩 daniel@stooplify.com
-              </a>
+          <div className="flex flex-col md:flex-row gap-6 mb-6">
+            <img 
+              src="https://media.licdn.com/dms/image/v2/C4D03AQHfEpPu5uyhmA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1623772310095?e=1770854400&v=beta&t=Csl4ztXTFqpT2bDF941vIBkMgwKK7iah2ExnaXY6eFg"
+              alt="Daniel - Founder of Stooplify"
+              className="w-32 h-32 rounded-full object-cover mx-auto md:mx-0 shadow-lg"
+            />
+            <div className="flex-1 space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
+              <p>{t('founderIntro')}</p>
+              <p>{t('founderBackground')}</p>
+              <p>{t('founderVision')}</p>
+              <p>{t('founderMission')}</p>
+              <p>{t('founderContact')}</p>
+              
+              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <a 
+                  href="mailto:daniel@stooplify.com"
+                  className="inline-flex items-center gap-2 text-[#FF6F61] hover:underline font-semibold"
+                >
+                  📩 daniel@stooplify.com
+                </a>
+              </div>
             </div>
           </div>
         </div>
