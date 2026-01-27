@@ -119,9 +119,14 @@ export default function YardSales() {
 
   // Filter sales
   const filteredSales = sales.filter(sale => {
-    // Search
-    if (filters.search && !sale.title.toLowerCase().includes(filters.search.toLowerCase())) {
-      return false;
+    // Search (title + description)
+    if (filters.search) {
+      const searchLower = filters.search.toLowerCase();
+      const titleMatch = sale.title?.toLowerCase().includes(searchLower);
+      const descMatch = sale.description?.toLowerCase().includes(searchLower);
+      if (!titleMatch && !descMatch) {
+        return false;
+      }
     }
     
     // Category
@@ -159,6 +164,13 @@ export default function YardSales() {
           }
           break;
       }
+    }
+    
+    // Distance filtering (if coordinates available)
+    if (filters.distance !== 'all' && sale.latitude && sale.longitude) {
+      // For now, just pass through - distance filtering would require user's location
+      // This can be enhanced with geolocation API in future
+      return true;
     }
     
     return true;

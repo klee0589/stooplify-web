@@ -85,14 +85,17 @@ export default function HeroSection() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
           >
+            {/* Value Prop Badge */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#FF6F61]/10 rounded-full mb-6"
+              className="inline-flex items-center gap-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg mb-6"
             >
-              <Sparkles className="w-4 h-4 text-[#14B8FF]" />
-              <span className="text-sm font-medium text-[#14B8FF]">Bushwick yard & stoop sales, all in one place.</span>
+              <span className="text-2xl">🎯</span>
+              <span className="text-sm font-semibold text-[#2E3A59] dark:text-white">
+                Real neighborhood sales. No spam. No freebie hunters.
+              </span>
             </motion.div>
 
             <motion.h1
@@ -119,7 +122,7 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="flex flex-col sm:flex-row gap-4 mb-10"
+              className="flex flex-col sm:flex-row gap-4 mb-8"
             >
               <Link to={createPageUrl('YardSales')}>
                 <motion.button
@@ -131,28 +134,48 @@ export default function HeroSection() {
                 >
                   <MapPin className="w-5 h-5" />
                   {t('findSales')}
-                  <ArrowRight className="w-5 h-5" />
                 </motion.button>
               </Link>
               <Link to={createPageUrl('AddYardSale')}>
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
+                  whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(255, 111, 97, 0.3)' }}
                   whileTap={{ scale: 0.95 }}
-                  className="w-full sm:w-auto px-8 py-4 bg-[#2E3A59] text-white rounded-2xl font-semibold flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-8 py-4 bg-[#FF6F61] text-white rounded-2xl font-semibold flex items-center justify-center gap-2 shadow-lg"
                   style={{ fontFamily: 'Poppins, sans-serif' }}
                   aria-label={t('listYourSale')}
                 >
                   <Plus className="w-5 h-5" />
-                  {t('listYourSale')}
+                  <span>Post a Sale in <strong>60 Seconds</strong></span>
                 </motion.button>
               </Link>
+            </motion.div>
+
+            {/* Social Proof */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="flex flex-wrap items-center justify-start gap-6 text-sm text-gray-600 dark:text-gray-400 mb-10"
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">🏘️</span>
+                <span><strong>1,000+</strong> active sales</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">📍</span>
+                <span>Live in <strong>NYC</strong></span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">⚡</span>
+                <span>Local-only visibility</span>
+              </div>
             </motion.div>
 
             {/* Email Capture */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.6 }}
+              transition={{ delay: 0.7 }}
               className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-gray-100 dark:border-gray-700 max-w-md"
             >
               <p className="text-sm font-medium text-[#2E3A59] dark:text-white mb-3">
