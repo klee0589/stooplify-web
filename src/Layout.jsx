@@ -6,6 +6,7 @@ import { Menu, X, Home, MapPin, PlusCircle, User, Heart, Settings, Globe, Moon, 
 import { base44 } from '@/api/base44Client';
 import { useTranslation } from '../components/translations';
 import { useTheme, ThemeProvider } from '../components/ThemeProvider';
+import { toast } from 'sonner';
 
 function LayoutContent({ children, currentPageName }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -234,7 +235,24 @@ function LayoutContent({ children, currentPageName }) {
                             {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
                           </span>
                         </button>
-                        
+
+                        {user?.email === 'klee0589@gmail.com' && (
+                          <button
+                            onClick={async () => {
+                              try {
+                                await base44.functions.invoke('resetFreeListings', { user_email: user.email });
+                                toast.success('Free listings reset!');
+                                window.location.reload();
+                              } catch (error) {
+                                toast.error('Failed to reset');
+                              }
+                            }}
+                            className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-green-600 dark:text-green-400"
+                          >
+                            <span className="text-sm font-medium">🔄 Reset Free Listings</span>
+                          </button>
+                        )}
+
                         <div className="border-t border-gray-200 dark:border-gray-700 my-2" />
                         
                         <button
