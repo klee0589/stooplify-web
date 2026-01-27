@@ -16,6 +16,8 @@ export default function PrintableFlyer({ sale }) {
       const canvas = await html2canvas(element, {
         scale: 2,
         backgroundColor: '#ffffff',
+        useCORS: true,
+        allowTaint: true,
       });
       
       const imgData = canvas.toDataURL('image/png');
