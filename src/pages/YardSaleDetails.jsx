@@ -88,22 +88,36 @@ export default function YardSaleDetails() {
   const { data: sale, isLoading } = useQuery({
     queryKey: ['yardSale', saleId],
     queryFn: async () => {
-      const sales = await base44.entities.YardSale.filter({ id: saleId });
-      if (sales.length > 0) {
-        // Increment views
-        await base44.entities.YardSale.update(saleId, { views: (sales[0].views || 0) + 1 });
-        
-        // Fetch seller info
-        if (sales[0].created_by) {
-          const sellers = await base44.entities.User.filter({ email: sales[0].created_by });
-          if (sellers.length > 0) {
-            setSeller(sellers[0]);
-          }
-        }
-        
-        return sales[0];
+      console.log('🔍 Fetching sale with ID:', saleId);
+      if (!saleId) {
+        console.error('❌ No sale ID provided');
+        return null;
       }
-      return null;
+      
+      try {
+        const sales = await base44.entities.YardSale.filter({ id: saleId });
+        console.log('📦 Found sales:', sales.length);
+        
+        if (sales.length > 0) {
+          // Increment views
+          await base44.entities.YardSale.update(saleId, { views: (sales[0].views || 0) + 1 });
+          
+          // Fetch seller info
+          if (sales[0].created_by) {
+            const sellers = await base44.entities.User.filter({ email: sales[0].created_by });
+            if (sellers.length > 0) {
+              setSeller(sellers[0]);
+            }
+          }
+          
+          return sales[0];
+        }
+        console.warn('⚠️ No sale found with ID:', saleId);
+        return null;
+      } catch (error) {
+        console.error('❌ Error fetching sale:', error);
+        throw error;
+      }
     },
     enabled: !!saleId,
   });
