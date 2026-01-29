@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Home, MapPin, PlusCircle, User, Heart, Settings, Globe, Moon, Sun, LogOut, ChevronDown } from 'lucide-react';
+import { Menu, X, Home, MapPin, PlusCircle, User, Heart, Settings, Globe, Moon, Sun, LogOut, ChevronDown, MessageCircle } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useTranslation } from '../components/translations';
 import { useTheme, ThemeProvider } from '../components/ThemeProvider';
@@ -55,6 +55,18 @@ function LayoutContent({ children, currentPageName }) {
       return await base44.entities.YardSale.filter({ created_by: user.email });
     },
     enabled: !!user,
+  });
+
+  // Fetch unread messages count
+  const { data: unreadCount = 0 } = useQuery({
+    queryKey: ['unreadMessages', user?.email],
+    queryFn: async () => {
+      if (!user) return 0;
+      const messages = await base44.entities.Message.filter({ recipient_email: user.email, read: false });
+      return messages.length;
+    },
+    enabled: !!user,
+    refetchInterval: 30000, // Refresh every 30 seconds
   });
   
   const toggleLanguage = () => {
@@ -195,12 +207,17 @@ function LayoutContent({ children, currentPageName }) {
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={() => setIsAvatarMenuOpen(!isAvatarMenuOpen)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                    className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative"
                   >
-                    <div className="w-8 h-8 bg-gradient-to-br from-[#FF6F61] to-[#F5A623] rounded-full flex items-center justify-center">
+                    <div className="w-8 h-8 bg-gradient-to-br from-[#FF6F61] to-[#F5A623] rounded-full flex items-center justify-center relative">
                       <span className="text-sm font-bold text-white">
                         {(user.full_name || user.email)?.[0]?.toUpperCase()}
                       </span>
+                      {unreadCount > 0 && (
+                        <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 text-white text-xs font-bold rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900">
+                          {unreadCount > 9 ? '9+' : unreadCount}
+                        </span>
+                      )}
                     </div>
                     <ChevronDown className={`w-4 h-4 text-gray-600 dark:text-gray-300 transition-transform ${isAvatarMenuOpen ? 'rotate-180' : ''}`} />
                   </motion.button>
@@ -236,6 +253,20 @@ function LayoutContent({ children, currentPageName }) {
                         >
                           <Heart className="w-4 h-4 text-gray-600 dark:text-gray-300" />
                           <span className="text-sm text-[#2E3A59] dark:text-white">{t('favorites')}</span>
+                        </Link>
+
+                        <Link
+                          to={createPageUrl('Messages')}
+                          onClick={() => setIsAvatarMenuOpen(false)}
+                          className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors relative"
+                        >
+                          <MessageCircle className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                          <span className="text-sm text-[#2E3A59] dark:text-white">Messages</span>
+                          {unreadCount > 0 && (
+                            <span className="ml-auto px-2 py-0.5 bg-green-500 text-white text-xs font-bold rounded-full">
+                              {unreadCount}
+                            </span>
+                          )}
                         </Link>
                         
                         <button

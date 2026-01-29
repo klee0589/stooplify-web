@@ -8,7 +8,7 @@ import { createPageUrl } from '../utils';
 import { 
   User, Mail, MapPin, Calendar, Heart, Tag, 
   Loader2, ArrowLeft, LogOut, Edit2, Check, X, Clock, Pencil,
-  Crown, Zap, CreditCard, Star, Award, MessageCircle
+  Crown, Zap, CreditCard, Star, Award
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,7 +17,6 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { format } from 'date-fns';
 import AlertSettings from '../components/profile/AlertSettings';
-import SellerMessageView from '../components/messaging/SellerMessageView';
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -27,7 +26,6 @@ export default function Profile() {
   const [editedName, setEditedName] = useState('');
   const [editedPhone, setEditedPhone] = useState('');
   const [language, setLanguage] = useState('en');
-  const [expandedSaleMessages, setExpandedSaleMessages] = useState(null);
   
   useEffect(() => {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
@@ -613,14 +611,6 @@ export default function Profile() {
                           <Clock className="w-3 h-3" />
                           {saleStatus.label}
                         </span>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => setExpandedSaleMessages(expandedSaleMessages === sale.id ? null : sale.id)}
-                          className="rounded-lg"
-                        >
-                          <MessageCircle className="w-4 h-4" />
-                        </Button>
                         <Link to={createPageUrl('AddYardSale') + `?edit=${sale.id}`}>
                           <Button
                             size="sm"
@@ -633,19 +623,6 @@ export default function Profile() {
                         </Link>
                       </div>
                     </div>
-                    
-                    <AnimatePresence>
-                      {expandedSaleMessages === sale.id && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          className="border-t dark:border-gray-600 p-4"
-                        >
-                          <SellerMessageView sale={sale} sellerEmail={user.email} />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
                   </motion.div>
                 );
               })}
