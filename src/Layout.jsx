@@ -58,7 +58,7 @@ function LayoutContent({ children, currentPageName }) {
   });
 
   // Fetch unread messages count
-  const { data: unreadCount, isLoading: isLoadingUnread } = useQuery({
+  const { data: unreadCount = 0 } = useQuery({
     queryKey: ['unreadMessages', user?.email],
     queryFn: async () => {
       if (!user) return 0;
@@ -67,7 +67,6 @@ function LayoutContent({ children, currentPageName }) {
     },
     enabled: !!user,
     refetchInterval: 30000, // Refresh every 30 seconds
-    initialData: 0,
   });
   
   const toggleLanguage = () => {
@@ -214,7 +213,7 @@ function LayoutContent({ children, currentPageName }) {
                       <span className="text-sm font-bold text-white">
                         {(user.full_name || user.email)?.[0]?.toUpperCase()}
                       </span>
-                      {!isLoadingUnread && unreadCount > 0 && (
+                      {user && unreadCount > 0 && (
                         <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 text-white text-xs font-bold rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900">
                           {unreadCount > 9 ? '9+' : unreadCount}
                         </span>
@@ -263,7 +262,7 @@ function LayoutContent({ children, currentPageName }) {
                         >
                           <MessageCircle className="w-4 h-4 text-gray-600 dark:text-gray-300" />
                           <span className="text-sm text-[#2E3A59] dark:text-white">Messages</span>
-                          {!isLoadingUnread && unreadCount > 0 && (
+                          {user && unreadCount > 0 && (
                             <span className="ml-auto px-2 py-0.5 bg-green-500 text-white text-xs font-bold rounded-full">
                               {unreadCount}
                             </span>
