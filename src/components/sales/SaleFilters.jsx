@@ -1,20 +1,20 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Filter, X, Check } from 'lucide-react';
+import { Filter, X, Check, Package, Sofa, Shirt, Zap, Baby, Crown, BookOpen, Dumbbell, Users } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 
 const categories = [
-  { value: 'general', label: 'General' },
-  { value: 'furniture', label: 'Furniture' },
-  { value: 'clothing', label: 'Clothing' },
-  { value: 'electronics', label: 'Electronics' },
-  { value: 'toys', label: 'Toys' },
-  { value: 'antiques', label: 'Antiques' },
-  { value: 'books', label: 'Books' },
-  { value: 'sports', label: 'Sports' },
-  { value: 'multi-family', label: 'Multi-Family' },
+  { value: 'general', label: 'General', icon: Package },
+  { value: 'furniture', label: 'Furniture', icon: Sofa },
+  { value: 'clothing', label: 'Clothing', icon: Shirt },
+  { value: 'electronics', label: 'Electronics', icon: Zap },
+  { value: 'toys', label: 'Toys', icon: Baby },
+  { value: 'antiques', label: 'Antiques', icon: Crown },
+  { value: 'books', label: 'Books', icon: BookOpen },
+  { value: 'sports', label: 'Sports', icon: Dumbbell },
+  { value: 'multi-family', label: 'Multi-Family', icon: Users },
 ];
 
 const distances = [
@@ -56,6 +56,7 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
         <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-2">
           {categories.map((cat) => {
             const isSelected = filters.categories?.includes(cat.value);
+            const Icon = cat.icon;
             return (
               <button
                 key={cat.value}
@@ -72,6 +73,7 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
                     : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                 }`}
               >
+                <Icon className="w-3 h-3" />
                 <span>{cat.label}</span>
                 {isSelected && <Check className="w-3 h-3" />}
               </button>

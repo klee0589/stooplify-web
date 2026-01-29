@@ -7,7 +7,7 @@ import { createPageUrl } from '../utils';
 import { 
   MapPin, Calendar, Clock, Heart, Share2, Navigation, 
   ChevronLeft, ChevronRight, X, ArrowLeft, Tag, UserCheck, Flag, Trash2, Edit,
-  DollarSign, CreditCard, Smartphone
+  DollarSign, CreditCard, Smartphone, Package, Sofa, Shirt, Zap, Baby, Crown, BookOpen, Dumbbell, Users
 } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -620,12 +620,19 @@ export default function YardSaleDetails() {
             <div className="space-y-3">
               {(sale.categories || (sale.category ? [sale.category] : [])).length > 0 && (
                 <div className="flex flex-wrap gap-2">
-                  {(sale.categories || [sale.category]).map((cat, idx) => (
-                    <span key={idx} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FF6F61]/10 rounded-full text-sm font-medium text-[#FF6F61] capitalize">
-                      <Tag className="w-3.5 h-3.5" />
-                      {cat.replace('-', ' ')}
-                    </span>
-                  ))}
+                  {(sale.categories || [sale.category]).map((cat, idx) => {
+                    const categoryIcons = {
+                      general: Package, furniture: Sofa, clothing: Shirt, electronics: Zap,
+                      toys: Baby, antiques: Crown, books: BookOpen, sports: Dumbbell, 'multi-family': Users
+                    };
+                    const Icon = categoryIcons[cat] || Tag;
+                    return (
+                      <span key={idx} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FF6F61]/10 rounded-full text-sm font-medium text-[#FF6F61] capitalize">
+                        <Icon className="w-3.5 h-3.5" />
+                        {cat.replace('-', ' ')}
+                      </span>
+                    );
+                  })}
                 </div>
               )}
               <TrustBadges seller={seller} />

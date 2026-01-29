@@ -6,7 +6,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { 
   MapPin, Calendar, Clock, Image as ImageIcon, Upload, X, 
-  Check, Loader2, ArrowLeft, Plus, Info, Camera, DollarSign, CreditCard, Smartphone 
+  Check, Loader2, ArrowLeft, Plus, Info, Camera, DollarSign, CreditCard, Smartphone,
+  Package, Sofa, Shirt, Zap, Baby, Crown, BookOpen, Dumbbell, Users
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,16 +20,16 @@ import { useTranslation } from '../components/translations';
 import SEO from '../components/SEO';
 
 const getCategoryLabels = (t) => [
-        { value: 'general', label: t('general') },
-        { value: 'furniture', label: t('furniture') },
-        { value: 'clothing', label: t('clothing') },
-        { value: 'electronics', label: t('electronics') },
-        { value: 'toys', label: t('toysKids') },
-        { value: 'antiques', label: t('antiques') },
-        { value: 'books', label: t('booksMedia') },
-        { value: 'sports', label: t('sportsOutdoors') },
-        { value: 'multi-family', label: t('multiFamily') },
-      ];
+              { value: 'general', label: t('general'), icon: Package },
+              { value: 'furniture', label: t('furniture'), icon: Sofa },
+              { value: 'clothing', label: t('clothing'), icon: Shirt },
+              { value: 'electronics', label: t('electronics'), icon: Zap },
+              { value: 'toys', label: t('toysKids'), icon: Baby },
+              { value: 'antiques', label: t('antiques'), icon: Crown },
+              { value: 'books', label: t('booksMedia'), icon: BookOpen },
+              { value: 'sports', label: t('sportsOutdoors'), icon: Dumbbell },
+              { value: 'multi-family', label: t('multiFamily'), icon: Users },
+            ];
 
 export default function AddYardSale() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -634,28 +635,32 @@ export default function AddYardSale() {
                   <div className="col-span-2">
                     <Label className="text-[#2E3A59] font-medium mb-2 block">Categories * (Select all that apply)</Label>
                     <div className="grid grid-cols-3 gap-3">
-                      {getCategoryLabels(t).map((cat) => (
-                        <div 
-                          key={cat.value}
-                          onClick={() => {
-                            const current = formData.categories || [];
-                            const newCategories = current.includes(cat.value)
-                              ? current.filter(c => c !== cat.value)
-                              : [...current, cat.value];
-                            updateField('categories', newCategories.length > 0 ? newCategories : ['general']);
-                          }}
-                          className={`flex items-center justify-center gap-2 px-3 py-3 rounded-xl border-2 cursor-pointer transition-all ${
-                            (formData.categories || []).includes(cat.value)
-                              ? 'bg-[#FF6F61] border-[#FF6F61] text-white'
-                              : 'bg-white border-gray-200 text-gray-700 hover:border-[#FF6F61]'
-                          }`}
-                        >
-                          <span className="text-sm font-medium">{cat.label}</span>
-                          {(formData.categories || []).includes(cat.value) && (
-                            <Check className="w-4 h-4" />
-                          )}
-                        </div>
-                      ))}
+                      {getCategoryLabels(t).map((cat) => {
+                        const Icon = cat.icon;
+                        return (
+                          <div 
+                            key={cat.value}
+                            onClick={() => {
+                              const current = formData.categories || [];
+                              const newCategories = current.includes(cat.value)
+                                ? current.filter(c => c !== cat.value)
+                                : [...current, cat.value];
+                              updateField('categories', newCategories.length > 0 ? newCategories : ['general']);
+                            }}
+                            className={`flex items-center justify-center gap-2 px-3 py-3 rounded-xl border-2 cursor-pointer transition-all ${
+                              (formData.categories || []).includes(cat.value)
+                                ? 'bg-[#FF6F61] border-[#FF6F61] text-white'
+                                : 'bg-white border-gray-200 text-gray-700 hover:border-[#FF6F61]'
+                            }`}
+                          >
+                            <Icon className="w-4 h-4" />
+                            <span className="text-sm font-medium">{cat.label}</span>
+                            {(formData.categories || []).includes(cat.value) && (
+                              <Check className="w-4 h-4" />
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
