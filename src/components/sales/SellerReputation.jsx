@@ -1,5 +1,5 @@
 import React from 'react';
-import { Calendar, Users, Star, Award } from 'lucide-react';
+import { Calendar, Users, Star, Award, Home } from 'lucide-react';
 
 export default function SellerReputation({ seller, averageRating, totalReviews, totalSales }) {
   if (!seller) return null;
@@ -36,8 +36,8 @@ export default function SellerReputation({ seller, averageRating, totalReviews, 
       )}
       
       {salesCount > 0 && (
-        <div className="flex items-center gap-2 text-sm text-gray-700">
-          <Calendar className="w-4 h-4 text-[#FF6F61]" />
+        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+          <Home className="w-4 h-4 text-[#FF6F61]" />
           <span>Hosted {salesCount} sale{salesCount !== 1 ? 's' : ''}</span>
         </div>
       )}
