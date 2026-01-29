@@ -13,7 +13,7 @@ import { startOfDay, endOfDay, startOfWeek, endOfWeek, addDays, isWithinInterval
 
 export default function YardSales() {
   const [viewMode, setViewMode] = useState('list');
-  const [filters, setFilters] = useState({ category: 'all', date: 'all', distance: 'all', payment: 'all', search: '' });
+  const [filters, setFilters] = useState({ categories: [], date: 'all', distance: 'all', payment: 'all', search: '' });
   const [showEndedSales, setShowEndedSales] = useState(false);
   const [favorites, setFavorites] = useState([]);
   const [user, setUser] = useState(null);
@@ -153,9 +153,12 @@ export default function YardSales() {
       }
     }
     
-    // Category
-    if (filters.category !== 'all' && sale.category !== filters.category) {
-      return false;
+    // Categories
+    if (filters.categories.length > 0) {
+      const saleCategories = sale.categories || (sale.category ? [sale.category] : []);
+      if (!filters.categories.some(cat => saleCategories.includes(cat))) {
+        return false;
+      }
     }
     
     // Date filtering
@@ -209,16 +212,16 @@ export default function YardSales() {
 
   const resetFilters = () => {
     base44.analytics.track({ eventName: 'filters_reset' });
-    setFilters({ category: 'all', date: 'all', distance: 'all', payment: 'all', search: '' });
+    setFilters({ categories: [], date: 'all', distance: 'all', payment: 'all', search: '' });
   };
 
   // Track filter changes
   useEffect(() => {
-    if (filters.category !== 'all' || filters.date !== 'all' || filters.payment !== 'all' || filters.search) {
+    if (filters.categories.length > 0 || filters.date !== 'all' || filters.payment !== 'all' || filters.search) {
       base44.analytics.track({
         eventName: 'sales_filtered',
         properties: {
-          category: filters.category,
+          categories: filters.categories,
           date: filters.date,
           payment: filters.payment,
           has_search: !!filters.search
