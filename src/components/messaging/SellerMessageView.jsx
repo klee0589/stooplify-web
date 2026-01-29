@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
-import { MessageCircle, Loader2, User } from 'lucide-react';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { MessageCircle, Loader2, User, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 export default function SellerMessageView({ sale, sellerEmail }) {
   const [selectedBuyer, setSelectedBuyer] = useState(null);
+  const [replyText, setReplyText] = useState('');
+  const queryClient = useQueryClient();
 
   const { data: allMessages = [], isLoading } = useQuery({
     queryKey: ['sellerMessages', sale.id],
@@ -29,6 +34,31 @@ export default function SellerMessageView({ sale, sellerEmail }) {
   }, {});
 
   const buyerEmails = Object.keys(conversations);
+
+  const sendReplyMutation = useMutation({
+    mutationFn: async ({ buyerEmail, content }) => {
+      return await base44.entities.Message.create({
+        yard_sale_id: sale.id,
+        sender_email: sellerEmail,
+        recipient_email: buyerEmail,
+        content,
+        read: false,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sellerMessages', sale.id] });
+      setReplyText('');
+      toast.success('Reply sent!');
+    },
+    onError: () => {
+      toast.error('Failed to send reply');
+    },
+  });
+
+  const handleReply = (buyerEmail) => {
+    if (!replyText.trim()) return;
+    sendReplyMutation.mutate({ buyerEmail, content: replyText });
+  };
 
   if (isLoading) {
     return (
@@ -100,32 +130,63 @@ export default function SellerMessageView({ sale, sellerEmail }) {
                   exit={{ height: 0, opacity: 0 }}
                   className="overflow-hidden"
                 >
-                  <div className="p-3 bg-white dark:bg-gray-800 rounded-xl mt-2 space-y-2 max-h-64 overflow-y-auto">
-                    {messages.reverse().map((msg) => {
-                      const isOwn = msg.sender_email === sellerEmail;
-                      return (
-                        <div
-                          key={msg.id}
-                          className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}
-                        >
+                  <div className="p-3 bg-white dark:bg-gray-800 rounded-xl mt-2">
+                    <div className="space-y-2 max-h-48 overflow-y-auto mb-3">
+                      {messages.reverse().map((msg) => {
+                        const isOwn = msg.sender_email === sellerEmail;
+                        return (
                           <div
-                            className={`max-w-[80%] rounded-2xl px-3 py-2 ${
-                              isOwn
-                                ? 'bg-[#14B8FF] text-white'
-                                : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
-                            }`}
+                            key={msg.id}
+                            className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}
                           >
-                            <p className="text-xs">{msg.content}</p>
-                            <p className={`text-xs mt-0.5 ${isOwn ? 'text-white/70' : 'text-gray-500'}`}>
-                              {new Date(msg.created_date).toLocaleTimeString('en-US', {
-                                hour: 'numeric',
-                                minute: '2-digit'
-                              })}
-                            </p>
+                            <div
+                              className={`max-w-[80%] rounded-2xl px-3 py-2 ${
+                                isOwn
+                                  ? 'bg-[#14B8FF] text-white'
+                                  : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+                              }`}
+                            >
+                              <p className="text-xs">{msg.content}</p>
+                              <p className={`text-xs mt-0.5 ${isOwn ? 'text-white/70' : 'text-gray-500'}`}>
+                                {new Date(msg.created_date).toLocaleTimeString('en-US', {
+                                  hour: 'numeric',
+                                  minute: '2-digit'
+                                })}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      );
-                    })}
+                        );
+                      })}
+                    </div>
+                    
+                    {/* Reply Input */}
+                    <div className="flex gap-2">
+                      <Textarea
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
+                        placeholder="Type your reply..."
+                        className="rounded-xl resize-none text-sm"
+                        rows={2}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && !e.shiftKey) {
+                            e.preventDefault();
+                            handleReply(buyerEmail);
+                          }
+                        }}
+                      />
+                      <Button
+                        onClick={() => handleReply(buyerEmail)}
+                        disabled={!replyText.trim() || sendReplyMutation.isPending}
+                        className="bg-[#14B8FF] hover:bg-[#0da3e6] self-end"
+                        size="sm"
+                      >
+                        {sendReplyMutation.isPending ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Send className="w-4 h-4" />
+                        )}
+                      </Button>
+                    </div>
                   </div>
                 </motion.div>
               )}
