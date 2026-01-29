@@ -7,6 +7,7 @@ import { base44 } from '@/api/base44Client';
 import { useTranslation } from '../components/translations';
 import { useTheme, ThemeProvider } from '../components/ThemeProvider';
 import { toast } from 'sonner';
+import { useQuery } from '@tanstack/react-query';
 
 function LayoutContent({ children, currentPageName }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -46,6 +47,16 @@ function LayoutContent({ children, currentPageName }) {
 
   const t = useTranslation(language);
   
+  // Fetch user's yard sales count
+  const { data: userSales = [] } = useQuery({
+    queryKey: ['userYardSales', user?.email],
+    queryFn: async () => {
+      if (!user) return [];
+      return await base44.entities.YardSale.filter({ created_by: user.email });
+    },
+    enabled: !!user,
+  });
+  
   const toggleLanguage = () => {
     const newLang = language === 'en' ? 'es' : 'en';
     setLanguage(newLang);
@@ -59,6 +70,7 @@ function LayoutContent({ children, currentPageName }) {
     { name: t('home'), page: 'Home', icon: Home },
     { name: t('browseSales'), page: 'YardSales', icon: MapPin },
     { name: t('listSale'), page: 'AddYardSale', icon: PlusCircle },
+    ...(userSales.length > 0 ? [{ name: t('myYardSales'), page: 'MyYardSales', icon: MapPin }] : []),
     { name: 'Guides', page: 'Guides', icon: Settings },
   ];
 
