@@ -69,8 +69,13 @@ export default function Messages() {
     return allMessages.some(m => m.yard_sale_id === sale.id);
   }).map(sale => {
     const saleMessages = allMessages.filter(m => m.yard_sale_id === sale.id);
-    const unreadCount = saleMessages.filter(m => !m.read).length;
-    return { ...sale, messageCount: saleMessages.length, unreadCount };
+    // Count unique senders
+    const uniqueSenders = [...new Set(saleMessages.map(m => m.sender_email))];
+    const messageCount = uniqueSenders.length;
+    // Count unique senders with unread messages
+    const sendersWithUnread = [...new Set(saleMessages.filter(m => !m.read).map(m => m.sender_email))];
+    const unreadCount = sendersWithUnread.length;
+    return { ...sale, messageCount, unreadCount };
   });
 
   if (!user || salesLoading) {
