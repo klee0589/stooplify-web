@@ -616,13 +616,17 @@ export default function YardSaleDetails() {
             animate={{ opacity: 1, x: 0 }}
             className="space-y-6"
           >
-            {/* Trust Badges & Category */}
+            {/* Trust Badges & Categories */}
             <div className="space-y-3">
-              {sale.category && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FF6F61]/10 rounded-full text-sm font-medium text-[#FF6F61] capitalize">
-                  <Tag className="w-3.5 h-3.5" />
-                  {sale.category.replace('-', ' ')}
-                </span>
+              {(sale.categories || (sale.category ? [sale.category] : [])).length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {(sale.categories || [sale.category]).map((cat, idx) => (
+                    <span key={idx} className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#FF6F61]/10 rounded-full text-sm font-medium text-[#FF6F61] capitalize">
+                      <Tag className="w-3.5 h-3.5" />
+                      {cat.replace('-', ' ')}
+                    </span>
+                  ))}
+                </div>
               )}
               <TrustBadges seller={seller} />
             </div>

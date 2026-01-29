@@ -80,7 +80,7 @@ export default function AddYardSale() {
     city: '',
     state: '',
     zip_code: '',
-    category: 'general',
+    categories: ['general'],
     address_unlock_hours: 24,
     payment_cash: true,
     payment_card: false,
@@ -131,7 +131,7 @@ export default function AddYardSale() {
                 city: sale.city || '',
                 state: sale.state || '',
                 zip_code: sale.zip_code || '',
-                category: sale.category || 'general',
+                categories: sale.categories || (sale.category ? [sale.category] : ['general']),
                 address_unlock_hours: sale.address_unlock_hours || 24,
                 payment_cash: sale.payment_cash ?? true,
                 payment_card: sale.payment_card ?? false,
@@ -495,7 +495,7 @@ export default function AddYardSale() {
     };
   })();
 
-  const isStep1Valid = formData.title && formData.date && formData.category;
+  const isStep1Valid = formData.title && formData.date && formData.categories?.length > 0;
   const isStep2Valid = formData.general_location && formData.address && formData.city && formData.state && formData.zip_code;
 
   if (isLoadingSale) {
@@ -631,21 +631,32 @@ export default function AddYardSale() {
                       className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6"
                     />
                   </div>
-                  <div>
-                    <Label className="text-[#2E3A59] font-medium mb-2 block">Category *</Label>
-                    <Select 
-                      value={formData.category} 
-                      onValueChange={(value) => updateField('category', value)}
-                    >
-                      <SelectTrigger className="rounded-xl border-gray-200 py-6">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {getCategoryLabels(t).map((cat) => (
-                          <SelectItem key={cat.value} value={cat.value}>{cat.label}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                  <div className="col-span-2">
+                    <Label className="text-[#2E3A59] font-medium mb-2 block">Categories * (Select all that apply)</Label>
+                    <div className="grid grid-cols-3 gap-3">
+                      {getCategoryLabels(t).map((cat) => (
+                        <div 
+                          key={cat.value}
+                          onClick={() => {
+                            const current = formData.categories || [];
+                            const newCategories = current.includes(cat.value)
+                              ? current.filter(c => c !== cat.value)
+                              : [...current, cat.value];
+                            updateField('categories', newCategories.length > 0 ? newCategories : ['general']);
+                          }}
+                          className={`flex items-center justify-center gap-2 px-3 py-3 rounded-xl border-2 cursor-pointer transition-all ${
+                            (formData.categories || []).includes(cat.value)
+                              ? 'bg-[#FF6F61] border-[#FF6F61] text-white'
+                              : 'bg-white border-gray-200 text-gray-700 hover:border-[#FF6F61]'
+                          }`}
+                        >
+                          <span className="text-sm font-medium">{cat.label}</span>
+                          {(formData.categories || []).includes(cat.value) && (
+                            <Check className="w-4 h-4" />
+                          )}
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
@@ -678,6 +689,9 @@ export default function AddYardSale() {
                     onChange={(e) => updateField('description', e.target.value)}
                     className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] min-h-[120px]"
                   />
+                  <p className="text-xs text-blue-600 mt-2 flex items-center gap-1">
+                    💡 Tip: Leave blank and upload photos in Step 3 - our AI will generate a description for you!
+                  </p>
                 </div>
 
                 {/* AI Description Preview Modal */}
@@ -726,46 +740,66 @@ export default function AddYardSale() {
                   <Label className="text-[#2E3A59] font-medium mb-3 block">Payment Methods Accepted</Label>
                   <div className="space-y-3">
                     <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
-                      <Checkbox
-                        id="payment_cash"
-                        checked={formData.payment_cash}
-                        onCheckedChange={(checked) => updateField('payment_cash', checked)}
-                      />
-                      <Label htmlFor="payment_cash" className="flex items-center gap-2 cursor-pointer flex-1">
+                      <div className="flex items-center justify-center w-5 h-5 rounded border-2 transition-all" style={{
+                        borderColor: formData.payment_cash ? '#10b981' : '#d1d5db',
+                        backgroundColor: formData.payment_cash ? '#10b981' : 'transparent'
+                      }}>
+                        {formData.payment_cash && <Check className="w-3 h-3 text-white" />}
+                      </div>
+                      <Label 
+                        htmlFor="payment_cash" 
+                        className="flex items-center gap-2 cursor-pointer flex-1"
+                        onClick={() => updateField('payment_cash', !formData.payment_cash)}
+                      >
                         <DollarSign className="w-4 h-4 text-green-600" />
                         <span>Cash</span>
                       </Label>
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
-                      <Checkbox
-                        id="payment_card"
-                        checked={formData.payment_card}
-                        onCheckedChange={(checked) => updateField('payment_card', checked)}
-                      />
-                      <Label htmlFor="payment_card" className="flex items-center gap-2 cursor-pointer flex-1">
+                      <div className="flex items-center justify-center w-5 h-5 rounded border-2 transition-all" style={{
+                        borderColor: formData.payment_card ? '#3b82f6' : '#d1d5db',
+                        backgroundColor: formData.payment_card ? '#3b82f6' : 'transparent'
+                      }}>
+                        {formData.payment_card && <Check className="w-3 h-3 text-white" />}
+                      </div>
+                      <Label 
+                        htmlFor="payment_card" 
+                        className="flex items-center gap-2 cursor-pointer flex-1"
+                        onClick={() => updateField('payment_card', !formData.payment_card)}
+                      >
                         <CreditCard className="w-4 h-4 text-blue-600" />
                         <span>Credit/Debit Cards</span>
                       </Label>
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
-                      <Checkbox
-                        id="payment_digital"
-                        checked={formData.payment_digital}
-                        onCheckedChange={(checked) => updateField('payment_digital', checked)}
-                      />
-                      <Label htmlFor="payment_digital" className="flex items-center gap-2 cursor-pointer flex-1">
+                      <div className="flex items-center justify-center w-5 h-5 rounded border-2 transition-all" style={{
+                        borderColor: formData.payment_digital ? '#a855f7' : '#d1d5db',
+                        backgroundColor: formData.payment_digital ? '#a855f7' : 'transparent'
+                      }}>
+                        {formData.payment_digital && <Check className="w-3 h-3 text-white" />}
+                      </div>
+                      <Label 
+                        htmlFor="payment_digital" 
+                        className="flex items-center gap-2 cursor-pointer flex-1"
+                        onClick={() => updateField('payment_digital', !formData.payment_digital)}
+                      >
                         <Smartphone className="w-4 h-4 text-purple-600" />
                         <span>Digital (Venmo, PayPal, etc.)</span>
                       </Label>
                     </div>
                     {formData.payment_cash && (formData.payment_card || formData.payment_digital) && (
                       <div className="flex items-center gap-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl">
-                        <Checkbox
-                          id="cash_preferred"
-                          checked={formData.cash_preferred}
-                          onCheckedChange={(checked) => updateField('cash_preferred', checked)}
-                        />
-                        <Label htmlFor="cash_preferred" className="cursor-pointer flex-1 text-sm">
+                        <div className="flex items-center justify-center w-5 h-5 rounded border-2 transition-all" style={{
+                          borderColor: formData.cash_preferred ? '#f59e0b' : '#d1d5db',
+                          backgroundColor: formData.cash_preferred ? '#f59e0b' : 'transparent'
+                        }}>
+                          {formData.cash_preferred && <Check className="w-3 h-3 text-white" />}
+                        </div>
+                        <Label 
+                          htmlFor="cash_preferred" 
+                          className="cursor-pointer flex-1 text-sm"
+                          onClick={() => updateField('cash_preferred', !formData.cash_preferred)}
+                        >
                           <span className="font-medium">Cash Preferred</span>
                           <span className="text-gray-600 dark:text-gray-400 block">Other methods accepted but cash is easier</span>
                         </Label>

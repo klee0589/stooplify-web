@@ -122,6 +122,7 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
               ))}
             </SelectContent>
           </Select>
+          </div>
         </div>
         
         {/* Reset Button */}
