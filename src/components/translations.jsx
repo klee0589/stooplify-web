@@ -2,9 +2,9 @@ export const translations = {
   en: {
     // Header
     home: 'Home',
-    browseSales: 'Browse Yard Sales',
-    listSale: 'List a Yard Sale',
-    myYardSales: 'My Yard Sales',
+    browseSales: 'Browse',
+    listSale: 'List',
+    myYardSales: 'My Listings',
     pricing: 'Pricing',
     favorites: 'Favorites',
     profile: 'Profile',
@@ -344,9 +344,9 @@ export const translations = {
   es: {
     // Header
     home: 'Inicio',
-    browseSales: 'Ver Ventas de Garaje',
-    listSale: 'Publicar una Venta',
-    myYardSales: 'Mis Ventas de Garaje',
+    browseSales: 'Buscar',
+    listSale: 'Publicar',
+    myYardSales: 'Mis Publicaciones',
     pricing: 'Precios',
     favorites: 'Favoritos',
     profile: 'Perfil',

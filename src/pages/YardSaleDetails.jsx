@@ -12,6 +12,7 @@ import {
 import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Button } from "@/components/ui/button";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { format } from 'date-fns';
 import { toast } from "sonner";
 import SEO from '../components/SEO';
@@ -911,13 +912,21 @@ export default function YardSaleDetails() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <h2 
-                className="text-2xl font-bold text-[#2E3A59] dark:text-white mb-6"
-                style={{ fontFamily: 'Poppins, sans-serif' }}
-              >
-                Printable Flyer
-              </h2>
-              <PrintableFlyer sale={sale} />
+              <Accordion type="single" collapsible className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm">
+                <AccordionItem value="flyer" className="border-0">
+                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                    <h2 
+                      className="text-xl font-bold text-[#2E3A59] dark:text-white"
+                      style={{ fontFamily: 'Poppins, sans-serif' }}
+                    >
+                      Printable Flyer
+                    </h2>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pb-6">
+                    <PrintableFlyer sale={sale} />
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
             </motion.div>
           </div>
         )}
