@@ -58,7 +58,8 @@ export default function Messages() {
     queryFn: async () => {
       if (!user) return [];
       const messages = await base44.entities.Message.list();
-      return messages.filter(m => m.recipient_email === user.email || m.sender_email === user.email);
+      // Only get messages TO the seller (from buyers)
+      return messages.filter(m => m.recipient_email === user.email);
     },
     enabled: !!user,
   });
@@ -68,7 +69,7 @@ export default function Messages() {
     return allMessages.some(m => m.yard_sale_id === sale.id);
   }).map(sale => {
     const saleMessages = allMessages.filter(m => m.yard_sale_id === sale.id);
-    const unreadCount = saleMessages.filter(m => !m.read && m.recipient_email === user?.email).length;
+    const unreadCount = saleMessages.filter(m => !m.read).length;
     return { ...sale, messageCount: saleMessages.length, unreadCount };
   });
 
