@@ -48,8 +48,8 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
       className="space-y-4"
     >
       {/* Categories - Multi-select */}
-      <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-        <div className="flex items-center gap-2 text-[#2E3A59] mb-3">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+        <div className="flex items-center gap-2 text-[#2E3A59] dark:text-white mb-3">
           <Filter className="w-4 h-4" />
           <span className="font-medium text-sm" style={{ fontFamily: 'Poppins, sans-serif' }}>Categories</span>
         </div>
@@ -69,7 +69,7 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
                 className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
                   isSelected
                     ? 'bg-[#FF6F61] text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                 }`}
               >
                 <span>{cat.label}</span>
@@ -81,7 +81,7 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
       </div>
 
       {/* Other Filters */}
-      <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {/* Search */}
           <Input
