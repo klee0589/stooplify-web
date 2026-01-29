@@ -32,8 +32,13 @@ export default function Home() {
   const { data: sales = [] } = useQuery({
     queryKey: ['featuredSales'],
     queryFn: async () => {
-      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-created_date', 6);
-      return allSales;
+      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 6);
+      // Filter to show only upcoming sales (not ended)
+      const now = new Date();
+      return allSales.filter(sale => {
+        const saleEndDateTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
+        return saleEndDateTime >= now;
+      });
     },
   });
 
