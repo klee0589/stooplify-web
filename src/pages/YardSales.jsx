@@ -58,34 +58,47 @@ export default function YardSales() {
     checkAuth();
   }, []);
 
-  const { data: sales = [], isLoading, refetch } = useQuery({
+  const { data: sales = [], isLoading, refetch, error } = useQuery({
     queryKey: ['yardSales'],
     queryFn: async () => {
-      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
-      
-      // Filter out sales older than 7 days (keep recent past sales + upcoming)
-      const now = new Date();
-      const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-      const upcomingSales = allSales.filter(sale => {
-        const saleDateTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
-        return saleDateTime >= sevenDaysAgo;
-      });
-      
-      // Fetch sellers for each sale and mark if past
-      const salesWithSellers = await Promise.all(
-        upcomingSales.map(async (sale) => {
+      try {
+        const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
+        console.log('Fetched sales:', allSales.length);
+        
+        // Filter out sales older than 7 days (keep recent past sales + upcoming)
+        const now = new Date();
+        const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        const upcomingSales = allSales.filter(sale => {
           const saleDateTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
-          const isPast = saleDateTime < now;
-          
-          if (sale.created_by) {
-            const sellers = await base44.entities.User.filter({ email: sale.created_by });
-            return { ...sale, seller: sellers[0] || null, isPast };
-          }
-          return { ...sale, seller: null, isPast };
-        })
-      );
-      
-      return salesWithSellers;
+          return saleDateTime >= sevenDaysAgo;
+        });
+        console.log('After date filter:', upcomingSales.length);
+        
+        // Fetch sellers for each sale and mark if past
+        const salesWithSellers = await Promise.all(
+          upcomingSales.map(async (sale) => {
+            try {
+              const saleDateTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
+              const isPast = saleDateTime < now;
+              
+              if (sale.created_by) {
+                const sellers = await base44.entities.User.filter({ email: sale.created_by });
+                return { ...sale, seller: sellers[0] || null, isPast };
+              }
+              return { ...sale, seller: null, isPast };
+            } catch (err) {
+              console.error('Error fetching seller for sale:', sale.id, err);
+              return { ...sale, seller: null, isPast: false };
+            }
+          })
+        );
+        
+        console.log('Final sales with sellers:', salesWithSellers.length);
+        return salesWithSellers;
+      } catch (err) {
+        console.error('Error fetching yard sales:', err);
+        throw err;
+      }
     },
   });
 
@@ -350,6 +363,19 @@ export default function YardSales() {
         {isLoading ? (
           <div className="flex items-center justify-center py-20">
             <Loader2 className="w-8 h-8 text-[#FF6F61] animate-spin" />
+          </div>
+        ) : error ? (
+          <div className="text-center py-20">
+            <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Map className="w-10 h-10 text-red-500" />
+            </div>
+            <h3 className="text-xl font-semibold text-[#2E3A59] dark:text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              Error Loading Sales
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300 mb-4">Please try refreshing the page</p>
+            <Button onClick={() => refetch()} className="bg-[#FF6F61] hover:bg-[#e55a4d]">
+              Retry
+            </Button>
           </div>
         ) : (
           <AnimatePresence mode="wait">
