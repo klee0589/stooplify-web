@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
-import { MapPin, Calendar, Clock, Heart, ArrowRight, DollarSign, CreditCard, Smartphone } from 'lucide-react';
+import { MapPin, Calendar, Clock, Heart, ArrowRight, DollarSign, CreditCard, Smartphone, Package, Sofa, Shirt, Zap, Baby, Crown, BookOpen, Dumbbell, Users, Tag } from 'lucide-react';
 import { format } from 'date-fns';
 import TrustBadges from './TrustBadges';
 import { useTranslation } from '../translations';
@@ -45,15 +45,26 @@ export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance,
           </div>
         )}
         
-        {/* Past Sale Badge */}
+        {/* Past Sale Badge or Category */}
         {isPast ? (
           <span className="absolute top-3 left-3 px-2.5 py-1 bg-gray-500/90 backdrop-blur-sm rounded-full text-xs font-medium text-white">
             {t('ended')}
           </span>
-        ) : sale.category && (
-          <span className="absolute top-3 left-3 px-2.5 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-medium text-[#2E3A59] capitalize">
-            {sale.category.replace('-', ' ')}
-          </span>
+        ) : (sale.categories?.[0] || sale.category) && (
+          (() => {
+            const categoryIcons = {
+              general: Package, furniture: Sofa, clothing: Shirt, electronics: Zap,
+              toys: Baby, antiques: Crown, books: BookOpen, sports: Dumbbell, 'multi-family': Users
+            };
+            const catValue = sale.categories?.[0] || sale.category;
+            const Icon = categoryIcons[catValue] || Tag;
+            return (
+              <span className="absolute top-3 left-3 px-2.5 py-1 bg-white/90 backdrop-blur-sm rounded-full text-xs font-medium text-[#2E3A59] capitalize flex items-center gap-1">
+                <Icon className="w-3 h-3" />
+                {catValue.replace('-', ' ')}
+              </span>
+            );
+          })()
         )}
         
         {/* Favorite Button */}
