@@ -102,11 +102,15 @@ export default function YardSaleDetails() {
           // Increment views
           await base44.entities.YardSale.update(saleId, { views: (sales[0].views || 0) + 1 });
           
-          // Fetch seller info
+          // Fetch seller info via backend function
           if (sales[0].created_by) {
-            const sellers = await base44.entities.User.filter({ email: sales[0].created_by });
-            if (sellers.length > 0) {
-              setSeller(sellers[0]);
+            try {
+              const { data } = await base44.functions.invoke('getSellerInfo', { email: sales[0].created_by });
+              if (data?.seller) {
+                setSeller(data.seller);
+              }
+            } catch (err) {
+              console.warn('Could not fetch seller info:', err);
             }
           }
           
