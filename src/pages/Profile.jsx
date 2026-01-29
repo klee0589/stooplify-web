@@ -8,7 +8,7 @@ import { createPageUrl } from '../utils';
 import { 
   User, Mail, MapPin, Calendar, Heart, Tag, 
   Loader2, ArrowLeft, LogOut, Edit2, Check, X, Clock, Pencil,
-  Crown, Zap, CreditCard, Star, Award 
+  Crown, Zap, CreditCard, Star, Award, MessageCircle
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,6 +17,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { format } from 'date-fns';
 import AlertSettings from '../components/profile/AlertSettings';
+import SellerMessageView from '../components/messaging/SellerMessageView';
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -26,6 +27,7 @@ export default function Profile() {
   const [editedName, setEditedName] = useState('');
   const [editedPhone, setEditedPhone] = useState('');
   const [language, setLanguage] = useState('en');
+  const [expandedSaleMessages, setExpandedSaleMessages] = useState(null);
   
   useEffect(() => {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
@@ -576,52 +578,74 @@ export default function Profile() {
                 return (
                   <motion.div
                     key={sale.id}
-                    whileHover={{ x: 5 }}
-                    className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
+                    className="bg-gray-50 dark:bg-gray-700 rounded-xl overflow-hidden"
                   >
-                    <Link to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`} className="flex items-center gap-3 flex-1">
-                      <div className="flex items-center gap-3">
-                        {sale.photos && sale.photos.length > 0 ? (
-                          <img 
-                            src={sale.photos[0]} 
-                            alt="" 
-                            className="w-12 h-12 rounded-lg object-cover"
-                          />
-                        ) : (
-                          <div className="w-12 h-12 bg-[#FF6F61]/10 rounded-lg flex items-center justify-center">
-                            <MapPin className="w-5 h-5 text-[#FF6F61]" />
+                    <div className="flex items-center justify-between p-4 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                      <Link to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`} className="flex items-center gap-3 flex-1">
+                        <div className="flex items-center gap-3">
+                          {sale.photos && sale.photos.length > 0 ? (
+                            <img 
+                              src={sale.photos[0]} 
+                              alt="" 
+                              className="w-12 h-12 rounded-lg object-cover"
+                            />
+                          ) : (
+                            <div className="w-12 h-12 bg-[#FF6F61]/10 rounded-lg flex items-center justify-center">
+                              <MapPin className="w-5 h-5 text-[#FF6F61]" />
+                            </div>
+                          )}
+                          <div>
+                            <p className="font-medium text-[#2E3A59] dark:text-white">{sale.title}</p>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                              {sale.date ? format(new Date(sale.date), 'MMM d, yyyy') : 'Date TBD'}
+                            </p>
                           </div>
-                        )}
-                        <div>
-                          <p className="font-medium text-[#2E3A59] dark:text-white">{sale.title}</p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            {sale.date ? format(new Date(sale.date), 'MMM d, yyyy') : 'Date TBD'}
-                          </p>
                         </div>
-                      </div>
-                    </Link>
-                    <div className="flex items-center gap-2">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${
-                        saleStatus.color === 'blue'
-                          ? 'bg-blue-100 text-blue-700'
-                          : saleStatus.color === 'green'
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-gray-100 text-gray-700'
-                      }`}>
-                        <Clock className="w-3 h-3" />
-                        {saleStatus.label}
-                      </span>
-                      <Link to={createPageUrl('AddYardSale') + `?edit=${sale.id}`}>
+                      </Link>
+                      <div className="flex items-center gap-2">
+                        <span className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${
+                          saleStatus.color === 'blue'
+                            ? 'bg-blue-100 text-blue-700'
+                            : saleStatus.color === 'green'
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-gray-100 text-gray-700'
+                        }`}>
+                          <Clock className="w-3 h-3" />
+                          {saleStatus.label}
+                        </span>
                         <Button
                           size="sm"
-                          variant="outline"
+                          variant="ghost"
+                          onClick={() => setExpandedSaleMessages(expandedSaleMessages === sale.id ? null : sale.id)}
                           className="rounded-lg"
-                          onClick={(e) => e.stopPropagation()}
                         >
-                          <Pencil className="w-3 h-3" />
+                          <MessageCircle className="w-4 h-4" />
                         </Button>
-                      </Link>
+                        <Link to={createPageUrl('AddYardSale') + `?edit=${sale.id}`}>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="rounded-lg"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <Pencil className="w-3 h-3" />
+                          </Button>
+                        </Link>
+                      </div>
                     </div>
+                    
+                    <AnimatePresence>
+                      {expandedSaleMessages === sale.id && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="border-t dark:border-gray-600 p-4"
+                        >
+                          <SellerMessageView sale={sale} sellerEmail={user.email} />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </motion.div>
                 );
               })}
