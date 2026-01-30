@@ -50,6 +50,21 @@ export default function MessageThread({ yardSale, seller }) {
     enabled: !!user && !!yardSale.id && !!seller.email,
   });
 
+  // Mark messages as read when viewing
+  useEffect(() => {
+    if (!user || !messages.length) return;
+    
+    const unreadMessages = messages.filter(m => !m.read && m.recipient_email === user.email);
+    if (unreadMessages.length > 0) {
+      Promise.all(
+        unreadMessages.map(m => base44.entities.Message.update(m.id, { read: true }))
+      ).then(() => {
+        queryClient.invalidateQueries({ queryKey: ['unreadMessages', user.email] });
+        queryClient.refetchQueries({ queryKey: ['unreadMessages', user.email] });
+      });
+    }
+  }, [messages, user]);
+
   // Real-time subscription for messages
   useEffect(() => {
     if (!user || !yardSale.id || !seller.email) return;
