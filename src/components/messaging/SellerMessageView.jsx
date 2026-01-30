@@ -61,7 +61,7 @@ export default function SellerMessageView({ sale, sellerEmail }) {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sellerMessages', sale.id] });
+      queryClient.invalidateQueries({ queryKey: ['sellerMessages'] });
       queryClient.invalidateQueries({ queryKey: ['unreadMessages'] });
       queryClient.invalidateQueries({ queryKey: ['allMessages'] });
       setReplyText('');
