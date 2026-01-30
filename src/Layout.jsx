@@ -57,13 +57,15 @@ function LayoutContent({ children, currentPageName }) {
     enabled: !!user,
   });
 
-  // Fetch unread messages count
+  // Fetch unread messages count (unique senders)
   const { data: unreadCount = 0 } = useQuery({
     queryKey: ['unreadMessages', user?.email],
     queryFn: async () => {
       if (!user) return 0;
       const messages = await base44.entities.Message.filter({ recipient_email: user.email, read: false });
-      return messages.length;
+      // Count unique senders with unread messages
+      const uniqueSenders = [...new Set(messages.map(m => m.sender_email))];
+      return uniqueSenders.length;
     },
     enabled: !!user,
     refetchInterval: 30000, // Refresh every 30 seconds

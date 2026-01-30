@@ -60,12 +60,12 @@ import GuidesPricing from './pages/GuidesPricing';
 import GuidesSeniors from './pages/GuidesSeniors';
 import GuidesTimings from './pages/GuidesTimings';
 import Home from './pages/Home';
+import Messages from './pages/Messages';
+import MyYardSales from './pages/MyYardSales';
 import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
 import YardSaleDetails from './pages/YardSaleDetails';
 import YardSales from './pages/YardSales';
-import MyYardSales from './pages/MyYardSales';
-import Messages from './pages/Messages';
 import __Layout from './Layout.jsx';
 
 
@@ -83,12 +83,12 @@ export const PAGES = {
     "GuidesSeniors": GuidesSeniors,
     "GuidesTimings": GuidesTimings,
     "Home": Home,
+    "Messages": Messages,
+    "MyYardSales": MyYardSales,
     "Pricing": Pricing,
     "Profile": Profile,
     "YardSaleDetails": YardSaleDetails,
     "YardSales": YardSales,
-    "MyYardSales": MyYardSales,
-    "Messages": Messages,
 }
 
 export const pagesConfig = {
