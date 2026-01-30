@@ -105,24 +105,28 @@ function LayoutContent({ children, currentPageName }) {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+    <div className="min-h-screen bg-[#F1DAC4] dark:bg-[#0D0C1D] transition-colors duration-300">
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
 
         :root {
-          --primary: #14B8FF;
-          --secondary: #2E3A59;
-          --accent: #F5A623;
-          --bg-light: #F9F9F9;
-          --text-dark: #333333;
+          --primary: #0D0C1D;
+          --secondary: #EADBC7;
+          --accent: #A69CAC;
+          --bg-light: #F1DAC4;
+          --bg-secondary: #EADBC7;
+          --text-dark: #161B33;
+          --text-secondary: #474973;
         }
 
         .dark {
-          --primary: #14B8FF;
-          --secondary: #1a2238;
-          --accent: #F5A623;
-          --bg-light: #111827;
-          --text-dark: #f3f4f6;
+          --primary: #A69CAC;
+          --secondary: #161B33;
+          --accent: #474973;
+          --bg-light: #0D0C1D;
+          --bg-secondary: #161B33;
+          --text-dark: #F1DAC4;
+          --text-secondary: #A69CAC;
         }
 
         body {
@@ -131,8 +135,8 @@ function LayoutContent({ children, currentPageName }) {
         }
 
         .dark body {
-          background: #0f172a;
-          color: #f3f4f6;
+          background: #0D0C1D;
+          color: #F1DAC4;
         }
 
         h1, h2, h3, h4, h5, h6 {
