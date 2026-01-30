@@ -77,8 +77,8 @@ function LayoutContent({ children, currentPageName }) {
     if (!user?.email) return;
 
     const unsubscribe = base44.entities.Message.subscribe((event) => {
-      // Update unread count if the message is for this user
-      if (event.data?.recipient_email === user.email || event.data?.sender_email === user.email) {
+      // Update unread count only when user RECEIVES a message (not sends)
+      if (event.data?.recipient_email === user.email) {
         queryClient.invalidateQueries({ queryKey: ['unreadMessages', user.email] });
         queryClient.refetchQueries({ queryKey: ['unreadMessages', user.email] });
       }
