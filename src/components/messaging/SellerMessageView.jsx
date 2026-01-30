@@ -43,10 +43,9 @@ export default function SellerMessageView({ sale, sellerEmail }) {
       );
     },
     onSuccess: () => {
-      // Invalidate all message-related queries to refresh badges
-      queryClient.invalidateQueries({ queryKey: ['sellerMessages'] });
-      queryClient.invalidateQueries({ queryKey: ['unreadMessages'] });
-      queryClient.invalidateQueries({ queryKey: ['allMessages'] });
+      // Invalidate message-related queries with specific keys
+      queryClient.invalidateQueries({ queryKey: ['sellerMessages', sale.id] });
+      queryClient.invalidateQueries({ queryKey: ['unreadMessages', sellerEmail] });
     },
   });
 
@@ -61,9 +60,8 @@ export default function SellerMessageView({ sale, sellerEmail }) {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sellerMessages'] });
-      queryClient.invalidateQueries({ queryKey: ['unreadMessages'] });
-      queryClient.invalidateQueries({ queryKey: ['allMessages'] });
+      queryClient.invalidateQueries({ queryKey: ['sellerMessages', sale.id] });
+      queryClient.invalidateQueries({ queryKey: ['unreadMessages', sellerEmail] });
       setReplyText('');
       toast.success('Reply sent!');
     },
