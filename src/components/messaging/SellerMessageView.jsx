@@ -172,7 +172,7 @@ export default function SellerMessageView({ sale, sellerEmail }) {
                 >
                   <div className="p-3 bg-white dark:bg-gray-800 rounded-xl mt-2">
                     <div className="space-y-2 max-h-48 overflow-y-auto mb-3">
-                      {messages.reverse().map((msg) => {
+                      {[...messages].reverse().map((msg) => {
                         const isOwn = msg.sender_email === sellerEmail;
                         return (
                           <div
