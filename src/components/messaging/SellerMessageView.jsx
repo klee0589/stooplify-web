@@ -236,21 +236,21 @@ export default function SellerMessageView({ sale, sellerEmail }) {
                       className="space-y-2 max-h-48 overflow-y-auto mb-3 bg-gray-50 dark:bg-gray-900 rounded-lg p-2 border border-gray-200 dark:border-gray-700"
                     >
                       {[...messages].reverse().map((msg) => {
-                        const isOwn = msg.sender_email === sellerEmail;
+                        const isSeller = msg.sender_email === sellerEmail;
                         return (
                           <div
                             key={msg.id}
-                            className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}
+                            className={`flex ${isSeller ? 'justify-end' : 'justify-start'}`}
                           >
                             <div
                               className={`max-w-[80%] rounded-2xl px-3 py-2 ${
-                                isOwn
+                                isSeller
                                   ? 'bg-[#14B8FF] text-white'
-                                  : 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600'
+                                  : 'bg-[#FF6F61] text-white'
                               }`}
                             >
                               <p className="text-xs">{msg.content}</p>
-                              <p className={`text-xs mt-0.5 ${isOwn ? 'text-white/70' : 'text-gray-500'}`}>
+                              <p className="text-xs mt-0.5 text-white/70">
                                 {new Date(msg.created_date).toLocaleTimeString('en-US', {
                                   hour: 'numeric',
                                   minute: '2-digit'

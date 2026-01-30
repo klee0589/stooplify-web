@@ -178,23 +178,23 @@ export default function MessageThread({ yardSale, seller }) {
         ) : (
           <AnimatePresence>
             {[...messages].reverse().map((message) => {
-              const isOwn = message.sender_email === user.email;
+              const isBuyer = message.sender_email === user.email;
               return (
                 <motion.div
                   key={message.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className={`flex ${isOwn ? 'justify-end' : 'justify-start'}`}
+                  className={`flex ${isBuyer ? 'justify-end' : 'justify-start'}`}
                 >
                   <div
                     className={`max-w-[80%] rounded-2xl px-4 py-2 ${
-                      isOwn
+                      isBuyer
                         ? 'bg-[#FF6F61] text-white'
-                        : 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600'
+                        : 'bg-[#14B8FF] text-white'
                     }`}
                   >
                     <p className="text-sm">{message.content}</p>
-                    <p className={`text-xs mt-1 ${isOwn ? 'text-white/70' : 'text-gray-500'}`}>
+                    <p className="text-xs mt-1 text-white/70">
                       {new Date(message.created_date).toLocaleString('en-US', {
                         month: 'short',
                         day: 'numeric',
