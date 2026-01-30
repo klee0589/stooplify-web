@@ -35,6 +35,20 @@ export default function SellerMessageView({ sale, sellerEmail }) {
 
   const buyerEmails = Object.keys(conversations);
 
+  const markAsReadMutation = useMutation({
+    mutationFn: async (messageIds) => {
+      // Mark all messages as read
+      await Promise.all(
+        messageIds.map(id => base44.entities.Message.update(id, { read: true }))
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['sellerMessages', sale.id] });
+      queryClient.invalidateQueries({ queryKey: ['unreadMessages'] });
+      queryClient.invalidateQueries({ queryKey: ['allMessages'] });
+    },
+  });
+
   const sendReplyMutation = useMutation({
     mutationFn: async ({ buyerEmail, content }) => {
       return await base44.entities.Message.create({
@@ -47,6 +61,8 @@ export default function SellerMessageView({ sale, sellerEmail }) {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['sellerMessages', sale.id] });
+      queryClient.invalidateQueries({ queryKey: ['unreadMessages'] });
+      queryClient.invalidateQueries({ queryKey: ['allMessages'] });
       setReplyText('');
       toast.success('Reply sent!');
     },
