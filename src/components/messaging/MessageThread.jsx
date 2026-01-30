@@ -69,8 +69,8 @@ export default function MessageThread({ yardSale, seller }) {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['messages', yardSale.id, user?.email] });
       setMessageText('');
+      queryClient.refetchQueries({ queryKey: ['messages', yardSale.id, user?.email] });
       toast.success('Message sent!');
     },
     onError: () => {

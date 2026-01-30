@@ -76,9 +76,9 @@ export default function SellerMessageView({ sale, sellerEmail }) {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sellerMessages', sale.id] });
-      queryClient.invalidateQueries({ queryKey: ['unreadMessages', sellerEmail] });
       setReplyText('');
+      queryClient.refetchQueries({ queryKey: ['sellerMessages', sale.id] });
+      queryClient.invalidateQueries({ queryKey: ['unreadMessages', sellerEmail] });
       toast.success('Reply sent!');
     },
     onError: () => {
