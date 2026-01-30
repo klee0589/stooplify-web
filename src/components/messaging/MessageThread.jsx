@@ -72,6 +72,16 @@ export default function MessageThread({ yardSale, seller }) {
     return unsubscribe;
   }, [user, yardSale.id, seller.email, soundEnabled, queryClient]);
 
+  // Mark unread messages as read when component mounts or messages change
+  useEffect(() => {
+    if (messages.length > 0 && user) {
+      const unreadMessages = messages.filter(m => !m.read && m.recipient_email === user.email);
+      if (unreadMessages.length > 0) {
+        markAsReadMutation.mutate(unreadMessages.map(m => m.id));
+      }
+    }
+  }, [messages.length, user?.email]);
+
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
     if (!userScrolled && messagesContainerRef.current) {
@@ -90,6 +100,20 @@ export default function MessageThread({ yardSale, seller }) {
     setSoundEnabled(newValue);
     localStorage.setItem('messageSoundEnabled', newValue);
   };
+
+  const markAsReadMutation = useMutation({
+    mutationFn: async (messageIds) => {
+      await Promise.all(
+        messageIds.map(id => base44.entities.Message.update(id, { read: true }))
+      );
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['messages', yardSale.id, user?.email] });
+      queryClient.invalidateQueries({ queryKey: ['unreadMessages', user.email] });
+      queryClient.refetchQueries({ queryKey: ['unreadMessages', user.email] });
+      queryClient.invalidateQueries({ queryKey: ['allMessages', user.email] });
+    },
+  });
 
   const sendMessageMutation = useMutation({
     mutationFn: async (content) => {
