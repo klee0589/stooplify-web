@@ -115,9 +115,10 @@ export default function SellerMessageView({ sale, sellerEmail }) {
       setReplyText('');
       // Optimistically update the cache
       queryClient.setQueryData(['sellerMessages', sale.id], (old = []) => [newMessage, ...old]);
-      // Invalidate both seller's and buyer's unread counts
+      // Invalidate and refetch both seller's and buyer's unread counts
       queryClient.invalidateQueries({ queryKey: ['unreadMessages', sellerEmail] });
       queryClient.invalidateQueries({ queryKey: ['unreadMessages', newMessage.recipient_email] });
+      queryClient.refetchQueries({ queryKey: ['unreadMessages', newMessage.recipient_email] });
       queryClient.invalidateQueries({ queryKey: ['allMessages', sellerEmail] });
       setUserScrolled(false); // Auto-scroll to new message
       toast.success('Reply sent!');

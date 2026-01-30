@@ -105,8 +105,9 @@ export default function MessageThread({ yardSale, seller }) {
       setMessageText('');
       // Optimistically update the cache
       queryClient.setQueryData(['messages', yardSale.id, user?.email], (old = []) => [newMessage, ...old]);
-      // Invalidate seller's unread count so their badge updates
+      // Invalidate and refetch seller's unread count so their badge updates immediately
       queryClient.invalidateQueries({ queryKey: ['unreadMessages', seller.email] });
+      queryClient.refetchQueries({ queryKey: ['unreadMessages', seller.email] });
       setUserScrolled(false); // Auto-scroll to new message
       toast.success('Message sent!');
     },
