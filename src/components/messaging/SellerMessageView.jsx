@@ -78,6 +78,7 @@ export default function SellerMessageView({ sale, sellerEmail }) {
       // Invalidate all message-related queries
       queryClient.invalidateQueries({ queryKey: ['sellerMessages', sale.id] });
       queryClient.invalidateQueries({ queryKey: ['unreadMessages', sellerEmail] });
+      queryClient.refetchQueries({ queryKey: ['unreadMessages', sellerEmail] });
       queryClient.invalidateQueries({ queryKey: ['allMessages', sellerEmail] });
     },
   });
@@ -179,10 +180,11 @@ export default function SellerMessageView({ sale, sellerEmail }) {
           >
             <button
               onClick={() => {
+                const wasOpening = selectedBuyer !== buyerEmail;
                 setSelectedBuyer(selectedBuyer === buyerEmail ? null : buyerEmail);
                 setUserScrolled(false); // Reset scroll state when opening
                 // Mark unread messages as read when opening conversation
-                if (selectedBuyer !== buyerEmail) {
+                if (wasOpening) {
                   const unreadMessages = messages.filter(m => !m.read && m.recipient_email === sellerEmail);
                   if (unreadMessages.length > 0) {
                     markAsReadMutation.mutate(unreadMessages.map(m => m.id));

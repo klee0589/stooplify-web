@@ -108,17 +108,18 @@ export default function Messages() {
     const isSeller = sale.created_by === user.email;
     
     if (isSeller) {
-      // For seller: count unique buyers
+      // For seller: count unique buyers with messages
       const uniqueBuyers = [...new Set(saleMessages.map(m => 
         m.sender_email === user.email ? m.recipient_email : m.sender_email
       ))].filter(email => email !== user.email);
       const messageCount = uniqueBuyers.length;
-      const unreadCount = [...new Set(saleMessages.filter(m => !m.read && m.sender_email !== user.email).map(m => m.sender_email))].length;
+      // Count unique buyers with unread messages
+      const unreadCount = [...new Set(saleMessages.filter(m => !m.read && m.recipient_email === user.email).map(m => m.sender_email))].length;
       return { ...sale, messageCount, unreadCount, isSeller: true };
     } else {
       // For buyer: single conversation with seller
       const unreadCount = saleMessages.filter(m => !m.read && m.recipient_email === user.email).length;
-      return { ...sale, messageCount: saleMessages.length, unreadCount, isSeller: false };
+      return { ...sale, messageCount: 1, unreadCount, isSeller: false };
     }
   });
 
