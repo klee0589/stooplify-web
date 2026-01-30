@@ -157,6 +157,38 @@ export default function Home() {
               </div>
             </div>
           </div>
+          
+          {/* CTA After Bio */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700 text-center"
+          >
+            <p className="text-gray-700 dark:text-gray-300 mb-6 text-lg">
+              Ready to discover your neighborhood's hidden treasures?
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <motion.a
+                href="/YardSales"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 bg-[#14B8FF] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
+                style={{ fontFamily: 'Poppins, sans-serif' }}
+              >
+                Browse Sales Now
+              </motion.a>
+              <motion.a
+                href="/AddYardSale"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
+                style={{ fontFamily: 'Poppins, sans-serif' }}
+              >
+                List Your Sale Free
+              </motion.a>
+            </div>
+          </motion.div>
         </div>
       </div>
       
