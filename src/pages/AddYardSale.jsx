@@ -201,6 +201,13 @@ export default function AddYardSale() {
 
             console.log('✅ Coordinates found:', { exactLat, exactLon });
 
+            // Validate location is in New York
+            const isInNY = exactLat >= 40.4774 && exactLat <= 40.9176 && exactLon >= -74.2591 && exactLon <= -73.7004;
+            
+            if (!isInNY) {
+              throw new Error('Address must be in New York City area');
+            }
+
             // Create approximate coordinates (offset by ~0.01 degrees = ~1km for privacy)
             const latOffset = (Math.random() - 0.5) * 0.02;
             const lonOffset = (Math.random() - 0.5) * 0.02;
@@ -224,12 +231,16 @@ export default function AddYardSale() {
           }
         } catch (error) {
           console.error(`❌ Geocoding attempt ${i + 1} error:`, error);
+          if (error.message.includes('New York')) {
+            throw error; // Rethrow NY validation error
+          }
         }
       }
       
       if (!coordinates.latitude) {
         console.error('❌ All geocoding attempts failed');
-        toast.error('Could not locate address on map, but sale will still be saved');
+        toast.error('Could not locate address on map');
+        throw new Error('Could not locate address');
       }
       
       if (isEditMode) {
@@ -467,10 +478,23 @@ export default function AddYardSale() {
       const geoData = await response.json();
       
       if (geoData.length > 0) {
-        setAddressValidation({ 
-          status: 'valid', 
-          message: `✓ Address found: ${geoData[0].display_name}` 
-        });
+        const lat = parseFloat(geoData[0].lat);
+        const lon = parseFloat(geoData[0].lon);
+        
+        // Check if within New York bounds (approximate)
+        const isInNY = lat >= 40.4774 && lat <= 40.9176 && lon >= -74.2591 && lon <= -73.7004;
+        
+        if (!isInNY) {
+          setAddressValidation({ 
+            status: 'invalid', 
+            message: '⚠️ Address must be in New York City area' 
+          });
+        } else {
+          setAddressValidation({ 
+            status: 'valid', 
+            message: `✓ Address found: ${geoData[0].display_name}` 
+          });
+        }
       } else {
         setAddressValidation({ 
           status: 'invalid', 
@@ -497,7 +521,7 @@ export default function AddYardSale() {
   })();
 
   const isStep1Valid = formData.title && formData.date && formData.categories?.length > 0;
-  const isStep2Valid = formData.general_location && formData.address && formData.city && formData.state && formData.zip_code;
+  const isStep2Valid = formData.general_location && formData.address && formData.city && formData.state && formData.zip_code && addressValidation.status === 'valid';
 
   if (isLoadingSale) {
     return (

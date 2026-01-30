@@ -185,6 +185,11 @@ export default function SaleMap({ sales, center }) {
         zoom={userLocation ? 12 : 11}
         style={{ height: '100%', width: '100%' }}
         scrollWheelZoom={true}
+        maxBounds={[
+          [40.4774, -74.2591], // Southwest corner of NY
+          [40.9176, -73.7004]  // Northeast corner of NY
+        ]}
+        maxBoundsViscosity={1.0}
       >
         <MapUpdater center={center} />
         <TileLayer
