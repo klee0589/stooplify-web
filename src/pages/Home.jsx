@@ -159,6 +159,43 @@ export default function Home() {
           </div>
         </div>
       </div>
+      
+      {/* Final CTA */}
+      <motion.section 
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="bg-gradient-to-br from-[#14B8FF] to-[#2E3A59] py-20"
+      >
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            Ready to Start Finding Deals?
+          </h2>
+          <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
+            Join thousands of treasure hunters discovering amazing finds at yard sales near you
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <motion.a
+              href="/YardSales"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-8 py-4 bg-white text-[#2E3A59] rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all"
+              style={{ fontFamily: 'Poppins, sans-serif' }}
+            >
+              Browse Sales Now
+            </motion.a>
+            <motion.a
+              href="/AddYardSale"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-8 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all"
+              style={{ fontFamily: 'Poppins, sans-serif' }}
+            >
+              List Your Sale Free
+            </motion.a>
+          </div>
+        </div>
+      </motion.section>
     </div>
   );
 }

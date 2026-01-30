@@ -8,6 +8,7 @@ import { useTranslation } from '../components/translations';
 import { useTheme, ThemeProvider } from '../components/ThemeProvider';
 import { toast } from 'sonner';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 
 function LayoutContent({ children, currentPageName }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -496,15 +497,51 @@ function LayoutContent({ children, currentPageName }) {
               <ul className="space-y-2 text-white/70">
                 <li><a href="#" className="hover:text-[#14B8FF] transition-colors">{t('privacyPolicy')}</a></li>
                 <li><a href="#" className="hover:text-[#14B8FF] transition-colors">{t('termsOfService')}</a></li>
-                <li><a href="#" className="hover:text-[#14B8FF] transition-colors">{t('contactUs')}</a></li>
+                <li><a href="mailto:daniel@stooplify.com" className="hover:text-[#14B8FF] transition-colors">Contact</a></li>
               </ul>
             </div>
           </div>
+
+          {/* Email Signup */}
+          <div className="border-t border-white/20 mt-12 pt-8">
+            <div className="max-w-md mx-auto text-center">
+              <h4 className="font-semibold text-lg text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                Get notified about sales in your area
+              </h4>
+              <form className="flex gap-2" onSubmit={(e) => {
+                e.preventDefault();
+                const email = e.target.email.value;
+                if (email) {
+                  base44.entities.EmailSubscriber.create({ email, notify_new_sales: true })
+                    .then(() => {
+                      toast.success('Subscribed! You\'ll hear from us soon.');
+                      e.target.reset();
+                    })
+                    .catch(() => toast.error('Failed to subscribe'));
+                }
+              }}>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Enter your email"
+                  required
+                  className="flex-1 px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:border-white/40"
+                />
+                <button
+                  type="submit"
+                  className="px-6 py-3 bg-white text-[#2E3A59] rounded-xl font-semibold hover:bg-white/90 transition-colors"
+                >
+                  Join
+                </button>
+              </form>
+            </div>
+          </div>
+
           <div className="border-t border-white/20 mt-8 pt-8 text-center text-white/60">
             <p>© {new Date().getFullYear()} Stooplify. {t('allRightsReserved')}.</p>
           </div>
-        </div>
-      </footer>
+          </div>
+          </footer>
     </div>
     );
     }
