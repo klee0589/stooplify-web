@@ -97,7 +97,6 @@ function LayoutContent({ children, currentPageName }) {
   };
 
   const navLinks = [
-    { name: t('home'), page: 'Home', icon: Home },
     { name: t('browseSales'), page: 'YardSales', icon: MapPin },
     { name: t('listSale'), page: 'AddYardSale', icon: PlusCircle },
     ...(userSales.length > 0 ? [{ name: t('myYardSales'), page: 'MyYardSales', icon: MapPin }] : []),
