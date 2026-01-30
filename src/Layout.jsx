@@ -111,18 +111,18 @@ function LayoutContent({ children, currentPageName }) {
 
         :root {
           --primary: #14B8FF;
-          --secondary: #2E3A59;
+          --secondary: #1a2842;
           --accent: #F5A623;
-          --bg-light: #F9F9F9;
-          --text-dark: #333333;
+          --bg-light: #FAFAFA;
+          --text-dark: #1a1a1a;
         }
 
         .dark {
           --primary: #14B8FF;
-          --secondary: #1a2238;
+          --secondary: #0f1623;
           --accent: #F5A623;
-          --bg-light: #111827;
-          --text-dark: #f3f4f6;
+          --bg-light: #0a0e1a;
+          --text-dark: #ffffff;
         }
 
         body {
@@ -131,8 +131,8 @@ function LayoutContent({ children, currentPageName }) {
         }
 
         .dark body {
-          background: #0f172a;
-          color: #f3f4f6;
+          background: #050810;
+          color: #ffffff;
         }
 
         h1, h2, h3, h4, h5, h6 {
