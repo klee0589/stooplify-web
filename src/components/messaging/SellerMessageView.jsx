@@ -246,7 +246,7 @@ export default function SellerMessageView({ sale, sellerEmail }) {
                               className={`max-w-[80%] rounded-2xl px-3 py-2 ${
                                 isOwn
                                   ? 'bg-[#14B8FF] text-white'
-                                  : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+                                  : 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-600'
                               }`}
                             >
                               <p className="text-xs">{msg.content}</p>
