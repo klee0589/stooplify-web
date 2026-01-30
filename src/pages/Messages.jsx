@@ -87,7 +87,7 @@ export default function Messages() {
     enabled: myMessagedSaleIds.length > 0,
   });
 
-  const salesWithMessages = allRelevantSales.map(sale => {
+  const salesWithMessages = (allRelevantSales || []).filter(sale => sale && sale.id).map(sale => {
     const saleMessages = allMessages.filter(m => m.yard_sale_id === sale.id);
     const isSeller = sale.created_by === user.email;
     
