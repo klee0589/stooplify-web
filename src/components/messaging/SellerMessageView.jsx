@@ -107,7 +107,16 @@ export default function SellerMessageView({ sale, sellerEmail }) {
             animate={{ opacity: 1 }}
           >
             <button
-              onClick={() => setSelectedBuyer(selectedBuyer === buyerEmail ? null : buyerEmail)}
+              onClick={() => {
+                setSelectedBuyer(selectedBuyer === buyerEmail ? null : buyerEmail);
+                // Mark unread messages as read when opening conversation
+                if (selectedBuyer !== buyerEmail) {
+                  const unreadMessages = messages.filter(m => !m.read && m.sender_email !== sellerEmail);
+                  if (unreadMessages.length > 0) {
+                    markAsReadMutation.mutate(unreadMessages.map(m => m.id));
+                  }
+                }
+              }}
               className="w-full flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors text-left"
             >
               <div className="w-8 h-8 bg-[#14B8FF]/10 rounded-full flex items-center justify-center flex-shrink-0">
