@@ -43,7 +43,8 @@ export default function SellerMessageView({ sale, sellerEmail }) {
       );
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['sellerMessages', sale.id] });
+      // Invalidate all message-related queries to refresh badges
+      queryClient.invalidateQueries({ queryKey: ['sellerMessages'] });
       queryClient.invalidateQueries({ queryKey: ['unreadMessages'] });
       queryClient.invalidateQueries({ queryKey: ['allMessages'] });
     },
