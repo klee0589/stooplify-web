@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -12,6 +12,7 @@ export default function Messages() {
   const [user, setUser] = useState(null);
   const [language, setLanguage] = useState('en');
   const [selectedSale, setSelectedSale] = useState(null);
+  const queryClient = useQueryClient();
 
   const t = useTranslation(language);
 
@@ -63,6 +64,21 @@ export default function Messages() {
     },
     enabled: !!user,
   });
+
+  // Real-time subscription for messages
+  useEffect(() => {
+    if (!user?.email) return;
+
+    const unsubscribe = base44.entities.Message.subscribe((event) => {
+      // Update if the message is for this user
+      if (event.data?.recipient_email === user.email || event.data?.sender_email === user.email) {
+        queryClient.invalidateQueries({ queryKey: ['allMessages', user.email] });
+        queryClient.invalidateQueries({ queryKey: ['unreadMessages', user.email] });
+      }
+    });
+
+    return unsubscribe;
+  }, [user?.email, queryClient]);
 
   // Get sales with messages (either seller's sales OR sales the user has messaged about)
   const myMessagedSaleIds = [...new Set(allMessages.map(m => m.yard_sale_id))];
