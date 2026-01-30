@@ -74,8 +74,8 @@ export default function MessageThread({ yardSale, seller }) {
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
-    if (!userScrolled && messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (!userScrolled && messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
   }, [messages, userScrolled]);
 

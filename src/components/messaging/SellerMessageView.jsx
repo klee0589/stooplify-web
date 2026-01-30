@@ -83,8 +83,8 @@ export default function SellerMessageView({ sale, sellerEmail }) {
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
-    if (!userScrolled && messagesEndRef.current && selectedBuyer) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    if (!userScrolled && messagesContainerRef.current && selectedBuyer) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
   }, [allMessages, userScrolled, selectedBuyer]);
 
