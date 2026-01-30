@@ -68,9 +68,10 @@ export default function MessageThread({ yardSale, seller }) {
         read: false,
       });
     },
-    onSuccess: () => {
+    onSuccess: (newMessage) => {
       setMessageText('');
-      queryClient.refetchQueries({ queryKey: ['messages', yardSale.id, user?.email] });
+      // Optimistically update the cache
+      queryClient.setQueryData(['messages', yardSale.id, user?.email], (old = []) => [newMessage, ...old]);
       toast.success('Message sent!');
     },
     onError: () => {
@@ -122,7 +123,7 @@ export default function MessageThread({ yardSale, seller }) {
           </p>
         ) : (
           <AnimatePresence>
-            {messages.map((message) => {
+            {[...messages].reverse().map((message) => {
               const isOwn = message.sender_email === user.email;
               return (
                 <motion.div

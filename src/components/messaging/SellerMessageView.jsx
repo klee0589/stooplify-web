@@ -75,9 +75,10 @@ export default function SellerMessageView({ sale, sellerEmail }) {
         read: false,
       });
     },
-    onSuccess: () => {
+    onSuccess: (newMessage) => {
       setReplyText('');
-      queryClient.refetchQueries({ queryKey: ['sellerMessages', sale.id] });
+      // Optimistically update the cache
+      queryClient.setQueryData(['sellerMessages', sale.id], (old = []) => [newMessage, ...old]);
       queryClient.invalidateQueries({ queryKey: ['unreadMessages', sellerEmail] });
       toast.success('Reply sent!');
     },
