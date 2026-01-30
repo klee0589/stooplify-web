@@ -75,9 +75,10 @@ export default function SellerMessageView({ sale, sellerEmail }) {
       );
     },
     onSuccess: () => {
-      // Invalidate message-related queries with specific keys
+      // Invalidate all message-related queries
       queryClient.invalidateQueries({ queryKey: ['sellerMessages', sale.id] });
       queryClient.invalidateQueries({ queryKey: ['unreadMessages', sellerEmail] });
+      queryClient.invalidateQueries({ queryKey: ['allMessages', sellerEmail] });
     },
   });
 
