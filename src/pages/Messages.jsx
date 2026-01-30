@@ -7,6 +7,7 @@ import { createPageUrl } from '../utils';
 import { MessageCircle, Loader2, ArrowLeft, Inbox } from 'lucide-react';
 import { useTranslation } from '../components/translations';
 import SellerMessageView from '../components/messaging/SellerMessageView';
+import MessageThread from '../components/messaging/MessageThread';
 
 export default function Messages() {
   const [user, setUser] = useState(null);
@@ -225,7 +226,7 @@ export default function Messages() {
                     {sale.isSeller ? (
                       <SellerMessageView sale={sale} sellerEmail={user.email} />
                     ) : (
-                      <SellerMessageView sale={sale} sellerEmail={sale.created_by} />
+                      <MessageThread yardSale={sale} seller={{ email: sale.created_by }} />
                     )}
                   </motion.div>
                 )}
