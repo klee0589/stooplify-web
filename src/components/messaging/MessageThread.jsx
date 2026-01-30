@@ -1,16 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tantml:react-query';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, MessageCircle, Loader2 } from 'lucide-react';
+import { Send, MessageCircle, Loader2, Volume2, VolumeX } from 'lucide-react';
 import { toast } from "sonner";
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function MessageThread({ yardSale, seller }) {
   const [user, setUser] = useState(null);
   const [messageText, setMessageText] = useState('');
+  const [soundEnabled, setSoundEnabled] = useState(() => localStorage.getItem('messageSoundEnabled') !== 'false');
+  const [userScrolled, setUserScrolled] = useState(false);
+  const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
   const queryClient = useQueryClient();
+  const notificationSound = useRef(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -22,6 +27,9 @@ export default function MessageThread({ yardSale, seller }) {
       }
     };
     checkAuth();
+    
+    // Initialize notification sound
+    notificationSound.current = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIGGi78OScTgwOUKXh8LJnHQU2jdXwyHkqBSl+zPLaizsKGGS57OihUBELTKXh8LdnHwU7k9nzw3csBS2AzvLZizYIGWm87+SaUBEMUKnh8LFoHQU3jtXwxXkrBSl9y/LajDsKGGO57Oeha');
   }, []);
 
   const { data: messages = [], isLoading } = useQuery({
@@ -51,12 +59,37 @@ export default function MessageThread({ yardSale, seller }) {
       if (event.data?.yard_sale_id === yardSale.id &&
           ((event.data?.sender_email === user.email && event.data?.recipient_email === seller.email) ||
            (event.data?.sender_email === seller.email && event.data?.recipient_email === user.email))) {
+        
+        // Play notification sound for incoming messages (not sent by current user)
+        if (event.data?.sender_email !== user.email && soundEnabled && notificationSound.current) {
+          notificationSound.current.play().catch(() => {});
+        }
+        
         queryClient.invalidateQueries({ queryKey: ['messages', yardSale.id, user?.email] });
       }
     });
 
     return unsubscribe;
-  }, [user, yardSale.id, seller.email, queryClient]);
+  }, [user, yardSale.id, seller.email, soundEnabled, queryClient]);
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    if (!userScrolled && messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, userScrolled]);
+
+  const handleScroll = (e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.target;
+    const isAtBottom = scrollHeight - scrollTop - clientHeight < 50;
+    setUserScrolled(!isAtBottom);
+  };
+
+  const toggleSound = () => {
+    const newValue = !soundEnabled;
+    setSoundEnabled(newValue);
+    localStorage.setItem('messageSoundEnabled', newValue);
+  };
 
   const sendMessageMutation = useMutation({
     mutationFn: async (content) => {
@@ -72,6 +105,7 @@ export default function MessageThread({ yardSale, seller }) {
       setMessageText('');
       // Optimistically update the cache
       queryClient.setQueryData(['messages', yardSale.id, user?.email], (old = []) => [newMessage, ...old]);
+      setUserScrolled(false); // Auto-scroll to new message
       toast.success('Message sent!');
     },
     onError: () => {
@@ -103,16 +137,33 @@ export default function MessageThread({ yardSale, seller }) {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl p-6">
-      <div className="flex items-center gap-2 mb-4">
-        <MessageCircle className="w-5 h-5 text-[#14B8FF]" />
-        <h3 className="text-lg font-semibold text-[#2E3A59] dark:text-white">
-          Message Seller
-        </h3>
+    <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg border border-gray-200 dark:border-gray-700">
+      <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center gap-2">
+          <MessageCircle className="w-5 h-5 text-[#14B8FF]" />
+          <h3 className="text-lg font-semibold text-[#2E3A59] dark:text-white">
+            Message Seller
+          </h3>
+        </div>
+        <button
+          onClick={toggleSound}
+          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+          title={soundEnabled ? 'Disable sound' : 'Enable sound'}
+        >
+          {soundEnabled ? (
+            <Volume2 className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+          ) : (
+            <VolumeX className="w-4 h-4 text-gray-400" />
+          )}
+        </button>
       </div>
 
       {/* Messages */}
-      <div className="space-y-3 mb-4 max-h-64 overflow-y-auto">
+      <div 
+        ref={messagesContainerRef}
+        onScroll={handleScroll}
+        className="space-y-3 mb-4 max-h-64 overflow-y-auto bg-gray-50 dark:bg-gray-900 rounded-xl p-3 border border-gray-200 dark:border-gray-700"
+      >
         {isLoading ? (
           <div className="flex justify-center py-4">
             <Loader2 className="w-6 h-6 text-gray-400 animate-spin" />
@@ -152,6 +203,7 @@ export default function MessageThread({ yardSale, seller }) {
                 </motion.div>
               );
             })}
+            <div ref={messagesEndRef} />
           </AnimatePresence>
         )}
       </div>
