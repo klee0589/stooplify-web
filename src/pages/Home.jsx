@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../components/translations';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { motion } from 'framer-motion';
 import SEO from '../components/SEO';
 import HeroSection from '../components/home/HeroSection';
 import HowItWorks from '../components/home/HowItWorks';
@@ -45,6 +46,83 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <HeroSection />
+      
+      {/* Stats Section */}
+      <section className="bg-gradient-to-br from-[#FF6F61] to-[#F5A623] py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              Join The Community
+            </h2>
+            <p className="text-white/90 text-lg max-w-2xl mx-auto">
+              Thousands of local shoppers finding amazing deals every week
+            </p>
+          </motion.div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 text-center border border-white/20"
+            >
+              <div className="text-6xl font-bold text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                {sales.length}+
+              </div>
+              <div className="text-2xl font-semibold text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                {t('activeSales')}
+              </div>
+              <p className="text-white/80 text-sm">
+                Live sales happening this weekend
+              </p>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 text-center border border-white/20"
+            >
+              <div className="text-6xl font-bold text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                2.5K+
+              </div>
+              <div className="text-2xl font-semibold text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                {t('happyShoppers')}
+              </div>
+              <p className="text-white/80 text-sm">
+                Finding treasures in their neighborhood
+              </p>
+            </motion.div>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 text-center border border-white/20"
+            >
+              <div className="text-6xl font-bold text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                90%
+              </div>
+              <div className="text-2xl font-semibold text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                {t('upToOff')}
+              </div>
+              <p className="text-white/80 text-sm">
+                Average savings on retail prices
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+      
       <HowItWorks />
       <FeaturedSales sales={sales} />
       <CTASection />
