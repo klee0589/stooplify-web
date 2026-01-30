@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { MessageCircle, Loader2, User, Send } from 'lucide-react';
@@ -22,6 +22,22 @@ export default function SellerMessageView({ sale, sellerEmail }) {
     },
     enabled: !!sale.id && !!sellerEmail,
   });
+
+  // Real-time subscription for messages
+  useEffect(() => {
+    if (!sale.id || !sellerEmail) return;
+
+    const unsubscribe = base44.entities.Message.subscribe((event) => {
+      // Only update if the message is related to this sale and seller
+      if (event.data?.yard_sale_id === sale.id && 
+          (event.data?.recipient_email === sellerEmail || event.data?.sender_email === sellerEmail)) {
+        queryClient.invalidateQueries({ queryKey: ['sellerMessages', sale.id] });
+        queryClient.invalidateQueries({ queryKey: ['unreadMessages', sellerEmail] });
+      }
+    });
+
+    return unsubscribe;
+  }, [sale.id, sellerEmail, queryClient]);
 
   // Group messages by buyer
   const conversations = allMessages.reduce((acc, msg) => {

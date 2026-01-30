@@ -42,6 +42,22 @@ export default function MessageThread({ yardSale, seller }) {
     enabled: !!user && !!yardSale.id && !!seller.email,
   });
 
+  // Real-time subscription for messages
+  useEffect(() => {
+    if (!user || !yardSale.id || !seller.email) return;
+
+    const unsubscribe = base44.entities.Message.subscribe((event) => {
+      // Only update if the message is part of this conversation
+      if (event.data?.yard_sale_id === yardSale.id &&
+          ((event.data?.sender_email === user.email && event.data?.recipient_email === seller.email) ||
+           (event.data?.sender_email === seller.email && event.data?.recipient_email === user.email))) {
+        queryClient.invalidateQueries({ queryKey: ['messages', yardSale.id, user?.email] });
+      }
+    });
+
+    return unsubscribe;
+  }, [user, yardSale.id, seller.email, queryClient]);
+
   const sendMessageMutation = useMutation({
     mutationFn: async (content) => {
       return await base44.entities.Message.create({

@@ -7,7 +7,7 @@ import { base44 } from '@/api/base44Client';
 import { useTranslation } from '../components/translations';
 import { useTheme, ThemeProvider } from '../components/ThemeProvider';
 import { toast } from 'sonner';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 function LayoutContent({ children, currentPageName }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,6 +16,7 @@ function LayoutContent({ children, currentPageName }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [language, setLanguage] = useState('en');
   const { theme, toggleTheme } = useTheme();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -68,8 +69,21 @@ function LayoutContent({ children, currentPageName }) {
       return uniqueSenders.length;
     },
     enabled: !!user,
-    refetchInterval: 30000, // Refresh every 30 seconds
   });
+
+  // Real-time subscription for unread messages count
+  useEffect(() => {
+    if (!user?.email) return;
+
+    const unsubscribe = base44.entities.Message.subscribe((event) => {
+      // Update unread count if the message is for this user
+      if (event.data?.recipient_email === user.email || event.data?.sender_email === user.email) {
+        queryClient.invalidateQueries({ queryKey: ['unreadMessages', user.email] });
+      }
+    });
+
+    return unsubscribe;
+  }, [user?.email]);
   
   const toggleLanguage = () => {
     const newLang = language === 'en' ? 'es' : 'en';
