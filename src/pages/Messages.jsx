@@ -58,24 +58,52 @@ export default function Messages() {
     queryFn: async () => {
       if (!user) return [];
       const messages = await base44.entities.Message.list();
-      // Only get messages TO the seller (from buyers)
-      return messages.filter(m => m.recipient_email === user.email);
+      // Get messages TO or FROM the user
+      return messages.filter(m => m.recipient_email === user.email || m.sender_email === user.email);
     },
     enabled: !!user,
   });
 
-  // Get sales with messages
-  const salesWithMessages = mySales.filter(sale => {
-    return allMessages.some(m => m.yard_sale_id === sale.id);
-  }).map(sale => {
+  // Get sales with messages (either seller's sales OR sales the user has messaged about)
+  const myMessagedSaleIds = [...new Set(allMessages.map(m => m.yard_sale_id))];
+  
+  const { data: allRelevantSales = [] } = useQuery({
+    queryKey: ['messagedSales', myMessagedSaleIds],
+    queryFn: async () => {
+      if (myMessagedSaleIds.length === 0) return [];
+      // Fetch all sales that have messages
+      const sales = await Promise.all(
+        myMessagedSaleIds.map(async (saleId) => {
+          try {
+            const sales = await base44.entities.YardSale.filter({ id: saleId });
+            return sales[0];
+          } catch {
+            return null;
+          }
+        })
+      );
+      return sales.filter(s => s !== null);
+    },
+    enabled: myMessagedSaleIds.length > 0,
+  });
+
+  const salesWithMessages = allRelevantSales.map(sale => {
     const saleMessages = allMessages.filter(m => m.yard_sale_id === sale.id);
-    // Count unique senders
-    const uniqueSenders = [...new Set(saleMessages.map(m => m.sender_email))];
-    const messageCount = uniqueSenders.length;
-    // Count unique senders with unread messages
-    const sendersWithUnread = [...new Set(saleMessages.filter(m => !m.read).map(m => m.sender_email))];
-    const unreadCount = sendersWithUnread.length;
-    return { ...sale, messageCount, unreadCount };
+    const isSeller = sale.created_by === user.email;
+    
+    if (isSeller) {
+      // For seller: count unique buyers
+      const uniqueBuyers = [...new Set(saleMessages.map(m => 
+        m.sender_email === user.email ? m.recipient_email : m.sender_email
+      ))].filter(email => email !== user.email);
+      const messageCount = uniqueBuyers.length;
+      const unreadCount = [...new Set(saleMessages.filter(m => !m.read && m.sender_email !== user.email).map(m => m.sender_email))].length;
+      return { ...sale, messageCount, unreadCount, isSeller: true };
+    } else {
+      // For buyer: single conversation with seller
+      const unreadCount = saleMessages.filter(m => !m.read && m.recipient_email === user.email).length;
+      return { ...sale, messageCount: saleMessages.length, unreadCount, isSeller: false };
+    }
   });
 
   if (!user || salesLoading) {
@@ -177,7 +205,11 @@ export default function Messages() {
                     exit={{ height: 0, opacity: 0 }}
                     className="border-t border-gray-200 dark:border-gray-700 p-5"
                   >
-                    <SellerMessageView sale={sale} sellerEmail={user.email} />
+                    {sale.isSeller ? (
+                      <SellerMessageView sale={sale} sellerEmail={user.email} />
+                    ) : (
+                      <SellerMessageView sale={sale} sellerEmail={sale.created_by} />
+                    )}
                   </motion.div>
                 )}
               </motion.div>
