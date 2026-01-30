@@ -75,6 +75,7 @@ export default function Messages() {
       if (event.data?.recipient_email === user.email || event.data?.sender_email === user.email) {
         queryClient.invalidateQueries({ queryKey: ['allMessages', user.email] });
         queryClient.invalidateQueries({ queryKey: ['unreadMessages', user.email] });
+        queryClient.refetchQueries({ queryKey: ['allMessages', user.email] });
       }
     });
 
