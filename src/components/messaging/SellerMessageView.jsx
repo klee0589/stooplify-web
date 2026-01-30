@@ -112,7 +112,7 @@ export default function SellerMessageView({ sale, sellerEmail }) {
                 setSelectedBuyer(selectedBuyer === buyerEmail ? null : buyerEmail);
                 // Mark unread messages as read when opening conversation
                 if (selectedBuyer !== buyerEmail) {
-                  const unreadMessages = messages.filter(m => !m.read && m.sender_email !== sellerEmail);
+                  const unreadMessages = messages.filter(m => !m.read && m.recipient_email === sellerEmail);
                   if (unreadMessages.length > 0) {
                     markAsReadMutation.mutate(unreadMessages.map(m => m.id));
                   }
