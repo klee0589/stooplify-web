@@ -69,6 +69,7 @@ function LayoutContent({ children, currentPageName }) {
       return uniqueSenders.length;
     },
     enabled: !!user,
+    refetchInterval: 5000, // Refetch every 5 seconds as backup
   });
 
   // Real-time subscription for unread messages count
@@ -79,11 +80,12 @@ function LayoutContent({ children, currentPageName }) {
       // Update unread count if the message is for this user
       if (event.data?.recipient_email === user.email || event.data?.sender_email === user.email) {
         queryClient.invalidateQueries({ queryKey: ['unreadMessages', user.email] });
+        queryClient.refetchQueries({ queryKey: ['unreadMessages', user.email] });
       }
     });
 
     return unsubscribe;
-  }, [user?.email]);
+  }, [user?.email, queryClient]);
   
   const toggleLanguage = () => {
     const newLang = language === 'en' ? 'es' : 'en';
