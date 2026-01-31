@@ -86,20 +86,32 @@ export default function YardSaleDetails() {
     checkAuth();
   }, []);
 
-  const { data: sale, isLoading } = useQuery({
+  const { data: sale, isLoading, error: saleError } = useQuery({
     queryKey: ['yardSale', saleId],
     queryFn: async () => {
       console.log('🔍 Fetching sale with ID:', saleId);
+      console.log('🔍 ID type:', typeof saleId, 'value:', saleId);
       if (!saleId) {
         console.error('❌ No sale ID provided');
         return null;
       }
       
       try {
-        const sales = await base44.entities.YardSale.filter({ id: saleId });
-        console.log('📦 Found sales:', sales.length);
+        // Try filtering by ID
+        let sales = await base44.entities.YardSale.filter({ id: saleId });
+        console.log('📦 Filter by id found sales:', sales.length, sales);
+        
+        // If not found, try listing all and finding by ID (backup)
+        if (sales.length === 0) {
+          console.log('🔄 Trying backup method - listing all sales...');
+          const allSales = await base44.entities.YardSale.list();
+          console.log('📦 Total sales in DB:', allSales.length);
+          sales = allSales.filter(s => s.id === saleId);
+          console.log('📦 Found after manual filter:', sales.length);
+        }
         
         if (sales.length > 0) {
+          console.log('✅ Found sale:', sales[0].title);
           // Increment views
           await base44.entities.YardSale.update(saleId, { views: (sales[0].views || 0) + 1 });
           
@@ -121,10 +133,12 @@ export default function YardSaleDetails() {
         return null;
       } catch (error) {
         console.error('❌ Error fetching sale:', error);
+        console.error('❌ Error details:', error.message, error.stack);
         throw error;
       }
     },
     enabled: !!saleId,
+    retry: 1,
   });
 
   const { data: favorites = [] } = useQuery({
