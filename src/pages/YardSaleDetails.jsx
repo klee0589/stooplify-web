@@ -112,8 +112,12 @@ export default function YardSaleDetails() {
         
         if (sales.length > 0) {
           console.log('✅ Found sale:', sales[0].title);
-          // Increment views
-          await base44.entities.YardSale.update(saleId, { views: (sales[0].views || 0) + 1 });
+          // Increment views (silently fail if no permission)
+          try {
+            await base44.entities.YardSale.update(saleId, { views: (sales[0].views || 0) + 1 });
+          } catch (err) {
+            console.log('Could not increment views (permission denied - user not sale creator)');
+          }
           
           // Fetch seller info via backend function
           if (sales[0].created_by) {
