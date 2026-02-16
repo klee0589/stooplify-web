@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Calendar as CalendarIcon, Heart, UserCheck, MapPin, Clock, ArrowRight } from 'lucide-react';
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { format, isSameDay } from 'date-fns';
+import { format, isSameDay, parseISO } from 'date-fns';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import SEO from '../components/SEO';
@@ -81,13 +81,13 @@ export default function Calendar() {
   // Get sales for selected date
   const salesForSelectedDate = allSales.filter(sale => {
     if (!sale.date) return false;
-    return isSameDay(new Date(sale.date), selectedDate);
+    return isSameDay(parseISO(sale.date + 'T12:00:00'), selectedDate);
   });
 
   // Get dates with events
   const datesWithEvents = allSales
     .filter(sale => sale.date)
-    .map(sale => new Date(sale.date));
+    .map(sale => parseISO(sale.date + 'T12:00:00'));
 
   const isFavorited = (saleId) => favorites.some(f => f.yard_sale_id === saleId);
   const isAttending = (saleId) => attendances.some(a => a.yard_sale_id === saleId);
@@ -310,7 +310,7 @@ export default function Calendar() {
                     </div>
                     <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
                       <CalendarIcon className="w-3.5 h-3.5" />
-                      {format(new Date(sale.date), 'MMM d, yyyy')}
+                      {format(parseISO(sale.date + 'T12:00:00'), 'MMM d, yyyy')}
                     </div>
                   </Link>
                 ))}
