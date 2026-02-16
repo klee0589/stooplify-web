@@ -26,6 +26,7 @@ export default function Profile() {
   const [editedName, setEditedName] = useState('');
   const [editedPhone, setEditedPhone] = useState('');
   const [language, setLanguage] = useState('en');
+  const [showFinishedSales, setShowFinishedSales] = useState(false);
   
   useEffect(() => {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
@@ -534,11 +535,20 @@ export default function Profile() {
             >
               {t('myYardSales')}
             </h3>
-            <Link to={createPageUrl('AddYardSale')}>
-              <Button className="bg-[#FF6F61] hover:bg-[#e55a4d] rounded-xl">
-                {t('addNewSale')}
-              </Button>
-            </Link>
+            <div className="flex items-center gap-3">
+              <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 cursor-pointer">
+                <Switch
+                  checked={showFinishedSales}
+                  onCheckedChange={setShowFinishedSales}
+                />
+                <span>Show finished</span>
+              </label>
+              <Link to={createPageUrl('AddYardSale')}>
+                <Button className="bg-[#FF6F61] hover:bg-[#e55a4d] rounded-xl">
+                  {t('addNewSale')}
+                </Button>
+              </Link>
+            </div>
           </div>
 
           {salesLoading ? (
@@ -632,7 +642,9 @@ export default function Profile() {
                   if (!sale.date) return true;
                   const saleStartTime = parseISO(`${sale.date}T${sale.start_time || '00:00'}:00`);
                   const saleEndTime = parseISO(`${sale.date}T${sale.end_time || '23:59'}:00`);
-                  return !(now >= saleStartTime && now < saleEndTime);
+                  const isLive = now >= saleStartTime && now < saleEndTime;
+                  const isFinished = now >= saleEndTime;
+                  return !isLive && (!isFinished || showFinishedSales);
                 }).length > 0 && (
                   <>
                     <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-3">All Sales</h4>
@@ -642,7 +654,9 @@ export default function Profile() {
                         if (!sale.date) return true;
                         const saleStartTime = parseISO(`${sale.date}T${sale.start_time || '00:00'}:00`);
                         const saleEndTime = parseISO(`${sale.date}T${sale.end_time || '23:59'}:00`);
-                        return !(now >= saleStartTime && now < saleEndTime);
+                        const isLive = now >= saleStartTime && now < saleEndTime;
+                        const isFinished = now >= saleEndTime;
+                        return !isLive && (!isFinished || showFinishedSales);
                       }).map((sale) => {
                         const getSaleStatus = () => {
                           if (!sale.date) return { label: t('dateTBD'), color: 'gray' };
