@@ -642,7 +642,7 @@ export default function AddYardSale() {
                     placeholder={t('titlePlaceholder')}
                     value={formData.title}
                     onChange={(e) => updateField('title', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   />
                 </div>
 
@@ -653,7 +653,7 @@ export default function AddYardSale() {
                       type="date"
                       value={formData.date}
                       onChange={(e) => updateField('date', e.target.value)}
-                      className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]"
+                      className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]"
                     />
                   </div>
                   <div className="col-span-2">
@@ -696,7 +696,7 @@ export default function AddYardSale() {
                       type="time"
                       value={formData.start_time}
                       onChange={(e) => updateField('start_time', e.target.value)}
-                      className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]"
+                      className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]"
                     />
                   </div>
                   <div>
@@ -705,7 +705,7 @@ export default function AddYardSale() {
                       type="time"
                       value={formData.end_time}
                       onChange={(e) => updateField('end_time', e.target.value)}
-                      className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]"
+                      className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]"
                     />
                   </div>
                 </div>
@@ -716,7 +716,7 @@ export default function AddYardSale() {
                     placeholder={t('descriptionPlaceholder')}
                     value={formData.description}
                     onChange={(e) => updateField('description', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] min-h-[120px] dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] min-h-[120px] text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   />
                   <p className="text-xs text-blue-600 mt-2 flex items-center gap-1">
                     💡 Tip: Leave blank and upload photos in Step 3 - our AI will generate a description for you!
@@ -877,7 +877,7 @@ export default function AddYardSale() {
                     placeholder={t('generalLocationPlaceholder')}
                     value={formData.general_location}
                     onChange={(e) => updateField('general_location', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   />
                   <p className="text-xs text-gray-500 mt-1">
                     {t('approximateLocationPrivacy')}
@@ -894,7 +894,7 @@ export default function AddYardSale() {
                       placeholder={t('exactAddressPlaceholder')}
                       value={formData.address}
                       onChange={(e) => updateField('address', e.target.value)}
-                      className={`rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
+                      className={`rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
                         addressValidation.status === 'valid' ? 'border-green-500 dark:border-green-500' : 
                         addressValidation.status === 'invalid' ? 'border-red-500 dark:border-red-500' : ''
                       }`}
@@ -928,7 +928,7 @@ export default function AddYardSale() {
                       placeholder={t('cityPlaceholder')}
                       value={formData.city}
                       onChange={(e) => updateField('city', e.target.value)}
-                      className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     />
                   </div>
                   <div>
@@ -937,7 +937,7 @@ export default function AddYardSale() {
                       placeholder={t('statePlaceholder')}
                       value={formData.state}
                       onChange={(e) => updateField('state', e.target.value)}
-                      className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                     />
                   </div>
                 </div>
@@ -948,7 +948,7 @@ export default function AddYardSale() {
                     placeholder={t('zipCodePlaceholder')}
                     value={formData.zip_code}
                     onChange={(e) => updateField('zip_code', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 max-w-[200px] dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 max-w-[200px] text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   />
                 </div>
               </div>
@@ -1155,7 +1155,7 @@ export default function AddYardSale() {
                       <Textarea
                         value={editableDescription}
                         onChange={(e) => setEditableDescription(e.target.value)}
-                        className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 min-h-[100px] bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 min-h-[100px] bg-white text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                       />
                     </div>
                   </div>
