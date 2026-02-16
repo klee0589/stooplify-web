@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Send, MessageCircle, Loader2, Volume2, VolumeX } from 'lucide-react';
+import { Send, MessageCircle, Loader2, Volume2, VolumeX, Trash2 } from 'lucide-react';
 import { toast } from "sonner";
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -131,9 +131,36 @@ export default function MessageThread({ yardSale, seller }) {
     },
   });
 
+  const deleteMessagesMutation = useMutation({
+    mutationFn: async () => {
+      // Delete all messages in this conversation
+      await Promise.all(messages.map(m => base44.entities.Message.delete(m.id)));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['messages', yardSale.id, user?.email] });
+      toast.success('Conversation deleted');
+    },
+    onError: () => {
+      toast.error('Failed to delete conversation');
+    },
+  });
+
   const handleSend = () => {
     if (!messageText.trim()) return;
     sendMessageMutation.mutate(messageText);
+  };
+
+  const handleDeleteConversation = () => {
+    if (window.confirm('Are you sure you want to delete this entire conversation? This cannot be undone.')) {
+      deleteMessagesMutation.mutate();
+    }
+  };
+
+  // Check if event is over
+  const isEventOver = () => {
+    if (!yardSale.date || !yardSale.end_time) return false;
+    const eventEndTime = new Date(`${yardSale.date}T${yardSale.end_time}`);
+    return new Date() > eventEndTime;
   };
 
   if (!user) {
@@ -163,17 +190,33 @@ export default function MessageThread({ yardSale, seller }) {
             Message Seller
           </h3>
         </div>
-        <button
-          onClick={toggleSound}
-          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-          title={soundEnabled ? 'Disable sound' : 'Enable sound'}
-        >
-          {soundEnabled ? (
-            <Volume2 className="w-4 h-4 text-gray-600 dark:text-gray-400" />
-          ) : (
-            <VolumeX className="w-4 h-4 text-gray-400" />
+        <div className="flex items-center gap-2">
+          <button
+            onClick={toggleSound}
+            className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            title={soundEnabled ? 'Disable sound' : 'Enable sound'}
+          >
+            {soundEnabled ? (
+              <Volume2 className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+            ) : (
+              <VolumeX className="w-4 h-4 text-gray-400" />
+            )}
+          </button>
+          {isEventOver() && messages.length > 0 && (
+            <button
+              onClick={handleDeleteConversation}
+              disabled={deleteMessagesMutation.isPending}
+              className="p-2 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors text-red-600 dark:text-red-400"
+              title="Delete conversation"
+            >
+              {deleteMessagesMutation.isPending ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Trash2 className="w-4 h-4" />
+              )}
+            </button>
           )}
-        </button>
+        </div>
       </div>
 
       {/* Messages */}
