@@ -117,6 +117,7 @@ function LayoutContent({ children, currentPageName }) {
     { name: t('browseSales'), page: 'YardSales', icon: MapPin },
     { name: t('listSale'), page: 'AddYardSale', icon: PlusCircle },
     ...(userSales.length > 0 ? [{ name: t('myYardSales'), page: 'MyYardSales', icon: MapPin }] : []),
+    { name: 'Calendar', page: 'Calendar', icon: Settings },
     { name: 'Guides', page: 'Guides', icon: Settings },
   ];
 
