@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { Calendar, MapPin, Edit, Trash2, Eye, Loader2, Plus } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import { format } from 'date-fns';
 import { toast } from "sonner";
 import { useTranslation } from '../components/translations';
@@ -13,6 +14,7 @@ import { useTranslation } from '../components/translations';
 export default function MyYardSales() {
   const [user, setUser] = useState(null);
   const [language, setLanguage] = useState('en');
+  const [showFinishedSales, setShowFinishedSales] = useState(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const t = useTranslation(language);
@@ -135,12 +137,21 @@ export default function MyYardSales() {
               {sales.length} {sales.length === 1 ? t('sale') : t('sales')} total
             </p>
           </div>
-          <Link to={createPageUrl('AddYardSale')}>
-            <Button className="bg-[#FF6F61] hover:bg-[#e55a4d] gap-2">
-              <Plus className="w-4 h-4" />
-              {t('addNewSale')}
-            </Button>
-          </Link>
+          <div className="flex items-center gap-4">
+            <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 cursor-pointer">
+              <Switch
+                checked={showFinishedSales}
+                onCheckedChange={setShowFinishedSales}
+              />
+              <span>Show finished</span>
+            </label>
+            <Link to={createPageUrl('AddYardSale')}>
+              <Button className="bg-[#FF6F61] hover:bg-[#e55a4d] gap-2">
+                <Plus className="w-4 h-4" />
+                {t('addNewSale')}
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Sales Sections */}
@@ -210,7 +221,7 @@ export default function MyYardSales() {
             )}
 
             {/* Finished */}
-            {finishedSales.length > 0 && (
+            {showFinishedSales && finishedSales.length > 0 && (
               <div>
                 <h2 className="text-xl font-bold text-[#2E3A59] dark:text-white mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
                   {t('finished')} ({finishedSales.length})
