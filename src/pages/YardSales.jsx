@@ -12,7 +12,7 @@ import SaleMap from '../components/sales/SaleMap';
 import { startOfDay, endOfDay, startOfWeek, endOfWeek, addDays, isWithinInterval } from 'date-fns';
 
 export default function YardSales() {
-  const [viewMode, setViewMode] = useState('list');
+  const [viewMode, setViewMode] = useState('map');
   const [filters, setFilters] = useState({ categories: [], date: 'all', distance: 'all', payment: 'all', search: '' });
   const [showEndedSales, setShowEndedSales] = useState(false);
   const [favorites, setFavorites] = useState([]);
