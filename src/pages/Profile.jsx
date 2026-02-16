@@ -553,25 +553,112 @@ export default function Profile() {
               <p className="text-gray-500 dark:text-gray-400">{t('noYardSalesYet')}</p>
             </div>
           ) : (
-            <div className="space-y-3">
-              {mySales.map((sale) => {
-                const getSaleStatus = () => {
-                  if (!sale.date) return { label: t('dateTBD'), color: 'gray' };
-
-                  const now = new Date();
-                  const saleDateTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
+            <div className="space-y-6">
+              {/* Current Live Sales */}
+              {(() => {
+                const now = new Date();
+                const liveSales = mySales.filter(sale => {
+                  if (!sale.date) return false;
                   const saleStartTime = new Date(`${sale.date}T${sale.start_time || '00:00'}`);
-
-                  if (now < saleStartTime) {
-                    return { label: t('upcoming'), color: 'blue' };
-                  } else if (now >= saleStartTime && now < saleDateTime) {
-                    return { label: t('inProgress'), color: 'green' };
-                  } else {
-                    return { label: t('finished'), color: 'gray' };
-                  }
-                };
+                  const saleEndTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
+                  return now >= saleStartTime && now < saleEndTime;
+                });
                 
-                const saleStatus = getSaleStatus();
+                return liveSales.length > 0 && (
+                  <div>
+                    <h4 className="text-sm font-semibold text-[#2E3A59] dark:text-white mb-3 flex items-center gap-2">
+                      <span className="relative flex h-3 w-3">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                      </span>
+                      Current (Live Now)
+                    </h4>
+                    <div className="space-y-2">
+                      {liveSales.map((sale) => (
+                        <motion.div
+                          key={sale.id}
+                          className="bg-green-50 dark:bg-green-900/20 rounded-xl overflow-hidden border-2 border-green-500"
+                        >
+                          <div className="flex items-center justify-between p-4 hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors">
+                            <Link to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`} className="flex items-center gap-3 flex-1">
+                              <div className="flex items-center gap-3">
+                                {sale.photos && sale.photos.length > 0 ? (
+                                  <img 
+                                    src={sale.photos[0]} 
+                                    alt="" 
+                                    className="w-12 h-12 rounded-lg object-cover"
+                                  />
+                                ) : (
+                                  <div className="w-12 h-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+                                    <MapPin className="w-5 h-5 text-green-600" />
+                                  </div>
+                                )}
+                                <div>
+                                  <p className="font-medium text-[#2E3A59] dark:text-white">{sale.title}</p>
+                                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                                    {sale.start_time || '8:00 AM'} - {sale.end_time || '2:00 PM'}
+                                  </p>
+                                </div>
+                              </div>
+                            </Link>
+                            <div className="flex items-center gap-2">
+                              <span className="px-3 py-1 rounded-full text-xs font-semibold bg-green-500 text-white flex items-center gap-1">
+                                <Clock className="w-3 h-3" />
+                                LIVE NOW
+                              </span>
+                              <Link to={createPageUrl('AddYardSale') + `?edit=${sale.id}`}>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="rounded-lg"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <Pencil className="w-3 h-3" />
+                                </Button>
+                              </Link>
+                            </div>
+                          </div>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* All Sales */}
+              <div>
+                {mySales.filter(sale => {
+                  const now = new Date();
+                  if (!sale.date) return true;
+                  const saleStartTime = new Date(`${sale.date}T${sale.start_time || '00:00'}`);
+                  const saleEndTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
+                  return !(now >= saleStartTime && now < saleEndTime);
+                }).length > 0 && (
+                  <>
+                    <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-3">All Sales</h4>
+                    <div className="space-y-2">
+                      {mySales.filter(sale => {
+                        const now = new Date();
+                        if (!sale.date) return true;
+                        const saleStartTime = new Date(`${sale.date}T${sale.start_time || '00:00'}`);
+                        const saleEndTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
+                        return !(now >= saleStartTime && now < saleEndTime);
+                      }).map((sale) => {
+                        const getSaleStatus = () => {
+                          if (!sale.date) return { label: t('dateTBD'), color: 'gray' };
+
+                          const now = new Date();
+                          const saleDateTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
+                          const saleStartTime = new Date(`${sale.date}T${sale.start_time || '00:00'}`);
+
+                          if (now < saleStartTime) {
+                            return { label: t('upcoming'), color: 'blue' };
+                          } else {
+                            return { label: t('finished'), color: 'gray' };
+                          }
+                        };
+                        
+                        const saleStatus = getSaleStatus();
                 
                 return (
                   <motion.div
@@ -624,8 +711,12 @@ export default function Profile() {
                       </div>
                     </div>
                   </motion.div>
-                );
-              })}
+                        );
+                      })}
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
           )}
         </motion.div>
