@@ -852,9 +852,9 @@ export default function YardSaleDetails() {
             )}
 
             {/* Message Seller - Prominent */}
-            {seller && user && sale.created_by !== user.email && (
+            {sale.created_by && user && sale.created_by !== user.email && (
               <div className="bg-gradient-to-r from-[#14B8FF] to-[#FF6F61] p-1 rounded-2xl">
-                <MessageThread yardSale={sale} seller={seller} />
+                <MessageThread yardSale={sale} seller={seller || { email: sale.created_by }} />
               </div>
             )}
 
