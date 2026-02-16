@@ -519,7 +519,7 @@ function LayoutContent({ children, currentPageName }) {
               <div className="mt-6">
                 <h4 className="font-semibold text-lg mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>Follow Us</h4>
                 <a 
-                  href="https://instagram.com/stooplify" 
+                  href="https://www.instagram.com/stooplify/" 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-white/70 hover:text-[#14B8FF] transition-colors"
