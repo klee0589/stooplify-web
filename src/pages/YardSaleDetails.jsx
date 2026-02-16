@@ -721,7 +721,7 @@ export default function YardSaleDetails() {
 
             {/* Map */}
             {(sale.latitude && sale.longitude) && (
-              <div className="bg-white p-5 rounded-2xl shadow-sm">
+              <div className="bg-white p-5 rounded-2xl shadow-sm relative z-0">
                 <div className="flex items-center justify-between mb-3">
                   <h3 className="font-semibold text-[#2E3A59]" style={{ fontFamily: 'Poppins, sans-serif' }}>
                     {t('locationMap')}
