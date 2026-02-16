@@ -73,7 +73,15 @@ export default function Calendar() {
       if (uniqueSaleIds.length === 0) return [];
       
       const sales = await base44.entities.YardSale.list();
-      return sales.filter(sale => uniqueSaleIds.includes(sale.id));
+      const now = new Date();
+      
+      // Filter to only include upcoming sales (not past)
+      return sales.filter(sale => {
+        if (!uniqueSaleIds.includes(sale.id)) return false;
+        if (!sale.date || !sale.end_time) return true;
+        const saleDateTime = new Date(`${sale.date}T${sale.end_time}`);
+        return saleDateTime >= now;
+      });
     },
     enabled: favorites.length > 0 || attendances.length > 0,
   });
@@ -91,6 +99,9 @@ export default function Calendar() {
 
   const isFavorited = (saleId) => favorites.some(f => f.yard_sale_id === saleId);
   const isAttending = (saleId) => attendances.some(a => a.yard_sale_id === saleId);
+  
+  // Count only upcoming attendances
+  const upcomingAttendancesCount = allSales.filter(sale => isAttending(sale.id)).length;
 
   if (!user) {
     return (
@@ -159,7 +170,7 @@ export default function Calendar() {
               </div>
               <div>
                 <p className="text-2xl font-bold text-[#2E3A59] dark:text-white">
-                  {attendances.length}
+                  {upcomingAttendancesCount}
                 </p>
                 <p className="text-sm text-gray-600 dark:text-gray-300">Attending</p>
               </div>
