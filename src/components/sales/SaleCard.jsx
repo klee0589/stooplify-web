@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 import { MapPin, Calendar, Clock, Heart, ArrowRight, DollarSign, CreditCard, Smartphone, Package, Sofa, Shirt, Zap, Baby, Crown, BookOpen, Dumbbell, Users, Tag } from 'lucide-react';
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import TrustBadges from './TrustBadges';
 import { useTranslation } from '../translations';
 
@@ -100,7 +100,7 @@ export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance,
             <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
               <Calendar className="w-3.5 h-3.5 text-[#FF6F61]" />
               <span className="text-sm">
-                {sale.date ? format(new Date(sale.date), 'EEE, MMM d') : t('dateTBD')}
+                {sale.date ? format(parseISO(sale.date + 'T12:00:00'), 'EEE, MMM d') : t('dateTBD')}
               </span>
             </div>
             <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
