@@ -99,13 +99,12 @@ export default function MyYardSales() {
 
   const getSaleStatus = (sale) => {
     if (!sale.date) return 'upcoming';
-    const saleDate = new Date(sale.date);
     const now = new Date();
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const saleDateOnly = new Date(saleDate.getFullYear(), saleDate.getMonth(), saleDate.getDate());
+    const saleStartTime = new Date(`${sale.date}T${sale.start_time || '00:00:00'}`);
+    const saleEndTime = new Date(`${sale.date}T${sale.end_time || '23:59:59'}`);
     
-    if (saleDateOnly < today) return 'finished';
-    if (saleDateOnly.getTime() === today.getTime()) return 'inProgress';
+    if (now > saleEndTime) return 'finished';
+    if (now >= saleStartTime && now <= saleEndTime) return 'inProgress';
     return 'upcoming';
   };
 
