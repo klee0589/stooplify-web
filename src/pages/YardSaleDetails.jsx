@@ -816,40 +816,30 @@ export default function YardSaleDetails() {
             {/* Seller Info & Message */}
             {sale.created_by && (
               <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border-2 border-[#14B8FF]">
+                <h3 className="font-semibold text-[#2E3A59] dark:text-white mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                  Hosted By
+                </h3>
+                
                 <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-[#FF6F61] to-[#F5A623] rounded-full flex items-center justify-center">
-                      <span className="text-xl font-bold text-white">
+                  <div className="flex items-center gap-4">
+                    <div className="w-16 h-16 bg-gradient-to-br from-[#FF6F61] to-[#F5A623] rounded-full flex items-center justify-center">
+                      <span className="text-2xl font-bold text-white">
                         {(seller?.full_name || seller?.email || sale.created_by)?.[0]?.toUpperCase()}
                       </span>
                     </div>
                     <div>
-                      <h3 className="font-semibold text-[#2E3A59] dark:text-white">
-                        {seller?.full_name || 'Seller'}
-                      </h3>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        {sellerSalesCount > 0 ? `${sellerSalesCount} sales` : 'New seller'}
-                        {sellerAverageRating && ` • ${sellerAverageRating.toFixed(1)}⭐`}
+                      <h4 className="text-lg font-semibold text-[#2E3A59] dark:text-white">
+                        {seller?.full_name || sale.created_by?.split('@')[0] || 'Host'}
+                      </h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                        {sellerSalesCount > 0 ? `${sellerSalesCount} ${sellerSalesCount === 1 ? 'sale' : 'sales'} hosted` : 'New to Stooplify'}
+                        {sellerAverageRating && ` • ⭐ ${sellerAverageRating.toFixed(1)} rating`}
                       </p>
+                      {seller?.email && (
+                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">{seller.email}</p>
+                      )}
                     </div>
                   </div>
-                  
-                  {user && sale.created_by !== user.email && (
-                    <motion.button
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => {
-                        const msgSection = document.getElementById('message-section');
-                        if (msgSection) {
-                          msgSection.scrollIntoView({ behavior: 'smooth' });
-                        }
-                      }}
-                      className="flex items-center gap-2 px-4 py-2 bg-[#14B8FF] text-white rounded-xl font-medium hover:bg-[#0da3e6] transition-colors"
-                    >
-                      <MessageCircle className="w-4 h-4" />
-                      Message Seller
-                    </motion.button>
-                  )}
                 </div>
                 
                 <SellerReputation 
@@ -858,6 +848,27 @@ export default function YardSaleDetails() {
                   totalReviews={sellerReviews.length}
                   totalSales={sellerSalesCount}
                 />
+                
+                {sale.created_by !== user?.email && (
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => {
+                      if (!user) {
+                        base44.auth.redirectToLogin();
+                        return;
+                      }
+                      const msgSection = document.getElementById('message-section');
+                      if (msgSection) {
+                        msgSection.scrollIntoView({ behavior: 'smooth' });
+                      }
+                    }}
+                    className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#14B8FF] text-white rounded-xl font-semibold hover:bg-[#0da3e6] transition-colors shadow-md mt-4"
+                  >
+                    <MessageCircle className="w-5 h-5" />
+                    Message Host via Stooplify
+                  </motion.button>
+                )}
               </div>
             )}
 
