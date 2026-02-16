@@ -122,12 +122,17 @@ export default function YardSaleDetails() {
           // Fetch seller info via backend function
           if (sales[0].created_by) {
             try {
+              console.log('🔍 Fetching seller info for:', sales[0].created_by);
               const { data } = await base44.functions.invoke('getSellerInfo', { email: sales[0].created_by });
+              console.log('📦 Seller info response:', data);
               if (data?.seller) {
+                console.log('✅ Setting seller:', data.seller);
                 setSeller(data.seller);
+              } else {
+                console.warn('⚠️ No seller data in response');
               }
             } catch (err) {
-              console.warn('Could not fetch seller info:', err);
+              console.error('❌ Failed to fetch seller info:', err);
             }
           }
           
