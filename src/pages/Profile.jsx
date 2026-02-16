@@ -15,7 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { format } from 'date-fns';
+import { format, parseISO } from 'date-fns';
 import AlertSettings from '../components/profile/AlertSettings';
 
 export default function Profile() {
@@ -559,8 +559,8 @@ export default function Profile() {
                 const now = new Date();
                 const liveSales = mySales.filter(sale => {
                   if (!sale.date) return false;
-                  const saleStartTime = new Date(`${sale.date}T${sale.start_time || '00:00'}`);
-                  const saleEndTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
+                  const saleStartTime = parseISO(`${sale.date}T${sale.start_time || '00:00'}:00`);
+                  const saleEndTime = parseISO(`${sale.date}T${sale.end_time || '23:59'}:00`);
                   return now >= saleStartTime && now < saleEndTime;
                 });
                 
@@ -630,8 +630,8 @@ export default function Profile() {
                 {mySales.filter(sale => {
                   const now = new Date();
                   if (!sale.date) return true;
-                  const saleStartTime = new Date(`${sale.date}T${sale.start_time || '00:00'}`);
-                  const saleEndTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
+                  const saleStartTime = parseISO(`${sale.date}T${sale.start_time || '00:00'}:00`);
+                  const saleEndTime = parseISO(`${sale.date}T${sale.end_time || '23:59'}:00`);
                   return !(now >= saleStartTime && now < saleEndTime);
                 }).length > 0 && (
                   <>
@@ -640,16 +640,16 @@ export default function Profile() {
                       {mySales.filter(sale => {
                         const now = new Date();
                         if (!sale.date) return true;
-                        const saleStartTime = new Date(`${sale.date}T${sale.start_time || '00:00'}`);
-                        const saleEndTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
+                        const saleStartTime = parseISO(`${sale.date}T${sale.start_time || '00:00'}:00`);
+                        const saleEndTime = parseISO(`${sale.date}T${sale.end_time || '23:59'}:00`);
                         return !(now >= saleStartTime && now < saleEndTime);
                       }).map((sale) => {
                         const getSaleStatus = () => {
                           if (!sale.date) return { label: t('dateTBD'), color: 'gray' };
 
                           const now = new Date();
-                          const saleDateTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
-                          const saleStartTime = new Date(`${sale.date}T${sale.start_time || '00:00'}`);
+                          const saleDateTime = parseISO(`${sale.date}T${sale.end_time || '23:59'}:00`);
+                          const saleStartTime = parseISO(`${sale.date}T${sale.start_time || '00:00'}:00`);
 
                           if (now < saleStartTime) {
                             return { label: t('upcoming'), color: 'blue' };
@@ -682,7 +682,7 @@ export default function Profile() {
                           <div>
                             <p className="font-medium text-[#2E3A59] dark:text-white">{sale.title}</p>
                             <p className="text-sm text-gray-500 dark:text-gray-400">
-                              {sale.date ? format(new Date(sale.date), 'MMM d, yyyy') : 'Date TBD'}
+                              {sale.date ? format(parseISO(sale.date + 'T12:00:00'), 'MMM d, yyyy') : 'Date TBD'}
                             </p>
                           </div>
                         </div>
