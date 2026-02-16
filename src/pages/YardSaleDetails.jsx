@@ -930,6 +930,28 @@ export default function YardSaleDetails() {
                 {t('getDirections')}
               </motion.button>
               
+              {sale.created_by !== user?.email && (
+                <motion.button
+                  whileHover={{ scale: 1.02, boxShadow: '0 10px 30px rgba(20, 184, 255, 0.3)' }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => {
+                    if (!user) {
+                      base44.auth.redirectToLogin();
+                      return;
+                    }
+                    const msgSection = document.getElementById('message-section');
+                    if (msgSection) {
+                      msgSection.scrollIntoView({ behavior: 'smooth' });
+                    }
+                  }}
+                  className="flex-1 min-w-[200px] flex items-center justify-center gap-2 px-6 py-4 bg-[#14B8FF] text-white rounded-xl font-semibold shadow-lg"
+                  style={{ fontFamily: 'Poppins, sans-serif' }}
+                >
+                  <MessageCircle className="w-5 h-5" />
+                  Chat with Host
+                </motion.button>
+              )}
+              
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
