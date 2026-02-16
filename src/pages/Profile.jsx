@@ -569,9 +569,9 @@ export default function Profile() {
                 const now = new Date();
                 const liveSales = mySales.filter(sale => {
                   if (!sale.date) return false;
-                  const saleStartTime = parseISO(`${sale.date}T${sale.start_time || '00:00'}:00`);
-                  const saleEndTime = parseISO(`${sale.date}T${sale.end_time || '23:59'}:00`);
-                  return now >= saleStartTime && now < saleEndTime;
+                  const saleStartTime = parseISO(`${sale.date}T${sale.start_time || '00:00:00'}`);
+                  const saleEndTime = parseISO(`${sale.date}T${sale.end_time || '23:59:59'}`);
+                  return now >= saleStartTime && now <= saleEndTime;
                 });
                 
                 return liveSales.length > 0 && (
@@ -640,10 +640,10 @@ export default function Profile() {
                 {mySales.filter(sale => {
                   const now = new Date();
                   if (!sale.date) return true;
-                  const saleStartTime = parseISO(`${sale.date}T${sale.start_time || '00:00'}:00`);
-                  const saleEndTime = parseISO(`${sale.date}T${sale.end_time || '23:59'}:00`);
-                  const isLive = now >= saleStartTime && now < saleEndTime;
-                  const isFinished = now >= saleEndTime;
+                  const saleStartTime = parseISO(`${sale.date}T${sale.start_time || '00:00:00'}`);
+                  const saleEndTime = parseISO(`${sale.date}T${sale.end_time || '23:59:59'}`);
+                  const isLive = now >= saleStartTime && now <= saleEndTime;
+                  const isFinished = now > saleEndTime;
                   return !isLive && (!isFinished || showFinishedSales);
                 }).length > 0 && (
                   <>
@@ -652,18 +652,18 @@ export default function Profile() {
                       {mySales.filter(sale => {
                         const now = new Date();
                         if (!sale.date) return true;
-                        const saleStartTime = parseISO(`${sale.date}T${sale.start_time || '00:00'}:00`);
-                        const saleEndTime = parseISO(`${sale.date}T${sale.end_time || '23:59'}:00`);
-                        const isLive = now >= saleStartTime && now < saleEndTime;
-                        const isFinished = now >= saleEndTime;
+                        const saleStartTime = parseISO(`${sale.date}T${sale.start_time || '00:00:00'}`);
+                        const saleEndTime = parseISO(`${sale.date}T${sale.end_time || '23:59:59'}`);
+                        const isLive = now >= saleStartTime && now <= saleEndTime;
+                        const isFinished = now > saleEndTime;
                         return !isLive && (!isFinished || showFinishedSales);
                       }).map((sale) => {
                         const getSaleStatus = () => {
                           if (!sale.date) return { label: t('dateTBD'), color: 'gray' };
 
                           const now = new Date();
-                          const saleDateTime = parseISO(`${sale.date}T${sale.end_time || '23:59'}:00`);
-                          const saleStartTime = parseISO(`${sale.date}T${sale.start_time || '00:00'}:00`);
+                          const saleDateTime = parseISO(`${sale.date}T${sale.end_time || '23:59:59'}`);
+                          const saleStartTime = parseISO(`${sale.date}T${sale.start_time || '00:00:00'}`);
 
                           if (now < saleStartTime) {
                             return { label: t('upcoming'), color: 'blue' };
