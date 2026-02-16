@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Home, MapPin, PlusCircle, User, Heart, Settings, Globe, Moon, Sun, LogOut, ChevronDown, MessageCircle } from 'lucide-react';
+import { Menu, X, Home, MapPin, PlusCircle, User, Heart, Settings, Globe, Moon, Sun, LogOut, ChevronDown, MessageCircle, Instagram } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useTranslation } from '../components/translations';
 import { useTheme, ThemeProvider } from '../components/ThemeProvider';
@@ -516,6 +516,18 @@ function LayoutContent({ children, currentPageName }) {
                 <li><a href="#" className="hover:text-[#14B8FF] transition-colors">{t('termsOfService')}</a></li>
                 <li><a href="mailto:daniel@stooplify.com" className="hover:text-[#14B8FF] transition-colors">Contact</a></li>
               </ul>
+              <div className="mt-6">
+                <h4 className="font-semibold text-lg mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>Follow Us</h4>
+                <a 
+                  href="https://instagram.com/stooplify" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 text-white/70 hover:text-[#14B8FF] transition-colors"
+                >
+                  <Instagram className="w-5 h-5" />
+                  <span>@stooplify</span>
+                </a>
+              </div>
             </div>
           </div>
 
