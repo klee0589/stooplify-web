@@ -50,9 +50,11 @@ export default function YardSales() {
         if (isAuth) {
           const currentUser = await base44.auth.me();
           setUser(currentUser);
+        } else {
+          base44.auth.redirectToLogin();
         }
       } catch (e) {
-        console.log('Not authenticated');
+        base44.auth.redirectToLogin();
       }
     };
     checkAuth();
