@@ -824,9 +824,6 @@ export default function YardSaleDetails() {
             {/* Safety Note */}
             <SafetyNote />
 
-            {/* Message Seller */}
-            {seller && <MessageThread yardSale={sale} seller={seller} />}
-
             {/* Seller Actions (Edit/Delete) */}
             {user && sale.created_by === user.email && (
               <div className="flex gap-3">
@@ -851,6 +848,13 @@ export default function YardSaleDetails() {
                   <Trash2 className="w-4 h-4" />
                   {t('deleteSale')}
                 </motion.button>
+              </div>
+            )}
+
+            {/* Message Seller - Prominent */}
+            {seller && user && sale.created_by !== user.email && (
+              <div className="bg-gradient-to-r from-[#14B8FF] to-[#FF6F61] p-1 rounded-2xl">
+                <MessageThread yardSale={sale} seller={seller} />
               </div>
             )}
 
