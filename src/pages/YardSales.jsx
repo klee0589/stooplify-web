@@ -72,6 +72,7 @@ export default function YardSales() {
         const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
         const upcomingSales = allSales.filter(sale => {
           const saleDateTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
+          console.log(`[FILTER] Sale: ${sale.title} | Date: ${sale.date} | End: ${sale.end_time} | SaleDateTime: ${saleDateTime.toISOString()} | SevenDaysAgo: ${sevenDaysAgo.toISOString()} | Keep: ${saleDateTime >= sevenDaysAgo}`);
           return saleDateTime >= sevenDaysAgo;
         });
         console.log('After date filter:', upcomingSales.length);
@@ -82,6 +83,7 @@ export default function YardSales() {
             try {
               const saleDateTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
               const isPast = saleDateTime < now;
+              console.log(`[isPast] Sale: ${sale.title} | SaleDateTime: ${saleDateTime.toISOString()} | Now: ${now.toISOString()} | isPast: ${isPast}`);
               
               if (sale.created_by) {
                 const sellers = await base44.entities.User.filter({ email: sale.created_by });
@@ -150,6 +152,7 @@ export default function YardSales() {
   // Filter sales
   const filteredSales = sales.filter(sale => {
     // Hide ended sales by default
+    console.log(`[DISPLAY FILTER] Sale: ${sale.title} | isPast: ${sale.isPast} | showEndedSales: ${showEndedSales} | WillShow: ${showEndedSales || !sale.isPast}`);
     if (!showEndedSales && sale.isPast) {
       return false;
     }
