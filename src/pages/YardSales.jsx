@@ -150,12 +150,8 @@ export default function YardSales() {
   // Filter sales
   const filteredSales = sales.filter(sale => {
     // Hide ended sales by default
-    if (!showEndedSales) {
-      const saleEndDateTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
-      const now = new Date();
-      if (saleEndDateTime < now) {
-        return false;
-      }
+    if (!showEndedSales && sale.isPast) {
+      return false;
     }
     
     // Search (title + description)
