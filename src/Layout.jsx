@@ -17,6 +17,7 @@ function LayoutContent({ children, currentPageName }) {
   const [language, setLanguage] = useState('en');
   const { theme, toggleTheme } = useTheme();
   const queryClient = useQueryClient();
+  const avatarMenuRef = React.useRef(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -45,6 +46,22 @@ function LayoutContent({ children, currentPageName }) {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (avatarMenuRef.current && !avatarMenuRef.current.contains(event.target)) {
+        setIsAvatarMenuOpen(false);
+      }
+    };
+
+    if (isAvatarMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isAvatarMenuOpen]);
 
   const t = useTranslation(language);
   
@@ -219,7 +236,7 @@ function LayoutContent({ children, currentPageName }) {
               </motion.button>
               
               {user ? (
-                <div className="relative">
+                <div className="relative" ref={avatarMenuRef}>
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
