@@ -1,0 +1,134 @@
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+
+Deno.serve(async (req) => {
+  try {
+    const base44 = createClientFromRequest(req);
+    const payload = await req.json();
+    
+    const { event, data: sale } = payload;
+    
+    // Only process new sales
+    if (event.type !== 'create' || !sale || sale.status !== 'approved') {
+      return Response.json({ success: true, message: 'Skipped - not a new approved sale' });
+    }
+
+    console.log(`📧 New sale created: ${sale.title} (${sale.id})`);
+
+    // Get all active alert preferences
+    const allAlerts = await base44.asServiceRole.entities.AlertPreference.filter({ is_active: true });
+    console.log(`Found ${allAlerts.length} active alerts`);
+
+    // Only send for upcoming sales (not past sales)
+    const saleDate = new Date(sale.date);
+    const now = new Date();
+    if (saleDate < now) {
+      console.log('Skipping - sale date is in the past');
+      return Response.json({ success: true, message: 'Skipped - past sale' });
+    }
+
+    const emailsSent = [];
+    const saleCategories = sale.categories || (sale.category ? [sale.category] : []);
+
+    // Find matching users
+    const matchingUsers = new Set();
+    allAlerts.forEach(alert => {
+      let matches = false;
+      
+      if (alert.alert_type === 'neighborhood') {
+        matches = sale.city?.toLowerCase().includes(alert.value.toLowerCase()) ||
+                 sale.general_location?.toLowerCase().includes(alert.value.toLowerCase());
+      } else if (alert.alert_type === 'category') {
+        matches = saleCategories.includes(alert.value);
+      }
+      
+      if (matches) {
+        matchingUsers.add(alert.user_email);
+      }
+    });
+
+    console.log(`Found ${matchingUsers.size} matching users`);
+
+    // Send emails to matching users
+    for (const userEmail of matchingUsers) {
+      const formattedDate = saleDate.toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+
+      const emailBody = `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <div style="background: linear-gradient(135deg, #14B8FF 0%, #2E3A59 100%); padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
+            <h1 style="color: white; margin: 0;">🎉 New Yard Sale Alert!</h1>
+          </div>
+          
+          <div style="padding: 30px; background: white;">
+            <p style="font-size: 16px; color: #2E3A59; margin-bottom: 20px;">
+              A new yard sale matching your preferences was just posted!
+            </p>
+            
+            <div style="padding: 20px; background: #f9f9f9; border-radius: 8px; margin-bottom: 20px;">
+              <h2 style="margin: 0 0 15px 0; color: #2E3A59;">${sale.title}</h2>
+              <p style="margin: 5px 0; color: #666;">
+                📅 ${formattedDate} at ${sale.start_time || '8:00 AM'}
+              </p>
+              <p style="margin: 5px 0; color: #666;">
+                📍 ${sale.general_location || sale.city}
+              </p>
+              ${sale.description ? `<p style="margin: 15px 0 0 0; color: #666;">${sale.description}</p>` : ''}
+            </div>
+
+            <div style="text-align: center;">
+              <a href="https://stooplify.com/YardSaleDetails?id=${sale.id}" 
+                 style="display: inline-block; padding: 15px 30px; background: #14B8FF; color: white; text-decoration: none; border-radius: 8px; font-weight: bold;">
+                View Sale Details
+              </a>
+            </div>
+
+            <div style="margin-top: 30px; padding: 20px; background: #f0f9ff; border-radius: 8px; text-align: center;">
+              <p style="margin: 0; color: #666; font-size: 14px;">
+                <a href="https://stooplify.com/Profile" style="color: #14B8FF; text-decoration: none;">
+                  Manage your alert preferences
+                </a>
+              </p>
+            </div>
+          </div>
+
+          <div style="padding: 20px; text-align: center; background: #f9f9f9; border-radius: 0 0 8px 8px;">
+            <p style="margin: 0; color: #666; font-size: 12px;">
+              Stooplify - Your neighborhood's best yard sales
+            </p>
+          </div>
+        </div>
+      `;
+
+      try {
+        await base44.asServiceRole.integrations.Core.SendEmail({
+          to: userEmail,
+          subject: `🎉 New Yard Sale: ${sale.title}`,
+          body: emailBody,
+        });
+        
+        emailsSent.push(userEmail);
+        console.log(`✅ Sent alert to ${userEmail}`);
+      } catch (emailError) {
+        console.error(`❌ Failed to send email to ${userEmail}:`, emailError.message);
+      }
+    }
+
+    console.log(`✅ Sent ${emailsSent.length} instant alerts`);
+
+    return Response.json({
+      success: true,
+      emailsSent: emailsSent.length,
+      recipients: emailsSent,
+    });
+
+  } catch (error) {
+    console.error('❌ Instant alert failed:', error);
+    return Response.json({ 
+      error: error.message,
+      stack: error.stack 
+    }, { status: 500 });
+  }
+});
