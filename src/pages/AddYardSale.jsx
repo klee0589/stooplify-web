@@ -577,7 +577,7 @@ export default function AddYardSale() {
     }
 
     return (
-    <div className="min-h-screen bg-[#F9F9F9] py-8">
+    <div className="min-h-screen bg-[#F9F9F9] dark:bg-[#0a0e1a] py-8">
       <div className="max-w-2xl mx-auto px-4">
         {/* Back Button */}
         <Link to={createPageUrl('Home')}>
@@ -653,12 +653,12 @@ export default function AddYardSale() {
                     placeholder={t('titlePlaceholder')}
                     value={formData.title}
                     onChange={(e) => updateField('title', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900"
                   />
                 </div>
 
                 <div>
-                  <Label className="text-[#2E3A59] font-medium mb-2 block">{t('date')} *</Label>
+                  <Label className="text-[#2E3A59] font-medium mb-2 block dark:text-gray-900">{t('date')} *</Label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
                     {[0, 1, 2, 7, 14].map((daysFromNow) => {
                       const date = new Date();
@@ -687,14 +687,14 @@ export default function AddYardSale() {
                     type="date"
                     value={formData.date}
                     onChange={(e) => updateField('date', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]"
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900 dark:[color-scheme:light]"
                   />
-                  <p className="text-xs text-gray-500 mt-1">Or pick a custom date above</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-900 mt-1">Or pick a custom date above</p>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="col-span-2">
-                    <Label className="text-[#2E3A59] font-medium mb-2 block">Categories * (Select all that apply)</Label>
+                    <Label className="text-[#2E3A59] font-medium mb-2 block dark:text-gray-900">Categories * (Select all that apply)</Label>
                     <div className="grid grid-cols-3 gap-3">
                       {getCategoryLabels().map((cat) => {
                         const Icon = cat.icon;
@@ -748,12 +748,12 @@ export default function AddYardSale() {
                 </div>
 
                 <div>
-                  <Label className="text-[#2E3A59] font-medium mb-2 block">{t('description')}</Label>
+                  <Label className="text-[#2E3A59] font-medium mb-2 block dark:text-gray-900">{t('description')}</Label>
                   <Textarea
                     placeholder={t('descriptionPlaceholder')}
                     value={formData.description}
                     onChange={(e) => updateField('description', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] min-h-[120px] text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] min-h-[120px] text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900"
                   />
                   <p className="text-xs text-blue-600 mt-2 flex items-center gap-1">
                     💡 Tip: Leave blank and upload photos in Step 3 - our AI will generate a description for you!
@@ -762,7 +762,7 @@ export default function AddYardSale() {
 
                 {/* Payment Methods */}
                 <div>
-                  <Label className="text-[#2E3A59] font-medium mb-3 block">Payment Methods Accepted</Label>
+                  <Label className="text-[#2E3A59] font-medium mb-3 block dark:text-gray-900">Payment Methods Accepted</Label>
                   <div className="space-y-3">
                     <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
                       <div className="flex items-center justify-center w-5 h-5 rounded border-2 transition-all" style={{
@@ -857,10 +857,10 @@ export default function AddYardSale() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="bg-white rounded-3xl p-6 md:p-8 shadow-lg"
+              className="bg-white dark:bg-white rounded-3xl p-6 md:p-8 shadow-lg"
             >
               <h2 
-                className="text-xl font-bold text-[#2E3A59] mb-6"
+                className="text-xl font-bold text-[#2E3A59] dark:text-gray-900 mb-6"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
                 {t('location')}
@@ -868,32 +868,32 @@ export default function AddYardSale() {
 
               <div className="space-y-5">
                 <div>
-                  <Label className="text-[#2E3A59] font-medium mb-2 flex items-center gap-2">
+                  <Label className="text-[#2E3A59] font-medium mb-2 flex items-center gap-2 dark:text-gray-900">
                     {t('generalLocationPublic')} *
-                    <span className="text-xs text-gray-500 font-normal">{t('generalLocationHint')}</span>
+                    <span className="text-xs text-gray-500 dark:text-gray-600 font-normal">{t('generalLocationHint')}</span>
                   </Label>
                   <Input
                     placeholder={t('generalLocationPlaceholder')}
                     value={formData.general_location}
                     onChange={(e) => updateField('general_location', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900"
                   />
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500 dark:text-gray-900 mt-1">
                     {t('approximateLocationPrivacy')}
                   </p>
                 </div>
 
                 <div>
-                  <Label className="text-[#2E3A59] font-medium mb-2 flex items-center gap-2">
+                  <Label className="text-[#2E3A59] font-medium mb-2 flex items-center gap-2 dark:text-gray-900">
                     {t('exactStreetAddressPrivate')} *
-                    <span className="text-xs text-green-600 font-normal">🔒 {t('protected')}</span>
+                    <span className="text-xs text-green-600 dark:text-green-700 font-normal">🔒 {t('protected')}</span>
                   </Label>
                   <div className="relative">
                     <Input
                       placeholder={t('exactAddressPlaceholder')}
                       value={formData.address}
                       onChange={(e) => updateField('address', e.target.value)}
-                      className={`rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
+                      className={`rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900 ${
                         addressValidation.status === 'valid' ? 'border-green-500 dark:border-green-500' : 
                         addressValidation.status === 'invalid' ? 'border-red-500 dark:border-red-500' : ''
                       }`}
@@ -984,10 +984,10 @@ export default function AddYardSale() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="bg-white rounded-3xl p-6 md:p-8 shadow-lg"
+              className="bg-white dark:bg-white rounded-3xl p-6 md:p-8 shadow-lg"
             >
               <h2 
-                className="text-xl font-bold text-[#2E3A59] mb-2"
+                className="text-xl font-bold text-[#2E3A59] dark:text-gray-900 mb-2"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
                 {t('paymentRequired')}
@@ -1067,10 +1067,10 @@ export default function AddYardSale() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="bg-white rounded-3xl p-6 md:p-8 shadow-lg"
+              className="bg-white dark:bg-white rounded-3xl p-6 md:p-8 shadow-lg"
             >
               <h2 
-                className="text-xl font-bold text-[#2E3A59] mb-2"
+                className="text-xl font-bold text-[#2E3A59] dark:text-gray-900 mb-2"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
                 {t('addPhotosOptional')}
@@ -1082,7 +1082,7 @@ export default function AddYardSale() {
               {/* Photo Upload Area */}
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 dark:text-gray-900">
                     {photos.length} / {user?.subscription_active ? '10' : '3'} {t('photos')}
                   </p>
                   {!user?.subscription_active && photos.length >= 3 && (
@@ -1136,7 +1136,7 @@ export default function AddYardSale() {
                     />
                   </label>
                 </div>
-                <p className="text-xs text-gray-500 text-center">
+                <p className="text-xs text-gray-500 dark:text-gray-900 text-center">
                   📸 {t('aiWillGenerateDescription')}
                 </p>
               </div>
@@ -1152,12 +1152,12 @@ export default function AddYardSale() {
                     <Check className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-[#2E3A59] mb-2">{t('aiGeneratedDescription')}</h4>
+                    <h4 className="font-semibold text-[#2E3A59] dark:text-gray-900 mb-2">{t('aiGeneratedDescription')}</h4>
                     <Textarea
                       value={editableDescription}
                       onChange={(e) => setEditableDescription(e.target.value)}
                       placeholder="Upload photos above and AI will generate a description..."
-                      className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 min-h-[100px] bg-white text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 min-h-[100px] bg-white text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900"
                       disabled={!aiDescription}
                     />
                   </div>
@@ -1253,7 +1253,7 @@ export default function AddYardSale() {
               key="step4"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-white rounded-3xl p-8 shadow-lg text-center"
+              className="bg-white dark:bg-white rounded-3xl p-8 shadow-lg text-center"
             >
               <motion.div
                 initial={{ scale: 0 }}
@@ -1265,12 +1265,12 @@ export default function AddYardSale() {
               </motion.div>
 
               <h2 
-                className="text-2xl font-bold text-[#2E3A59] mb-3"
+                className="text-2xl font-bold text-[#2E3A59] dark:text-gray-900 mb-3"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
                 {isEditMode ? t('saleUpdated') : t('saleIsLive')}
               </h2>
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-600 dark:text-gray-900 mb-6">
                 {t('redirectingToSalePage')}
               </p>
               
