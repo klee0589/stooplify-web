@@ -318,11 +318,15 @@ function LayoutContent({ children, currentPageName }) {
                           <button
                             onClick={async () => {
                               try {
-                                await base44.functions.invoke('resetFreeListings', { user_email: user.email });
-                                toast.success('Free listings reset!');
-                                window.location.reload();
+                                const response = await base44.functions.invoke('resetFreeListings', { user_email: user.email });
+                                if (response?.data?.success) {
+                                  toast.success('Free listings reset!');
+                                  window.location.reload();
+                                } else {
+                                  toast.error(response?.data?.error || 'Failed to reset');
+                                }
                               } catch (error) {
-                                toast.error('Failed to reset');
+                                toast.error('Failed to reset: ' + (error?.message || 'Unknown error'));
                               }
                             }}
                             className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-green-600 dark:text-green-400"
