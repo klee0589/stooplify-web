@@ -107,13 +107,19 @@ export default function AddYardSale() {
           
           // Check if payment is needed (not first listing and no subscription) - only for new sales
           if (!isEditMode) {
-            const hasSubscription = currentUser.subscription_active || false;
-            const hasUsedFreeListing = (currentUser.free_listings_used || 0) >= 1;
+            // Admin bypass: no payment required for admin user
+            if (currentUser.email === 'klee0589@gmail.com') {
+              setNeedsPayment(false);
+              console.log('✅ Admin bypass - no payment needed');
+            } else {
+              const hasSubscription = currentUser.subscription_active || false;
+              const hasUsedFreeListing = (currentUser.free_listings_used || 0) >= 1;
 
-            // Payment needed if: they've used free listing AND don't have subscription
-            const needsPay = hasUsedFreeListing && !hasSubscription;
-            setNeedsPayment(needsPay);
-            console.log(needsPay ? '💳 Payment required' : '✅ No payment needed (first listing free!)');
+              // Payment needed if: they've used free listing AND don't have subscription
+              const needsPay = hasUsedFreeListing && !hasSubscription;
+              setNeedsPayment(needsPay);
+              console.log(needsPay ? '💳 Payment required' : '✅ No payment needed (first listing free!)');
+            }
           }
           
           // Load existing sale data if editing
