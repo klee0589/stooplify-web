@@ -1,20 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Calendar as CalendarIcon, Heart, UserCheck, MapPin, Clock, ArrowRight } from 'lucide-react';
+import { Calendar as CalendarIcon, Heart, UserCheck, MapPin, Clock, ArrowRight, CheckCircle2 } from 'lucide-react';
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { format, isSameDay, parseISO } from 'date-fns';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import SEO from '../components/SEO';
 import { useTranslation } from '../components/translations';
+import { toast } from 'sonner';
 
 export default function Calendar() {
   const [user, setUser] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [language, setLanguage] = useState('en');
   const [eventFilter, setEventFilter] = useState('all'); // 'all', 'favorites', 'attending'
+  const queryClient = useQueryClient();
   
   const t = useTranslation(language);
 
@@ -90,6 +92,17 @@ export default function Calendar() {
   // Helper functions
   const isFavorited = (saleId) => favorites.some(f => f.yard_sale_id === saleId);
   const isAttending = (saleId) => attendances.some(a => a.yard_sale_id === saleId);
+  const getAttendance = (saleId) => attendances.find(a => a.yard_sale_id === saleId);
+
+  const toggleAttendedMutation = useMutation({
+    mutationFn: async ({ attendanceId, attended }) => {
+      return await base44.entities.Attendance.update(attendanceId, { attended });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['attendances', user?.email] });
+      toast.success('Attendance updated');
+    },
+  });
 
   // Get sales for selected date with filter
   const salesForSelectedDate = allSales.filter(sale => {
@@ -328,6 +341,32 @@ export default function Calendar() {
                         <span>{sale.general_location || sale.city}</span>
                       </div>
                     </div>
+
+                    {/* Attended Toggle - only show if user is attending */}
+                    {isAttending(sale.id) && (() => {
+                      const attendance = getAttendance(sale.id);
+                      return (
+                        <div className="mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
+                          <button
+                            onClick={(e) => {
+                              e.preventDefault();
+                              toggleAttendedMutation.mutate({
+                                attendanceId: attendance.id,
+                                attended: !attendance.attended
+                              });
+                            }}
+                            className={`flex items-center gap-2 w-full py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
+                              attendance.attended
+                                ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800'
+                                : 'bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600'
+                            }`}
+                          >
+                            <CheckCircle2 className={`w-4 h-4 ${attendance.attended ? 'fill-current' : ''}`} />
+                            <span>{attendance.attended ? 'Attended ✓' : 'Mark as attended'}</span>
+                          </button>
+                        </div>
+                      );
+                    })()}
 
                     <Link 
                       to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}
