@@ -559,7 +559,7 @@ export default function AddYardSale() {
   }, [formData.address, formData.zip_code]);
 
   const isStep1Valid = formData.title && formData.date && formData.categories?.length > 0;
-  const isStep2Valid = formData.general_location && formData.address && formData.city && formData.state && formData.zip_code && addressValidation.status === 'valid';
+  const isStep2Valid = formData.general_location && formData.address && formData.city && formData.state && formData.zip_code;
 
   if (isLoadingSale) {
     return (
@@ -946,10 +946,12 @@ export default function AddYardSale() {
                       ) : (
                         <p className={`text-xs mt-1 ${
                           addressValidation.status === 'valid' ? 'text-green-600' :
-                          addressValidation.status === 'invalid' ? 'text-red-600' :
+                          addressValidation.status === 'invalid' ? 'text-orange-600' :
                           'text-gray-500'
                         }`}>
-                          {addressValidation.message}
+                          {addressValidation.status === 'invalid' 
+                            ? '⚠️ Could not verify address - you can still continue if the address is correct'
+                            : addressValidation.message}
                         </p>
                       )}
                     </motion.div>
