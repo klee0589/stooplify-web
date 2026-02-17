@@ -14,6 +14,7 @@ export default function Calendar() {
   const [user, setUser] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [language, setLanguage] = useState('en');
+  const [eventFilter, setEventFilter] = useState('all'); // 'all', 'favorites', 'attending'
   
   const t = useTranslation(language);
 
@@ -86,11 +87,17 @@ export default function Calendar() {
     enabled: favorites.length > 0 || attendances.length > 0,
   });
 
-  // Get sales for selected date
+  // Get sales for selected date with filter
   const salesForSelectedDate = allSales.filter(sale => {
     if (!sale.date) return false;
     try {
-      return isSameDay(parseISO(sale.date + 'T12:00:00'), selectedDate);
+      const dateMatch = isSameDay(parseISO(sale.date + 'T12:00:00'), selectedDate);
+      if (!dateMatch) return false;
+      
+      // Apply event filter
+      if (eventFilter === 'favorites') return isFavorited(sale.id);
+      if (eventFilter === 'attending') return isAttending(sale.id);
+      return true; // 'all'
     } catch (e) {
       return false;
     }
@@ -196,12 +203,48 @@ export default function Calendar() {
             animate={{ opacity: 1, x: 0 }}
             className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
           >
-            <h2 
-              className="text-xl font-bold text-[#2E3A59] dark:text-white mb-4"
-              style={{ fontFamily: 'Poppins, sans-serif' }}
-            >
-              Calendar View
-            </h2>
+            <div className="flex items-center justify-between mb-4">
+              <h2 
+                className="text-xl font-bold text-[#2E3A59] dark:text-white"
+                style={{ fontFamily: 'Poppins, sans-serif' }}
+              >
+                Calendar View
+              </h2>
+              <div className="flex gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+                <button
+                  onClick={() => setEventFilter('all')}
+                  className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                    eventFilter === 'all'
+                      ? 'bg-white dark:bg-gray-600 text-[#2E3A59] dark:text-white shadow-sm'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-[#2E3A59] dark:hover:text-white'
+                  }`}
+                >
+                  All
+                </button>
+                <button
+                  onClick={() => setEventFilter('favorites')}
+                  className={`px-3 py-1 rounded text-xs font-medium transition-colors flex items-center gap-1 ${
+                    eventFilter === 'favorites'
+                      ? 'bg-white dark:bg-gray-600 text-[#FF6F61] shadow-sm'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-[#FF6F61]'
+                  }`}
+                >
+                  <Heart className="w-3 h-3" />
+                  Favorites
+                </button>
+                <button
+                  onClick={() => setEventFilter('attending')}
+                  className={`px-3 py-1 rounded text-xs font-medium transition-colors flex items-center gap-1 ${
+                    eventFilter === 'attending'
+                      ? 'bg-white dark:bg-gray-600 text-green-600 shadow-sm'
+                      : 'text-gray-600 dark:text-gray-300 hover:text-green-600'
+                  }`}
+                >
+                  <UserCheck className="w-3 h-3" />
+                  Attending
+                </button>
+              </div>
+            </div>
             <CalendarComponent
               mode="single"
               selected={selectedDate}
