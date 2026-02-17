@@ -689,21 +689,16 @@ export default function YardSaleDetails() {
                 {sale.title}
               </h1>
               {(() => {
-                if (!sale.date) return null;
+                if (!sale.date || !sale.start_time || !sale.end_time) return null;
                 
                 const now = new Date();
-                const saleDate = sale.date.includes('T') ? sale.date.split('T')[0] : sale.date;
                 
-                // Parse times - ensure they have seconds
-                const startTime = (sale.start_time || '08:00').includes(':') ? sale.start_time : '08:00';
-                const endTime = (sale.end_time || '23:59').includes(':') ? sale.end_time : '23:59';
+                // Get just the date part (YYYY-MM-DD)
+                const dateStr = sale.date.split('T')[0];
                 
-                // Add seconds if not present
-                const startTimeFull = startTime.split(':').length === 2 ? `${startTime}:00` : startTime;
-                const endTimeFull = endTime.split(':').length === 2 ? `${endTime}:00` : endTime;
-                
-                const saleStart = new Date(`${saleDate}T${startTimeFull}`);
-                const saleEnd = new Date(`${saleDate}T${endTimeFull}`);
+                // Create date objects in local timezone
+                const saleStart = new Date(`${dateStr} ${sale.start_time}`);
+                const saleEnd = new Date(`${dateStr} ${sale.end_time}`);
                 
                 const isLive = now >= saleStart && now <= saleEnd;
                 const isUpcoming = now < saleStart;
