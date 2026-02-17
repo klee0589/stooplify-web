@@ -464,7 +464,7 @@ export default function AddYardSale() {
     const { address, city, state, zip_code } = formData;
 
     // Skip if not enough info
-    if (!address || !zip_code) {
+    if (!address) {
       setAddressValidation({ status: 'idle', message: '' });
       return;
     }
@@ -473,13 +473,26 @@ export default function AddYardSale() {
     setAddressValidation({ status: 'checking', message: 'Checking address...' });
 
     try {
-      const query = `${address}, ${city || ''}, ${state || ''} ${zip_code}`;
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`,
-        { headers: { 'User-Agent': 'Stooplify/1.0' } }
-      );
+      // Try multiple query formats to increase success rate
+      const queries = [
+        `${address}, ${city}, ${state} ${zip_code}`,
+        `${address}, ${zip_code}`,
+        `${address}, ${city}, ${state}`,
+        `${address}`
+      ].filter(q => q.trim());
 
-      const geoData = await response.json();
+      let geoData = [];
+      for (const query of queries) {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`,
+          { headers: { 'User-Agent': 'Stooplify/1.0' } }
+        );
+        const data = await response.json();
+        if (data.length > 0) {
+          geoData = data;
+          break;
+        }
+      }
 
       if (geoData.length > 0) {
         const lat = parseFloat(geoData[0].lat);
