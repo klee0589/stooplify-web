@@ -54,17 +54,7 @@ Deno.serve(async (req) => {
       await base44.asServiceRole.entities.Message.delete(message.id);
     }
 
-    // Reset all users' free_listings_used to 0
-    const allUsers = await base44.asServiceRole.entities.User.list();
-    console.log(`Resetting free_listings_used for ${allUsers.length} users...`);
-    
-    for (const u of allUsers) {
-      if (u.free_listings_used > 0) {
-        await base44.asServiceRole.entities.User.update(u.id, { free_listings_used: 0 });
-      }
-    }
-
-    console.log('✅ All test data removed and free listings reset');
+    console.log('✅ All test data removed');
 
     return Response.json({
       success: true,
@@ -73,9 +63,9 @@ Deno.serve(async (req) => {
         favorites: allFavorites.length,
         attendances: allAttendances.length,
         reviews: allReviews.length,
-        messages: allMessages.length,
-        usersReset: allUsers.filter(u => u.free_listings_used > 0).length
-      }
+        messages: allMessages.length
+      },
+      note: 'Users can reset their own free_listings_used via the profile menu'
     });
   } catch (error) {
     console.error('Error resetting data:', error);
