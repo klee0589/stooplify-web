@@ -583,7 +583,7 @@ export default function AddYardSale() {
         <Link to={createPageUrl('Home')}>
             <motion.button
               whileHover={{ x: -5 }}
-              className="flex items-center gap-2 text-gray-600 hover:text-[#FF6F61] transition-colors mb-6"
+              className="flex items-center gap-2 text-gray-600 dark:text-gray-100 hover:text-[#FF6F61] transition-colors mb-6"
             >
               <ArrowLeft className="w-5 h-5" />
               {t('back')}
