@@ -318,7 +318,7 @@ function LayoutContent({ children, currentPageName }) {
                           <button
                             onClick={async () => {
                               try {
-                                const response = await base44.functions.invoke('resetFreeListings', { user_email: user.email });
+                                const response = await base44.functions.invoke('resetFreeListings');
                                 if (response?.data?.success) {
                                   toast.success('Free listings reset!');
                                   window.location.reload();
