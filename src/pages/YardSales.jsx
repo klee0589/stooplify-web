@@ -13,7 +13,7 @@ import { startOfDay, endOfDay, startOfWeek, endOfWeek, addDays, isWithinInterval
 
 export default function YardSales() {
   const [viewMode, setViewMode] = useState('map');
-  const [filters, setFilters] = useState({ categories: [], date: 'all', distance: 'all', payment: 'all', search: '' });
+  const [filters, setFilters] = useState({ categories: [], date: 'all', status: 'all', distance: 'all', payment: 'all', search: '' });
   const [showEndedSales, setShowEndedSales] = useState(false);
   const [favorites, setFavorites] = useState([]);
   const [user, setUser] = useState(null);
@@ -151,9 +151,22 @@ export default function YardSales() {
 
   // Filter sales
   const filteredSales = sales.filter(sale => {
-    // Hide ended sales by default
-    console.log(`[DISPLAY FILTER] Sale: ${sale.title} | isPast: ${sale.isPast} | showEndedSales: ${showEndedSales} | WillShow: ${showEndedSales || !sale.isPast}`);
-    if (!showEndedSales && sale.isPast) {
+    const now = new Date();
+    const saleStart = new Date(`${sale.date}T${sale.start_time || '08:00'}`);
+    const saleEnd = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
+    const isLive = now >= saleStart && now <= saleEnd;
+    const isUpcoming = now < saleStart;
+    const isFinished = now > saleEnd;
+    
+    // Status filter
+    if (filters.status !== 'all') {
+      if (filters.status === 'live' && !isLive) return false;
+      if (filters.status === 'upcoming' && !isUpcoming) return false;
+      if (filters.status === 'finished' && !isFinished) return false;
+    }
+    
+    // Hide ended sales by default (unless status filter is set to finished)
+    if (filters.status !== 'finished' && !showEndedSales && sale.isPast) {
       return false;
     }
     
