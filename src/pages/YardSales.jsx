@@ -14,7 +14,7 @@ import { startOfDay, endOfDay, startOfWeek, endOfWeek, addDays, isWithinInterval
 export default function YardSales() {
   const [viewMode, setViewMode] = useState('map');
   const [filters, setFilters] = useState({ categories: [], date: 'all', distance: 'all', payment: 'all', search: '' });
-  const [showEndedSales, setShowEndedSales] = useState(false);
+  const [showEndedSales, setShowEndedSales] = useState(true);
   const [favorites, setFavorites] = useState([]);
   const [user, setUser] = useState(null);
   const [language, setLanguage] = useState('en');
