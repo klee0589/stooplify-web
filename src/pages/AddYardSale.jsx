@@ -664,7 +664,7 @@ export default function AddYardSale() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="bg-white rounded-3xl p-6 md:p-8 shadow-lg"
+              className="bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-8 shadow-lg border dark:border-gray-800"
             >
               <h2 
                 className="text-xl font-bold text-[#2E3A59] mb-6"
@@ -884,7 +884,7 @@ export default function AddYardSale() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="bg-white rounded-3xl p-6 md:p-8 shadow-lg"
+              className="bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-8 shadow-lg border dark:border-gray-800"
             >
               <h2 
                 className="text-xl font-bold text-[#2E3A59] mb-6"
@@ -1025,7 +1025,7 @@ export default function AddYardSale() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="bg-white rounded-3xl p-6 md:p-8 shadow-lg"
+              className="bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-8 shadow-lg border dark:border-gray-800"
             >
               <h2 
                 className="text-xl font-bold text-[#2E3A59] mb-2"
@@ -1108,7 +1108,7 @@ export default function AddYardSale() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="bg-white rounded-3xl p-6 md:p-8 shadow-lg"
+              className="bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-8 shadow-lg border dark:border-gray-800"
             >
               <h2 
                 className="text-xl font-bold text-[#2E3A59] mb-2"
@@ -1294,7 +1294,7 @@ export default function AddYardSale() {
               key="step4"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-white rounded-3xl p-8 shadow-lg text-center"
+              className="bg-white dark:bg-gray-900 rounded-3xl p-8 shadow-lg text-center border dark:border-gray-800"
             >
               <motion.div
                 initial={{ scale: 0 }}
