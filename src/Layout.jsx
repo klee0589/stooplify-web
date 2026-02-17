@@ -315,24 +315,28 @@ function LayoutContent({ children, currentPageName }) {
                         </button>
 
                         {user?.email === 'klee0589@gmail.com' && (
-                          <button
-                            onClick={async () => {
-                              try {
-                                const response = await base44.functions.invoke('resetFreeListings');
-                                if (response?.data?.success) {
-                                  toast.success('Free listings reset!');
-                                  window.location.reload();
-                                } else {
-                                  toast.error(response?.data?.error || 'Failed to reset');
+                          <>
+                            <button
+                              onClick={async () => {
+                                if (!confirm('Reset ALL data and free listings for ALL users? This cannot be undone.')) return;
+                                try {
+                                  toast.loading('Resetting all data...');
+                                  const response = await base44.functions.invoke('resetAllData');
+                                  if (response?.data?.success) {
+                                    toast.success(`Deleted ${response.data.deleted.sales} sales, ${response.data.deleted.favorites} favorites, ${response.data.deleted.attendances} attendances. Reset ${response.data.deleted.usersReset} users.`);
+                                    setTimeout(() => window.location.reload(), 2000);
+                                  } else {
+                                    toast.error(response?.data?.error || 'Failed to reset');
+                                  }
+                                } catch (error) {
+                                  toast.error('Failed: ' + (error?.message || 'Unknown error'));
                                 }
-                              } catch (error) {
-                                toast.error('Failed to reset: ' + (error?.message || 'Unknown error'));
-                              }
-                            }}
-                            className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-green-600 dark:text-green-400"
-                          >
-                            <span className="text-sm font-medium">🔄 Reset Free Listings</span>
-                          </button>
+                              }}
+                              className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-red-600 dark:text-red-400"
+                            >
+                              <span className="text-sm font-medium">🗑️ Reset All Data</span>
+                            </button>
+                          </>
                         )}
 
                         <div className="border-t border-gray-200 dark:border-gray-700 my-2" />
