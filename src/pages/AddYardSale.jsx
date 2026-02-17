@@ -637,10 +637,10 @@ export default function AddYardSale() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="bg-white rounded-3xl p-6 md:p-8 shadow-lg"
+              className="bg-white dark:bg-white rounded-3xl p-6 md:p-8 shadow-lg"
             >
               <h2 
-                className="text-xl font-bold text-[#2E3A59] mb-6"
+                className="text-xl font-bold text-[#2E3A59] dark:text-gray-900 mb-6"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
                 {t('saleDetails')}
