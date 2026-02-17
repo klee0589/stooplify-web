@@ -8,7 +8,7 @@ import { createPageUrl } from '../utils';
 import { 
   User, Mail, MapPin, Calendar, Heart, Tag, 
   Loader2, ArrowLeft, LogOut, Edit2, Check, X, Clock, Pencil,
-  Crown, Zap, CreditCard, Star, Award
+  Crown, Zap, CreditCard, Star, Award, Camera
 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
