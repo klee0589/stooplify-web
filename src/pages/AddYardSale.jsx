@@ -756,46 +756,52 @@ export default function AddYardSale() {
                   </p>
                 </div>
 
-                {/* AI Description Preview Modal */}
-                {showAiPreview && aiDescription && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4"
-                  >
-                    <div className="flex items-start gap-3 mb-3">
-                      <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <Check className="w-5 h-5 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-[#2E3A59] mb-1">AI Generated Description</h4>
-                        <p className="text-sm text-gray-700">{aiDescription}</p>
-                      </div>
+                {/* AI Description Preview - Always Visible */}
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4"
+                >
+                  <div className="flex items-start gap-3 mb-3">
+                    <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <Check className="w-5 h-5 text-white" />
                     </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-[#2E3A59] mb-2">{t('aiGeneratedDescription')}</h4>
+                      <Textarea
+                        value={editableDescription}
+                        onChange={(e) => setEditableDescription(e.target.value)}
+                        placeholder="AI will generate a description when you upload photos in Step 3..."
+                        className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 min-h-[100px] bg-white text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        disabled={!aiDescription}
+                      />
+                    </div>
+                  </div>
+                  {aiDescription && (
                     <div className="flex gap-2">
                       <Button
                         onClick={() => {
-                          updateField('description', aiDescription);
-                          setShowAiPreview(false);
+                          updateField('description', editableDescription);
                           toast.success('Description added!');
                         }}
                         className="flex-1 bg-blue-500 hover:bg-blue-600"
                       >
-                        Use This Description
+                        {t('useThisDescription')}
                       </Button>
                       <Button
                         variant="outline"
                         onClick={() => {
-                          setShowAiPreview(false);
-                          toast('You can edit the description above');
+                          setEditableDescription('');
+                          setAiDescription(null);
+                          toast('Description cleared');
                         }}
                         className="flex-1"
                       >
-                        Edit Manually
+                        Clear
                       </Button>
                     </div>
-                  </motion.div>
-                )}
+                  )}
+                </motion.div>
 
                 {/* Payment Methods */}
                 <div>
