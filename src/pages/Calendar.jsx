@@ -103,9 +103,15 @@ export default function Calendar() {
     }
   });
 
-  // Get dates with events
+  // Get dates with events (respecting filter)
   const datesWithEvents = allSales
-    .filter(sale => sale.date)
+    .filter(sale => {
+      if (!sale.date) return false;
+      // Apply event filter
+      if (eventFilter === 'favorites') return isFavorited(sale.id);
+      if (eventFilter === 'attending') return isAttending(sale.id);
+      return true; // 'all'
+    })
     .map(sale => {
       try {
         return parseISO(sale.date + 'T12:00:00');
