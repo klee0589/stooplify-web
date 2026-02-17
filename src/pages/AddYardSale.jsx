@@ -646,16 +646,42 @@ export default function AddYardSale() {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-[#2E3A59] font-medium mb-2 block">{t('date')} *</Label>
-                    <Input
-                      type="date"
-                      value={formData.date}
-                      onChange={(e) => updateField('date', e.target.value)}
-                      className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]"
-                    />
+                <div>
+                  <Label className="text-[#2E3A59] font-medium mb-2 block">{t('date')} *</Label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
+                    {[0, 1, 2, 7, 14].map((daysFromNow) => {
+                      const date = new Date();
+                      date.setDate(date.getDate() + daysFromNow);
+                      const dateStr = date.toISOString().split('T')[0];
+                      const dayName = daysFromNow === 0 ? 'Today' : 
+                                     daysFromNow === 1 ? 'Tomorrow' : 
+                                     date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                      return (
+                        <button
+                          key={daysFromNow}
+                          type="button"
+                          onClick={() => updateField('date', dateStr)}
+                          className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                            formData.date === dateStr
+                              ? 'bg-[#FF6F61] text-white'
+                              : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                          }`}
+                        >
+                          {dayName}
+                        </button>
+                      );
+                    })}
                   </div>
+                  <Input
+                    type="date"
+                    value={formData.date}
+                    onChange={(e) => updateField('date', e.target.value)}
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">Or pick a custom date above</p>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
                   <div className="col-span-2">
                     <Label className="text-[#2E3A59] font-medium mb-2 block">Categories * (Select all that apply)</Label>
                     <div className="grid grid-cols-3 gap-3">
