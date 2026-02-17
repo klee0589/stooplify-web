@@ -681,12 +681,35 @@ export default function YardSaleDetails() {
             </div>
 
             {/* Title */}
-            <h1 
-              className="text-3xl md:text-4xl font-bold text-[#2E3A59]"
-              style={{ fontFamily: 'Poppins, sans-serif' }}
-            >
-              {sale.title}
-            </h1>
+            <div className="flex items-start gap-3 flex-wrap">
+              <h1 
+                className="text-3xl md:text-4xl font-bold text-[#2E3A59] flex-1"
+                style={{ fontFamily: 'Poppins, sans-serif' }}
+              >
+                {sale.title}
+              </h1>
+              {(() => {
+                const now = new Date();
+                const saleStart = new Date(`${sale.date}T${sale.start_time || '08:00'}`);
+                const saleEnd = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
+                
+                if (now >= saleStart && now <= saleEnd) {
+                  return (
+                    <span className="text-sm font-bold px-4 py-2 bg-green-500 text-white rounded-full animate-pulse shadow-lg flex items-center gap-2">
+                      <span className="w-2 h-2 bg-white rounded-full animate-ping" />
+                      LIVE NOW
+                    </span>
+                  );
+                } else if (now < saleStart) {
+                  return (
+                    <span className="text-sm font-bold px-4 py-2 bg-blue-500 text-white rounded-full shadow-lg">
+                      📅 UPCOMING
+                    </span>
+                  );
+                }
+                return null;
+              })()}
+            </div>
 
             {/* Date & Time */}
             <div className="flex flex-wrap gap-4">
