@@ -248,7 +248,7 @@ export default function Calendar() {
             <CalendarComponent
               mode="single"
               selected={selectedDate}
-              onSelect={setSelectedDate}
+              onSelect={(date) => setSelectedDate(date || new Date())}
               modifiers={{
                 hasEvent: datesWithEvents
               }}
@@ -278,7 +278,7 @@ export default function Calendar() {
               className="text-xl font-bold text-[#2E3A59] dark:text-white mb-4"
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
-              {format(selectedDate, 'MMMM d, yyyy')}
+              {selectedDate ? format(selectedDate, 'MMMM d, yyyy') : 'Select a date'}
             </h2>
 
             {salesForSelectedDate.length === 0 ? (
