@@ -681,44 +681,12 @@ export default function YardSaleDetails() {
             </div>
 
             {/* Title */}
-            <div className="flex items-start gap-3 flex-wrap">
-              <h1 
-                className="text-3xl md:text-4xl font-bold text-[#2E3A59] flex-1"
-                style={{ fontFamily: 'Poppins, sans-serif' }}
-              >
-                {sale.title}
-              </h1>
-              {(() => {
-                if (!sale.date || !sale.start_time || !sale.end_time) return null;
-                
-                const now = new Date();
-                const [year, month, day] = sale.date.split('T')[0].split('-');
-                const [startHour, startMin] = sale.start_time.split(':');
-                const [endHour, endMin] = sale.end_time.split(':');
-                
-                const saleStart = new Date(year, month - 1, day, startHour, startMin);
-                const saleEnd = new Date(year, month - 1, day, endHour, endMin);
-                
-                const isLive = now >= saleStart && now <= saleEnd;
-                const isUpcoming = now < saleStart;
-                
-                if (isLive) {
-                  return (
-                    <span className="text-sm font-bold px-4 py-2 bg-green-500 text-white rounded-full animate-pulse shadow-lg flex items-center gap-2">
-                      <span className="w-2 h-2 bg-white rounded-full animate-ping" />
-                      LIVE NOW
-                    </span>
-                  );
-                } else if (isUpcoming) {
-                  return (
-                    <span className="text-sm font-bold px-4 py-2 bg-blue-500 text-white rounded-full shadow-lg">
-                      📅 UPCOMING
-                    </span>
-                  );
-                }
-                return null;
-              })()}
-            </div>
+            <h1 
+              className="text-3xl md:text-4xl font-bold text-[#2E3A59]"
+              style={{ fontFamily: 'Poppins, sans-serif' }}
+            >
+              {sale.title}
+            </h1>
 
             {/* Date & Time */}
             <div className="flex flex-wrap gap-4">

@@ -33,13 +33,6 @@ const dateOptions = [
   { value: 'week', label: 'This Week' },
 ];
 
-const statusOptions = [
-  { value: 'all', label: 'All' },
-  { value: 'live', label: '🔴 Live Now' },
-  { value: 'upcoming', label: 'Upcoming' },
-  { value: 'finished', label: 'Finished' },
-];
-
 const paymentOptions = [
   { value: 'all', label: 'Any Payment' },
   { value: 'cash', label: 'Cash' },
@@ -91,7 +84,7 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
 
       {/* Other Filters */}
       <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {/* Search */}
           <Input
             placeholder="Search sales..."
@@ -99,21 +92,6 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
             onChange={(e) => onFilterChange({ ...filters, search: e.target.value })}
             className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61]"
           />
-          
-          {/* Status */}
-          <Select 
-            value={filters.status || 'all'} 
-            onValueChange={(value) => onFilterChange({ ...filters, status: value })}
-          >
-            <SelectTrigger className="rounded-xl border-gray-200">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              {statusOptions.map((opt) => (
-                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
           
           {/* Date */}
           <Select 
@@ -162,7 +140,7 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
         </div>
         
         {/* Reset Button */}
-        {(filters.categories?.length > 0 || filters.date !== 'all' || filters.status !== 'all' || filters.payment !== 'all' || filters.search) && (
+        {(filters.categories?.length > 0 || filters.date !== 'all' || filters.payment !== 'all' || filters.search) && (
           <Button
             variant="ghost"
             size="sm"
