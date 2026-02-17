@@ -318,12 +318,14 @@ function LayoutContent({ children, currentPageName }) {
                           <>
                             <button
                               onClick={async () => {
-                                if (!confirm('Reset ALL data and free listings for ALL users? This cannot be undone.')) return;
+                                if (!confirm('Reset ALL data? This will delete all sales, favorites, attendances, reviews, and messages. This cannot be undone.')) return;
                                 try {
-                                  toast.loading('Resetting all data...');
+                                  const loadingToast = toast.loading('Resetting all data...');
                                   const response = await base44.functions.invoke('resetAllData');
+                                  toast.dismiss(loadingToast);
                                   if (response?.data?.success) {
-                                    toast.success(`Deleted ${response.data.deleted.sales} sales, ${response.data.deleted.favorites} favorites, ${response.data.deleted.attendances} attendances. Reset ${response.data.deleted.usersReset} users.`);
+                                    const d = response.data.deleted;
+                                    toast.success(`Deleted ${d.sales} sales, ${d.favorites} favorites, ${d.attendances} attendances, ${d.reviews} reviews, ${d.messages} messages.`);
                                     setTimeout(() => window.location.reload(), 2000);
                                   } else {
                                     toast.error(response?.data?.error || 'Failed to reset');
