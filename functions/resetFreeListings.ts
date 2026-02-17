@@ -20,17 +20,11 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'user_email is required' }, { status: 400 });
     }
 
-    // Get the target user
-    const targetUsers = await base44.asServiceRole.entities.User.filter({ email: user_email });
+    // Reset the current user's free listings counter
+    const currentUserData = await base44.auth.me();
+    const previousValue = currentUserData.free_listings_used || 0;
     
-    if (targetUsers.length === 0) {
-      return Response.json({ error: 'User not found' }, { status: 404 });
-    }
-
-    const targetUser = targetUsers[0];
-
-    // Reset their free listings counter
-    await base44.asServiceRole.entities.User.update(targetUser.id, {
+    await base44.auth.updateMe({
       free_listings_used: 0
     });
 
@@ -39,7 +33,7 @@ Deno.serve(async (req) => {
     return Response.json({ 
       success: true, 
       message: `Free listings counter reset for ${user_email}`,
-      previous_value: targetUser.free_listings_used || 0
+      previous_value: previousValue
     });
   } catch (error) {
     console.error('Error resetting free listings:', error);
