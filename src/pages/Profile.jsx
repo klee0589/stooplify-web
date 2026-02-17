@@ -420,11 +420,13 @@ export default function Profile() {
               <li>• {t('noPerListingFees')}</li>
               <li>• {t('prioritySupport')}</li>
             </ul>
-            <Link to={createPageUrl('AddYardSale')}>
-              <Button className="w-full bg-white text-[#FF6F61] hover:bg-white/90 rounded-xl font-semibold">
-                {t('upgradeNow')}
-              </Button>
-            </Link>
+            <Button 
+              onClick={handleUpgradeNow}
+              disabled={isCheckingOut}
+              className="w-full bg-white text-[#FF6F61] hover:bg-white/90 rounded-xl font-semibold disabled:opacity-50"
+            >
+              {isCheckingOut ? 'Redirecting...' : t('upgradeNow')}
+            </Button>
             </div>
           )}
 
