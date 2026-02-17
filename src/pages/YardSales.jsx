@@ -71,11 +71,16 @@ export default function YardSales() {
         const salesWithSellers = await Promise.all(
           allSales.map(async (sale) => {
             try {
-              // More robust date/time parsing
-              const saleEndMoment = moment(`${sale.date}T${sale.end_time || '23:59'}`);
-              const isPast = saleEndMoment.isBefore(moment());
+              // Parse date and time - handle both date and time properly
+              const dateStr = sale.date; // e.g., "2026-01-15"
+              const timeStr = sale.end_time || '23:59'; // e.g., "14:00" or "2:00 PM"
               
-              console.log(`[isPast Check] Sale: ${sale.title} | Date: ${sale.date} | End: ${sale.end_time} | Parsed: ${saleEndMoment.format()} | Now: ${moment().format()} | isPast: ${isPast}`);
+              // Combine date and time into a single moment object
+              const saleEndMoment = moment(`${dateStr} ${timeStr}`, ['YYYY-MM-DD HH:mm', 'YYYY-MM-DD h:mm A']);
+              const now = moment();
+              const isPast = saleEndMoment.isBefore(now);
+              
+              console.log(`[isPast Check] Sale: ${sale.title} | Date: ${dateStr} | End Time: ${timeStr} | Parsed: ${saleEndMoment.format('YYYY-MM-DD HH:mm')} | Now: ${now.format('YYYY-MM-DD HH:mm')} | isPast: ${isPast}`);
               
               if (sale.created_by) {
                 const sellers = await base44.entities.User.filter({ email: sale.created_by });
