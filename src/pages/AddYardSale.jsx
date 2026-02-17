@@ -62,7 +62,7 @@ export default function AddYardSale() {
   const [aiDescription, setAiDescription] = useState(null);
   const [showAiPreview, setShowAiPreview] = useState(false);
   const [editableDescription, setEditableDescription] = useState('');
-  const [addressValidation, setAddressValidation] = useState({ status: 'idle', message: '', suggestion: null });
+  const [addressValidation, setAddressValidation] = useState({ status: 'idle', message: '' });
   const [isValidatingAddress, setIsValidatingAddress] = useState(false);
   
   const navigate = useNavigate();
@@ -107,19 +107,13 @@ export default function AddYardSale() {
           
           // Check if payment is needed (not first listing and no subscription) - only for new sales
           if (!isEditMode) {
-            // Admin bypass: no payment required for admin user
-            if (currentUser.email === 'klee0589@gmail.com') {
-              setNeedsPayment(false);
-              console.log('✅ Admin bypass - no payment needed');
-            } else {
-              const hasSubscription = currentUser.subscription_active || false;
-              const hasUsedFreeListing = (currentUser.free_listings_used || 0) >= 1;
+            const hasSubscription = currentUser.subscription_active || false;
+            const hasUsedFreeListing = (currentUser.free_listings_used || 0) >= 1;
 
-              // Payment needed if: they've used free listing AND don't have subscription
-              const needsPay = hasUsedFreeListing && !hasSubscription;
-              setNeedsPayment(needsPay);
-              console.log(needsPay ? '💳 Payment required' : '✅ No payment needed (first listing free!)');
-            }
+            // Payment needed if: they've used free listing AND don't have subscription
+            const needsPay = hasUsedFreeListing && !hasSubscription;
+            setNeedsPayment(needsPay);
+            console.log(needsPay ? '💳 Payment required' : '✅ No payment needed (first listing free!)');
           }
           
           // Load existing sale data if editing
@@ -497,49 +491,28 @@ export default function AddYardSale() {
         if (!isInNY) {
           setAddressValidation({ 
             status: 'invalid', 
-            message: '⚠️ Address must be in New York City area',
-            suggestion: null
+            message: '⚠️ Address must be in New York City area' 
           });
         } else {
           setAddressValidation({ 
             status: 'valid', 
-            message: `✓ Address found: ${geoData[0].display_name}`,
-            suggestion: geoData[0]
+            message: `✓ Address found: ${geoData[0].display_name}` 
           });
         }
       } else {
         setAddressValidation({ 
           status: 'invalid', 
-          message: '⚠️ Address not found - please check spelling',
-          suggestion: null
+          message: '⚠️ Address not found - please check spelling' 
         });
       }
     } catch (error) {
       setAddressValidation({ 
         status: 'error', 
-        message: '⚠️ Could not verify address',
-        suggestion: null
+        message: '⚠️ Could not verify address' 
       });
     } finally {
       setIsValidatingAddress(false);
     }
-  };
-
-  const handleAddressSelect = (suggestion) => {
-    const addressParts = suggestion.address || {};
-    
-    // Auto-fill form fields from the selected address
-    setFormData(prev => ({
-      ...prev,
-      address: `${addressParts.house_number || ''} ${addressParts.road || ''}`.trim() || prev.address,
-      city: addressParts.city || addressParts.town || addressParts.village || prev.city,
-      state: addressParts.state || 'NY',
-      zip_code: addressParts.postcode || prev.zip_code
-    }));
-    
-    // Clear validation after selection
-    setAddressValidation({ status: 'valid', message: '✓ Address selected', suggestion: null });
-    toast.success('Address auto-filled!');
   };
 
   // Debounce address validation
@@ -559,7 +532,7 @@ export default function AddYardSale() {
   }, [formData.address, formData.zip_code]);
 
   const isStep1Valid = formData.title && formData.date && formData.categories?.length > 0;
-  const isStep2Valid = formData.general_location && formData.address && formData.city && formData.state && formData.zip_code;
+  const isStep2Valid = formData.general_location && formData.address && formData.city && formData.state && formData.zip_code && addressValidation.status === 'valid';
 
   if (isLoadingSale) {
     return (
@@ -604,7 +577,7 @@ export default function AddYardSale() {
     }
 
     return (
-    <div className="min-h-screen bg-[#F9F9F9] dark:bg-[#0a0e1a] py-8">
+    <div className="min-h-screen bg-[#F9F9F9] py-8">
       <div className="max-w-2xl mx-auto px-4">
         {/* Back Button */}
         <Link to={createPageUrl('Home')}>
@@ -664,10 +637,10 @@ export default function AddYardSale() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-8 shadow-lg border dark:border-gray-800"
+              className="bg-white rounded-3xl p-6 md:p-8 shadow-lg"
             >
               <h2 
-                className="text-xl font-bold text-[#2E3A59] dark:text-gray-100 mb-6"
+                className="text-xl font-bold text-[#2E3A59] mb-6"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
                 {t('saleDetails')}
@@ -680,7 +653,7 @@ export default function AddYardSale() {
                     placeholder={t('titlePlaceholder')}
                     value={formData.title}
                     onChange={(e) => updateField('title', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900"
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   />
                 </div>
 
@@ -714,7 +687,7 @@ export default function AddYardSale() {
                     type="date"
                     value={formData.date}
                     onChange={(e) => updateField('date', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900 dark:[color-scheme:light]"
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]"
                   />
                   <p className="text-xs text-gray-500 mt-1">Or pick a custom date above</p>
                 </div>
@@ -780,7 +753,7 @@ export default function AddYardSale() {
                     placeholder={t('descriptionPlaceholder')}
                     value={formData.description}
                     onChange={(e) => updateField('description', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] min-h-[120px] text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900"
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] min-h-[120px] text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   />
                   <p className="text-xs text-blue-600 mt-2 flex items-center gap-1">
                     💡 Tip: Leave blank and upload photos in Step 3 - our AI will generate a description for you!
@@ -884,10 +857,10 @@ export default function AddYardSale() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-8 shadow-lg border dark:border-gray-800"
+              className="bg-white rounded-3xl p-6 md:p-8 shadow-lg"
             >
               <h2 
-                className="text-xl font-bold text-[#2E3A59] dark:text-gray-100 mb-6"
+                className="text-xl font-bold text-[#2E3A59] mb-6"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
                 {t('location')}
@@ -903,7 +876,7 @@ export default function AddYardSale() {
                     placeholder={t('generalLocationPlaceholder')}
                     value={formData.general_location}
                     onChange={(e) => updateField('general_location', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900"
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   />
                   <p className="text-xs text-gray-500 mt-1">
                     {t('approximateLocationPrivacy')}
@@ -920,7 +893,7 @@ export default function AddYardSale() {
                       placeholder={t('exactAddressPlaceholder')}
                       value={formData.address}
                       onChange={(e) => updateField('address', e.target.value)}
-                      className={`rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900 ${
+                      className={`rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
                         addressValidation.status === 'valid' ? 'border-green-500 dark:border-green-500' : 
                         addressValidation.status === 'invalid' ? 'border-red-500 dark:border-red-500' : ''
                       }`}
@@ -930,31 +903,17 @@ export default function AddYardSale() {
                     )}
                   </div>
                   {addressValidation.message && (
-                    <motion.div
+                    <motion.p
                       initial={{ opacity: 0, y: -5 }}
                       animate={{ opacity: 1, y: 0 }}
+                      className={`text-xs mt-1 ${
+                        addressValidation.status === 'valid' ? 'text-green-600' :
+                        addressValidation.status === 'invalid' ? 'text-red-600' :
+                        'text-gray-500'
+                      }`}
                     >
-                      {addressValidation.suggestion ? (
-                        <button
-                          type="button"
-                          onClick={() => handleAddressSelect(addressValidation.suggestion)}
-                          className="w-full text-left text-xs mt-1 p-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors"
-                        >
-                          <span className="text-green-600 dark:text-green-400 font-medium">✓ Click to use: </span>
-                          <span className="text-gray-700 dark:text-gray-300">{addressValidation.suggestion.display_name}</span>
-                        </button>
-                      ) : (
-                        <p className={`text-xs mt-1 ${
-                          addressValidation.status === 'valid' ? 'text-green-600' :
-                          addressValidation.status === 'invalid' ? 'text-orange-600' :
-                          'text-gray-500'
-                        }`}>
-                          {addressValidation.status === 'invalid' 
-                            ? '⚠️ Could not verify address - you can still continue if the address is correct'
-                            : addressValidation.message}
-                        </p>
-                      )}
-                    </motion.div>
+                      {addressValidation.message}
+                    </motion.p>
                   )}
                   <p className="text-xs text-gray-500 mt-1">
                     {t('exactAddressUnlocksHint')}
@@ -988,7 +947,7 @@ export default function AddYardSale() {
                     placeholder={t('zipCodePlaceholder')}
                     value={formData.zip_code}
                     onChange={(e) => updateField('zip_code', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 max-w-[200px] text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900"
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 max-w-[200px] text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                   />
                 </div>
               </div>
@@ -1025,10 +984,10 @@ export default function AddYardSale() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-8 shadow-lg border dark:border-gray-800"
+              className="bg-white rounded-3xl p-6 md:p-8 shadow-lg"
             >
               <h2 
-                className="text-xl font-bold text-[#2E3A59] dark:text-gray-100 mb-2"
+                className="text-xl font-bold text-[#2E3A59] mb-2"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
                 {t('paymentRequired')}
@@ -1108,10 +1067,10 @@ export default function AddYardSale() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
-              className="bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-8 shadow-lg border dark:border-gray-800"
+              className="bg-white rounded-3xl p-6 md:p-8 shadow-lg"
             >
               <h2 
-                className="text-xl font-bold text-[#2E3A59] dark:text-gray-100 mb-2"
+                className="text-xl font-bold text-[#2E3A59] mb-2"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
                 {t('addPhotosOptional')}
@@ -1198,7 +1157,7 @@ export default function AddYardSale() {
                       value={editableDescription}
                       onChange={(e) => setEditableDescription(e.target.value)}
                       placeholder="Upload photos above and AI will generate a description..."
-                      className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 min-h-[100px] bg-white text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900"
+                      className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 min-h-[100px] bg-white text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                       disabled={!aiDescription}
                     />
                   </div>
@@ -1294,7 +1253,7 @@ export default function AddYardSale() {
               key="step4"
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-white dark:bg-gray-900 rounded-3xl p-8 shadow-lg text-center border dark:border-gray-800"
+              className="bg-white rounded-3xl p-8 shadow-lg text-center"
             >
               <motion.div
                 initial={{ scale: 0 }}
