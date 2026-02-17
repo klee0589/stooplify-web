@@ -692,13 +692,12 @@ export default function YardSaleDetails() {
                 if (!sale.date || !sale.start_time || !sale.end_time) return null;
                 
                 const now = new Date();
+                const [year, month, day] = sale.date.split('T')[0].split('-');
+                const [startHour, startMin] = sale.start_time.split(':');
+                const [endHour, endMin] = sale.end_time.split(':');
                 
-                // Get just the date part (YYYY-MM-DD)
-                const dateStr = sale.date.split('T')[0];
-                
-                // Create date objects in local timezone
-                const saleStart = new Date(`${dateStr} ${sale.start_time}`);
-                const saleEnd = new Date(`${dateStr} ${sale.end_time}`);
+                const saleStart = new Date(year, month - 1, day, startHour, startMin);
+                const saleEnd = new Date(year, month - 1, day, endHour, endMin);
                 
                 const isLive = now >= saleStart && now <= saleEnd;
                 const isUpcoming = now < saleStart;
