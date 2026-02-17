@@ -173,11 +173,11 @@ export default function AddYardSale() {
 
       // Try multiple query formats for better geocoding results
       const queries = [
-      `${data.address}, ${data.city}, ${data.state} ${data.zip_code}`,
-      `${data.address}, ${data.zip_code}`, // Try with just zip code
-      `${data.address}, Brooklyn, NY ${data.zip_code}`, // Try with Brooklyn for NYC neighborhoods
-      `${data.address}, New York, NY ${data.zip_code}` // Try with New York City
-      ];
+        `${data.address}, ${data.city}, ${data.state} ${data.zip_code}`,
+        `${data.address}, ${data.zip_code}`,
+        `${data.address}, ${data.city}, ${data.state}`,
+        `${data.address}`
+      ].filter(q => q.trim());
 
       for (let i = 0; i < queries.length; i++) {
         const query = queries[i];
@@ -532,7 +532,7 @@ export default function AddYardSale() {
   }, [formData.address, formData.zip_code]);
 
   const isStep1Valid = formData.title && formData.date && formData.categories?.length > 0;
-  const isStep2Valid = formData.general_location && formData.address && formData.city && formData.state && formData.zip_code && addressValidation.status === 'valid';
+  const isStep2Valid = formData.general_location && formData.address && addressValidation.status === 'valid';
 
   if (isLoadingSale) {
     return (
