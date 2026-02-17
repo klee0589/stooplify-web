@@ -87,6 +87,10 @@ export default function Calendar() {
     enabled: favorites.length > 0 || attendances.length > 0,
   });
 
+  // Helper functions
+  const isFavorited = (saleId) => favorites.some(f => f.yard_sale_id === saleId);
+  const isAttending = (saleId) => attendances.some(a => a.yard_sale_id === saleId);
+
   // Get sales for selected date with filter
   const salesForSelectedDate = allSales.filter(sale => {
     if (!sale.date) return false;
@@ -120,9 +124,6 @@ export default function Calendar() {
       }
     })
     .filter(date => date !== null);
-
-  const isFavorited = (saleId) => favorites.some(f => f.yard_sale_id === saleId);
-  const isAttending = (saleId) => attendances.some(a => a.yard_sale_id === saleId);
   
   // Count only upcoming attendances
   const upcomingAttendancesCount = allSales.filter(sale => isAttending(sale.id)).length;
