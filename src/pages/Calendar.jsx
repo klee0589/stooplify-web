@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Calendar as CalendarIcon, Heart, UserCheck, MapPin, Clock, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { Calendar as CalendarIcon, Heart, UserCheck, MapPin, Clock, ArrowRight } from 'lucide-react';
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { format, isSameDay, parseISO } from 'date-fns';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import SEO from '../components/SEO';
 import { useTranslation } from '../components/translations';
-import { toast } from 'sonner';
 
 export default function Calendar() {
   const [user, setUser] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [language, setLanguage] = useState('en');
   const [eventFilter, setEventFilter] = useState('all'); // 'all', 'favorites', 'attending'
-  const queryClient = useQueryClient();
   
   const t = useTranslation(language);
 
@@ -92,17 +90,6 @@ export default function Calendar() {
   // Helper functions
   const isFavorited = (saleId) => favorites.some(f => f.yard_sale_id === saleId);
   const isAttending = (saleId) => attendances.some(a => a.yard_sale_id === saleId);
-  const getAttendance = (saleId) => attendances.find(a => a.yard_sale_id === saleId);
-
-  const toggleAttendedMutation = useMutation({
-    mutationFn: async ({ attendanceId, attended }) => {
-      return await base44.entities.Attendance.update(attendanceId, { attended });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['attendances', user?.email] });
-      toast.success('Attendance updated');
-    },
-  });
 
   // Get sales for selected date with filter
   const salesForSelectedDate = allSales.filter(sale => {
@@ -152,7 +139,7 @@ export default function Calendar() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F9F9F9] dark:bg-[#0a0e1a]">
+    <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
       <SEO 
         title="My Calendar | Stooplify"
         description="View all your favorited and attending yard sales in one place"
@@ -181,7 +168,7 @@ export default function Calendar() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border dark:border-gray-700"
+            className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
           >
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-[#FF6F61]/10 rounded-lg flex items-center justify-center">
@@ -200,7 +187,7 @@ export default function Calendar() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border dark:border-gray-700"
+            className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
           >
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center">
@@ -221,7 +208,7 @@ export default function Calendar() {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border dark:border-gray-700"
+            className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
           >
             <div className="flex items-center justify-between mb-4">
               <h2 
@@ -292,7 +279,7 @@ export default function Calendar() {
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border dark:border-gray-700"
+            className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
           >
             <h2 
               className="text-xl font-bold text-[#2E3A59] dark:text-white mb-4"
@@ -342,32 +329,6 @@ export default function Calendar() {
                       </div>
                     </div>
 
-                    {/* Attended Toggle - only show if user is attending */}
-                    {isAttending(sale.id) && (() => {
-                      const attendance = getAttendance(sale.id);
-                      return (
-                        <div className="mb-3 pb-3 border-b border-gray-200 dark:border-gray-700">
-                          <button
-                            onClick={(e) => {
-                              e.preventDefault();
-                              toggleAttendedMutation.mutate({
-                                attendanceId: attendance.id,
-                                attended: !attendance.attended
-                              });
-                            }}
-                            className={`flex items-center gap-2 w-full py-2 px-3 rounded-lg text-sm font-medium transition-colors ${
-                              attendance.attended
-                                ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800'
-                                : 'bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600'
-                            }`}
-                          >
-                            <CheckCircle2 className={`w-4 h-4 ${attendance.attended ? 'fill-current' : ''}`} />
-                            <span>{attendance.attended ? 'Attended ✓' : 'Mark as attended'}</span>
-                          </button>
-                        </div>
-                      );
-                    })()}
-
                     <Link 
                       to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}
                       className="flex items-center justify-center gap-2 w-full py-2 bg-[#14B8FF] text-white rounded-xl text-sm font-medium hover:bg-[#0da3e6] transition-colors"
@@ -388,7 +349,7 @@ export default function Calendar() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="mt-8 bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border dark:border-gray-700"
+            className="mt-8 bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
           >
             <h2 
               className="text-xl font-bold text-[#2E3A59] dark:text-white mb-4"
