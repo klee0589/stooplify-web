@@ -604,7 +604,7 @@ export default function AddYardSale() {
     }
 
     return (
-    <div className="min-h-screen bg-[#F9F9F9] py-8">
+    <div className="min-h-screen bg-[#F9F9F9] dark:bg-[#0a0e1a] py-8">
       <div className="max-w-2xl mx-auto px-4">
         {/* Back Button */}
         <Link to={createPageUrl('Home')}>
