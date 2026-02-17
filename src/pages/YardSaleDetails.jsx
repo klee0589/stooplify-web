@@ -693,19 +693,29 @@ export default function YardSaleDetails() {
                 
                 const now = new Date();
                 const saleDate = sale.date.includes('T') ? sale.date.split('T')[0] : sale.date;
-                const saleStart = new Date(`${saleDate}T${sale.start_time || '08:00'}:00`);
-                const saleEnd = new Date(`${saleDate}T${sale.end_time || '23:59'}:00`);
                 
-                console.log('Status check:', { now: now.toISOString(), saleStart: saleStart.toISOString(), saleEnd: saleEnd.toISOString() });
+                // Parse times - ensure they have seconds
+                const startTime = (sale.start_time || '08:00').includes(':') ? sale.start_time : '08:00';
+                const endTime = (sale.end_time || '23:59').includes(':') ? sale.end_time : '23:59';
                 
-                if (now >= saleStart && now <= saleEnd) {
+                // Add seconds if not present
+                const startTimeFull = startTime.split(':').length === 2 ? `${startTime}:00` : startTime;
+                const endTimeFull = endTime.split(':').length === 2 ? `${endTime}:00` : endTime;
+                
+                const saleStart = new Date(`${saleDate}T${startTimeFull}`);
+                const saleEnd = new Date(`${saleDate}T${endTimeFull}`);
+                
+                const isLive = now >= saleStart && now <= saleEnd;
+                const isUpcoming = now < saleStart;
+                
+                if (isLive) {
                   return (
                     <span className="text-sm font-bold px-4 py-2 bg-green-500 text-white rounded-full animate-pulse shadow-lg flex items-center gap-2">
                       <span className="w-2 h-2 bg-white rounded-full animate-ping" />
                       LIVE NOW
                     </span>
                   );
-                } else if (now < saleStart) {
+                } else if (isUpcoming) {
                   return (
                     <span className="text-sm font-bold px-4 py-2 bg-blue-500 text-white rounded-full shadow-lg">
                       📅 UPCOMING
