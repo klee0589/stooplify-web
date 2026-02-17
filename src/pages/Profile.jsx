@@ -141,6 +141,23 @@ export default function Profile() {
     },
   });
 
+  const handleProfilePictureUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploadingPicture(true);
+    try {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      await base44.auth.updateMe({ profile_picture: file_url });
+      const updatedUser = await base44.auth.me();
+      setUser(updatedUser);
+      toast.success('Profile picture updated!');
+    } catch (error) {
+      toast.error('Failed to upload picture');
+    }
+    setIsUploadingPicture(false);
+  };
+
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const handleUpgradeNow = async () => {
