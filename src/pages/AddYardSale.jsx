@@ -4,11 +4,11 @@ import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
-import { 
-  MapPin, Calendar, Clock, Image as ImageIcon, Upload, X, 
+import {
+  MapPin, Calendar, Clock, Image as ImageIcon, Upload, X,
   Check, Loader2, ArrowLeft, Plus, Info, Camera, DollarSign, CreditCard, Smartphone,
-  Package, Sofa, Shirt, Zap, Baby, Crown, BookOpen, Dumbbell, Users
-} from 'lucide-react';
+  Package, Sofa, Shirt, Zap, Baby, Crown, BookOpen, Dumbbell, Users } from
+'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -38,19 +38,19 @@ export default function AddYardSale() {
   }, []);
 
   const t = useTranslation(language);
-  
+
   const getCategoryLabels = () => [
-    { value: 'general', label: t('general'), icon: Package },
-    { value: 'furniture', label: t('furniture'), icon: Sofa },
-    { value: 'clothing', label: t('clothing'), icon: Shirt },
-    { value: 'electronics', label: t('electronics'), icon: Zap },
-    { value: 'toys', label: t('toysKids'), icon: Baby },
-    { value: 'antiques', label: t('antiques'), icon: Crown },
-    { value: 'books', label: t('booksMedia'), icon: BookOpen },
-    { value: 'sports', label: t('sportsOutdoors'), icon: Dumbbell },
-    { value: 'multi-family', label: t('multiFamily'), icon: Users },
-  ];
-  
+  { value: 'general', label: t('general'), icon: Package },
+  { value: 'furniture', label: t('furniture'), icon: Sofa },
+  { value: 'clothing', label: t('clothing'), icon: Shirt },
+  { value: 'electronics', label: t('electronics'), icon: Zap },
+  { value: 'toys', label: t('toysKids'), icon: Baby },
+  { value: 'antiques', label: t('antiques'), icon: Crown },
+  { value: 'books', label: t('booksMedia'), icon: BookOpen },
+  { value: 'sports', label: t('sportsOutdoors'), icon: Dumbbell },
+  { value: 'multi-family', label: t('multiFamily'), icon: Users }];
+
+
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [step, setStep] = useState(1);
@@ -64,9 +64,9 @@ export default function AddYardSale() {
   const [editableDescription, setEditableDescription] = useState('');
   const [addressValidation, setAddressValidation] = useState({ status: 'idle', message: '' });
   const [isValidatingAddress, setIsValidatingAddress] = useState(false);
-  
+
   const navigate = useNavigate();
-  
+
   // Stripe price IDs (from your Stripe products)
   const SINGLE_LISTING_PRICE_ID = 'price_1Sp0DuEBgBmaTVQEKO1W2NrG'; // $4 one-time
   const SUBSCRIPTION_PRICE_ID = 'price_1Sp0DuEBgBmaTVQE0iSg1m5n'; // $9/month
@@ -86,7 +86,7 @@ export default function AddYardSale() {
     payment_cash: true,
     payment_card: false,
     payment_digital: false,
-    cash_preferred: false,
+    cash_preferred: false
   });
 
   useEffect(() => {
@@ -104,7 +104,7 @@ export default function AddYardSale() {
         if (isAuth) {
           const currentUser = await base44.auth.me();
           setUser(currentUser);
-          
+
           // Check if payment is needed (not first listing and no subscription) - only for new sales
           if (!isEditMode) {
             const hasSubscription = currentUser.subscription_active || false;
@@ -115,7 +115,7 @@ export default function AddYardSale() {
             setNeedsPayment(needsPay);
             console.log(needsPay ? '💳 Payment required' : '✅ No payment needed (first listing free!)');
           }
-          
+
           // Load existing sale data if editing
           if (isEditMode && editSaleId) {
             const sales = await base44.entities.YardSale.filter({ id: editSaleId });
@@ -137,10 +137,10 @@ export default function AddYardSale() {
                 payment_cash: sale.payment_cash ?? true,
                 payment_card: sale.payment_card ?? false,
                 payment_digital: sale.payment_digital ?? false,
-                cash_preferred: sale.cash_preferred ?? false,
+                cash_preferred: sale.cash_preferred ?? false
               });
               setPhotos(sale.photos || []);
-              
+
               // Populate AI description with existing description when editing
               if (sale.description) {
                 setAiDescription(sale.description);
@@ -155,7 +155,7 @@ export default function AddYardSale() {
       }
     };
     checkAuth();
-    
+
     // Check for payment success/cancel
     const paymentStatus = urlParams.get('payment');
     if (paymentStatus === 'success') {
@@ -170,19 +170,19 @@ export default function AddYardSale() {
     mutationFn: async (data) => {
       // Geocode the address to get coordinates
       let coordinates = {};
-      
+
       // Try multiple query formats for better geocoding results
       const queries = [
-        `${data.address}, ${data.city}, ${data.state} ${data.zip_code}`,
-        `${data.address}, ${data.zip_code}`, // Try with just zip code
-        `${data.address}, Brooklyn, NY ${data.zip_code}`, // Try with Brooklyn for NYC neighborhoods
-        `${data.address}, New York, NY ${data.zip_code}`, // Try with New York City
+      `${data.address}, ${data.city}, ${data.state} ${data.zip_code}`,
+      `${data.address}, ${data.zip_code}`, // Try with just zip code
+      `${data.address}, Brooklyn, NY ${data.zip_code}`, // Try with Brooklyn for NYC neighborhoods
+      `${data.address}, New York, NY ${data.zip_code}` // Try with New York City
       ];
-      
+
       for (let i = 0; i < queries.length; i++) {
         const query = queries[i];
         console.log(`🌍 Geocoding attempt ${i + 1}:`, query);
-        
+
         try {
           const response = await fetch(
             `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`,
@@ -209,7 +209,7 @@ export default function AddYardSale() {
 
             // Validate location is in New York
             const isInNY = exactLat >= 40.4774 && exactLat <= 40.9176 && exactLon >= -74.2591 && exactLon <= -73.7004;
-            
+
             if (!isInNY) {
               throw new Error('Address must be in New York City area');
             }
@@ -222,7 +222,7 @@ export default function AddYardSale() {
               exact_latitude: exactLat,
               exact_longitude: exactLon,
               latitude: exactLat + latOffset,
-              longitude: exactLon + lonOffset,
+              longitude: exactLon + lonOffset
             };
 
             console.log('📍 Final coordinates:', coordinates);
@@ -230,10 +230,10 @@ export default function AddYardSale() {
           } else {
             console.warn(`⚠️ No results for attempt ${i + 1}`);
           }
-          
+
           // Wait a bit between requests to respect rate limits
           if (i < queries.length - 1) {
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise((resolve) => setTimeout(resolve, 1000));
           }
         } catch (error) {
           console.error(`❌ Geocoding attempt ${i + 1} error:`, error);
@@ -242,19 +242,19 @@ export default function AddYardSale() {
           }
         }
       }
-      
+
       if (!coordinates.latitude) {
         console.error('❌ All geocoding attempts failed');
         toast.error('Could not locate address on map');
         throw new Error('Could not locate address');
       }
-      
+
       if (isEditMode) {
         // Update existing sale
         await base44.entities.YardSale.update(editSaleId, {
           ...data,
           ...coordinates,
-          photos: photos,
+          photos: photos
         });
         return { id: editSaleId };
       } else {
@@ -264,14 +264,14 @@ export default function AddYardSale() {
           ...coordinates,
           photos: photos,
           status: 'approved',
-          views: 0,
+          views: 0
         });
-        
+
         // Increment free_listings_used
         await base44.auth.updateMe({
-          free_listings_used: (user.free_listings_used || 0) + 1,
+          free_listings_used: (user.free_listings_used || 0) + 1
         });
-        
+
         return sale;
       }
     },
@@ -284,7 +284,7 @@ export default function AddYardSale() {
     },
     onError: (error) => {
       toast.error('Failed to submit. Please try again.');
-    },
+    }
   });
 
   const handlePhotoUpload = async (e) => {
@@ -316,12 +316,12 @@ export default function AddYardSale() {
       try {
         const { file_url } = await base44.integrations.Core.UploadFile({ file });
         uploadedUrls.push(file_url);
-        setPhotos(prev => [...prev, file_url]);
+        setPhotos((prev) => [...prev, file_url]);
       } catch (error) {
         toast.error(`Failed to upload ${file.name}`);
       }
     }
-    
+
     // Generate AI description if we have photos
     if (uploadedUrls.length > 0) {
       const toastId = toast.loading('Generating description from photos...');
@@ -329,7 +329,7 @@ export default function AddYardSale() {
         console.log('🤖 Calling AI with file URLs:', uploadedUrls);
         const generatedDescription = await base44.integrations.Core.InvokeLLM({
           prompt: "Based on these images of yard sale items, write a brief, appealing description (2-3 sentences) of what's being sold. Focus on the main items visible and make it sound inviting to potential buyers.",
-          file_urls: uploadedUrls,
+          file_urls: uploadedUrls
         });
         console.log('🤖 AI response:', generatedDescription);
         toast.dismiss(toastId);
@@ -343,7 +343,7 @@ export default function AddYardSale() {
         toast.error(`AI Error: ${error.message || 'Could not generate description'}`);
       }
     }
-    
+
     setIsUploading(false);
   };
 
@@ -358,18 +358,18 @@ export default function AddYardSale() {
     }
 
     setIsUploading(true);
-    
+
     try {
       const { file_url } = await base44.integrations.Core.UploadFile({ file });
-      setPhotos(prev => [...prev, file_url]);
-      
+      setPhotos((prev) => [...prev, file_url]);
+
       // Generate AI description from photo
       const toastId = toast.loading('Generating description from photo...');
       try {
         console.log('🤖 Calling AI with photo URL:', file_url);
         const generatedDescription = await base44.integrations.Core.InvokeLLM({
           prompt: "Based on this image of yard sale items, write a brief, appealing description (2-3 sentences) of what's being sold. Focus on the main items visible and make it sound inviting to potential buyers.",
-          file_urls: [file_url],
+          file_urls: [file_url]
         });
         console.log('🤖 AI response:', generatedDescription);
         toast.dismiss(toastId);
@@ -385,12 +385,12 @@ export default function AddYardSale() {
     } catch (error) {
       toast.error('Failed to upload photo');
     }
-    
+
     setIsUploading(false);
   };
 
   const removePhoto = (index) => {
-    setPhotos(prev => prev.filter((_, i) => i !== index));
+    setPhotos((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleCheckout = async (priceId, listingType) => {
@@ -412,13 +412,13 @@ export default function AddYardSale() {
       }
 
       console.log('🟠 About to call function...');
-            const response = await base44.functions.invoke('createCheckout', { priceId, listingType });
-            console.log('🟢 Function returned!');
-            console.log('Full response:', response);
-            console.log('Response keys:', Object.keys(response || {}));
-            console.log('Response.data:', response?.data);
-            console.log('Response.data.url:', response?.data?.url);
-      
+      const response = await base44.functions.invoke('createCheckout', { priceId, listingType });
+      console.log('🟢 Function returned!');
+      console.log('Full response:', response);
+      console.log('Response keys:', Object.keys(response || {}));
+      console.log('Response.data:', response?.data);
+      console.log('Response.data.url:', response?.data?.url);
+
       const checkoutUrl = response?.data?.url;
       if (checkoutUrl) {
         console.log('Redirecting to:', checkoutUrl);
@@ -452,8 +452,8 @@ export default function AddYardSale() {
   };
 
   const updateField = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    
+    setFormData((prev) => ({ ...prev, [field]: value }));
+
     // Trigger address validation when relevant fields change
     if (['address', 'city', 'state', 'zip_code'].includes(field)) {
       validateAddressDebounced();
@@ -462,53 +462,53 @@ export default function AddYardSale() {
 
   const validateAddress = async () => {
     const { address, city, state, zip_code } = formData;
-    
+
     // Skip if not enough info
     if (!address || !zip_code) {
       setAddressValidation({ status: 'idle', message: '' });
       return;
     }
-    
+
     setIsValidatingAddress(true);
     setAddressValidation({ status: 'checking', message: 'Checking address...' });
-    
+
     try {
       const query = `${address}, ${city || ''}, ${state || ''} ${zip_code}`;
       const response = await fetch(
         `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`,
         { headers: { 'User-Agent': 'Stooplify/1.0' } }
       );
-      
+
       const geoData = await response.json();
-      
+
       if (geoData.length > 0) {
         const lat = parseFloat(geoData[0].lat);
         const lon = parseFloat(geoData[0].lon);
-        
+
         // Check if within New York bounds (approximate)
         const isInNY = lat >= 40.4774 && lat <= 40.9176 && lon >= -74.2591 && lon <= -73.7004;
-        
+
         if (!isInNY) {
-          setAddressValidation({ 
-            status: 'invalid', 
-            message: '⚠️ Address must be in New York City area' 
+          setAddressValidation({
+            status: 'invalid',
+            message: '⚠️ Address must be in New York City area'
           });
         } else {
-          setAddressValidation({ 
-            status: 'valid', 
-            message: `✓ Address found: ${geoData[0].display_name}` 
+          setAddressValidation({
+            status: 'valid',
+            message: `✓ Address found: ${geoData[0].display_name}`
           });
         }
       } else {
-        setAddressValidation({ 
-          status: 'invalid', 
-          message: '⚠️ Address not found - please check spelling' 
+        setAddressValidation({
+          status: 'invalid',
+          message: '⚠️ Address not found - please check spelling'
         });
       }
     } catch (error) {
-      setAddressValidation({ 
-        status: 'error', 
-        message: '⚠️ Could not verify address' 
+      setAddressValidation({
+        status: 'error',
+        message: '⚠️ Could not verify address'
       });
     } finally {
       setIsValidatingAddress(false);
@@ -538,8 +538,8 @@ export default function AddYardSale() {
     return (
       <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900 flex items-center justify-center">
         <Loader2 className="w-8 h-8 text-[#FF6F61] animate-spin" />
-      </div>
-    );
+      </div>);
+
   }
 
   if (!isAuthenticated) {
@@ -548,15 +548,15 @@ export default function AddYardSale() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white rounded-3xl p-8 shadow-xl max-w-md w-full text-center"
-        >
+          className="bg-white rounded-3xl p-8 shadow-xl max-w-md w-full text-center">
+
           <div className="w-20 h-20 bg-[#FF6F61]/10 rounded-full flex items-center justify-center mx-auto mb-6">
             <Plus className="w-10 h-10 text-[#FF6F61]" />
           </div>
-          <h2 
+          <h2
             className="text-2xl font-bold text-[#2E3A59] mb-3"
-            style={{ fontFamily: 'Poppins, sans-serif' }}
-          >
+            style={{ fontFamily: 'Poppins, sans-serif' }}>
+
             {t('signInToListYourSale')}
           </h2>
           <p className="text-gray-600 mb-6">
@@ -567,24 +567,24 @@ export default function AddYardSale() {
             whileTap={{ scale: 0.98 }}
             onClick={() => base44.auth.redirectToLogin()}
             className="w-full py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg"
-            style={{ fontFamily: 'Poppins, sans-serif' }}
-          >
+            style={{ fontFamily: 'Poppins, sans-serif' }}>
+
             {t('signInOrCreateAccount')}
           </motion.button>
         </motion.div>
-      </div>
-    );
-    }
+      </div>);
 
-    return (
-    <div className="min-h-screen bg-[#F9F9F9] dark:bg-[#0a0e1a] py-8">
+  }
+
+  return (
+    <div className="bg-slate-700 py-8 min-h-screen dark:bg-[#0a0e1a]">
       <div className="max-w-2xl mx-auto px-4">
         {/* Back Button */}
         <Link to={createPageUrl('Home')}>
             <motion.button
-              whileHover={{ x: -5 }}
-              className="flex items-center gap-2 text-gray-600 dark:text-gray-100 hover:text-[#FF6F61] transition-colors mb-6"
-            >
+            whileHover={{ x: -5 }}
+            className="flex items-center gap-2 text-gray-600 hover:text-[#FF6F61] transition-colors mb-6">
+
               <ArrowLeft className="w-5 h-5" />
               {t('back')}
             </motion.button>
@@ -594,55 +594,55 @@ export default function AddYardSale() {
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-8"
-        >
-          <h1 
-            className="text-3xl font-bold text-[#2E3A59] dark:text-white mb-2"
-            style={{ fontFamily: 'Poppins, sans-serif' }}
-          >
+          className="text-center mb-8">
+
+          <h1
+            className="text-3xl font-bold text-[#2E3A59] mb-2"
+            style={{ fontFamily: 'Poppins, sans-serif' }}>
+
             {isEditMode ? t('editYourYardSale') : t('addYourYardSale')}
           </h1>
-          <p className="text-gray-600">{isEditMode ? t('updateYourSaleDetails') : t('listYourSaleInJustSteps')}</p>
+          <p className="text-gray-100">{isEditMode ? t('updateYourSaleDetails') : t('listYourSaleInJustSteps')}</p>
         </motion.div>
 
         {/* Progress Steps */}
-        {step < 4 && (
-          <div className="flex items-center justify-center gap-4 mb-8">
-            {[1, 2, 3].map((s) => (
-              <div key={s} className="flex items-center">
+        {step < 4 &&
+        <div className="flex items-center justify-center gap-4 mb-8">
+            {[1, 2, 3].map((s) =>
+          <div key={s} className="flex items-center">
                 <motion.div
-                  animate={{ 
-                    scale: step === s ? 1.1 : 1,
-                    backgroundColor: step >= s ? '#FF6F61' : '#e5e7eb'
-                  }}
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold"
-                  style={{ color: step >= s ? 'white' : '#9ca3af' }}
-                >
+              animate={{
+                scale: step === s ? 1.1 : 1,
+                backgroundColor: step >= s ? '#FF6F61' : '#e5e7eb'
+              }}
+              className="w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold"
+              style={{ color: step >= s ? 'white' : '#9ca3af' }}>
+
                   {step > s ? <Check className="w-4 h-4" /> : s}
                 </motion.div>
-                {s < 3 && (
-                  <div className={`w-12 h-1 mx-2 rounded-full ${step > s ? 'bg-[#FF6F61]' : 'bg-gray-200'}`} />
-                )}
+                {s < 3 &&
+            <div className={`w-12 h-1 mx-2 rounded-full ${step > s ? 'bg-[#FF6F61]' : 'bg-gray-200'}`} />
+            }
               </div>
-            ))}
+          )}
           </div>
-        )}
+        }
 
         {/* Form Steps */}
         <AnimatePresence mode="wait">
           {/* Step 1: Basic Info */}
-          {step === 1 && (
-            <motion.div
-              key="step1"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="bg-white dark:bg-white rounded-3xl p-6 md:p-8 shadow-lg"
-            >
-              <h2 
-                className="text-xl font-bold text-[#2E3A59] dark:text-gray-900 mb-6"
-                style={{ fontFamily: 'Poppins, sans-serif' }}
-              >
+          {step === 1 &&
+          <motion.div
+            key="step1"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="bg-white rounded-3xl p-6 md:p-8 shadow-lg">
+
+              <h2
+              className="text-xl font-bold text-[#2E3A59] mb-6"
+              style={{ fontFamily: 'Poppins, sans-serif' }}>
+
                 {t('saleDetails')}
               </h2>
 
@@ -650,78 +650,78 @@ export default function AddYardSale() {
                 <div>
                   <Label className="text-[#2E3A59] font-medium mb-2 block">{t('title')} *</Label>
                   <Input
-                    placeholder={t('titlePlaceholder')}
-                    value={formData.title}
-                    onChange={(e) => updateField('title', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900"
-                  />
+                  placeholder={t('titlePlaceholder')}
+                  value={formData.title}
+                  onChange={(e) => updateField('title', e.target.value)}
+                  className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+
                 </div>
 
                 <div>
-                  <Label className="text-[#2E3A59] font-medium mb-2 block dark:text-gray-900">{t('date')} *</Label>
+                  <Label className="text-[#2E3A59] font-medium mb-2 block">{t('date')} *</Label>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3">
                     {[0, 1, 2, 7, 14].map((daysFromNow) => {
-                      const date = new Date();
-                      date.setDate(date.getDate() + daysFromNow);
-                      const dateStr = date.toISOString().split('T')[0];
-                      const dayName = daysFromNow === 0 ? 'Today' : 
-                                     daysFromNow === 1 ? 'Tomorrow' : 
-                                     date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-                      return (
-                        <button
-                          key={daysFromNow}
-                          type="button"
-                          onClick={() => updateField('date', dateStr)}
-                          className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                            formData.date === dateStr
-                              ? 'bg-[#FF6F61] text-white'
-                              : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                          }`}
-                        >
+                    const date = new Date();
+                    date.setDate(date.getDate() + daysFromNow);
+                    const dateStr = date.toISOString().split('T')[0];
+                    const dayName = daysFromNow === 0 ? 'Today' :
+                    daysFromNow === 1 ? 'Tomorrow' :
+                    date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+                    return (
+                      <button
+                        key={daysFromNow}
+                        type="button"
+                        onClick={() => updateField('date', dateStr)}
+                        className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                        formData.date === dateStr ?
+                        'bg-[#FF6F61] text-white' :
+                        'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'}`
+                        }>
+
                           {dayName}
-                        </button>
-                      );
-                    })}
+                        </button>);
+
+                  })}
                   </div>
                   <Input
-                    type="date"
-                    value={formData.date}
-                    onChange={(e) => updateField('date', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900 dark:[color-scheme:light]"
-                  />
-                  <p className="text-xs text-gray-500 dark:text-gray-900 mt-1">Or pick a custom date above</p>
+                  type="date"
+                  value={formData.date}
+                  onChange={(e) => updateField('date', e.target.value)}
+                  className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]" />
+
+                  <p className="text-xs text-gray-500 mt-1">Or pick a custom date above</p>
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="col-span-2">
-                    <Label className="text-[#2E3A59] font-medium mb-2 block dark:text-gray-900">Categories * (Select all that apply)</Label>
+                    <Label className="text-[#2E3A59] font-medium mb-2 block">Categories * (Select all that apply)</Label>
                     <div className="grid grid-cols-3 gap-3">
                       {getCategoryLabels().map((cat) => {
-                        const Icon = cat.icon;
-                        return (
-                          <div 
-                            key={cat.value}
-                            onClick={() => {
-                              const current = formData.categories || [];
-                              const newCategories = current.includes(cat.value)
-                                ? current.filter(c => c !== cat.value)
-                                : [...current, cat.value];
-                              updateField('categories', newCategories.length > 0 ? newCategories : ['general']);
-                            }}
-                            className={`flex items-center justify-center gap-2 px-3 py-3 rounded-xl border-2 cursor-pointer transition-all ${
-                              (formData.categories || []).includes(cat.value)
-                                ? 'bg-[#FF6F61] border-[#FF6F61] text-white'
-                                : 'bg-white border-gray-200 text-gray-700 hover:border-[#FF6F61]'
-                            }`}
-                          >
+                      const Icon = cat.icon;
+                      return (
+                        <div
+                          key={cat.value}
+                          onClick={() => {
+                            const current = formData.categories || [];
+                            const newCategories = current.includes(cat.value) ?
+                            current.filter((c) => c !== cat.value) :
+                            [...current, cat.value];
+                            updateField('categories', newCategories.length > 0 ? newCategories : ['general']);
+                          }}
+                          className={`flex items-center justify-center gap-2 px-3 py-3 rounded-xl border-2 cursor-pointer transition-all ${
+                          (formData.categories || []).includes(cat.value) ?
+                          'bg-[#FF6F61] border-[#FF6F61] text-white' :
+                          'bg-white border-gray-200 text-gray-700 hover:border-[#FF6F61]'}`
+                          }>
+
                             <Icon className="w-4 h-4" />
                             <span className="text-sm font-medium">{cat.label}</span>
-                            {(formData.categories || []).includes(cat.value) && (
-                              <Check className="w-4 h-4" />
-                            )}
-                          </div>
-                        );
-                      })}
+                            {(formData.categories || []).includes(cat.value) &&
+                          <Check className="w-4 h-4" />
+                          }
+                          </div>);
+
+                    })}
                     </div>
                   </div>
                 </div>
@@ -730,31 +730,31 @@ export default function AddYardSale() {
                   <div>
                     <Label className="text-[#2E3A59] font-medium mb-2 block">{t('startTime')}</Label>
                     <Input
-                      type="time"
-                      value={formData.start_time}
-                      onChange={(e) => updateField('start_time', e.target.value)}
-                      className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]"
-                    />
+                    type="time"
+                    value={formData.start_time}
+                    onChange={(e) => updateField('start_time', e.target.value)}
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]" />
+
                   </div>
                   <div>
                     <Label className="text-[#2E3A59] font-medium mb-2 block">{t('endTime')}</Label>
                     <Input
-                      type="time"
-                      value={formData.end_time}
-                      onChange={(e) => updateField('end_time', e.target.value)}
-                      className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]"
-                    />
+                    type="time"
+                    value={formData.end_time}
+                    onChange={(e) => updateField('end_time', e.target.value)}
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]" />
+
                   </div>
                 </div>
 
                 <div>
-                  <Label className="text-[#2E3A59] font-medium mb-2 block dark:text-gray-900">{t('description')}</Label>
+                  <Label className="text-[#2E3A59] font-medium mb-2 block">{t('description')}</Label>
                   <Textarea
-                    placeholder={t('descriptionPlaceholder')}
-                    value={formData.description}
-                    onChange={(e) => updateField('description', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] min-h-[120px] text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900"
-                  />
+                  placeholder={t('descriptionPlaceholder')}
+                  value={formData.description}
+                  onChange={(e) => updateField('description', e.target.value)}
+                  className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] min-h-[120px] text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+
                   <p className="text-xs text-blue-600 mt-2 flex items-center gap-1">
                     💡 Tip: Leave blank and upload photos in Step 3 - our AI will generate a description for you!
                   </p>
@@ -762,159 +762,159 @@ export default function AddYardSale() {
 
                 {/* Payment Methods */}
                 <div>
-                  <Label className="text-[#2E3A59] font-medium mb-3 block dark:text-gray-900">Payment Methods Accepted</Label>
+                  <Label className="text-[#2E3A59] font-medium mb-3 block">Payment Methods Accepted</Label>
                   <div className="space-y-3">
                     <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
                       <div className="flex items-center justify-center w-5 h-5 rounded border-2 transition-all" style={{
-                        borderColor: formData.payment_cash ? '#10b981' : '#d1d5db',
-                        backgroundColor: formData.payment_cash ? '#10b981' : 'transparent'
-                      }}>
+                      borderColor: formData.payment_cash ? '#10b981' : '#d1d5db',
+                      backgroundColor: formData.payment_cash ? '#10b981' : 'transparent'
+                    }}>
                         {formData.payment_cash && <Check className="w-3 h-3 text-white" />}
                       </div>
-                      <Label 
-                        htmlFor="payment_cash" 
-                        className="flex items-center gap-2 cursor-pointer flex-1"
-                        onClick={() => updateField('payment_cash', !formData.payment_cash)}
-                      >
+                      <Label
+                      htmlFor="payment_cash"
+                      className="flex items-center gap-2 cursor-pointer flex-1"
+                      onClick={() => updateField('payment_cash', !formData.payment_cash)}>
+
                         <DollarSign className="w-4 h-4 text-green-600" />
                         <span>Cash</span>
                       </Label>
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
                       <div className="flex items-center justify-center w-5 h-5 rounded border-2 transition-all" style={{
-                        borderColor: formData.payment_card ? '#3b82f6' : '#d1d5db',
-                        backgroundColor: formData.payment_card ? '#3b82f6' : 'transparent'
-                      }}>
+                      borderColor: formData.payment_card ? '#3b82f6' : '#d1d5db',
+                      backgroundColor: formData.payment_card ? '#3b82f6' : 'transparent'
+                    }}>
                         {formData.payment_card && <Check className="w-3 h-3 text-white" />}
                       </div>
-                      <Label 
-                        htmlFor="payment_card" 
-                        className="flex items-center gap-2 cursor-pointer flex-1"
-                        onClick={() => updateField('payment_card', !formData.payment_card)}
-                      >
+                      <Label
+                      htmlFor="payment_card"
+                      className="flex items-center gap-2 cursor-pointer flex-1"
+                      onClick={() => updateField('payment_card', !formData.payment_card)}>
+
                         <CreditCard className="w-4 h-4 text-blue-600" />
                         <span>Credit/Debit Cards</span>
                       </Label>
                     </div>
                     <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
                       <div className="flex items-center justify-center w-5 h-5 rounded border-2 transition-all" style={{
-                        borderColor: formData.payment_digital ? '#a855f7' : '#d1d5db',
-                        backgroundColor: formData.payment_digital ? '#a855f7' : 'transparent'
-                      }}>
+                      borderColor: formData.payment_digital ? '#a855f7' : '#d1d5db',
+                      backgroundColor: formData.payment_digital ? '#a855f7' : 'transparent'
+                    }}>
                         {formData.payment_digital && <Check className="w-3 h-3 text-white" />}
                       </div>
-                      <Label 
-                        htmlFor="payment_digital" 
-                        className="flex items-center gap-2 cursor-pointer flex-1"
-                        onClick={() => updateField('payment_digital', !formData.payment_digital)}
-                      >
+                      <Label
+                      htmlFor="payment_digital"
+                      className="flex items-center gap-2 cursor-pointer flex-1"
+                      onClick={() => updateField('payment_digital', !formData.payment_digital)}>
+
                         <Smartphone className="w-4 h-4 text-purple-600" />
                         <span>Digital (Venmo, PayPal, etc.)</span>
                       </Label>
                     </div>
-                    {formData.payment_cash && (formData.payment_card || formData.payment_digital) && (
-                      <div className="flex items-center gap-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl">
+                    {formData.payment_cash && (formData.payment_card || formData.payment_digital) &&
+                  <div className="flex items-center gap-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl">
                         <div className="flex items-center justify-center w-5 h-5 rounded border-2 transition-all" style={{
-                          borderColor: formData.cash_preferred ? '#f59e0b' : '#d1d5db',
-                          backgroundColor: formData.cash_preferred ? '#f59e0b' : 'transparent'
-                        }}>
+                      borderColor: formData.cash_preferred ? '#f59e0b' : '#d1d5db',
+                      backgroundColor: formData.cash_preferred ? '#f59e0b' : 'transparent'
+                    }}>
                           {formData.cash_preferred && <Check className="w-3 h-3 text-white" />}
                         </div>
-                        <Label 
-                          htmlFor="cash_preferred" 
-                          className="cursor-pointer flex-1 text-sm"
-                          onClick={() => updateField('cash_preferred', !formData.cash_preferred)}
-                        >
+                        <Label
+                      htmlFor="cash_preferred"
+                      className="cursor-pointer flex-1 text-sm"
+                      onClick={() => updateField('cash_preferred', !formData.cash_preferred)}>
+
                           <span className="font-medium">Cash Preferred</span>
                           <span className="text-gray-600 dark:text-gray-400 block">Other methods accepted but cash is easier</span>
                         </Label>
                       </div>
-                    )}
+                  }
                   </div>
                 </div>
               </div>
 
               <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                disabled={!isStep1Valid}
-                onClick={() => {
-                  setStep(2);
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                className="w-full mt-6 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                style={{ fontFamily: 'Poppins, sans-serif' }}
-              >
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              disabled={!isStep1Valid}
+              onClick={() => {
+                setStep(2);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="w-full mt-6 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ fontFamily: 'Poppins, sans-serif' }}>
+
                 {t('continue')}
               </motion.button>
             </motion.div>
-          )}
+          }
 
           {/* Step 2: Location */}
-          {step === 2 && (
-            <motion.div
-              key="step2"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="bg-white dark:bg-white rounded-3xl p-6 md:p-8 shadow-lg"
-            >
-              <h2 
-                className="text-xl font-bold text-[#2E3A59] dark:text-gray-900 mb-6"
-                style={{ fontFamily: 'Poppins, sans-serif' }}
-              >
+          {step === 2 &&
+          <motion.div
+            key="step2"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="bg-white rounded-3xl p-6 md:p-8 shadow-lg">
+
+              <h2
+              className="text-xl font-bold text-[#2E3A59] mb-6"
+              style={{ fontFamily: 'Poppins, sans-serif' }}>
+
                 {t('location')}
               </h2>
 
               <div className="space-y-5">
                 <div>
-                  <Label className="text-[#2E3A59] font-medium mb-2 flex items-center gap-2 dark:text-gray-900">
+                  <Label className="text-[#2E3A59] font-medium mb-2 flex items-center gap-2">
                     {t('generalLocationPublic')} *
-                    <span className="text-xs text-gray-500 dark:text-gray-600 font-normal">{t('generalLocationHint')}</span>
+                    <span className="text-xs text-gray-500 font-normal">{t('generalLocationHint')}</span>
                   </Label>
                   <Input
-                    placeholder={t('generalLocationPlaceholder')}
-                    value={formData.general_location}
-                    onChange={(e) => updateField('general_location', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900"
-                  />
-                  <p className="text-xs text-gray-500 dark:text-gray-900 mt-1">
+                  placeholder={t('generalLocationPlaceholder')}
+                  value={formData.general_location}
+                  onChange={(e) => updateField('general_location', e.target.value)}
+                  className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+
+                  <p className="text-xs text-gray-500 mt-1">
                     {t('approximateLocationPrivacy')}
                   </p>
                 </div>
 
                 <div>
-                  <Label className="text-[#2E3A59] font-medium mb-2 flex items-center gap-2 dark:text-gray-900">
+                  <Label className="text-[#2E3A59] font-medium mb-2 flex items-center gap-2">
                     {t('exactStreetAddressPrivate')} *
-                    <span className="text-xs text-green-600 dark:text-green-700 font-normal">🔒 {t('protected')}</span>
+                    <span className="text-xs text-green-600 font-normal">🔒 {t('protected')}</span>
                   </Label>
                   <div className="relative">
                     <Input
-                      placeholder={t('exactAddressPlaceholder')}
-                      value={formData.address}
-                      onChange={(e) => updateField('address', e.target.value)}
-                      className={`rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900 ${
-                        addressValidation.status === 'valid' ? 'border-green-500 dark:border-green-500' : 
-                        addressValidation.status === 'invalid' ? 'border-red-500 dark:border-red-500' : ''
-                      }`}
-                    />
-                    {isValidatingAddress && (
-                      <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 animate-spin" />
-                    )}
+                    placeholder={t('exactAddressPlaceholder')}
+                    value={formData.address}
+                    onChange={(e) => updateField('address', e.target.value)}
+                    className={`rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
+                    addressValidation.status === 'valid' ? 'border-green-500 dark:border-green-500' :
+                    addressValidation.status === 'invalid' ? 'border-red-500 dark:border-red-500' : ''}`
+                    } />
+
+                    {isValidatingAddress &&
+                  <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 animate-spin" />
+                  }
                   </div>
-                  {addressValidation.message && (
-                    <motion.p
-                      initial={{ opacity: 0, y: -5 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className={`text-xs mt-1 ${
-                        addressValidation.status === 'valid' ? 'text-green-600' :
-                        addressValidation.status === 'invalid' ? 'text-red-600' :
-                        'text-gray-500'
-                      }`}
-                    >
+                  {addressValidation.message &&
+                <motion.p
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`text-xs mt-1 ${
+                  addressValidation.status === 'valid' ? 'text-green-600' :
+                  addressValidation.status === 'invalid' ? 'text-red-600' :
+                  'text-gray-500'}`
+                  }>
+
                       {addressValidation.message}
                     </motion.p>
-                  )}
+                }
                   <p className="text-xs text-gray-500 mt-1">
                     {t('exactAddressUnlocksHint')}
                   </p>
@@ -924,72 +924,72 @@ export default function AddYardSale() {
                   <div>
                     <Label className="text-[#2E3A59] font-medium mb-2 block">{t('city')} *</Label>
                     <Input
-                      placeholder={t('cityPlaceholder')}
-                      value={formData.city}
-                      onChange={(e) => updateField('city', e.target.value)}
-                      className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    />
+                    placeholder={t('cityPlaceholder')}
+                    value={formData.city}
+                    onChange={(e) => updateField('city', e.target.value)}
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+
                   </div>
                   <div>
                     <Label className="text-[#2E3A59] font-medium mb-2 block">{t('state')} *</Label>
                     <Input
-                      placeholder={t('statePlaceholder')}
-                      value={formData.state}
-                      onChange={(e) => updateField('state', e.target.value)}
-                      className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    />
+                    placeholder={t('statePlaceholder')}
+                    value={formData.state}
+                    onChange={(e) => updateField('state', e.target.value)}
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+
                   </div>
                 </div>
 
                 <div>
                   <Label className="text-[#2E3A59] font-medium mb-2 block">{t('zipCode')} *</Label>
                   <Input
-                    placeholder={t('zipCodePlaceholder')}
-                    value={formData.zip_code}
-                    onChange={(e) => updateField('zip_code', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 max-w-[200px] text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                  />
+                  placeholder={t('zipCodePlaceholder')}
+                  value={formData.zip_code}
+                  onChange={(e) => updateField('zip_code', e.target.value)}
+                  className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 max-w-[200px] text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+
                 </div>
               </div>
 
               <div className="flex gap-4 mt-6">
                 <Button
-                  variant="outline"
-                  onClick={() => setStep(1)}
-                  className="flex-1 py-6 rounded-xl"
-                >
+                variant="outline"
+                onClick={() => setStep(1)}
+                className="flex-1 py-6 rounded-xl">
+
                   {t('back')}
                 </Button>
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  disabled={!isStep2Valid}
-                  onClick={() => {
-                    setStep(3);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className="flex-1 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
-                  style={{ fontFamily: 'Poppins, sans-serif' }}
-                >
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                disabled={!isStep2Valid}
+                onClick={() => {
+                  setStep(3);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="flex-1 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                style={{ fontFamily: 'Poppins, sans-serif' }}>
+
                   {t('continue')}
                 </motion.button>
               </div>
             </motion.div>
-          )}
+          }
 
           {/* Step 3: Photos or Payment */}
-          {step === 3 && needsPayment && (
-            <motion.div
-              key="step3-payment"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="bg-white dark:bg-white rounded-3xl p-6 md:p-8 shadow-lg"
-            >
-              <h2 
-                className="text-xl font-bold text-[#2E3A59] dark:text-gray-900 mb-2"
-                style={{ fontFamily: 'Poppins, sans-serif' }}
-              >
+          {step === 3 && needsPayment &&
+          <motion.div
+            key="step3-payment"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="bg-white rounded-3xl p-6 md:p-8 shadow-lg">
+
+              <h2
+              className="text-xl font-bold text-[#2E3A59] mb-2"
+              style={{ fontFamily: 'Poppins, sans-serif' }}>
+
                 {t('paymentRequired')}
               </h2>
               <p className="text-gray-600 mb-6 text-sm">
@@ -999,13 +999,13 @@ export default function AddYardSale() {
               <div className="space-y-4 mb-6">
                 {/* Single Listing */}
                 <motion.button
-                  whileHover={{ scale: isCheckingPayment ? 1 : 1.02 }}
-                  className={`w-full border-2 border-gray-200 rounded-2xl p-6 text-left hover:border-[#FF6F61] transition-all ${
-                    isCheckingPayment ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-                  }`}
-                  onClick={() => !isCheckingPayment && handleCheckout(SINGLE_LISTING_PRICE_ID, 'single')}
-                  disabled={isCheckingPayment}
-                >
+                whileHover={{ scale: isCheckingPayment ? 1 : 1.02 }}
+                className={`w-full border-2 border-gray-200 rounded-2xl p-6 text-left hover:border-[#FF6F61] transition-all ${
+                isCheckingPayment ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`
+                }
+                onClick={() => !isCheckingPayment && handleCheckout(SINGLE_LISTING_PRICE_ID, 'single')}
+                disabled={isCheckingPayment}>
+
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="text-lg font-bold text-[#2E3A59]" style={{ fontFamily: 'Poppins, sans-serif' }}>
                       {t('singleListing')}
@@ -1017,13 +1017,13 @@ export default function AddYardSale() {
 
                 {/* Unlimited Subscription */}
                 <motion.button
-                  whileHover={{ scale: isCheckingPayment ? 1 : 1.02 }}
-                  className={`w-full border-2 border-gray-200 bg-[#FF6F61]/5 rounded-2xl p-6 text-left hover:border-[#FF6F61] transition-all relative overflow-hidden ${
-                    isCheckingPayment ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
-                  }`}
-                  onClick={() => !isCheckingPayment && handleCheckout(SUBSCRIPTION_PRICE_ID, 'subscription')}
-                  disabled={isCheckingPayment}
-                >
+                whileHover={{ scale: isCheckingPayment ? 1 : 1.02 }}
+                className={`w-full border-2 border-gray-200 bg-[#FF6F61]/5 rounded-2xl p-6 text-left hover:border-[#FF6F61] transition-all relative overflow-hidden ${
+                isCheckingPayment ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`
+                }
+                onClick={() => !isCheckingPayment && handleCheckout(SUBSCRIPTION_PRICE_ID, 'subscription')}
+                disabled={isCheckingPayment}>
+
                   <div className="absolute top-2 right-2 bg-[#F5A623] text-white text-xs font-bold px-3 py-1 rounded-full">
                     {t('bestValue')}
                   </div>
@@ -1040,39 +1040,39 @@ export default function AddYardSale() {
                 </motion.button>
               </div>
 
-              {isCheckingPayment && (
-                <div className="flex items-center justify-center gap-2 text-[#FF6F61] mb-4">
+              {isCheckingPayment &&
+            <div className="flex items-center justify-center gap-2 text-[#FF6F61] mb-4">
                   <Loader2 className="w-5 h-5 animate-spin" />
                   <span className="font-medium">{t('redirectingToCheckout')}</span>
                 </div>
-              )}
+            }
 
               <div className="flex gap-4">
                 <Button
-                  variant="outline"
-                  onClick={() => setStep(2)}
-                  className="flex-1 py-6 rounded-xl"
-                  disabled={isCheckingPayment}
-                >
+                variant="outline"
+                onClick={() => setStep(2)}
+                className="flex-1 py-6 rounded-xl"
+                disabled={isCheckingPayment}>
+
                   {t('back')}
                 </Button>
               </div>
             </motion.div>
-          )}
+          }
 
           {/* Step 3: Photos */}
-          {step === 3 && !needsPayment && (
-            <motion.div
-              key="step3"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="bg-white dark:bg-white rounded-3xl p-6 md:p-8 shadow-lg"
-            >
-              <h2 
-                className="text-xl font-bold text-[#2E3A59] dark:text-gray-900 mb-2"
-                style={{ fontFamily: 'Poppins, sans-serif' }}
-              >
+          {step === 3 && !needsPayment &&
+          <motion.div
+            key="step3"
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="bg-white rounded-3xl p-6 md:p-8 shadow-lg">
+
+              <h2
+              className="text-xl font-bold text-[#2E3A59] mb-2"
+              style={{ fontFamily: 'Poppins, sans-serif' }}>
+
                 {t('addPhotosOptional')}
               </h2>
               <p className="text-gray-600 mb-6 text-sm">
@@ -1082,133 +1082,133 @@ export default function AddYardSale() {
               {/* Photo Upload Area */}
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-sm text-gray-600 dark:text-gray-900">
+                  <p className="text-sm text-gray-600">
                     {photos.length} / {user?.subscription_active ? '10' : '3'} {t('photos')}
                   </p>
-                  {!user?.subscription_active && photos.length >= 3 && (
-                    <p className="text-xs text-[#FF6F61]">
+                  {!user?.subscription_active && photos.length >= 3 &&
+                <p className="text-xs text-[#FF6F61]">
                       {t('upgradeForMorePhotos')}
                     </p>
-                  )}
+                }
                 </div>
                 <div className="grid grid-cols-2 gap-3 mb-4">
                   <label className="block">
                     <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center cursor-pointer hover:border-[#FF6F61] transition-colors">
-                      {isUploading ? (
-                        <Loader2 className="w-8 h-8 text-[#FF6F61] mx-auto animate-spin" />
-                      ) : (
-                        <>
+                      {isUploading ?
+                    <Loader2 className="w-8 h-8 text-[#FF6F61] mx-auto animate-spin" /> :
+
+                    <>
                           <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                           <p className="text-gray-600 font-medium text-sm">{t('uploadPhotos')}</p>
                           <p className="text-gray-400 text-xs mt-1">{t('fromGallery')}</p>
                         </>
-                      )}
+                    }
                     </div>
                     <input
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={handlePhotoUpload}
-                      className="hidden"
-                      disabled={isUploading}
-                    />
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handlePhotoUpload}
+                    className="hidden"
+                    disabled={isUploading} />
+
                   </label>
 
                   <label className="block">
                     <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center cursor-pointer hover:border-[#14B8FF] transition-colors">
-                      {isUploading ? (
-                        <Loader2 className="w-8 h-8 text-[#14B8FF] mx-auto animate-spin" />
-                      ) : (
-                        <>
+                      {isUploading ?
+                    <Loader2 className="w-8 h-8 text-[#14B8FF] mx-auto animate-spin" /> :
+
+                    <>
                           <Camera className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                           <p className="text-gray-600 font-medium text-sm">{t('takePhoto')}</p>
                           <p className="text-gray-400 text-xs mt-1">{t('useCamera')}</p>
                         </>
-                      )}
+                    }
                     </div>
                     <input
-                      type="file"
-                      accept="image/*"
-                      capture="environment"
-                      onChange={handleCameraCapture}
-                      className="hidden"
-                      disabled={isUploading}
-                    />
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    onChange={handleCameraCapture}
+                    className="hidden"
+                    disabled={isUploading} />
+
                   </label>
                 </div>
-                <p className="text-xs text-gray-500 dark:text-gray-900 text-center">
+                <p className="text-xs text-gray-500 text-center">
                   📸 {t('aiWillGenerateDescription')}
                 </p>
               </div>
 
               {/* AI Description Preview - Always Visible */}
               <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 mb-6"
-              >
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 mb-6">
+
                 <div className="flex items-start gap-3 mb-3">
                   <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
                     <Check className="w-5 h-5 text-white" />
                   </div>
                   <div className="flex-1">
-                    <h4 className="font-semibold text-[#2E3A59] dark:text-gray-900 mb-2">{t('aiGeneratedDescription')}</h4>
+                    <h4 className="font-semibold text-[#2E3A59] mb-2">{t('aiGeneratedDescription')}</h4>
                     <Textarea
-                      value={editableDescription}
-                      onChange={(e) => setEditableDescription(e.target.value)}
-                      placeholder="Upload photos above and AI will generate a description..."
-                      className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 min-h-[100px] bg-white text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900"
-                      disabled={!aiDescription}
-                    />
+                    value={editableDescription}
+                    onChange={(e) => setEditableDescription(e.target.value)}
+                    placeholder="Upload photos above and AI will generate a description..."
+                    className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 min-h-[100px] bg-white text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    disabled={!aiDescription} />
+
                   </div>
                 </div>
-                {aiDescription && (
-                  <div className="flex gap-2">
+                {aiDescription &&
+              <div className="flex gap-2">
                     <Button
-                      onClick={() => {
-                        updateField('description', editableDescription);
-                        toast.success('Description added!');
-                      }}
-                      className="flex-1 bg-blue-500 hover:bg-blue-600"
-                    >
+                  onClick={() => {
+                    updateField('description', editableDescription);
+                    toast.success('Description added!');
+                  }}
+                  className="flex-1 bg-blue-500 hover:bg-blue-600">
+
                       {t('useThisDescription')}
                     </Button>
                     <Button
-                      variant="outline"
-                      onClick={() => {
-                        setEditableDescription('');
-                        setAiDescription(null);
-                        toast('Description cleared');
-                      }}
-                      className="flex-1"
-                    >
+                  variant="outline"
+                  onClick={() => {
+                    setEditableDescription('');
+                    setAiDescription(null);
+                    toast('Description cleared');
+                  }}
+                  className="flex-1">
+
                       Clear
                     </Button>
                   </div>
-                )}
+              }
               </motion.div>
 
               {/* Uploaded Photos */}
-              {photos.length > 0 && (
-                <div className="grid grid-cols-3 gap-3 mb-6">
-                  {photos.map((photo, index) => (
-                    <motion.div
-                      key={index}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      className="relative aspect-square rounded-xl overflow-hidden"
-                    >
+              {photos.length > 0 &&
+            <div className="grid grid-cols-3 gap-3 mb-6">
+                  {photos.map((photo, index) =>
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="relative aspect-square rounded-xl overflow-hidden">
+
                       <img src={photo} alt="" className="w-full h-full object-cover" />
                       <button
-                        onClick={() => removePhoto(index)}
-                        className="absolute top-2 right-2 w-6 h-6 bg-white/90 rounded-full flex items-center justify-center shadow-md hover:bg-white"
-                      >
+                  onClick={() => removePhoto(index)}
+                  className="absolute top-2 right-2 w-6 h-6 bg-white/90 rounded-full flex items-center justify-center shadow-md hover:bg-white">
+
                         <X className="w-4 h-4 text-gray-600" />
                       </button>
                     </motion.div>
-                  ))}
-                </div>
               )}
+                </div>
+            }
 
               {/* Notice */}
               <div className="bg-green-50 rounded-xl p-4 mb-6 flex items-start gap-3">
@@ -1220,65 +1220,65 @@ export default function AddYardSale() {
 
               <div className="flex gap-4">
                 <Button
-                  variant="outline"
-                  onClick={() => setStep(2)}
-                  className="flex-1 py-6 rounded-xl"
-                >
+                variant="outline"
+                onClick={() => setStep(2)}
+                className="flex-1 py-6 rounded-xl">
+
                   {t('back')}
                 </Button>
                 <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  disabled={createMutation.isPending}
-                  onClick={handleSubmit}
-                  className="flex-1 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 flex items-center justify-center gap-2"
-                  style={{ fontFamily: 'Poppins, sans-serif' }}
-                >
-                  {createMutation.isPending ? (
-                    <>
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                disabled={createMutation.isPending}
+                onClick={handleSubmit}
+                className="flex-1 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 flex items-center justify-center gap-2"
+                style={{ fontFamily: 'Poppins, sans-serif' }}>
+
+                  {createMutation.isPending ?
+                <>
                       <Loader2 className="w-5 h-5 animate-spin" />
                       {t('submitting')}...
-                    </>
-                  ) : (
-                    t('submitListing')
-                  )}
+                    </> :
+
+                t('submitListing')
+                }
                 </motion.button>
               </div>
             </motion.div>
-          )}
+          }
 
           {/* Step 4: Success - This is just a brief loading state before redirect */}
-          {step === 4 && (
-            <motion.div
-              key="step4"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="bg-white dark:bg-white rounded-3xl p-8 shadow-lg text-center"
-            >
+          {step === 4 &&
+          <motion.div
+            key="step4"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-3xl p-8 shadow-lg text-center">
+
               <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", delay: 0.2 }}
-                className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6"
-              >
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: "spring", delay: 0.2 }}
+              className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+
                 <Check className="w-10 h-10 text-green-500" />
               </motion.div>
 
-              <h2 
-                className="text-2xl font-bold text-[#2E3A59] dark:text-gray-900 mb-3"
-                style={{ fontFamily: 'Poppins, sans-serif' }}
-              >
+              <h2
+              className="text-2xl font-bold text-[#2E3A59] mb-3"
+              style={{ fontFamily: 'Poppins, sans-serif' }}>
+
                 {isEditMode ? t('saleUpdated') : t('saleIsLive')}
               </h2>
-              <p className="text-gray-600 dark:text-gray-900 mb-6">
+              <p className="text-gray-600 mb-6">
                 {t('redirectingToSalePage')}
               </p>
               
               <Loader2 className="w-8 h-8 text-[#FF6F61] animate-spin mx-auto" />
             </motion.div>
-          )}
+          }
         </AnimatePresence>
       </div>
-    </div>
-  );
+    </div>);
+
 }
