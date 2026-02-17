@@ -680,7 +680,7 @@ export default function AddYardSale() {
                     placeholder={t('titlePlaceholder')}
                     value={formData.title}
                     onChange={(e) => updateField('title', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900"
                   />
                 </div>
 
@@ -714,7 +714,7 @@ export default function AddYardSale() {
                     type="date"
                     value={formData.date}
                     onChange={(e) => updateField('date', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]"
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900 dark:[color-scheme:light]"
                   />
                   <p className="text-xs text-gray-500 mt-1">Or pick a custom date above</p>
                 </div>
@@ -780,7 +780,7 @@ export default function AddYardSale() {
                     placeholder={t('descriptionPlaceholder')}
                     value={formData.description}
                     onChange={(e) => updateField('description', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] min-h-[120px] text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] min-h-[120px] text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900"
                   />
                   <p className="text-xs text-blue-600 mt-2 flex items-center gap-1">
                     💡 Tip: Leave blank and upload photos in Step 3 - our AI will generate a description for you!
@@ -903,7 +903,7 @@ export default function AddYardSale() {
                     placeholder={t('generalLocationPlaceholder')}
                     value={formData.general_location}
                     onChange={(e) => updateField('general_location', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900"
                   />
                   <p className="text-xs text-gray-500 mt-1">
                     {t('approximateLocationPrivacy')}
@@ -920,7 +920,7 @@ export default function AddYardSale() {
                       placeholder={t('exactAddressPlaceholder')}
                       value={formData.address}
                       onChange={(e) => updateField('address', e.target.value)}
-                      className={`rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
+                      className={`rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900 ${
                         addressValidation.status === 'valid' ? 'border-green-500 dark:border-green-500' : 
                         addressValidation.status === 'invalid' ? 'border-red-500 dark:border-red-500' : ''
                       }`}
@@ -988,7 +988,7 @@ export default function AddYardSale() {
                     placeholder={t('zipCodePlaceholder')}
                     value={formData.zip_code}
                     onChange={(e) => updateField('zip_code', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 max-w-[200px] text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 max-w-[200px] text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900"
                   />
                 </div>
               </div>
@@ -1198,7 +1198,7 @@ export default function AddYardSale() {
                       value={editableDescription}
                       onChange={(e) => setEditableDescription(e.target.value)}
                       placeholder="Upload photos above and AI will generate a description..."
-                      className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 min-h-[100px] bg-white text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 min-h-[100px] bg-white text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900"
                       disabled={!aiDescription}
                     />
                   </div>
