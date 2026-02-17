@@ -140,6 +140,12 @@ export default function AddYardSale() {
                 cash_preferred: sale.cash_preferred ?? false,
               });
               setPhotos(sale.photos || []);
+              
+              // Populate AI description with existing description when editing
+              if (sale.description) {
+                setAiDescription(sale.description);
+                setEditableDescription(sale.description);
+              }
             }
             setIsLoadingSale(false);
           }
