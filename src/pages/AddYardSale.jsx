@@ -526,15 +526,15 @@ export default function AddYardSale() {
   };
 
   const handleAddressSelect = (suggestion) => {
-    const addressParts = suggestion.address;
+    const addressParts = suggestion.address || {};
     
     // Auto-fill form fields from the selected address
     setFormData(prev => ({
       ...prev,
-      address: `${addressParts.house_number || ''} ${addressParts.road || ''}`.trim(),
-      city: addressParts.city || addressParts.town || addressParts.village || '',
+      address: `${addressParts.house_number || ''} ${addressParts.road || ''}`.trim() || prev.address,
+      city: addressParts.city || addressParts.town || addressParts.village || prev.city,
       state: addressParts.state || 'NY',
-      zip_code: addressParts.postcode || ''
+      zip_code: addressParts.postcode || prev.zip_code
     }));
     
     // Clear validation after selection
