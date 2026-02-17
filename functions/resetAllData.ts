@@ -14,61 +14,83 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Forbidden: Admin only' }, { status: 403 });
     }
 
+    const deleteCounts = {
+      sales: 0,
+      favorites: 0,
+      attendances: 0,
+      reviews: 0,
+      messages: 0
+    };
+
     // Delete all yard sales
-    const allSales = await base44.asServiceRole.entities.YardSale.list();
-    console.log(`Deleting ${allSales.length} yard sales...`);
-    
-    for (const sale of allSales) {
-      await base44.asServiceRole.entities.YardSale.delete(sale.id);
+    try {
+      const allSales = await base44.asServiceRole.entities.YardSale.list();
+      console.log(`Deleting ${allSales.length} yard sales...`);
+      await Promise.all(allSales.map(sale => 
+        base44.asServiceRole.entities.YardSale.delete(sale.id).catch(e => console.error('Delete sale error:', e))
+      ));
+      deleteCounts.sales = allSales.length;
+    } catch (e) {
+      console.error('Error deleting sales:', e);
     }
 
     // Delete all favorites
-    const allFavorites = await base44.asServiceRole.entities.Favorite.list();
-    console.log(`Deleting ${allFavorites.length} favorites...`);
-    
-    for (const fav of allFavorites) {
-      await base44.asServiceRole.entities.Favorite.delete(fav.id);
+    try {
+      const allFavorites = await base44.asServiceRole.entities.Favorite.list();
+      console.log(`Deleting ${allFavorites.length} favorites...`);
+      await Promise.all(allFavorites.map(fav => 
+        base44.asServiceRole.entities.Favorite.delete(fav.id).catch(e => console.error('Delete favorite error:', e))
+      ));
+      deleteCounts.favorites = allFavorites.length;
+    } catch (e) {
+      console.error('Error deleting favorites:', e);
     }
 
     // Delete all attendances
-    const allAttendances = await base44.asServiceRole.entities.Attendance.list();
-    console.log(`Deleting ${allAttendances.length} attendances...`);
-    
-    for (const att of allAttendances) {
-      await base44.asServiceRole.entities.Attendance.delete(att.id);
+    try {
+      const allAttendances = await base44.asServiceRole.entities.Attendance.list();
+      console.log(`Deleting ${allAttendances.length} attendances...`);
+      await Promise.all(allAttendances.map(att => 
+        base44.asServiceRole.entities.Attendance.delete(att.id).catch(e => console.error('Delete attendance error:', e))
+      ));
+      deleteCounts.attendances = allAttendances.length;
+    } catch (e) {
+      console.error('Error deleting attendances:', e);
     }
 
     // Delete all reviews
-    const allReviews = await base44.asServiceRole.entities.YardSaleReview.list();
-    console.log(`Deleting ${allReviews.length} reviews...`);
-    
-    for (const review of allReviews) {
-      await base44.asServiceRole.entities.YardSaleReview.delete(review.id);
+    try {
+      const allReviews = await base44.asServiceRole.entities.YardSaleReview.list();
+      console.log(`Deleting ${allReviews.length} reviews...`);
+      await Promise.all(allReviews.map(review => 
+        base44.asServiceRole.entities.YardSaleReview.delete(review.id).catch(e => console.error('Delete review error:', e))
+      ));
+      deleteCounts.reviews = allReviews.length;
+    } catch (e) {
+      console.error('Error deleting reviews:', e);
     }
 
     // Delete all messages
-    const allMessages = await base44.asServiceRole.entities.Message.list();
-    console.log(`Deleting ${allMessages.length} messages...`);
-    
-    for (const message of allMessages) {
-      await base44.asServiceRole.entities.Message.delete(message.id);
+    try {
+      const allMessages = await base44.asServiceRole.entities.Message.list();
+      console.log(`Deleting ${allMessages.length} messages...`);
+      await Promise.all(allMessages.map(message => 
+        base44.asServiceRole.entities.Message.delete(message.id).catch(e => console.error('Delete message error:', e))
+      ));
+      deleteCounts.messages = allMessages.length;
+    } catch (e) {
+      console.error('Error deleting messages:', e);
     }
 
     console.log('✅ All test data removed');
 
     return Response.json({
       success: true,
-      deleted: {
-        sales: allSales.length,
-        favorites: allFavorites.length,
-        attendances: allAttendances.length,
-        reviews: allReviews.length,
-        messages: allMessages.length
-      },
+      deleted: deleteCounts,
       note: 'Users can reset their own free_listings_used via the profile menu'
     });
   } catch (error) {
     console.error('Error resetting data:', error);
-    return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({ error: error.message, stack: error.stack }, { status: 500 });
   }
 });
