@@ -62,7 +62,7 @@ export default function AddYardSale() {
   const [aiDescription, setAiDescription] = useState(null);
   const [showAiPreview, setShowAiPreview] = useState(false);
   const [editableDescription, setEditableDescription] = useState('');
-  const [addressValidation, setAddressValidation] = useState({ status: 'idle', message: '' });
+  const [addressValidation, setAddressValidation] = useState({ status: 'idle', message: '', suggestion: null });
   const [isValidatingAddress, setIsValidatingAddress] = useState(false);
   
   const navigate = useNavigate();
@@ -497,28 +497,49 @@ export default function AddYardSale() {
         if (!isInNY) {
           setAddressValidation({ 
             status: 'invalid', 
-            message: '⚠️ Address must be in New York City area' 
+            message: '⚠️ Address must be in New York City area',
+            suggestion: null
           });
         } else {
           setAddressValidation({ 
             status: 'valid', 
-            message: `✓ Address found: ${geoData[0].display_name}` 
+            message: `✓ Address found: ${geoData[0].display_name}`,
+            suggestion: geoData[0]
           });
         }
       } else {
         setAddressValidation({ 
           status: 'invalid', 
-          message: '⚠️ Address not found - please check spelling' 
+          message: '⚠️ Address not found - please check spelling',
+          suggestion: null
         });
       }
     } catch (error) {
       setAddressValidation({ 
         status: 'error', 
-        message: '⚠️ Could not verify address' 
+        message: '⚠️ Could not verify address',
+        suggestion: null
       });
     } finally {
       setIsValidatingAddress(false);
     }
+  };
+
+  const handleAddressSelect = (suggestion) => {
+    const addressParts = suggestion.address;
+    
+    // Auto-fill form fields from the selected address
+    setFormData(prev => ({
+      ...prev,
+      address: `${addressParts.house_number || ''} ${addressParts.road || ''}`.trim(),
+      city: addressParts.city || addressParts.town || addressParts.village || '',
+      state: addressParts.state || 'NY',
+      zip_code: addressParts.postcode || ''
+    }));
+    
+    // Clear validation after selection
+    setAddressValidation({ status: 'valid', message: '✓ Address selected', suggestion: null });
+    toast.success('Address auto-filled!');
   };
 
   // Debounce address validation
@@ -909,17 +930,29 @@ export default function AddYardSale() {
                     )}
                   </div>
                   {addressValidation.message && (
-                    <motion.p
+                    <motion.div
                       initial={{ opacity: 0, y: -5 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className={`text-xs mt-1 ${
-                        addressValidation.status === 'valid' ? 'text-green-600' :
-                        addressValidation.status === 'invalid' ? 'text-red-600' :
-                        'text-gray-500'
-                      }`}
                     >
-                      {addressValidation.message}
-                    </motion.p>
+                      {addressValidation.suggestion ? (
+                        <button
+                          type="button"
+                          onClick={() => handleAddressSelect(addressValidation.suggestion)}
+                          className="w-full text-left text-xs mt-1 p-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors"
+                        >
+                          <span className="text-green-600 dark:text-green-400 font-medium">✓ Click to use: </span>
+                          <span className="text-gray-700 dark:text-gray-300">{addressValidation.suggestion.display_name}</span>
+                        </button>
+                      ) : (
+                        <p className={`text-xs mt-1 ${
+                          addressValidation.status === 'valid' ? 'text-green-600' :
+                          addressValidation.status === 'invalid' ? 'text-red-600' :
+                          'text-gray-500'
+                        }`}>
+                          {addressValidation.message}
+                        </p>
+                      )}
+                    </motion.div>
                   )}
                   <p className="text-xs text-gray-500 mt-1">
                     {t('exactAddressUnlocksHint')}
