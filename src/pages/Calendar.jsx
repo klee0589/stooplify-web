@@ -181,7 +181,7 @@ export default function Calendar() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
+            className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border dark:border-gray-800"
           >
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-[#FF6F61]/10 rounded-lg flex items-center justify-center">
@@ -200,7 +200,7 @@ export default function Calendar() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
+            className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border dark:border-gray-800"
           >
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center">
@@ -221,7 +221,7 @@ export default function Calendar() {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
+            className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border dark:border-gray-800"
           >
             <div className="flex items-center justify-between mb-4">
               <h2 
@@ -292,7 +292,7 @@ export default function Calendar() {
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
+            className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border dark:border-gray-800"
           >
             <h2 
               className="text-xl font-bold text-[#2E3A59] dark:text-white mb-4"
@@ -388,7 +388,7 @@ export default function Calendar() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="mt-8 bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
+            className="mt-8 bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm border dark:border-gray-800"
           >
             <h2 
               className="text-xl font-bold text-[#2E3A59] dark:text-white mb-4"
