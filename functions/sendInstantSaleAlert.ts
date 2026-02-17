@@ -28,15 +28,17 @@ Deno.serve(async (req) => {
 
     const emailsSent = [];
     const saleCategories = sale.categories || (sale.category ? [sale.category] : []);
+    console.log(`🏷️ Sale Categories: [${saleCategories.join(', ')}]`);
 
     // Find matching users
     const matchingUsers = new Set();
     allAlerts.forEach(alert => {
+      console.log(`🔍 Processing alert ID:${alert.id} | Email:${alert.user_email} | Type:${alert.alert_type} | Value:${alert.value}`);
       let matches = false;
       
       if (alert.alert_type === 'distance') {
         if (!alert.latitude || !alert.longitude || !sale.latitude || !sale.longitude) {
-          console.warn(`Skipping distance alert for ${alert.user_email} due to missing coordinates`);
+          console.warn(`⚠️ Skipping distance alert for ${alert.user_email} - missing coordinates (alert: ${alert.latitude},${alert.longitude} | sale: ${sale.latitude},${sale.longitude})`);
           return;
         }
 
@@ -62,22 +64,27 @@ Deno.serve(async (req) => {
         matches = distanceMiles <= parseFloat(alert.value);
         
         if (matches) {
-          console.log(`✓ Distance match for ${alert.user_email}: ${distanceMiles.toFixed(2)} miles <= ${alert.value} miles`);
+          console.log(`✓ Distance MATCH for ${alert.user_email}: ${distanceMiles.toFixed(2)}mi <= ${alert.value}mi`);
+        } else {
+          console.log(`✗ Distance NO MATCH for ${alert.user_email}: ${distanceMiles.toFixed(2)}mi > ${alert.value}mi`);
         }
       } else if (alert.alert_type === 'category') {
         matches = saleCategories.includes(alert.value);
         
         if (matches) {
-          console.log(`✓ Category match for ${alert.user_email}: ${alert.value} in [${saleCategories.join(', ')}]`);
+          console.log(`✓ Category MATCH for ${alert.user_email}: '${alert.value}' found in [${saleCategories.join(', ')}]`);
+        } else {
+          console.log(`✗ Category NO MATCH for ${alert.user_email}: '${alert.value}' NOT in [${saleCategories.join(', ')}]`);
         }
       }
       
       if (matches) {
+        console.log(`  → Adding ${alert.user_email} to matching users`);
         matchingUsers.add(alert.user_email);
       }
     });
 
-    console.log(`Found ${matchingUsers.size} matching users`);
+    console.log(`Found ${matchingUsers.size} total matching users`);
 
     // Send emails to matching users
     for (const userEmail of matchingUsers) {
@@ -141,13 +148,13 @@ Deno.serve(async (req) => {
         });
         
         emailsSent.push(userEmail);
-        console.log(`✅ Sent alert to ${userEmail}`);
+        console.log(`✅ Successfully sent alert email to ${userEmail}`);
       } catch (emailError) {
-        console.error(`❌ Failed to send email to ${userEmail}:`, emailError.message);
+        console.error(`❌ Failed to send email to ${userEmail}: ${emailError.message}`, emailError.stack);
       }
     }
 
-    console.log(`✅ Sent ${emailsSent.length} instant alerts`);
+    console.log(`✅ Completed - Sent ${emailsSent.length} instant alerts`);
 
     return Response.json({
       success: true,
@@ -156,7 +163,7 @@ Deno.serve(async (req) => {
     });
 
   } catch (error) {
-    console.error('❌ Instant alert failed:', error);
+    console.error('❌ Instant alert failed:', error.message, error.stack);
     return Response.json({ 
       error: error.message,
       stack: error.stack 
