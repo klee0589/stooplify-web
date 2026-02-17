@@ -34,11 +34,42 @@ Deno.serve(async (req) => {
     allAlerts.forEach(alert => {
       let matches = false;
       
-      if (alert.alert_type === 'neighborhood') {
-        matches = sale.city?.toLowerCase().includes(alert.value.toLowerCase()) ||
-                 sale.general_location?.toLowerCase().includes(alert.value.toLowerCase());
+      if (alert.alert_type === 'distance') {
+        if (!alert.latitude || !alert.longitude || !sale.latitude || !sale.longitude) {
+          console.warn(`Skipping distance alert for ${alert.user_email} due to missing coordinates`);
+          return;
+        }
+
+        // Haversine formula to calculate distance between two points on a sphere
+        const toRadians = (deg) => deg * (Math.PI / 180);
+        const R = 6371; // Radius of Earth in kilometers
+
+        const lat1 = toRadians(alert.latitude);
+        const lon1 = toRadians(alert.longitude);
+        const lat2 = toRadians(sale.latitude);
+        const lon2 = toRadians(sale.longitude);
+
+        const dLat = lat2 - lat1;
+        const dLon = lon2 - lon1;
+
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                  Math.cos(lat1) * Math.cos(lat2) *
+                  Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distanceKm = R * c;
+        const distanceMiles = distanceKm * 0.621371; // Convert to miles
+
+        matches = distanceMiles <= parseFloat(alert.value);
+        
+        if (matches) {
+          console.log(`✓ Distance match for ${alert.user_email}: ${distanceMiles.toFixed(2)} miles <= ${alert.value} miles`);
+        }
       } else if (alert.alert_type === 'category') {
         matches = saleCategories.includes(alert.value);
+        
+        if (matches) {
+          console.log(`✓ Category match for ${alert.user_email}: ${alert.value} in [${saleCategories.join(', ')}]`);
+        }
       }
       
       if (matches) {

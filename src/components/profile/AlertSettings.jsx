@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { motion } from 'framer-motion';
-import { Bell, Plus, X, Loader2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Loader2, MapPin, Tag, Plus, Trash2, Bell } from 'lucide-react';
 import { toast } from "sonner";
 
 const distances = [
@@ -29,40 +28,59 @@ export default function AlertSettings({ userEmail }) {
   const [showAddAlert, setShowAddAlert] = useState(false);
   const [alertType, setAlertType] = useState('distance');
   const [alertValue, setAlertValue] = useState('');
+  const [userLocation, setUserLocation] = useState(null);
   const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({ latitude: position.coords.latitude, longitude: position.coords.longitude });
+        },
+        (error) => {
+          console.error("Error getting user location:", error);
+          toast.error("Could not get your location for distance alerts.");
+        }
+      );
+    }
+  }, []);
 
   const { data: alerts = [], isLoading } = useQuery({
     queryKey: ['alertPreferences', userEmail],
-    queryFn: () => base44.entities.AlertPreference.filter({ user_email: userEmail }),
-    enabled: !!userEmail,
+    queryFn: async () => {
+      return await base44.entities.AlertPreference.filter({ user_email: userEmail });
+    },
   });
 
   const createAlertMutation = useMutation({
-    mutationFn: (data) => base44.entities.AlertPreference.create(data),
+    mutationFn: async (data) => {
+      return await base44.entities.AlertPreference.create(data);
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['alertPreferences'] });
+      queryClient.invalidateQueries({ queryKey: ['alertPreferences', userEmail] });
       toast.success('Alert added!');
       setShowAddAlert(false);
       setAlertValue('');
     },
-    onError: () => {
-      toast.error('Failed to add alert');
-    },
   });
 
   const deleteAlertMutation = useMutation({
-    mutationFn: (id) => base44.entities.AlertPreference.delete(id),
+    mutationFn: async (alertId) => {
+      return await base44.entities.AlertPreference.delete(alertId);
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['alertPreferences'] });
+      queryClient.invalidateQueries({ queryKey: ['alertPreferences', userEmail] });
       toast.success('Alert removed');
     },
   });
 
   const toggleAlertMutation = useMutation({
-    mutationFn: ({ id, isActive }) => 
-      base44.entities.AlertPreference.update(id, { is_active: !isActive }),
+    mutationFn: async ({ id, is_active }) => {
+      return await base44.entities.AlertPreference.update(id, { is_active });
+    },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['alertPreferences'] });
+      queryClient.invalidateQueries({ queryKey: ['alertPreferences', userEmail] });
+      toast.success('Alert updated');
     },
   });
 
@@ -79,37 +97,38 @@ export default function AlertSettings({ userEmail }) {
       return;
     }
 
-    createAlertMutation.mutate({
+    const newAlert = {
       user_email: userEmail,
       alert_type: alertType,
       value: alertValue,
       is_active: true,
-    });
+    };
+
+    if (alertType === 'distance' && userLocation) {
+      newAlert.latitude = userLocation.latitude;
+      newAlert.longitude = userLocation.longitude;
+    } else if (alertType === 'distance' && !userLocation) {
+      toast.error('Cannot add distance alert without your location.');
+      return;
+    }
+
+    createAlertMutation.mutate(newAlert);
   };
 
   if (isLoading) {
     return (
-      <div className="flex justify-center py-8">
-        <Loader2 className="w-6 h-6 text-gray-400 animate-spin" />
+      <div className="flex items-center justify-center py-8">
+        <Loader2 className="w-6 h-6 text-[#14B8FF] animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm">
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-[#14B8FF]/10 rounded-xl flex items-center justify-center">
-            <Bell className="w-5 h-5 text-[#14B8FF]" />
-          </div>
-          <div>
-            <h3 className="text-lg font-semibold text-[#2E3A59] dark:text-white">
-              Smart Alerts
-            </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Get notified about sales you care about
-            </p>
-          </div>
+    <div className="space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h3 className="text-lg font-semibold text-[#2E3A59] dark:text-white">Smart Alerts</h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">Get notified when new sales match your criteria</p>
         </div>
         <Button
           onClick={() => setShowAddAlert(!showAddAlert)}
@@ -121,15 +140,9 @@ export default function AlertSettings({ userEmail }) {
         </Button>
       </div>
 
-      {/* Add Alert Form */}
       {showAddAlert && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          exit={{ opacity: 0, height: 0 }}
-          className="mb-6 p-4 bg-gray-50 dark:bg-gray-900 rounded-xl"
-        >
-          <div className="flex gap-3 mb-3">
+        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-3">
+          <div className="flex gap-2">
             <Select value={alertType} onValueChange={setAlertType}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue />
@@ -163,61 +176,41 @@ export default function AlertSettings({ userEmail }) {
                 </SelectContent>
               </Select>
             )}
-          </div>
 
-          <div className="flex gap-2">
             <Button
               onClick={handleAddAlert}
               disabled={!alertValue || createAlertMutation.isPending}
-              className="flex-1 bg-[#14B8FF] hover:bg-[#0da3e6]"
             >
-              {createAlertMutation.isPending ? 'Adding...' : 'Add Alert'}
-            </Button>
-            <Button
-              onClick={() => setShowAddAlert(false)}
-              variant="outline"
-              className="flex-1"
-            >
-              Cancel
+              {createAlertMutation.isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Add'}
             </Button>
           </div>
-        </motion.div>
+        </div>
       )}
 
-      {/* Alert List */}
       {alerts.length === 0 ? (
-        <div className="text-center py-8 text-gray-500">
-          <Bell className="w-12 h-12 mx-auto mb-3 text-gray-300" />
-          <p>No alerts set up yet</p>
-          <p className="text-sm">Get notified when new sales match your interests</p>
+        <div className="text-center py-8 bg-gray-50 dark:bg-gray-800 rounded-lg">
+          <Bell className="w-12 h-12 text-gray-400 mx-auto mb-3" />
+          <p className="text-gray-500 dark:text-gray-400">No alerts configured yet</p>
+          <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
+            Add an alert to get notified about new sales
+          </p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="space-y-2">
           {alerts.map((alert) => (
-            <motion.div
+            <div
               key={alert.id}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              className={`flex items-center justify-between p-3 rounded-xl border-2 transition-all ${
-                alert.is_active
-                  ? 'bg-[#14B8FF]/5 border-[#14B8FF]/20'
-                  : 'bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 opacity-50'
-              }`}
+              className="flex items-center justify-between p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg"
             >
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => toggleAlertMutation.mutate({ id: alert.id, isActive: alert.is_active })}
-                  className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-colors ${
-                    alert.is_active
-                      ? 'bg-[#14B8FF] border-[#14B8FF]'
-                      : 'border-gray-300 dark:border-gray-600'
-                  }`}
-                >
-                  {alert.is_active && <Bell className="w-3 h-3 text-white" />}
-                </button>
+              <div className="flex items-center gap-3 flex-1">
+                {alert.alert_type === 'distance' ? (
+                  <MapPin className="w-5 h-5 text-[#14B8FF]" />
+                ) : (
+                  <Tag className="w-5 h-5 text-[#F5A623]" />
+                )}
                 <div>
-                  <p className="font-medium text-[#2E3A59] dark:text-white capitalize">
-                    {alert.alert_type === 'distance' 
+                  <p className="font-medium text-[#2E3A59] dark:text-white">
+                    {alert.alert_type === 'distance'
                       ? `Within ${alert.value} mile${alert.value === '1' ? '' : 's'}`
                       : alert.value.replace('-', ' ')}
                   </p>
@@ -226,22 +219,33 @@ export default function AlertSettings({ userEmail }) {
                   </p>
                 </div>
               </div>
-              <button
-                onClick={() => deleteAlertMutation.mutate(alert.id)}
-                className="text-gray-400 hover:text-red-500 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </motion.div>
+
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => toggleAlertMutation.mutate({ id: alert.id, is_active: !alert.is_active })}
+                  className={alert.is_active ? 'text-green-600' : 'text-gray-400'}
+                >
+                  {alert.is_active ? 'Active' : 'Paused'}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => deleteAlertMutation.mutate(alert.id)}
+                  className="text-red-600 hover:text-red-700"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
           ))}
         </div>
       )}
 
-      {/* Info Box */}
-      <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
-        <p className="text-sm text-gray-700 dark:text-gray-300">
-          <strong>📧 Email alerts:</strong> We'll send you a weekly roundup of new sales matching your preferences. 
-          You'll never miss a great find!
+      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+        <p className="text-sm text-blue-800 dark:text-blue-200">
+          💡 You'll receive email alerts when new sales match your preferences
         </p>
       </div>
     </div>
