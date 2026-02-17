@@ -316,28 +316,28 @@ function LayoutContent({ children, currentPageName }) {
 
                         {user?.email === 'klee0589@gmail.com' &&
                     <>
-                            <button
-                        onClick={async () => {
-                          if (!confirm('Reset ALL data? This will delete all sales, favorites, attendances, reviews, and messages. This cannot be undone.')) return;
-                          try {
-                            const loadingToast = toast.loading('Resetting all data...');
-                            const response = await base44.functions.invoke('resetAllData');
-                            toast.dismiss(loadingToast);
-                            if (response?.data?.success) {
-                              const d = response.data.deleted;
-                              toast.success(`Deleted ${d.sales} sales, ${d.favorites} favorites, ${d.attendances} attendances, ${d.reviews} reviews, ${d.messages} messages.`);
-                              setTimeout(() => window.location.reload(), 2000);
-                            } else {
-                              toast.error(response?.data?.error || 'Failed to reset');
-                            }
-                          } catch (error) {
-                            toast.error('Failed: ' + (error?.message || 'Unknown error'));
-                          }
-                        }}
-                        className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-red-600 dark:text-red-400">
+                            
 
-                              <span className="text-sm font-medium">🗑️ Reset All Data</span>
-                            </button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                           </>
                     }
 
