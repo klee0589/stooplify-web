@@ -253,10 +253,30 @@ export default function Profile() {
           className="bg-white dark:bg-gray-800 rounded-3xl p-6 md:p-8 shadow-lg mb-6"
         >
           <div className="flex flex-col md:flex-row md:items-center gap-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-[#FF6F61] to-[#F5A623] rounded-2xl flex items-center justify-center flex-shrink-0">
-              <span className="text-3xl font-bold text-white">
-                {(user.full_name || user.email)?.[0]?.toUpperCase()}
-              </span>
+            <div className="relative">
+              {user.profile_picture ? (
+                <img 
+                  src={user.profile_picture}
+                  alt="Profile"
+                  className="w-20 h-20 rounded-2xl object-cover flex-shrink-0"
+                />
+              ) : (
+                <div className="w-20 h-20 bg-gradient-to-br from-[#FF6F61] to-[#F5A623] rounded-2xl flex items-center justify-center flex-shrink-0">
+                  <span className="text-3xl font-bold text-white">
+                    {(user.full_name || user.email)?.[0]?.toUpperCase()}
+                  </span>
+                </div>
+              )}
+              <label className="absolute bottom-0 right-0 bg-[#14B8FF] hover:bg-[#0da3e6] rounded-full p-2 cursor-pointer shadow-lg transition-colors">
+                <Camera className="w-4 h-4 text-white" />
+                <input 
+                  type="file" 
+                  accept="image/*"
+                  onChange={handleProfilePictureUpload}
+                  disabled={isUploadingPicture}
+                  className="hidden"
+                />
+              </label>
             </div>
             
             <div className="flex-1">
