@@ -89,13 +89,24 @@ export default function Calendar() {
   // Get sales for selected date
   const salesForSelectedDate = allSales.filter(sale => {
     if (!sale.date) return false;
-    return isSameDay(parseISO(sale.date + 'T12:00:00'), selectedDate);
+    try {
+      return isSameDay(parseISO(sale.date + 'T12:00:00'), selectedDate);
+    } catch (e) {
+      return false;
+    }
   });
 
   // Get dates with events
   const datesWithEvents = allSales
     .filter(sale => sale.date)
-    .map(sale => parseISO(sale.date + 'T12:00:00'));
+    .map(sale => {
+      try {
+        return parseISO(sale.date + 'T12:00:00');
+      } catch (e) {
+        return null;
+      }
+    })
+    .filter(date => date !== null);
 
   const isFavorited = (saleId) => favorites.some(f => f.yard_sale_id === saleId);
   const isAttending = (saleId) => attendances.some(a => a.yard_sale_id === saleId);
@@ -321,7 +332,7 @@ export default function Calendar() {
                     </div>
                     <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
                       <CalendarIcon className="w-3.5 h-3.5" />
-                      {format(parseISO(sale.date + 'T12:00:00'), 'MMM d, yyyy')}
+                      {sale.date ? format(parseISO(sale.date + 'T12:00:00'), 'MMM d, yyyy') : 'Date TBD'}
                     </div>
                   </Link>
                 ))}
