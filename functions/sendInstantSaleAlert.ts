@@ -42,8 +42,9 @@ Deno.serve(async (req) => {
 
     // Only send for upcoming sales (not past sales)
     const saleDate = new Date(sale.date);
-    const now = new Date();
-    if (saleDate < now) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Midnight today
+    if (saleDate < today) {
       console.log('Skipping - sale date is in the past');
       return Response.json({ success: true, message: 'Skipped - past sale' });
     }
