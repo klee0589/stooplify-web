@@ -32,7 +32,7 @@ function LayoutContent({ children, currentPageName }) {
       }
     };
     checkAuth();
-    
+
     // Load language preference
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
     setLanguage(savedLang);
@@ -64,7 +64,7 @@ function LayoutContent({ children, currentPageName }) {
   }, [isAvatarMenuOpen]);
 
   const t = useTranslation(language);
-  
+
   // Fetch user's yard sales count
   const { data: userSales = [] } = useQuery({
     queryKey: ['userYardSales', user?.email],
@@ -72,7 +72,7 @@ function LayoutContent({ children, currentPageName }) {
       if (!user) return [];
       return await base44.entities.YardSale.filter({ created_by: user.email });
     },
-    enabled: !!user,
+    enabled: !!user
   });
 
   // Fetch unread messages count (unique senders)
@@ -82,11 +82,11 @@ function LayoutContent({ children, currentPageName }) {
       if (!user) return 0;
       const messages = await base44.entities.Message.filter({ recipient_email: user.email, read: false });
       // Count unique senders with unread messages
-      const uniqueSenders = [...new Set(messages.map(m => m.sender_email))];
+      const uniqueSenders = [...new Set(messages.map((m) => m.sender_email))];
       return uniqueSenders.length;
     },
     enabled: !!user,
-    refetchInterval: 5000, // Refetch every 5 seconds as backup
+    refetchInterval: 5000 // Refetch every 5 seconds as backup
   });
 
   // Real-time subscription for unread messages count
@@ -103,7 +103,7 @@ function LayoutContent({ children, currentPageName }) {
 
     return unsubscribe;
   }, [user?.email, queryClient]);
-  
+
   const toggleLanguage = () => {
     const newLang = language === 'en' ? 'es' : 'en';
     setLanguage(newLang);
@@ -114,12 +114,12 @@ function LayoutContent({ children, currentPageName }) {
   };
 
   const navLinks = [
-    { name: t('browseSales'), page: 'YardSales', icon: MapPin },
-    { name: t('listSale'), page: 'AddYardSale', icon: PlusCircle },
-    ...(userSales.length > 0 ? [{ name: t('myYardSales'), page: 'MyYardSales', icon: MapPin }] : []),
-    { name: 'Calendar', page: 'Calendar', icon: Settings },
-    { name: 'Guides', page: 'Guides', icon: Settings },
-  ];
+  { name: t('browseSales'), page: 'YardSales', icon: MapPin },
+  { name: t('listSale'), page: 'AddYardSale', icon: PlusCircle },
+  ...(userSales.length > 0 ? [{ name: t('myYardSales'), page: 'MyYardSales', icon: MapPin }] : []),
+  { name: 'Calendar', page: 'Calendar', icon: Settings },
+  { name: 'Guides', page: 'Guides', icon: Settings }];
+
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
@@ -193,9 +193,9 @@ function LayoutContent({ children, currentPageName }) {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         className={`fixed top-0 left-0 right-0 z-[1000] transition-all duration-300 ${
-          isScrolled ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
-        }`}
-      >
+        isScrolled ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent'}`
+        }>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
@@ -204,23 +204,23 @@ function LayoutContent({ children, currentPageName }) {
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_6963ba60866b343e03d8de8e/f9ad791a3_logo_v1.png"
                 alt="Stooplify"
                 className="h-8 md:h-10 w-auto"
-                whileHover={{ scale: 1.05 }}
-              />
+                whileHover={{ scale: 1.05 }} />
+
             </Link>
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-8">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.page}
-                  to={createPageUrl(link.page)}
-                  className={`font-medium transition-colors hover:text-[#14B8FF] ${
-                    currentPageName === link.page ? 'text-[#14B8FF]' : 'text-[#2E3A59] dark:text-white'
-                  }`}
-                >
+              {navLinks.map((link) =>
+              <Link
+                key={link.page}
+                to={createPageUrl(link.page)}
+                className={`font-medium transition-colors hover:text-[#14B8FF] ${
+                currentPageName === link.page ? 'text-[#14B8FF]' : 'text-[#2E3A59] dark:text-white'}`
+                }>
+
                   {link.name}
                 </Link>
-              ))}
+              )}
             </nav>
 
             {/* Language Toggle & User Menu */}
@@ -230,41 +230,41 @@ function LayoutContent({ children, currentPageName }) {
                 whileTap={{ scale: 0.95 }}
                 onClick={toggleLanguage}
                 className="px-3 py-2 text-[#2E3A59] dark:text-white font-medium hover:text-[#14B8FF] transition-colors flex items-center gap-2"
-                title={language === 'en' ? 'Switch to Spanish' : 'Cambiar a inglés'}
-              >
+                title={language === 'en' ? 'Switch to Spanish' : 'Cambiar a inglés'}>
+
                 <Globe className="w-4 h-4" />
                 {language === 'en' ? 'ES' : 'EN'}
               </motion.button>
               
-              {user ? (
-                <div className="relative" ref={avatarMenuRef}>
+              {user ?
+              <div className="relative" ref={avatarMenuRef}>
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => setIsAvatarMenuOpen(!isAvatarMenuOpen)}
-                    className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative"
-                  >
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setIsAvatarMenuOpen(!isAvatarMenuOpen)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative">
+
                     <div className="w-8 h-8 bg-gradient-to-br from-[#FF6F61] to-[#F5A623] rounded-full flex items-center justify-center relative">
                       <span className="text-sm font-bold text-white">
                         {(user.full_name || user.email)?.[0]?.toUpperCase()}
                       </span>
-                      {user && unreadCount > 0 && (
-                        <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 text-white text-xs font-bold rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900">
+                      {user && unreadCount > 0 &&
+                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 text-white text-xs font-bold rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900">
                           {unreadCount > 9 ? '9+' : unreadCount}
                         </span>
-                      )}
+                    }
                     </div>
                     <ChevronDown className={`w-4 h-4 text-gray-600 dark:text-gray-300 transition-transform ${isAvatarMenuOpen ? 'rotate-180' : ''}`} />
                   </motion.button>
                   
                   <AnimatePresence>
-                    {isAvatarMenuOpen && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50"
-                      >
+                    {isAvatarMenuOpen &&
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
+
                         <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
                           <p className="text-sm font-semibold text-[#2E3A59] dark:text-white truncate">
                             {user.full_name || user.email}
@@ -273,115 +273,115 @@ function LayoutContent({ children, currentPageName }) {
                         </div>
                         
                         <Link
-                          to={createPageUrl('Profile')}
-                          onClick={() => setIsAvatarMenuOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                        >
+                      to={createPageUrl('Profile')}
+                      onClick={() => setIsAvatarMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+
                           <User className="w-4 h-4 text-gray-600 dark:text-gray-300" />
                           <span className="text-sm text-[#2E3A59] dark:text-white">{t('profile')}</span>
                         </Link>
                         
                         <Link
-                          to={createPageUrl('Favorites')}
-                          onClick={() => setIsAvatarMenuOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                        >
+                      to={createPageUrl('Favorites')}
+                      onClick={() => setIsAvatarMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+
                           <Heart className="w-4 h-4 text-gray-600 dark:text-gray-300" />
                           <span className="text-sm text-[#2E3A59] dark:text-white">{t('favorites')}</span>
                         </Link>
 
                         <Link
-                          to={createPageUrl('Messages')}
-                          onClick={() => setIsAvatarMenuOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors relative"
-                        >
+                      to={createPageUrl('Messages')}
+                      onClick={() => setIsAvatarMenuOpen(false)}
+                      className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors relative">
+
                           <MessageCircle className="w-4 h-4 text-gray-600 dark:text-gray-300" />
                           <span className="text-sm text-[#2E3A59] dark:text-white">Messages</span>
-                          {user && unreadCount > 0 && (
-                            <span className="ml-auto px-2 py-0.5 bg-green-500 text-white text-xs font-bold rounded-full">
+                          {user && unreadCount > 0 &&
+                      <span className="ml-auto px-2 py-0.5 bg-green-500 text-white text-xs font-bold rounded-full">
                               {unreadCount}
                             </span>
-                          )}
+                      }
                         </Link>
                         
                         <button
-                          onClick={toggleTheme}
-                          className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-                        >
+                      onClick={toggleTheme}
+                      className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+
                           {theme === 'light' ? <Moon className="w-4 h-4 text-gray-600 dark:text-gray-300" /> : <Sun className="w-4 h-4 text-gray-600 dark:text-gray-300" />}
                           <span className="text-sm text-[#2E3A59] dark:text-white">
                             {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
                           </span>
                         </button>
 
-                        {user?.email === 'klee0589@gmail.com' && (
-                          <>
+                        {user?.email === 'klee0589@gmail.com' &&
+                    <>
                             <button
-                              onClick={async () => {
-                                if (!confirm('Reset ALL data? This will delete all sales, favorites, attendances, reviews, and messages. This cannot be undone.')) return;
-                                try {
-                                  const loadingToast = toast.loading('Resetting all data...');
-                                  const response = await base44.functions.invoke('resetAllData');
-                                  toast.dismiss(loadingToast);
-                                  if (response?.data?.success) {
-                                    const d = response.data.deleted;
-                                    toast.success(`Deleted ${d.sales} sales, ${d.favorites} favorites, ${d.attendances} attendances, ${d.reviews} reviews, ${d.messages} messages.`);
-                                    setTimeout(() => window.location.reload(), 2000);
-                                  } else {
-                                    toast.error(response?.data?.error || 'Failed to reset');
-                                  }
-                                } catch (error) {
-                                  toast.error('Failed: ' + (error?.message || 'Unknown error'));
-                                }
-                              }}
-                              className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-red-600 dark:text-red-400"
-                            >
+                        onClick={async () => {
+                          if (!confirm('Reset ALL data? This will delete all sales, favorites, attendances, reviews, and messages. This cannot be undone.')) return;
+                          try {
+                            const loadingToast = toast.loading('Resetting all data...');
+                            const response = await base44.functions.invoke('resetAllData');
+                            toast.dismiss(loadingToast);
+                            if (response?.data?.success) {
+                              const d = response.data.deleted;
+                              toast.success(`Deleted ${d.sales} sales, ${d.favorites} favorites, ${d.attendances} attendances, ${d.reviews} reviews, ${d.messages} messages.`);
+                              setTimeout(() => window.location.reload(), 2000);
+                            } else {
+                              toast.error(response?.data?.error || 'Failed to reset');
+                            }
+                          } catch (error) {
+                            toast.error('Failed: ' + (error?.message || 'Unknown error'));
+                          }
+                        }}
+                        className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-red-600 dark:text-red-400">
+
                               <span className="text-sm font-medium">🗑️ Reset All Data</span>
                             </button>
                           </>
-                        )}
+                    }
 
                         <div className="border-t border-gray-200 dark:border-gray-700 my-2" />
                         
                         <button
-                          onClick={() => base44.auth.logout()}
-                          className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-red-600 dark:text-red-400"
-                        >
+                      onClick={() => base44.auth.logout()}
+                      className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-red-600 dark:text-red-400">
+
                           <LogOut className="w-4 h-4" />
                           <span className="text-sm font-medium">{t('signOut')}</span>
                         </button>
                       </motion.div>
-                    )}
+                  }
                   </AnimatePresence>
-                </div>
-              ) : (
-                <>
+                </div> :
+
+              <>
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => base44.auth.redirectToLogin()}
-                    className="px-4 py-2 text-[#2E3A59] dark:text-white font-medium hover:text-[#14B8FF] transition-colors"
-                  >
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => base44.auth.redirectToLogin()}
+                  className="px-4 py-2 text-[#2E3A59] dark:text-white font-medium hover:text-[#14B8FF] transition-colors">
+
                     {t('signIn')}
                   </motion.button>
                   <motion.button
-                    whileHover={{ scale: 1.05, boxShadow: '0 10px 30px rgba(20, 184, 255, 0.3)' }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => base44.auth.redirectToLogin()}
-                    className="px-6 py-2.5 bg-[#14B8FF] text-white rounded-full font-medium shadow-lg"
-                  >
+                  whileHover={{ scale: 1.05, boxShadow: '0 10px 30px rgba(20, 184, 255, 0.3)' }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => base44.auth.redirectToLogin()}
+                  className="px-6 py-2.5 bg-[#14B8FF] text-white rounded-full font-medium shadow-lg">
+
                     {t('getStarted')}
                   </motion.button>
                 </>
-              )}
+              }
             </div>
 
             {/* Mobile Menu Button */}
             <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 text-[#2E3A59]"
-            >
+              className="md:hidden p-2 text-[#2E3A59]">
+
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </motion.button>
           </div>
@@ -389,106 +389,106 @@ function LayoutContent({ children, currentPageName }) {
 
         {/* Mobile Menu */}
         <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="md:hidden bg-white dark:bg-gray-900 border-t shadow-lg"
-              >
+          {isMenuOpen &&
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="md:hidden bg-white dark:bg-gray-900 border-t shadow-lg">
+
               <div className="px-4 py-4 space-y-2">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.page}
-                    to={createPageUrl(link.page)}
-                    onClick={() => setIsMenuOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
-                      currentPageName === link.page
-                        ? 'bg-[#14B8FF]/10 text-[#14B8FF]'
-                        : 'text-[#2E3A59] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
-                    }`}
-                  >
+                {navLinks.map((link) =>
+              <Link
+                key={link.page}
+                to={createPageUrl(link.page)}
+                onClick={() => setIsMenuOpen(false)}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                currentPageName === link.page ?
+                'bg-[#14B8FF]/10 text-[#14B8FF]' :
+                'text-[#2E3A59] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'}`
+                }>
+
                     <link.icon size={20} />
                     <span className="font-medium">{link.name}</span>
                   </Link>
-                ))}
+              )}
 
-                {user && (
-                  <>
+                {user &&
+              <>
                     <Link
-                      to={createPageUrl('Profile')}
-                      onClick={() => setIsMenuOpen(false)}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
-                        currentPageName === 'Profile'
-                          ? 'bg-[#14B8FF]/10 text-[#14B8FF]'
-                          : 'text-[#2E3A59] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
-                      }`}
-                    >
+                  to={createPageUrl('Profile')}
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                  currentPageName === 'Profile' ?
+                  'bg-[#14B8FF]/10 text-[#14B8FF]' :
+                  'text-[#2E3A59] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'}`
+                  }>
+
                       <User size={20} />
                       <span className="font-medium">{t('profile')}</span>
                     </Link>
                     <Link
-                      to={createPageUrl('Favorites')}
-                      onClick={() => setIsMenuOpen(false)}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
-                        currentPageName === 'Favorites'
-                          ? 'bg-[#14B8FF]/10 text-[#14B8FF]'
-                          : 'text-[#2E3A59] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'
-                      }`}
-                    >
+                  to={createPageUrl('Favorites')}
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                  currentPageName === 'Favorites' ?
+                  'bg-[#14B8FF]/10 text-[#14B8FF]' :
+                  'text-[#2E3A59] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'}`
+                  }>
+
                       <Heart size={20} />
                       <span className="font-medium">{t('favorites')}</span>
                     </Link>
                   </>
-                )}
+              }
 
                 <div className="pt-4 border-t space-y-2">
                   <button
-                    onClick={() => {
-                      toggleTheme();
-                      setIsMenuOpen(false);
-                    }}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-[#2E3A59] dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl"
-                  >
+                  onClick={() => {
+                    toggleTheme();
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-[#2E3A59] dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl">
+
                     {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
                     <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
                   </button>
                   <button
-                    onClick={() => {
-                      toggleLanguage();
-                      setIsMenuOpen(false);
-                    }}
-                    className="w-full flex items-center gap-3 px-4 py-3 text-[#2E3A59] dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl"
-                  >
+                  onClick={() => {
+                    toggleLanguage();
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-[#2E3A59] dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl">
+
                     <Globe size={20} />
                     <span>{language === 'en' ? 'Español' : 'English'}</span>
                   </button>
-                  {user ? (
-                    <button
-                      onClick={() => {
-                        base44.auth.logout();
-                        setIsMenuOpen(false);
-                      }}
-                      className="w-full flex items-center gap-3 px-4 py-3 text-left text-red-600 dark:text-red-400 font-medium hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl"
-                    >
+                  {user ?
+                <button
+                  onClick={() => {
+                    base44.auth.logout();
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full flex items-center gap-3 px-4 py-3 text-left text-red-600 dark:text-red-400 font-medium hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl">
+
                       <LogOut size={20} />
                       <span>{t('signOut')}</span>
-                    </button>
-                  ) : (
-                    <button
-                      onClick={() => {
-                        base44.auth.redirectToLogin();
-                        setIsMenuOpen(false);
-                      }}
-                      className="w-full px-4 py-3 bg-[#14B8FF] text-white text-center rounded-xl font-medium"
-                    >
+                    </button> :
+
+                <button
+                  onClick={() => {
+                    base44.auth.redirectToLogin();
+                    setIsMenuOpen(false);
+                  }}
+                  className="w-full px-4 py-3 bg-[#14B8FF] text-white text-center rounded-xl font-medium">
+
                       {t('signIn')} / {t('getStarted')}
                     </button>
-                  )}
+                }
                 </div>
               </div>
             </motion.div>
-          )}
+          }
         </AnimatePresence>
       </motion.header>
 
@@ -505,8 +505,8 @@ function LayoutContent({ children, currentPageName }) {
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_6963ba60866b343e03d8de8e/f9ad791a3_logo_v1.png"
                 alt="Stooplify"
-                className="h-10 w-auto brightness-0 invert mb-4"
-              />
+                className="h-10 w-auto brightness-0 invert mb-4" />
+
               <p className="text-white/70 max-w-sm">
                 Discover amazing finds at yard sales near you. Join our community of treasure hunters today!
               </p>
@@ -528,12 +528,12 @@ function LayoutContent({ children, currentPageName }) {
               </ul>
               <div className="mt-6">
                 <h4 className="font-semibold text-lg mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>Follow Us</h4>
-                <a 
-                  href="https://www.instagram.com/stooplify/" 
-                  target="_blank" 
+                <a
+                  href="https://www.instagram.com/stooplify/"
+                  target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 text-white/70 hover:text-[#14B8FF] transition-colors"
-                >
+                  className="inline-flex items-center gap-2 text-white/70 hover:text-[#14B8FF] transition-colors">
+
                   <Instagram className="w-5 h-5" />
                   <span>@stooplify</span>
                 </a>
@@ -542,53 +542,53 @@ function LayoutContent({ children, currentPageName }) {
           </div>
 
           {/* Email Signup */}
-          <div className="border-t border-white/20 mt-12 pt-8">
-            <div className="max-w-md mx-auto text-center">
-              <h4 className="font-semibold text-lg text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                Get notified about sales in your area
-              </h4>
-              <form className="flex gap-2" onSubmit={(e) => {
-                e.preventDefault();
-                const email = e.target.email.value;
-                if (email) {
-                  base44.entities.EmailSubscriber.create({ email, notify_new_sales: true })
-                    .then(() => {
-                      toast.success('Subscribed! You\'ll hear from us soon.');
-                      e.target.reset();
-                    })
-                    .catch(() => toast.error('Failed to subscribe'));
-                }
-              }}>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Enter your email"
-                  required
-                  className="flex-1 px-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder:text-white/50 focus:outline-none focus:border-white/40 dark:bg-gray-800 dark:border-gray-600 dark:text-white dark:placeholder:text-gray-400"
-                />
-                <button
-                  type="submit"
-                  className="px-6 py-3 bg-white text-[#2E3A59] rounded-xl font-semibold hover:bg-white/90 transition-colors"
-                >
-                  Join
-                </button>
-              </form>
-            </div>
-          </div>
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
           <div className="border-t border-white/20 mt-8 pt-8 text-center text-white/60">
             <p>© {new Date().getFullYear()} Stooplify. {t('allRightsReserved')}.</p>
           </div>
           </div>
           </footer>
-    </div>
-    );
-    }
+    </div>);
 
-    export default function Layout({ children, currentPageName }) {
-    return (
+}
+
+export default function Layout({ children, currentPageName }) {
+  return (
     <ThemeProvider>
     <LayoutContent children={children} currentPageName={currentPageName} />
-    </ThemeProvider>
-    );
-    }
+    </ThemeProvider>);
+
+}
