@@ -65,8 +65,8 @@ import Messages from './pages/Messages';
 import MyYardSales from './pages/MyYardSales';
 import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
-import YardSales from './pages/YardSales';
 import YardSaleDetails from './pages/YardSaleDetails';
+import YardSales from './pages/YardSales';
 import __Layout from './Layout.jsx';
 
 
@@ -89,8 +89,8 @@ export const PAGES = {
     "MyYardSales": MyYardSales,
     "Pricing": Pricing,
     "Profile": Profile,
-    "YardSales": YardSales,
     "YardSaleDetails": YardSaleDetails,
+    "YardSales": YardSales,
 }
 
 export const pagesConfig = {

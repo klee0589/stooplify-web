@@ -754,53 +754,6 @@ export default function AddYardSale() {
                   </p>
                 </div>
 
-                {/* AI Description Preview - Always Visible */}
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4"
-                >
-                  <div className="flex items-start gap-3 mb-3">
-                    <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0">
-                      <Check className="w-5 h-5 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-[#2E3A59] mb-2">{t('aiGeneratedDescription')}</h4>
-                      <Textarea
-                        value={editableDescription}
-                        onChange={(e) => setEditableDescription(e.target.value)}
-                        placeholder="AI will generate a description when you upload photos in Step 3..."
-                        className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 min-h-[100px] bg-white text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                        disabled={!aiDescription}
-                      />
-                    </div>
-                  </div>
-                  {aiDescription && (
-                    <div className="flex gap-2">
-                      <Button
-                        onClick={() => {
-                          updateField('description', editableDescription);
-                          toast.success('Description added!');
-                        }}
-                        className="flex-1 bg-blue-500 hover:bg-blue-600"
-                      >
-                        {t('useThisDescription')}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        onClick={() => {
-                          setEditableDescription('');
-                          setAiDescription(null);
-                          toast('Description cleared');
-                        }}
-                        className="flex-1"
-                      >
-                        Clear
-                      </Button>
-                    </div>
-                  )}
-                </motion.div>
-
                 {/* Payment Methods */}
                 <div>
                   <Label className="text-[#2E3A59] font-medium mb-3 block">Payment Methods Accepted</Label>
@@ -1176,31 +1129,32 @@ export default function AddYardSale() {
                 </p>
               </div>
 
-              {/* AI Description Preview */}
-              {showAiPreview && aiDescription && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 mb-6"
-                >
-                  <div className="flex items-start gap-3 mb-3">
-                    <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
-                      <Check className="w-5 h-5 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-[#2E3A59] mb-2">{t('aiGeneratedDescription')}</h4>
-                      <Textarea
-                        value={editableDescription}
-                        onChange={(e) => setEditableDescription(e.target.value)}
-                        className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 min-h-[100px] bg-white text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                      />
-                    </div>
+              {/* AI Description Preview - Always Visible */}
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-blue-50 border-2 border-blue-200 rounded-xl p-4 mb-6"
+              >
+                <div className="flex items-start gap-3 mb-3">
+                  <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center flex-shrink-0 mt-1">
+                    <Check className="w-5 h-5 text-white" />
                   </div>
+                  <div className="flex-1">
+                    <h4 className="font-semibold text-[#2E3A59] mb-2">{t('aiGeneratedDescription')}</h4>
+                    <Textarea
+                      value={editableDescription}
+                      onChange={(e) => setEditableDescription(e.target.value)}
+                      placeholder="Upload photos above and AI will generate a description..."
+                      className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 min-h-[100px] bg-white text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      disabled={!aiDescription}
+                    />
+                  </div>
+                </div>
+                {aiDescription && (
                   <div className="flex gap-2">
                     <Button
                       onClick={() => {
                         updateField('description', editableDescription);
-                        setShowAiPreview(false);
                         toast.success('Description added!');
                       }}
                       className="flex-1 bg-blue-500 hover:bg-blue-600"
@@ -1210,16 +1164,17 @@ export default function AddYardSale() {
                     <Button
                       variant="outline"
                       onClick={() => {
-                        setShowAiPreview(false);
-                        toast('You can add your own description in step 1');
+                        setEditableDescription('');
+                        setAiDescription(null);
+                        toast('Description cleared');
                       }}
                       className="flex-1"
                     >
-                      {t('editManually')}
+                      Clear
                     </Button>
                   </div>
-                </motion.div>
-              )}
+                )}
+              </motion.div>
 
               {/* Uploaded Photos */}
               {photos.length > 0 && (
