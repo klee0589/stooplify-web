@@ -244,10 +244,20 @@ function LayoutContent({ children, currentPageName }) {
                   onClick={() => setIsAvatarMenuOpen(!isAvatarMenuOpen)}
                   className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative">
 
-                    <div className="w-8 h-8 bg-gradient-to-br from-[#FF6F61] to-[#F5A623] rounded-full flex items-center justify-center relative">
-                      <span className="text-sm font-bold text-white">
-                        {(user.full_name || user.email)?.[0]?.toUpperCase()}
-                      </span>
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center relative overflow-hidden">
+                      {user.profile_picture ? (
+                        <img 
+                          src={user.profile_picture}
+                          alt="Profile"
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-gradient-to-br from-[#FF6F61] to-[#F5A623] flex items-center justify-center">
+                          <span className="text-sm font-bold text-white">
+                            {(user.full_name || user.email)?.[0]?.toUpperCase()}
+                          </span>
+                        </div>
+                      )}
                       {user && unreadCount > 0 &&
                     <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 text-white text-xs font-bold rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900">
                           {unreadCount > 9 ? '9+' : unreadCount}
