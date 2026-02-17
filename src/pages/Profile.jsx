@@ -29,6 +29,7 @@ export default function Profile() {
   const [editedPhone, setEditedPhone] = useState('');
   const [language, setLanguage] = useState('en');
   const [showFinishedSales, setShowFinishedSales] = useState(false);
+  const [isUploadingPicture, setIsUploadingPicture] = useState(false);
   
   useEffect(() => {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
