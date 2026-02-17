@@ -19,18 +19,6 @@ import { toast } from "sonner";
 import { useTranslation } from '../components/translations';
 import SEO from '../components/SEO';
 
-const getCategoryLabels = (t) => [
-              { value: 'general', label: t('general'), icon: Package },
-              { value: 'furniture', label: t('furniture'), icon: Sofa },
-              { value: 'clothing', label: t('clothing'), icon: Shirt },
-              { value: 'electronics', label: t('electronics'), icon: Zap },
-              { value: 'toys', label: t('toysKids'), icon: Baby },
-              { value: 'antiques', label: t('antiques'), icon: Crown },
-              { value: 'books', label: t('booksMedia'), icon: BookOpen },
-              { value: 'sports', label: t('sportsOutdoors'), icon: Dumbbell },
-              { value: 'multi-family', label: t('multiFamily'), icon: Users },
-            ];
-
 export default function AddYardSale() {
   const urlParams = new URLSearchParams(window.location.search);
   const editSaleId = urlParams.get('edit');
@@ -50,6 +38,18 @@ export default function AddYardSale() {
   }, []);
 
   const t = useTranslation(language);
+  
+  const getCategoryLabels = () => [
+    { value: 'general', label: t('general'), icon: Package },
+    { value: 'furniture', label: t('furniture'), icon: Sofa },
+    { value: 'clothing', label: t('clothing'), icon: Shirt },
+    { value: 'electronics', label: t('electronics'), icon: Zap },
+    { value: 'toys', label: t('toysKids'), icon: Baby },
+    { value: 'antiques', label: t('antiques'), icon: Crown },
+    { value: 'books', label: t('booksMedia'), icon: BookOpen },
+    { value: 'sports', label: t('sportsOutdoors'), icon: Dumbbell },
+    { value: 'multi-family', label: t('multiFamily'), icon: Users },
+  ];
   
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -696,7 +696,7 @@ export default function AddYardSale() {
                   <div className="col-span-2">
                     <Label className="text-[#2E3A59] font-medium mb-2 block">Categories * (Select all that apply)</Label>
                     <div className="grid grid-cols-3 gap-3">
-                      {getCategoryLabels(t).map((cat) => {
+                      {getCategoryLabels().map((cat) => {
                         const Icon = cat.icon;
                         return (
                           <div 
