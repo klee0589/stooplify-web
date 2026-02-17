@@ -458,19 +458,17 @@ export default function YardSaleDetails() {
   };
 
   const isAddressUnlocked = () => {
-    if (!sale?.date || !sale?.start_time) return false;
-    const saleDateTime = new Date(`${sale.date}T${sale.start_time}`);
-    const now = new Date();
-    const hoursUntilSale = (saleDateTime - now) / (1000 * 60 * 60);
-    return hoursUntilSale <= (sale.address_unlock_hours || 24);
+    if (!sale?.date) return false;
+    const saleDate = new Date(sale.date).toDateString();
+    const today = new Date().toDateString();
+    return saleDate === today;
   };
 
   const isExactLocationVisible = () => {
-    if (!sale?.date || !sale?.start_time) return false;
-    const saleDateTime = new Date(`${sale.date}T${sale.start_time}`);
-    const now = new Date();
-    const hoursUntilSale = (saleDateTime - now) / (1000 * 60 * 60);
-    return hoursUntilSale <= 1 || isAttending;
+    if (!sale?.date) return false;
+    const saleDate = new Date(sale.date).toDateString();
+    const today = new Date().toDateString();
+    return saleDate === today || isAttending;
   };
 
   if (isLoading) {
