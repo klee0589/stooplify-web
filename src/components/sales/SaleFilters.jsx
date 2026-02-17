@@ -1,46 +1,62 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Filter, X, Check, Package, Sofa, Shirt, Zap, Baby, Crown, BookOpen, Dumbbell, Users } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-
-const categories = [
-  { value: 'general', label: 'General', icon: Package },
-  { value: 'furniture', label: 'Furniture', icon: Sofa },
-  { value: 'clothing', label: 'Clothing', icon: Shirt },
-  { value: 'electronics', label: 'Electronics', icon: Zap },
-  { value: 'toys', label: 'Toys', icon: Baby },
-  { value: 'antiques', label: 'Antiques', icon: Crown },
-  { value: 'books', label: 'Books', icon: BookOpen },
-  { value: 'sports', label: 'Sports', icon: Dumbbell },
-  { value: 'multi-family', label: 'Multi-Family', icon: Users },
-];
-
-const distances = [
-  { value: 'all', label: 'Any Distance' },
-  { value: '5', label: 'Within 5 miles' },
-  { value: '10', label: 'Within 10 miles' },
-  { value: '25', label: 'Within 25 miles' },
-  { value: '50', label: 'Within 50 miles' },
-];
-
-const dateOptions = [
-  { value: 'all', label: 'Any Date' },
-  { value: 'today', label: 'Today' },
-  { value: 'tomorrow', label: 'Tomorrow' },
-  { value: 'weekend', label: 'This Weekend' },
-  { value: 'week', label: 'This Week' },
-];
-
-const paymentOptions = [
-  { value: 'all', label: 'Any Payment' },
-  { value: 'cash', label: 'Cash' },
-  { value: 'card', label: 'Cards' },
-  { value: 'digital', label: 'Digital' },
-];
+import { useTranslation } from '../translations';
 
 export default function SaleFilters({ filters, onFilterChange, onReset }) {
+  const [language, setLanguage] = useState('en');
+  
+  useEffect(() => {
+    const savedLang = localStorage.getItem('stooplify_lang') || 'en';
+    setLanguage(savedLang);
+    
+    const handleLanguageChange = (e) => {
+      setLanguage(e.detail);
+    };
+    
+    window.addEventListener('languageChange', handleLanguageChange);
+    return () => window.removeEventListener('languageChange', handleLanguageChange);
+  }, []);
+
+  const t = useTranslation(language);
+
+  const categories = [
+    { value: 'general', label: t('general'), icon: Package },
+    { value: 'furniture', label: t('furniture'), icon: Sofa },
+    { value: 'clothing', label: t('clothing'), icon: Shirt },
+    { value: 'electronics', label: t('electronics'), icon: Zap },
+    { value: 'toys', label: t('toysKids'), icon: Baby },
+    { value: 'antiques', label: t('antiques'), icon: Crown },
+    { value: 'books', label: t('booksMedia'), icon: BookOpen },
+    { value: 'sports', label: t('sportsOutdoors'), icon: Dumbbell },
+    { value: 'multi-family', label: t('multiFamily'), icon: Users },
+  ];
+
+  const distances = [
+    { value: 'all', label: language === 'es' ? 'Cualquier distancia' : 'Any Distance' },
+    { value: '5', label: language === 'es' ? 'Dentro de 5 millas' : 'Within 5 miles' },
+    { value: '10', label: language === 'es' ? 'Dentro de 10 millas' : 'Within 10 miles' },
+    { value: '25', label: language === 'es' ? 'Dentro de 25 millas' : 'Within 25 miles' },
+    { value: '50', label: language === 'es' ? 'Dentro de 50 millas' : 'Within 50 miles' },
+  ];
+
+  const dateOptions = [
+    { value: 'all', label: language === 'es' ? 'Cualquier fecha' : 'Any Date' },
+    { value: 'today', label: language === 'es' ? 'Hoy' : 'Today' },
+    { value: 'tomorrow', label: language === 'es' ? 'Mañana' : 'Tomorrow' },
+    { value: 'weekend', label: language === 'es' ? 'Este fin de semana' : 'This Weekend' },
+    { value: 'week', label: language === 'es' ? 'Esta semana' : 'This Week' },
+  ];
+
+  const paymentOptions = [
+    { value: 'all', label: language === 'es' ? 'Cualquier pago' : 'Any Payment' },
+    { value: 'cash', label: language === 'es' ? 'Efectivo' : 'Cash' },
+    { value: 'card', label: language === 'es' ? 'Tarjetas' : 'Cards' },
+    { value: 'digital', label: language === 'es' ? 'Digital' : 'Digital' },
+  ];
   return (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
@@ -51,7 +67,9 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
       <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
         <div className="flex items-center gap-2 text-[#2E3A59] dark:text-white mb-3">
           <Filter className="w-4 h-4" />
-          <span className="font-medium text-sm" style={{ fontFamily: 'Poppins, sans-serif' }}>Categories</span>
+          <span className="font-medium text-sm" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            {language === 'es' ? 'Categorías' : 'Categories'}
+          </span>
         </div>
         <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-2">
           {categories.map((cat) => {
@@ -87,7 +105,7 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {/* Search */}
           <Input
-            placeholder="Search sales..."
+            placeholder={language === 'es' ? 'Buscar ventas...' : 'Search sales...'}
             value={filters.search || ''}
             onChange={(e) => onFilterChange({ ...filters, search: e.target.value })}
             className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61]"
@@ -99,7 +117,7 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
             onValueChange={(value) => onFilterChange({ ...filters, date: value })}
           >
             <SelectTrigger className="rounded-xl border-gray-200">
-              <SelectValue placeholder="Date" />
+              <SelectValue placeholder={language === 'es' ? 'Fecha' : 'Date'} />
             </SelectTrigger>
             <SelectContent>
               {dateOptions.map((opt) => (
@@ -114,7 +132,7 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
             onValueChange={(value) => onFilterChange({ ...filters, distance: value })}
           >
             <SelectTrigger className="rounded-xl border-gray-200">
-              <SelectValue placeholder="Distance" />
+              <SelectValue placeholder={language === 'es' ? 'Distancia' : 'Distance'} />
             </SelectTrigger>
             <SelectContent>
               {distances.map((dist) => (
@@ -129,7 +147,7 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
             onValueChange={(value) => onFilterChange({ ...filters, payment: value })}
           >
             <SelectTrigger className="rounded-xl border-gray-200">
-              <SelectValue placeholder="Payment" />
+              <SelectValue placeholder={language === 'es' ? 'Pago' : 'Payment'} />
             </SelectTrigger>
             <SelectContent>
               {paymentOptions.map((opt) => (
@@ -148,7 +166,7 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
             className="text-gray-500 hover:text-[#FF6F61] mt-3"
           >
             <X className="w-4 h-4 mr-1" />
-            Reset All Filters
+            {language === 'es' ? 'Restablecer filtros' : 'Reset All Filters'}
           </Button>
         )}
       </div>
