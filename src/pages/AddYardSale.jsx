@@ -577,13 +577,13 @@ export default function AddYardSale() {
   }
 
   return (
-    <div className="bg-[#F9F9F9] py-8 min-h-screen dark:bg-[#0a0e1a]">
+    <div className="bg-[#F9F9F9] py-8 min-h-screen dark:bg-gray-900">
       <div className="max-w-2xl mx-auto px-4">
         {/* Back Button */}
         <Link to={createPageUrl('Home')}>
             <motion.button
             whileHover={{ x: -5 }}
-            className="flex items-center gap-2 text-gray-600 hover:text-[#FF6F61] transition-colors mb-6">
+            className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-[#FF6F61] transition-colors mb-6">
 
               <ArrowLeft className="w-5 h-5" />
               {t('back')}
@@ -597,12 +597,12 @@ export default function AddYardSale() {
           className="text-center mb-8">
 
           <h1
-            className="text-3xl font-bold text-[#2E3A59] mb-2"
+            className="text-3xl font-bold text-[#2E3A59] dark:text-white mb-2"
             style={{ fontFamily: 'Poppins, sans-serif' }}>
 
             {isEditMode ? t('editYourYardSale') : t('addYourYardSale')}
           </h1>
-          <p className="text-gray-100">{isEditMode ? t('updateYourSaleDetails') : t('listYourSaleInJustSteps')}</p>
+          <p className="text-gray-600 dark:text-gray-400">{isEditMode ? t('updateYourSaleDetails') : t('listYourSaleInJustSteps')}</p>
         </motion.div>
 
         {/* Progress Steps */}
