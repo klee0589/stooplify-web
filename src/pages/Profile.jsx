@@ -18,6 +18,8 @@ import { toast } from "sonner";
 import { format, parseISO } from 'date-fns';
 import AlertSettings from '../components/profile/AlertSettings';
 
+const SUBSCRIPTION_PRICE_ID = 'price_1Sp0DuEBgBmaTVQE0iSg1m5n'; // $9/month
+
 export default function Profile() {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
