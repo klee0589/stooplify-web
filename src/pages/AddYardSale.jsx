@@ -177,6 +177,8 @@ export default function AddYardSale() {
         `${data.address}, ${data.city}, ${data.state} ${data.zip_code}`,
         `${data.address}, ${data.zip_code}`,
         `${data.address}, ${data.city}, ${data.state}`,
+        `${data.city}, ${data.state} ${data.zip_code}`,
+        `${data.city}, ${data.state}`,
         `${data.address}`
       ].filter(q => q.trim());
 
@@ -186,7 +188,7 @@ export default function AddYardSale() {
 
         try {
           const response = await fetch(
-            `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`,
+            `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5`,
             {
               headers: {
                 'User-Agent': 'Stooplify/1.0'
@@ -208,11 +210,12 @@ export default function AddYardSale() {
 
             console.log('✅ Coordinates found:', { exactLat, exactLon });
 
-            // Validate location is in New York
-            const isInNY = exactLat >= 40.4774 && exactLat <= 40.9176 && exactLon >= -74.2591 && exactLon <= -73.7004;
+            // Validate location is in New York (relaxed bounds)
+            const isInNY = exactLat >= 40.4 && exactLat <= 40.95 && exactLon >= -74.3 && exactLon <= -73.6;
 
             if (!isInNY) {
-              throw new Error('Address must be in New York City area');
+              console.warn(`Location outside NY bounds: ${exactLat}, ${exactLon}`);
+              continue; // Try next query instead of throwing
             }
 
             // Create approximate coordinates (offset by ~0.01 degrees = ~1km for privacy)
@@ -234,19 +237,17 @@ export default function AddYardSale() {
 
           // Wait a bit between requests to respect rate limits
           if (i < queries.length - 1) {
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            await new Promise((resolve) => setTimeout(resolve, 500));
           }
         } catch (error) {
           console.error(`❌ Geocoding attempt ${i + 1} error:`, error);
-          if (error.message.includes('New York')) {
-            throw error; // Rethrow NY validation error
-          }
+          // Continue to next query on error
         }
       }
 
       if (!coordinates.latitude) {
         console.error('❌ All geocoding attempts failed');
-        toast.error('Could not locate address on map');
+        toast.error('Could not locate address. Please check the address and try again.');
         throw new Error('Could not locate address');
       }
 
@@ -479,19 +480,26 @@ export default function AddYardSale() {
         `${address}, ${city}, ${state} ${zip_code}`,
         `${address}, ${zip_code}`,
         `${address}, ${city}, ${state}`,
+        `${city}, ${state} ${zip_code}`,
+        `${city}, ${state}`,
         `${address}`
       ].filter(q => q.trim());
 
       let geoData = [];
       for (const query of queries) {
-        const response = await fetch(
-          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`,
-          { headers: { 'User-Agent': 'Stooplify/1.0' } }
-        );
-        const data = await response.json();
-        if (data.length > 0) {
-          geoData = data;
-          break;
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5`,
+            { headers: { 'User-Agent': 'Stooplify/1.0' } }
+          );
+          const data = await response.json();
+          if (data.length > 0) {
+            geoData = data;
+            break;
+          }
+        } catch (err) {
+          // Continue to next query on error
+          continue;
         }
       }
 
@@ -499,8 +507,8 @@ export default function AddYardSale() {
         const lat = parseFloat(geoData[0].lat);
         const lon = parseFloat(geoData[0].lon);
 
-        // Check if within New York bounds (approximate)
-        const isInNY = lat >= 40.4774 && lat <= 40.9176 && lon >= -74.2591 && lon <= -73.7004;
+        // Check if within New York bounds (relaxed slightly to be more forgiving)
+        const isInNY = lat >= 40.4 && lat <= 40.95 && lon >= -74.3 && lon <= -73.6;
 
         if (!isInNY) {
           setAddressValidation({
@@ -516,13 +524,13 @@ export default function AddYardSale() {
       } else {
         setAddressValidation({
           status: 'invalid',
-          message: '⚠️ Address not found - please check spelling'
+          message: '⚠️ Address not found - try entering just the street address or city/state'
         });
       }
     } catch (error) {
       setAddressValidation({
         status: 'error',
-        message: '⚠️ Could not verify address'
+        message: '⚠️ Could not verify address - you can still continue'
       });
     } finally {
       setIsValidatingAddress(false);
