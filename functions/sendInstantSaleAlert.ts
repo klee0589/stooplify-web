@@ -5,11 +5,33 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const payload = await req.json();
     
-    const { event, data: sale } = payload;
+    const { event, data: saleFromEvent } = payload;
     
     // Only process new sales
-    if (event.type !== 'create' || !sale || sale.status !== 'approved') {
-      return Response.json({ success: true, message: 'Skipped - not a new approved sale' });
+    if (event.type !== 'create' || !saleFromEvent) {
+      return Response.json({ success: true, message: 'Skipped - not a create event' });
+    }
+
+    // Fetch the latest sale data from database to avoid race conditions
+    console.log(`🔄 Fetching latest data for sale ID: ${saleFromEvent.id}`);
+    let sale;
+    try {
+      const salesData = await base44.asServiceRole.entities.YardSale.filter({ id: saleFromEvent.id });
+      sale = salesData[0];
+      if (!sale) {
+        console.log('⚠️ Sale not found in database yet');
+        return Response.json({ success: true, message: 'Sale not yet indexed' });
+      }
+      console.log(`✓ Sale fetched: status=${sale.status}, categories=${JSON.stringify(sale.categories)}`);
+    } catch (fetchError) {
+      console.error(`❌ Failed to fetch sale: ${fetchError.message}`);
+      return Response.json({ success: true, message: 'Could not fetch sale data' });
+    }
+
+    // Only proceed if approved
+    if (sale.status !== 'approved') {
+      console.log(`⏭️ Skipped - sale status is '${sale.status}' (not approved)`);
+      return Response.json({ success: true, message: 'Skipped - not approved yet' });
     }
 
     console.log(`📧 New sale created: ${sale.title} (${sale.id})`);
