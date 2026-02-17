@@ -838,7 +838,10 @@ export default function AddYardSale() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 disabled={!isStep1Valid}
-                onClick={() => setStep(2)}
+                onClick={() => {
+                  setStep(2);
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
                 className="w-full mt-6 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
@@ -961,7 +964,10 @@ export default function AddYardSale() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   disabled={!isStep2Valid}
-                  onClick={() => setStep(3)}
+                  onClick={() => {
+                    setStep(3);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
                   className="flex-1 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ fontFamily: 'Poppins, sans-serif' }}
                 >
