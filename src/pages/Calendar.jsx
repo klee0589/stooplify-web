@@ -152,7 +152,7 @@ export default function Calendar() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
+    <div className="min-h-screen bg-[#F9F9F9] dark:bg-[#0a0e1a]">
       <SEO 
         title="My Calendar | Stooplify"
         description="View all your favorited and attending yard sales in one place"
