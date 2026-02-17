@@ -522,25 +522,44 @@ export default function Profile() {
                   <Button
                     onClick={async () => {
                       try {
-                        toast.info('Sending test notifications...');
-                        const { data } = await base44.functions.invoke('testNotifications', {});
-                        if (data.results.email?.status === 'success') {
-                          toast.success('Test email sent! Check your inbox.');
+                        if (user.notification_enabled === false || user.notification_email === false) {
+                          toast.error('Email notifications are disabled. Enable them first.');
+                          return;
                         }
-                        if (data.results.sms?.status === 'info') {
-                          toast.info(data.results.sms.message);
+
+                        toast.info('Sending test email...');
+                        
+                        await base44.integrations.Core.SendEmail({
+                          to: user.email,
+                          subject: '🎉 Test Notification - Stooplify',
+                          body: `
+                            <h2>Test Email Notification</h2>
+                            <p>Hi ${user.full_name || 'there'}!</p>
+                            <p>This is a test email from Stooplify. If you're receiving this, your email notifications are working perfectly!</p>
+                            <p>You can manage your notification preferences in your profile settings.</p>
+                            <br>
+                            <p>Happy treasure hunting!</p>
+                            <p>- The Stooplify Team</p>
+                          `
+                        });
+                        
+                        toast.success('Test email sent! Check your inbox.');
+                        
+                        if (user.notification_sms && user.phone) {
+                          toast.info('SMS service not yet configured');
                         }
                       } catch (error) {
-                        toast.error('Failed to send test notifications');
+                        console.error('Test notification error:', error);
+                        toast.error('Failed to send test email: ' + error.message);
                       }
                     }}
                     variant="outline"
                     className="w-full"
                   >
-                    🔔 Send Test Notifications
+                    🔔 Send Test Email
                   </Button>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
-                    Test your notification settings
+                    Test your email notification settings
                   </p>
                 </div>
               </>
