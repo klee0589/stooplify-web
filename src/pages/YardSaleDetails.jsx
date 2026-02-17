@@ -689,9 +689,14 @@ export default function YardSaleDetails() {
                 {sale.title}
               </h1>
               {(() => {
+                if (!sale.date) return null;
+                
                 const now = new Date();
-                const saleStart = new Date(`${sale.date}T${sale.start_time || '08:00'}`);
-                const saleEnd = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
+                const saleDate = sale.date.includes('T') ? sale.date.split('T')[0] : sale.date;
+                const saleStart = new Date(`${saleDate}T${sale.start_time || '08:00'}:00`);
+                const saleEnd = new Date(`${saleDate}T${sale.end_time || '23:59'}:00`);
+                
+                console.log('Status check:', { now: now.toISOString(), saleStart: saleStart.toISOString(), saleEnd: saleEnd.toISOString() });
                 
                 if (now >= saleStart && now <= saleEnd) {
                   return (
