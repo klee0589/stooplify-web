@@ -672,20 +672,12 @@ export default function AddYardSale() {
                       );
                     })}
                   </div>
-                  <div 
-                    onClick={(e) => {
-                      const input = e.currentTarget.querySelector('input');
-                      input?.showPicker?.();
-                    }}
-                    className="cursor-pointer"
-                  >
-                    <Input
-                      type="date"
-                      value={formData.date}
-                      onChange={(e) => updateField('date', e.target.value)}
-                      className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark] cursor-pointer"
-                    />
-                  </div>
+                  <Input
+                    type="date"
+                    value={formData.date}
+                    onChange={(e) => updateField('date', e.target.value)}
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]"
+                  />
                   <p className="text-xs text-gray-500 mt-1">Or pick a custom date above</p>
                 </div>
                 
