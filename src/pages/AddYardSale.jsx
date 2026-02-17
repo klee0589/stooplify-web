@@ -667,7 +667,7 @@ export default function AddYardSale() {
               className="bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-8 shadow-lg border dark:border-gray-800"
             >
               <h2 
-                className="text-xl font-bold text-[#2E3A59] mb-6"
+                className="text-xl font-bold text-[#2E3A59] dark:text-gray-100 mb-6"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
                 {t('saleDetails')}
@@ -887,7 +887,7 @@ export default function AddYardSale() {
               className="bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-8 shadow-lg border dark:border-gray-800"
             >
               <h2 
-                className="text-xl font-bold text-[#2E3A59] mb-6"
+                className="text-xl font-bold text-[#2E3A59] dark:text-gray-100 mb-6"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
                 {t('location')}
@@ -1028,7 +1028,7 @@ export default function AddYardSale() {
               className="bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-8 shadow-lg border dark:border-gray-800"
             >
               <h2 
-                className="text-xl font-bold text-[#2E3A59] mb-2"
+                className="text-xl font-bold text-[#2E3A59] dark:text-gray-100 mb-2"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
                 {t('paymentRequired')}
@@ -1111,7 +1111,7 @@ export default function AddYardSale() {
               className="bg-white dark:bg-gray-900 rounded-3xl p-6 md:p-8 shadow-lg border dark:border-gray-800"
             >
               <h2 
-                className="text-xl font-bold text-[#2E3A59] mb-2"
+                className="text-xl font-bold text-[#2E3A59] dark:text-gray-100 mb-2"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
                 {t('addPhotosOptional')}
