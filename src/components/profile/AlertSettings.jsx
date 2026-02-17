@@ -7,14 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 
-const neighborhoods = [
-  'Bushwick',
-  'Williamsburg',
-  'Greenpoint',
-  'Bedford-Stuyvesant',
-  'Crown Heights',
-  'Park Slope',
-  'Prospect Heights',
+const distances = [
+  { value: '1', label: 'Within 1 mile' },
+  { value: '3', label: 'Within 3 miles' },
+  { value: '5', label: 'Within 5 miles' },
+  { value: '10', label: 'Within 10 miles' },
+  { value: '25', label: 'Within 25 miles' },
 ];
 
 const categories = [
@@ -29,7 +27,7 @@ const categories = [
 
 export default function AlertSettings({ userEmail }) {
   const [showAddAlert, setShowAddAlert] = useState(false);
-  const [alertType, setAlertType] = useState('neighborhood');
+  const [alertType, setAlertType] = useState('distance');
   const [alertValue, setAlertValue] = useState('');
   const queryClient = useQueryClient();
 
@@ -137,19 +135,19 @@ export default function AlertSettings({ userEmail }) {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="neighborhood">Neighborhood</SelectItem>
+                <SelectItem value="distance">Distance</SelectItem>
                 <SelectItem value="category">Category</SelectItem>
               </SelectContent>
             </Select>
 
-            {alertType === 'neighborhood' ? (
+            {alertType === 'distance' ? (
               <Select value={alertValue} onValueChange={setAlertValue}>
                 <SelectTrigger className="flex-1">
-                  <SelectValue placeholder="Select neighborhood" />
+                  <SelectValue placeholder="Select distance" />
                 </SelectTrigger>
                 <SelectContent>
-                  {neighborhoods.map(n => (
-                    <SelectItem key={n} value={n}>{n}</SelectItem>
+                  {distances.map(d => (
+                    <SelectItem key={d.value} value={d.value}>{d.label}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -219,10 +217,12 @@ export default function AlertSettings({ userEmail }) {
                 </button>
                 <div>
                   <p className="font-medium text-[#2E3A59] dark:text-white capitalize">
-                    {alert.value.replace('-', ' ')}
+                    {alert.alert_type === 'distance' 
+                      ? `Within ${alert.value} mile${alert.value === '1' ? '' : 's'}`
+                      : alert.value.replace('-', ' ')}
                   </p>
                   <p className="text-xs text-gray-500">
-                    {alert.alert_type === 'neighborhood' ? 'Neighborhood' : 'Category'}
+                    {alert.alert_type === 'distance' ? 'Distance' : 'Category'}
                   </p>
                 </div>
               </div>
