@@ -516,6 +516,33 @@ export default function Profile() {
                     />
                   </div>
                 </div>
+
+                {/* Test Notifications Button */}
+                <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                  <Button
+                    onClick={async () => {
+                      try {
+                        toast.info('Sending test notifications...');
+                        const { data } = await base44.functions.invoke('testNotifications', {});
+                        if (data.results.email?.status === 'success') {
+                          toast.success('Test email sent! Check your inbox.');
+                        }
+                        if (data.results.sms?.status === 'info') {
+                          toast.info(data.results.sms.message);
+                        }
+                      } catch (error) {
+                        toast.error('Failed to send test notifications');
+                      }
+                    }}
+                    variant="outline"
+                    className="w-full"
+                  >
+                    🔔 Send Test Notifications
+                  </Button>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
+                    Test your notification settings
+                  </p>
+                </div>
               </>
             )}
           </div>
