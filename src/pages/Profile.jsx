@@ -140,6 +140,35 @@ export default function Profile() {
     },
   });
 
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+
+  const handleUpgradeNow = async () => {
+    setIsCheckingOut(true);
+    try {
+      if (window.self !== window.top) {
+        toast.error('Checkout only works from the published app. Please open in a new tab.');
+        setIsCheckingOut(false);
+        return;
+      }
+
+      const response = await base44.functions.invoke('createCheckout', { 
+        priceId: SUBSCRIPTION_PRICE_ID,
+        listingType: 'subscription'
+      });
+
+      const checkoutUrl = response?.data?.url;
+      if (checkoutUrl) {
+        window.location.href = checkoutUrl;
+      } else {
+        toast.error('Failed to create checkout session');
+        setIsCheckingOut(false);
+      }
+    } catch (error) {
+      toast.error(error?.message || 'Failed to create checkout session');
+      setIsCheckingOut(false);
+    }
+  };
+
   if (isChecking) {
     return (
       <div className="min-h-screen bg-[#F9F9F9] flex items-center justify-center">
