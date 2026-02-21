@@ -434,5 +434,6 @@ export default function YardSales() {
         )}
       </div>
     </div>
+    </PullToRefresh>
   );
 }

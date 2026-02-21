@@ -13,11 +13,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { useTranslation } from '../components/translations';
 import SEO from '../components/SEO';
+import { DrawerSelect } from '@/components/ui/drawer-select';
 
 export default function AddYardSale() {
   const urlParams = new URLSearchParams(window.location.search);
