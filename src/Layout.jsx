@@ -8,6 +8,7 @@ import { useTranslation } from '../components/translations';
 import { useTheme, ThemeProvider } from '../components/ThemeProvider';
 import { toast } from 'sonner';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import BottomNavBar from '../components/BottomNavBar';
 
 function LayoutContent({ children, currentPageName }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -145,6 +146,12 @@ function LayoutContent({ children, currentPageName }) {
         body {
           font-family: 'Inter', sans-serif;
           transition: background-color 0.3s ease, color 0.3s ease;
+          overscroll-behavior: none;
+        }
+        
+        button, a, [role="button"] {
+          user-select: none;
+          -webkit-touch-callout: none;
         }
 
         .dark body {
@@ -194,7 +201,9 @@ function LayoutContent({ children, currentPageName }) {
         animate={{ y: 0 }}
         className={`fixed top-0 left-0 right-0 z-[1000] transition-all duration-300 ${
         isScrolled ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent'}`
-        }>
+        }
+        style={{ paddingTop: 'env(safe-area-inset-top)' }}
+        >
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
@@ -503,9 +512,12 @@ function LayoutContent({ children, currentPageName }) {
       </motion.header>
 
       {/* Main Content */}
-      <main className="pt-16 md:pt-20">
+      <main className="pt-16 md:pt-20 pb-0 md:pb-0" style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
         {children}
       </main>
+
+      {/* Bottom Navigation - Mobile Only */}
+      <BottomNavBar />
 
       {/* Footer */}
       <footer className="bg-[#2E3A59] dark:bg-gray-950 text-white">
