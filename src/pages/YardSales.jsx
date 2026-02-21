@@ -11,6 +11,7 @@ import SaleFilters from '../components/sales/SaleFilters';
 import SaleMap from '../components/sales/SaleMap';
 import { startOfDay, endOfDay, startOfWeek, endOfWeek, addDays, isWithinInterval } from 'date-fns';
 import moment from 'moment';
+import PullToRefresh from '../components/PullToRefresh';
 
 export default function YardSales() {
   const [viewMode, setViewMode] = useState('map');
@@ -272,7 +273,13 @@ export default function YardSales() {
     }))
   };
 
+  const handleRefresh = async () => {
+    await queryClient.invalidateQueries(['yardSales']);
+    await queryClient.invalidateQueries(['favorites']);
+  };
+
   return (
+    <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
       <SEO 
         title="Browse Yard Sales Near You | Stooplify"
