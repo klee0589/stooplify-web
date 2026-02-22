@@ -625,7 +625,7 @@ function LayoutContent({ children, currentPageName }) {
                     <span>@stooplify</span>
                   </a>
                   <a
-                    href="https://www.facebook.com/stooplify/"
+                    href="https://www.facebook.com/profile.php?id=61586102653727"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 text-white/70 hover:text-[#14B8FF] transition-colors">
