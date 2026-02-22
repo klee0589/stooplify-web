@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { Home, MapPin, PlusCircle, MessageCircle, User } from 'lucide-react';
@@ -8,6 +8,27 @@ import { useQuery } from '@tanstack/react-query';
 export default function BottomNavBar() {
   const location = useLocation();
   const [user, setUser] = useState(null);
+  const scrollPositions = useRef({});
+
+  // Save scroll position when navigating away
+  useEffect(() => {
+    const saveScrollPosition = () => {
+      scrollPositions.current[location.pathname] = window.scrollY;
+    };
+
+    return saveScrollPosition;
+  }, [location.pathname]);
+
+  // Restore scroll position when returning to a tab
+  useEffect(() => {
+    const savedPosition = scrollPositions.current[location.pathname];
+    
+    if (savedPosition !== undefined) {
+      setTimeout(() => {
+        window.scrollTo(0, savedPosition);
+      }, 0);
+    }
+  }, [location.pathname]);
 
   useEffect(() => {
     const checkAuth = async () => {
