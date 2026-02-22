@@ -81,15 +81,12 @@ export default function YardSales() {
               const now = moment();
               const isPast = saleEndMoment.isBefore(now);
               
-              console.log(`[isPast Check] Sale: ${sale.title} | Date: ${dateStr} | End Time: ${timeStr} | Parsed: ${saleEndMoment.format('YYYY-MM-DD HH:mm')} | Now: ${now.format('YYYY-MM-DD HH:mm')} | isPast: ${isPast}`);
-              
               if (sale.created_by) {
                 const sellers = await base44.entities.User.filter({ email: sale.created_by });
                 return { ...sale, seller: sellers[0] || null, isPast };
               }
               return { ...sale, seller: null, isPast };
             } catch (err) {
-              console.error('Error fetching seller for sale:', sale.id, err);
               return { ...sale, seller: null, isPast: false };
             }
           })
@@ -97,7 +94,6 @@ export default function YardSales() {
         
         return salesWithSellers;
       } catch (err) {
-        console.error('Error fetching yard sales:', err);
         throw err;
       }
     },
@@ -149,7 +145,6 @@ export default function YardSales() {
   // Filter sales
   const filteredSales = sales.filter(sale => {
     // Hide ended sales by default
-    console.log(`[Filter] Sale: ${sale.title} | isPast: ${sale.isPast} | showEndedSales: ${showEndedSales} | Will show: ${showEndedSales || !sale.isPast}`);
     if (!showEndedSales && sale.isPast) {
       return false;
     }
