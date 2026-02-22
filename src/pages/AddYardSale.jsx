@@ -563,6 +563,11 @@ export default function AddYardSale() {
 
   return (
     <div className="bg-[#F9F9F9] py-8 min-h-screen dark:bg-gray-900">
+      <SEO 
+        title={isEditMode ? "Edit Your Yard Sale Listing | Stooplify" : "List Your Yard Sale - Free First Listing | Stooplify"}
+        description={isEditMode ? "Update your yard sale details, photos, and information" : "List your yard sale for free! Reach thousands of local buyers. Post garage sales, estate sales, or multi-family sales. Upload photos, set your date and location, and start selling today."}
+        keywords="list yard sale, post garage sale, create sale listing, advertise yard sale, free yard sale posting, sell items locally"
+      />
       <div className="max-w-2xl mx-auto px-4">
         {/* Back Button */}
         <Link to={createPageUrl('Home')}>
