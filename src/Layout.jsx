@@ -213,7 +213,7 @@ function LayoutContent({ children, currentPageName }) {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
-            {/* Back Button (Mobile) or Logo */}
+            {/* Mobile: Back Button or Logo */}
             {showBackButton ? (
               <button
                 onClick={() => navigate(-1)}
@@ -224,21 +224,21 @@ function LayoutContent({ children, currentPageName }) {
                 <span className="text-sm font-medium">{t('back')}</span>
               </button>
             ) : (
-              <Link to={createPageUrl('Home')} className="flex items-center">
+              <Link to={createPageUrl('Home')} className="flex md:hidden items-center">
                 <motion.img
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_6963ba60866b343e03d8de8e/f9ad791a3_logo_v1.png"
                   alt="Stooplify"
-                  className="h-8 md:h-10 w-auto"
+                  className="h-8 w-auto"
                   whileHover={{ scale: 1.05 }} />
               </Link>
             )}
 
-            {/* Desktop Logo (always visible on desktop) */}
+            {/* Desktop: Logo (always visible) */}
             <Link to={createPageUrl('Home')} className="hidden md:flex items-center">
               <motion.img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_6963ba60866b343e03d8de8e/f9ad791a3_logo_v1.png"
                 alt="Stooplify"
-                className="h-8 md:h-10 w-auto"
+                className="h-10 w-auto"
                 whileHover={{ scale: 1.05 }} />
             </Link>
 
