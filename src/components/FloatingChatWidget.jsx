@@ -169,10 +169,10 @@ export default function FloatingChatWidget() {
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={handleOpen}
-            className="fixed bottom-6 right-6 z-50 w-16 h-16 bg-[#14B8FF] text-white rounded-full shadow-2xl flex items-center justify-center hover:bg-[#0da3e6] transition-colors"
+            className="fixed z-50 w-16 h-16 bg-[#14B8FF] text-white rounded-full shadow-2xl flex items-center justify-center hover:bg-[#0da3e6] transition-colors"
             style={{ 
-              paddingBottom: 'calc(env(safe-area-inset-bottom) + 1.5rem)',
-              paddingRight: 'calc(env(safe-area-inset-right) + 1.5rem)'
+              bottom: 'calc(1.5rem + env(safe-area-inset-bottom))',
+              right: 'calc(1.5rem + env(safe-area-inset-right))'
             }}
           >
             <MessageCircle className="w-7 h-7" />
