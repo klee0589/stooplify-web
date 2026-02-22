@@ -440,6 +440,7 @@ export default function YardSales() {
           </AnimatePresence>
         )}
       </div>
+    </div>
     </PullToRefresh>
   );
 }
