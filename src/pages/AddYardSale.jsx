@@ -114,7 +114,6 @@ export default function AddYardSale() {
              // Admins don't need payment, payment needed if: they've used free listing AND don't have subscription
              const needsPay = !isAdmin && hasUsedFreeListing && !hasSubscription;
              setNeedsPayment(needsPay);
-             console.log(needsPay ? '💳 Payment required' : '✅ No payment needed (admin/subscription/first listing)');
            }
 
           // Load existing sale data if editing
@@ -184,7 +183,6 @@ export default function AddYardSale() {
 
       for (let i = 0; i < queries.length; i++) {
         const query = queries[i];
-        console.log(`🌍 Geocoding attempt ${i + 1}:`, query);
 
         try {
           const response = await fetch(
@@ -197,24 +195,19 @@ export default function AddYardSale() {
           );
 
           if (!response.ok) {
-            console.warn(`Geocoding attempt ${i + 1} failed: ${response.status}`);
             continue;
           }
 
           const geoData = await response.json();
-          console.log(`🌍 Geocoding response ${i + 1}:`, geoData);
 
           if (geoData.length > 0) {
             const exactLat = parseFloat(geoData[0].lat);
             const exactLon = parseFloat(geoData[0].lon);
 
-            console.log('✅ Coordinates found:', { exactLat, exactLon });
-
             // Validate location is in New York (relaxed bounds)
             const isInNY = exactLat >= 40.4 && exactLat <= 40.95 && exactLon >= -74.3 && exactLon <= -73.6;
 
             if (!isInNY) {
-              console.warn(`Location outside NY bounds: ${exactLat}, ${exactLon}`);
               continue; // Try next query instead of throwing
             }
 
@@ -229,10 +222,7 @@ export default function AddYardSale() {
               longitude: exactLon + lonOffset
             };
 
-            console.log('📍 Final coordinates:', coordinates);
             break; // Success, exit loop
-          } else {
-            console.warn(`⚠️ No results for attempt ${i + 1}`);
           }
 
           // Wait a bit between requests to respect rate limits
@@ -240,13 +230,11 @@ export default function AddYardSale() {
             await new Promise((resolve) => setTimeout(resolve, 500));
           }
         } catch (error) {
-          console.error(`❌ Geocoding attempt ${i + 1} error:`, error);
           // Continue to next query on error
         }
       }
 
       if (!coordinates.latitude) {
-        console.error('❌ All geocoding attempts failed');
         toast.error('Could not locate address. Please check the address and try again.');
         throw new Error('Could not locate address');
       }
@@ -328,20 +316,16 @@ export default function AddYardSale() {
     if (uploadedUrls.length > 0) {
       const toastId = toast.loading('Generating description from photos...');
       try {
-        console.log('🤖 Calling AI with file URLs:', uploadedUrls);
         const generatedDescription = await base44.integrations.Core.InvokeLLM({
           prompt: "Based on these images of yard sale items, write a brief, appealing description (2-3 sentences) of what's being sold. Focus on the main items visible and make it sound inviting to potential buyers.",
           file_urls: uploadedUrls
         });
-        console.log('🤖 AI response:', generatedDescription);
         toast.dismiss(toastId);
         setAiDescription(generatedDescription);
         setEditableDescription(generatedDescription);
         toast.success('AI generated a description!');
       } catch (error) {
         toast.dismiss(toastId);
-        console.error('❌ AI generation failed:', error);
-        console.error('Error details:', error.message, error.stack);
         toast.error(`AI Error: ${error.message || 'Could not generate description'}`);
       }
     }
@@ -368,20 +352,16 @@ export default function AddYardSale() {
       // Generate AI description from photo
       const toastId = toast.loading('Generating description from photo...');
       try {
-        console.log('🤖 Calling AI with photo URL:', file_url);
         const generatedDescription = await base44.integrations.Core.InvokeLLM({
           prompt: "Based on this image of yard sale items, write a brief, appealing description (2-3 sentences) of what's being sold. Focus on the main items visible and make it sound inviting to potential buyers.",
           file_urls: [file_url]
         });
-        console.log('🤖 AI response:', generatedDescription);
         toast.dismiss(toastId);
         setAiDescription(generatedDescription);
         setEditableDescription(generatedDescription);
         toast.success('AI generated a description!');
       } catch (error) {
         toast.dismiss(toastId);
-        console.error('❌ AI generation failed:', error);
-        console.error('Error details:', error.message, error.stack);
         toast.error(`AI Error: ${error.message || 'Could not generate description'}`);
       }
     } catch (error) {
@@ -402,40 +382,23 @@ export default function AddYardSale() {
       properties: { listing_type: listingType }
     });
     try {
-      console.log('Starting checkout with:', { priceId, listingType });
-      console.log('iframe check - window.self:', window.self === window.top);
-
       // Check if running in iframe
       if (window.self !== window.top) {
-        console.log('IN IFRAME - blocking checkout');
         toast.error('Checkout only works from the published app. Please open in a new tab.');
         setIsCheckingPayment(false);
         return;
       }
 
-      console.log('🟠 About to call function...');
       const response = await base44.functions.invoke('createCheckout', { priceId, listingType });
-      console.log('🟢 Function returned!');
-      console.log('Full response:', response);
-      console.log('Response keys:', Object.keys(response || {}));
-      console.log('Response.data:', response?.data);
-      console.log('Response.data.url:', response?.data?.url);
 
       const checkoutUrl = response?.data?.url;
       if (checkoutUrl) {
-        console.log('Redirecting to:', checkoutUrl);
         window.location.href = checkoutUrl;
       } else {
-        console.error('No URL in response - response was:', JSON.stringify(response));
         toast.error('Failed to create checkout session');
         setIsCheckingPayment(false);
       }
     } catch (error) {
-      console.error('Checkout error caught:', error);
-      console.error('Error type:', typeof error);
-      console.error('Error message:', error?.message);
-      console.error('Error response:', error?.response);
-      console.error('Full error:', JSON.stringify(error));
       toast.error(error?.message || 'Failed to create checkout session');
       setIsCheckingPayment(false);
     }
