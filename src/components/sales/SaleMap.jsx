@@ -125,14 +125,7 @@ export default function SaleMap({ sales, center }) {
      return acc;
    }, {});
 
-   // Debug: Log sales data
-   useEffect(() => {
-     console.log('🗺️ SaleMap received sales:', sales.length);
-     console.log('Sales with coordinates:', sales.filter(s => s.latitude && s.longitude).length);
-     sales.forEach(sale => {
-       console.log(`Sale: ${sale.title} - Lat: ${sale.latitude}, Lon: ${sale.longitude}`);
-     });
-   }, [sales]);
+
 
   useEffect(() => {
     // Get user's current location
@@ -141,8 +134,8 @@ export default function SaleMap({ sales, center }) {
         (position) => {
           setUserLocation([position.coords.latitude, position.coords.longitude]);
         },
-        (error) => {
-          console.log('Location access denied, using default');
+        () => {
+          // Location access denied, use default
         }
       );
     }
@@ -188,8 +181,9 @@ export default function SaleMap({ sales, center }) {
       >
         <MapUpdater center={center} />
         <TileLayer
-          attribution='&copy; <a href="https://carto.com/">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
+          attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://stamen.com">Stamen Design</a>'
+          url="https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png"
+          maxZoom={18}
         />
         {/* Community Locations */}
         {communityLocations.map((location) => (
