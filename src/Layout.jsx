@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from './utils';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, Home, MapPin, PlusCircle, User, Heart, Settings, Globe, Moon, Sun, LogOut, ChevronDown, MessageCircle, Instagram } from 'lucide-react';
+import { Menu, X, Home, MapPin, PlusCircle, User, Heart, Settings, Globe, Moon, Sun, LogOut, ChevronDown, MessageCircle, Instagram, ArrowLeft } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useTranslation } from '../components/translations';
 import { useTheme, ThemeProvider } from '../components/ThemeProvider';
@@ -19,6 +19,12 @@ function LayoutContent({ children, currentPageName }) {
   const { theme, toggleTheme } = useTheme();
   const queryClient = useQueryClient();
   const avatarMenuRef = React.useRef(null);
+  const navigate = useNavigate();
+
+  // Root screens that don't show back button
+  const rootScreens = ['Home', 'YardSales', 'Messages', 'Profile'];
+  const isRootScreen = rootScreens.includes(currentPageName);
+  const showBackButton = !isRootScreen;
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -207,14 +213,33 @@ function LayoutContent({ children, currentPageName }) {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
-            {/* Logo */}
-            <Link to={createPageUrl('Home')} className="flex items-center">
+            {/* Back Button (Mobile) or Logo */}
+            {showBackButton ? (
+              <button
+                onClick={() => navigate(-1)}
+                className="flex md:hidden items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-[#14B8FF] transition-colors"
+                style={{ userSelect: 'none', WebkitTouchCallout: 'none' }}
+              >
+                <ArrowLeft className="w-5 h-5" />
+                <span className="text-sm font-medium">{t('back')}</span>
+              </button>
+            ) : (
+              <Link to={createPageUrl('Home')} className="flex items-center">
+                <motion.img
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_6963ba60866b343e03d8de8e/f9ad791a3_logo_v1.png"
+                  alt="Stooplify"
+                  className="h-8 md:h-10 w-auto"
+                  whileHover={{ scale: 1.05 }} />
+              </Link>
+            )}
+
+            {/* Desktop Logo (always visible on desktop) */}
+            <Link to={createPageUrl('Home')} className="hidden md:flex items-center">
               <motion.img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_6963ba60866b343e03d8de8e/f9ad791a3_logo_v1.png"
                 alt="Stooplify"
                 className="h-8 md:h-10 w-auto"
                 whileHover={{ scale: 1.05 }} />
-
             </Link>
 
             {/* Desktop Navigation */}
@@ -512,7 +537,11 @@ function LayoutContent({ children, currentPageName }) {
       </motion.header>
 
       {/* Main Content */}
-      <main className="pt-16 md:pt-20 pb-0 md:pb-0" style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}>
+      <main 
+        className="pt-16 md:pt-20 pb-0 md:pb-0" 
+        style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}
+        id="main-content"
+      >
         {children}
       </main>
 
