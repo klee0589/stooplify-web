@@ -427,7 +427,7 @@ export default function YardSales() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
                 transition={{ duration: 0.3 }}
-                className="h-[600px] rounded-2xl overflow-hidden"
+                className="h-[600px] rounded-2xl overflow-hidden mb-20 md:mb-0"
               >
                 <SaleMap sales={filteredSales} />
               </motion.div>
