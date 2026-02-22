@@ -67,6 +67,7 @@ import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
 import YardSaleDetails from './pages/YardSaleDetails';
 import YardSales from './pages/YardSales';
+import ChatSupport from './pages/ChatSupport';
 import __Layout from './Layout.jsx';
 
 
@@ -91,6 +92,7 @@ export const PAGES = {
     "Profile": Profile,
     "YardSaleDetails": YardSaleDetails,
     "YardSales": YardSales,
+    "ChatSupport": ChatSupport,
 }
 
 export const pagesConfig = {

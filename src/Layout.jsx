@@ -127,7 +127,8 @@ function LayoutContent({ children, currentPageName }) {
   { name: t('listSale'), page: 'AddYardSale', icon: PlusCircle },
   ...(userSales.length > 0 ? [{ name: t('myYardSales'), page: 'MyYardSales', icon: MapPin }] : []),
   { name: 'Calendar', page: 'Calendar', icon: Settings },
-  { name: 'Guides', page: 'Guides', icon: Settings }];
+  { name: 'Guides', page: 'Guides', icon: Settings },
+  { name: language === 'en' ? 'Chat Support' : 'Chat de Soporte', page: 'ChatSupport', icon: MessageCircle }];
 
 
   return (
