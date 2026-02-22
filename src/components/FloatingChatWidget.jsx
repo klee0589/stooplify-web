@@ -168,7 +168,7 @@ export default function FloatingChatWidget() {
           exit={{ scale: 0, opacity: 0 }}
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
-          onClick={handleOpen} className="bg-[#14B8FF] text-white rounded-full fixed z-50 w-16 h-16 shadow-2xl flex items-center justify-center hover:bg-[#0da3e6] transition-colors"
+          onClick={handleOpen} className="bg-[#14B8FF] text-white rounded-full fixed z-50 w-15 h-15 shadow-2xl flex items-center justify-center hover:bg-[#0da3e6] transition-colors"
 
           style={{
             bottom: 'calc(1.5rem + env(safe-area-inset-bottom))',
