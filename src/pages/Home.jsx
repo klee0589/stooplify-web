@@ -135,8 +135,12 @@ export default function Home() {
           </h3>
           
           <div className="flex flex-col md:flex-row gap-6 mb-6">
-            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-[#FF6F61] to-[#F5A623] flex items-center justify-center mx-auto md:mx-0 shadow-lg">
-              <span className="text-5xl">👤</span>
+            <div className="w-32 h-32 rounded-full overflow-hidden mx-auto md:mx-0 shadow-lg bg-gradient-to-br from-[#FF6F61] to-[#F5A623]">
+              <img 
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/409ec94fd_headshot.jpg"
+                alt="Daniel - Founder of Stooplify"
+                className="w-full h-full object-cover mix-blend-lighten"
+              />
             </div>
             <div className="flex-1 space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
               <p>{t('founderIntro')}</p>
