@@ -17,6 +17,7 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { format, parseISO } from 'date-fns';
 import AlertSettings from '../components/profile/AlertSettings';
+import SEO from '../components/SEO';
 import {
   AlertDialog,
   AlertDialogAction,
