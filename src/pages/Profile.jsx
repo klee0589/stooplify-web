@@ -260,6 +260,11 @@ export default function Profile() {
 
   return (
     <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
+      <SEO 
+        title={`${user?.full_name || 'My'} Profile - Manage Yard Sales & Settings | Stooplify`}
+        description={`Manage your yard sale listings, favorites, and notification preferences. ${mySales.length} active sale${mySales.length !== 1 ? 's' : ''} posted.`}
+        keywords="user profile, my yard sales, account settings, manage listings, notification preferences"
+      />
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back Button */}
         <Link to={createPageUrl('Home')}>

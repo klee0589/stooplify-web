@@ -141,9 +141,9 @@ export default function Pricing() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#F9F9F9] to-white py-12">
       <SEO 
-        title="Pricing Plans - List Your Yard Sale | Stooplify"
-        description="Simple, transparent pricing for yard sales. Free listing, $4 per sale, or $9/month unlimited. Business plans available for stores. Start free today!"
-        keywords="yard sale pricing, list yard sale free, yard sale posting cost, garage sale listing fees, yard sale plans"
+        title="Yard Sale Listing Pricing - Start Free | Stooplify"
+        description="List your first yard sale FREE! Then choose: $4 per listing or $9/month unlimited. No hidden fees. Reach thousands of local buyers. Perfect for garage sales, estate sales, and multi-family events."
+        keywords="yard sale listing cost, garage sale pricing, how much to list yard sale, free yard sale posting, yard sale advertising cost, estate sale listing fee"
         structuredData={structuredData}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

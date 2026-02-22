@@ -43,8 +43,27 @@ export default function Home() {
     },
   });
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Stooplify",
+    "url": "https://stooplify.com",
+    "description": "Discover amazing yard sales, garage sales, and estate sales near you. Find hidden treasures at unbeatable prices from local sellers in your neighborhood.",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://stooplify.com/YardSales?search={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  };
+
   return (
     <div className="min-h-screen">
+      <SEO 
+        title="Stooplify - Find Local Yard Sales, Garage Sales & Estate Sales Near You"
+        description="Discover amazing deals at yard sales, garage sales, and estate sales in your neighborhood. Browse thousands of local sales, save favorites, and find hidden treasures at unbeatable prices."
+        keywords="yard sales near me, garage sales, estate sales, local sales, secondhand shopping, thrift sales, neighborhood sales, treasure hunting, bargain shopping, NYC yard sales"
+        structuredData={structuredData}
+      />
       <HeroSection />
       
       {/* Stats Section */}

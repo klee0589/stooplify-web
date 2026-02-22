@@ -138,11 +138,23 @@ export default function Calendar() {
     );
   }
 
+  const upcomingSalesCount = allSales.length;
+  
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "My Yard Sale Calendar",
+    "description": "Your personalized calendar of saved and attending yard sales",
+    "numberOfItems": upcomingSalesCount
+  };
+
   return (
     <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
       <SEO 
-        title="My Calendar | Stooplify"
-        description="View all your favorited and attending yard sales in one place"
+        title="My Yard Sale Calendar - Track Favorites & Attending Sales | Stooplify"
+        description={`Manage your ${favorites.length} favorite yard sales and ${upcomingAttendancesCount} sales you're attending. Never miss a local sale with your personalized calendar view.`}
+        keywords="yard sale calendar, my saved sales, attending events, favorite sales, sale reminders, upcoming yard sales"
+        structuredData={structuredData}
       />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

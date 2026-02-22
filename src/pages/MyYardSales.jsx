@@ -10,6 +10,7 @@ import { Switch } from "@/components/ui/switch";
 import { format } from 'date-fns';
 import { toast } from "sonner";
 import { useTranslation } from '../components/translations';
+import SEO from '../components/SEO';
 
 export default function MyYardSales() {
   const [user, setUser] = useState(null);
@@ -122,6 +123,11 @@ export default function MyYardSales() {
 
   return (
     <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900 py-8">
+      <SEO 
+        title={`My Yard Sales (${sales.length}) - Manage Your Listings | Stooplify`}
+        description={`View and manage your ${sales.length} yard sale listing${sales.length !== 1 ? 's' : ''}. Edit details, track views, and update your sales in real-time.`}
+        keywords="my yard sales, manage listings, edit yard sale, my garage sales, seller dashboard"
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
