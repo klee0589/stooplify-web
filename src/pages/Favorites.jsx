@@ -8,6 +8,7 @@ import { Heart, Loader2, MapPin, ArrowLeft, Map, List } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import SaleCard from '../components/sales/SaleCard';
 import SaleMap from '../components/sales/SaleMap';
+import PullToRefresh from '../components/PullToRefresh';
 
 export default function Favorites() {
   const [user, setUser] = useState(null);
@@ -16,6 +17,11 @@ export default function Favorites() {
   const [viewMode, setViewMode] = useState('list');
 
   const queryClient = useQueryClient();
+  
+  const handleRefresh = async () => {
+    await queryClient.refetchQueries({ queryKey: ['userFavorites'] });
+    await queryClient.refetchQueries({ queryKey: ['favoriteSales'] });
+  };
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -111,8 +117,9 @@ export default function Favorites() {
   const isLoading = favoritesLoading || salesLoading;
 
   return (
-    <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <PullToRefresh onRefresh={handleRefresh}>
+      <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
@@ -245,7 +252,8 @@ export default function Favorites() {
             <SaleMap sales={sales} />
           </motion.div>
         )}
+        </div>
       </div>
-    </div>
+    </PullToRefresh>
   );
 }

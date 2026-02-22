@@ -62,6 +62,14 @@ export default function BottomNavBar() {
     return currentPath === path || (currentPath === '' && path === 'Home');
   };
 
+  const handleNavClick = (e, path) => {
+    const active = isActive(path);
+    if (active) {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   const navItems = [
     { name: 'Home', path: 'Home', icon: Home },
     { name: 'Browse', path: 'YardSales', icon: MapPin },
@@ -87,6 +95,7 @@ export default function BottomNavBar() {
             <Link
               key={item.path}
               to={createPageUrl(item.path)}
+              onClick={(e) => handleNavClick(e, item.path)}
               className={`flex flex-col items-center justify-center flex-1 h-full transition-colors relative ${
                 item.highlight 
                   ? 'text-[#FF6F61]' 

@@ -8,6 +8,7 @@ import { MessageCircle, Loader2, ArrowLeft, Inbox } from 'lucide-react';
 import { useTranslation } from '../components/translations';
 import SellerMessageView from '../components/messaging/SellerMessageView';
 import MessageThread from '../components/messaging/MessageThread';
+import PullToRefresh from '../components/PullToRefresh';
 
 export default function Messages() {
   const [user, setUser] = useState(null);
@@ -16,6 +17,11 @@ export default function Messages() {
   const queryClient = useQueryClient();
 
   const t = useTranslation(language);
+  
+  const handleRefresh = async () => {
+    await queryClient.refetchQueries({ queryKey: ['allMessages'] });
+    await queryClient.refetchQueries({ queryKey: ['messagedSales'] });
+  };
 
   useEffect(() => {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
@@ -134,8 +140,9 @@ export default function Messages() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <PullToRefresh onRefresh={handleRefresh}>
+      <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
           <Link to={createPageUrl('Profile')}>
@@ -235,7 +242,8 @@ export default function Messages() {
             ))}
           </div>
         )}
+        </div>
       </div>
-    </div>
+    </PullToRefresh>
   );
 }

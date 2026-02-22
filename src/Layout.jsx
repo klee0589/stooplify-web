@@ -158,6 +158,7 @@ function LayoutContent({ children, currentPageName }) {
         button, a, [role="button"] {
           user-select: none;
           -webkit-touch-callout: none;
+          -webkit-tap-highlight-color: transparent;
         }
 
         .dark body {
