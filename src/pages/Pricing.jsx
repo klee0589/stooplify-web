@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { Check, Store, Zap, TrendingUp, MapPin, Star, Users } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import SEO from '../components/SEO';
 
 export default function Pricing() {
   const [language, setLanguage] = useState('en');
@@ -102,8 +103,49 @@ export default function Pricing() {
     badge: 'Most Visible'
   };
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Pricing Plans",
+    "description": "Choose from free, pay-per-listing, or unlimited monthly plans for yard sales. Business plans available for thrift stores and permanent locations.",
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Free Plan",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      {
+        "@type": "Offer",
+        "name": "Pay Per Listing",
+        "price": "4",
+        "priceCurrency": "USD"
+      },
+      {
+        "@type": "Offer",
+        "name": "Unlimited Plan",
+        "price": "9",
+        "priceCurrency": "USD",
+        "billingIncrement": "monthly"
+      },
+      {
+        "@type": "Offer",
+        "name": "Featured Shop",
+        "price": "49",
+        "priceCurrency": "USD",
+        "billingIncrement": "monthly"
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#F9F9F9] to-white py-12">
+      <SEO 
+        title="Pricing Plans - List Your Yard Sale | Stooplify"
+        description="Simple, transparent pricing for yard sales. Free listing, $4 per sale, or $9/month unlimited. Business plans available for stores. Start free today!"
+        keywords="yard sale pricing, list yard sale free, yard sale posting cost, garage sale listing fees, yard sale plans"
+        structuredData={structuredData}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div

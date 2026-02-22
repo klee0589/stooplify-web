@@ -130,6 +130,7 @@ function LayoutContent({ children, currentPageName }) {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+      <a href="#main-content" className="skip-to-content">Skip to main content</a>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
 
@@ -149,10 +150,36 @@ function LayoutContent({ children, currentPageName }) {
           --text-dark: #ffffff;
         }
 
+        * {
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
         body {
           font-family: 'Inter', sans-serif;
           transition: background-color 0.3s ease, color 0.3s ease;
           overscroll-behavior: none;
+        }
+        
+        /* Accessibility */
+        :focus-visible {
+          outline: 2px solid var(--primary);
+          outline-offset: 2px;
+        }
+        
+        /* Skip to main content for screen readers */
+        .skip-to-content {
+          position: absolute;
+          top: -40px;
+          left: 0;
+          background: var(--primary);
+          color: white;
+          padding: 8px;
+          z-index: 100000;
+        }
+        
+        .skip-to-content:focus {
+          top: 0;
         }
         
         button, a, [role="button"] {
@@ -210,6 +237,7 @@ function LayoutContent({ children, currentPageName }) {
         isScrolled ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent'}`
         }
         style={{ paddingTop: 'env(safe-area-inset-top)' }}
+        role="banner"
         >
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -244,7 +272,7 @@ function LayoutContent({ children, currentPageName }) {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-8">
+            <nav className="hidden md:flex items-center gap-8" role="navigation" aria-label="Main navigation">
               {navLinks.map((link) =>
               <Link
                 key={link.page}
@@ -550,7 +578,7 @@ function LayoutContent({ children, currentPageName }) {
       <BottomNavBar />
 
       {/* Footer */}
-      <footer className="bg-[#2E3A59] dark:bg-gray-950 text-white">
+      <footer className="bg-[#2E3A59] dark:bg-gray-950 text-white" role="contentinfo">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2">

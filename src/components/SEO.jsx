@@ -5,7 +5,7 @@ export default function SEO({
   description = 'Discover amazing yard sales, garage sales, and estate sales in your neighborhood. Buy and sell locally with Stooplify - the digital marketplace for local treasures.',
   keywords = 'yard sale, garage sale, estate sale, local sales, secondhand, thrift, buy local, sell items, neighborhood sales',
   image = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_6963ba60866b343e03d8de8e/f9ad791a3_logo_v1.png',
-  url,
+  url = typeof window !== 'undefined' ? window.location.href : 'https://stooplify.com',
   type = 'website',
   structuredData
 }) {
@@ -25,9 +25,25 @@ export default function SEO({
       element.setAttribute('content', content);
     };
     
+    // Update link tags
+    const updateLink = (rel, href) => {
+      let element = document.querySelector(`link[rel="${rel}"]`);
+      if (!element) {
+        element = document.createElement('link');
+        element.setAttribute('rel', rel);
+        document.head.appendChild(element);
+      }
+      element.setAttribute('href', href);
+    };
+    
     // Standard meta tags
     updateMeta('description', description);
     updateMeta('keywords', keywords);
+    updateMeta('robots', 'index, follow');
+    updateMeta('author', 'Stooplify');
+    
+    // Canonical URL
+    updateLink('canonical', url);
     
     // Open Graph tags
     updateMeta('og:title', title, true);
@@ -41,6 +57,8 @@ export default function SEO({
     updateMeta('twitter:title', title);
     updateMeta('twitter:description', description);
     updateMeta('twitter:image', image);
+    updateMeta('twitter:site', '@stooplify');
+    updateMeta('twitter:creator', '@stooplify');
     
     // Structured Data
     if (structuredData) {

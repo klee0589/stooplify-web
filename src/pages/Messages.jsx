@@ -9,6 +9,7 @@ import { useTranslation } from '../components/translations';
 import SellerMessageView from '../components/messaging/SellerMessageView';
 import MessageThread from '../components/messaging/MessageThread';
 import PullToRefresh from '../components/PullToRefresh';
+import SEO from '../components/SEO';
 
 export default function Messages() {
   const [user, setUser] = useState(null);
@@ -141,6 +142,11 @@ export default function Messages() {
 
   return (
     <PullToRefresh onRefresh={handleRefresh}>
+      <SEO 
+        title="My Messages | Stooplify"
+        description="Manage conversations with yard sale buyers and sellers. Communicate directly about items and sales."
+        keywords="yard sale messages, buyer seller communication"
+      />
       <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
