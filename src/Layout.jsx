@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import BottomNavBar from '../components/BottomNavBar';
 import SentryErrorBoundary, { setUserContext } from '../components/SentryErrorBoundary';
+import FloatingChatWidget from '../components/FloatingChatWidget';
 
 function LayoutContent({ children, currentPageName }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -127,8 +128,7 @@ function LayoutContent({ children, currentPageName }) {
   { name: t('listSale'), page: 'AddYardSale', icon: PlusCircle },
   ...(userSales.length > 0 ? [{ name: t('myYardSales'), page: 'MyYardSales', icon: MapPin }] : []),
   { name: 'Calendar', page: 'Calendar', icon: Settings },
-  { name: 'Guides', page: 'Guides', icon: Settings },
-  { name: language === 'en' ? 'Chat Support' : 'Chat de Soporte', page: 'ChatSupport', icon: MessageCircle }];
+  { name: 'Guides', page: 'Guides', icon: Settings }];
 
 
   return (
@@ -579,6 +579,9 @@ function LayoutContent({ children, currentPageName }) {
 
       {/* Bottom Navigation - Mobile Only */}
       <BottomNavBar />
+
+      {/* Floating Chat Widget */}
+      <FloatingChatWidget />
 
       {/* Footer */}
       <footer className="bg-[#2E3A59] dark:bg-gray-950 text-white" role="contentinfo">
