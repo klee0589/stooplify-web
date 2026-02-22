@@ -9,6 +9,7 @@ import { useTheme, ThemeProvider } from '../components/ThemeProvider';
 import { toast } from 'sonner';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import BottomNavBar from '../components/BottomNavBar';
+import SentryErrorBoundary, { setUserContext } from '../components/SentryErrorBoundary';
 
 function LayoutContent({ children, currentPageName }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -33,6 +34,7 @@ function LayoutContent({ children, currentPageName }) {
         if (isAuth) {
           const currentUser = await base44.auth.me();
           setUser(currentUser);
+          setUserContext(currentUser);
         }
       } catch (e) {
         console.log('Not authenticated');
@@ -667,8 +669,10 @@ function LayoutContent({ children, currentPageName }) {
 
 export default function Layout({ children, currentPageName }) {
   return (
-    <ThemeProvider>
-    <LayoutContent children={children} currentPageName={currentPageName} />
-    </ThemeProvider>);
-
+    <SentryErrorBoundary>
+      <ThemeProvider>
+        <LayoutContent children={children} currentPageName={currentPageName} />
+      </ThemeProvider>
+    </SentryErrorBoundary>
+  );
 }
