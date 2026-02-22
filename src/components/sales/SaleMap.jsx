@@ -156,6 +156,9 @@ export default function SaleMap({ sales, center }) {
   return (
     <div className="w-full h-full rounded-2xl overflow-hidden shadow-lg">
       <style>{`
+        .leaflet-tile-pane {
+          filter: saturate(0.8) brightness(1.05) sepia(0.15);
+        }
         .leaflet-popup-content-wrapper {
           border-radius: 16px;
           padding: 0;
@@ -181,9 +184,9 @@ export default function SaleMap({ sales, center }) {
       >
         <MapUpdater center={center} />
         <TileLayer
-          attribution='&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://stamen.com">Stamen Design</a>'
-          url="https://tiles.stadiamaps.com/tiles/stamen_terrain/{z}/{x}/{y}{r}.png"
-          maxZoom={18}
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          maxZoom={19}
         />
         {/* Community Locations */}
         {communityLocations.map((location) => (
