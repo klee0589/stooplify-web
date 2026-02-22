@@ -135,11 +135,9 @@ export default function Home() {
           </h3>
           
           <div className="flex flex-col md:flex-row gap-6 mb-6">
-            <img 
-              src="https://media.licdn.com/dms/image/v2/C4D03AQHfEpPu5uyhmA/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1623772310095?e=1770854400&v=beta&t=Csl4ztXTFqpT2bDF941vIBkMgwKK7iah2ExnaXY6eFg"
-              alt="Daniel - Founder of Stooplify"
-              className="w-32 h-32 rounded-full object-cover mx-auto md:mx-0 shadow-lg"
-            />
+            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-[#FF6F61] to-[#F5A623] flex items-center justify-center mx-auto md:mx-0 shadow-lg">
+              <span className="text-5xl">👤</span>
+            </div>
             <div className="flex-1 space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
               <p>{t('founderIntro')}</p>
               <p>{t('founderBackground')}</p>
