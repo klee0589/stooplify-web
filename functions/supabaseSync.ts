@@ -12,16 +12,22 @@ Deno.serve(async (req) => {
     const body = await req.json();
 
     // Check if this is an automation event or direct API call
-    let action, saleId, saleData;
+    let action, saleId, saleData, isAutomation = false;
     
     if (body.event) {
-      // Automation event format
+      // Automation event format - these come from Base44 automations and are trusted
       console.log('🤖 Automation triggered:', body.event.type);
+      isAutomation = true;
       action = body.event.type; // 'create', 'update', or 'delete'
       saleId = body.event.entity_id;
       saleData = body.data;
     } else {
-      // Direct API call format
+      // Direct API call format - require admin authentication
+      const user = await base44.auth.me();
+      if (!user || user.role !== 'admin') {
+        return Response.json({ error: 'Admin access required for manual sync' }, { status: 403 });
+      }
+      
       action = body.action;
       saleId = body.saleId;
       saleData = body.saleData;

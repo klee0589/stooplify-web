@@ -5,16 +5,25 @@ import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
 import { RefreshCw, Wifi, WifiOff } from 'lucide-react';
 
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL || 'https://kojdxlijskwakkjkdtam.supabase.co',
-  import.meta.env.VITE_SUPABASE_ANON_KEY || 'sb_publishable_c5QCq6-iXelaBtg-8WZ-bw_t655ZwzR'
-);
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl || !supabaseKey) {
+  console.error('Supabase credentials not configured');
+}
+
+const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
 
 export default function SupabaseSync({ onUpdate }) {
   const [isConnected, setIsConnected] = useState(false);
   const [recentUpdates, setRecentUpdates] = useState([]);
 
   useEffect(() => {
+    if (!supabase) {
+      console.warn('Supabase not configured - realtime updates disabled');
+      return;
+    }
+    
     console.log('🔌 Setting up Supabase realtime subscription...');
 
     // Subscribe to realtime changes

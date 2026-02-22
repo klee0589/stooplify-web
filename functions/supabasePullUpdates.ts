@@ -16,7 +16,12 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     
-    // This can be called without auth for syncing
+    // Require admin authentication for sync operations
+    const user = await base44.auth.me();
+    if (!user || user.role !== 'admin') {
+      return Response.json({ error: 'Admin access required' }, { status: 403 });
+    }
+    
     const { since } = await req.json();
     
     console.log('🔄 Pulling updates from Supabase since:', since);

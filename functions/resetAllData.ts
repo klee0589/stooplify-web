@@ -8,9 +8,9 @@ Deno.serve(async (req) => {
     const user = await base44.auth.me();
     console.log('User:', user?.email);
 
-    if (!user || user.email !== 'klee0589@gmail.com') {
+    if (!user || user.role !== 'admin') {
       console.log('Unauthorized attempt by:', user?.email);
-      return Response.json({ error: 'Unauthorized' }, { status: 403 });
+      return Response.json({ error: 'Admin access required' }, { status: 403 });
     }
 
     const deleteCounts = { sales: 0, favorites: 0, attendances: 0, reviews: 0, messages: 0 };

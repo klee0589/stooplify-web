@@ -3,6 +3,13 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+    
+    // This function returns only public seller info, but still requires the caller to be authenticated
+    const caller = await base44.auth.me();
+    if (!caller) {
+      return Response.json({ error: 'Authentication required' }, { status: 401 });
+    }
+    
     const { email } = await req.json();
     
     if (!email) {

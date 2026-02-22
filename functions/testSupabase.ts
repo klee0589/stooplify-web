@@ -2,6 +2,15 @@ import { createClient } from 'npm:@supabase/supabase-js@2.39.0';
 
 Deno.serve(async (req) => {
   try {
+    // This is a test function - require admin authentication
+    const { createClientFromRequest } = await import('npm:@base44/sdk@0.8.6');
+    const base44 = createClientFromRequest(req);
+    const user = await base44.auth.me();
+    
+    if (!user || user.role !== 'admin') {
+      return Response.json({ error: 'Admin access required' }, { status: 403 });
+    }
+    
     console.log('🔍 Testing Supabase connection...');
     console.log('URL:', Deno.env.get('SUPABASE_URL'));
     console.log('Service role key exists:', !!Deno.env.get('SUPABASE_SERVICE_ROLE_KEY'));
