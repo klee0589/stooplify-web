@@ -3,10 +3,18 @@ import { GuideContent } from '../components/GuideContent';
 
 export default function GuidesSeniors() {
   useEffect(() => {
-    document.title = 'How Seniors Can Post a Yard Sale Online - Easy Guide | Stooplify';
+    document.title = 'How Seniors Can Post Yard Sales, Garage Sales & Stoop Sales Online | Stooplify';
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
-      metaDesc.setAttribute('content', 'Simple guide for seniors to post yard sales online in NYC. No tech skills needed - list your sale in minutes in Brooklyn, Queens, or anywhere in New York.');
+      metaDesc.setAttribute('content', 'Simple guide for seniors to post yard sales, garage sales, and stoop sales online in NYC. No tech skills needed - list your yard sale, garage sale, or street sale in minutes in Brooklyn, Queens, or anywhere in New York.');
+    }
+    
+    const metaKeywords = document.querySelector('meta[name="keywords"]');
+    if (!metaKeywords) {
+      const keywords = document.createElement('meta');
+      keywords.name = 'keywords';
+      keywords.content = 'seniors post yard sale, elderly garage sale online, seniors stoop sale, easy yard sale listing, post garage sale for seniors, simple yard sale listing, seniors sell online NYC, easy garage sale posting';
+      document.head.appendChild(keywords);
     }
     
     const script = document.createElement('script');
@@ -14,8 +22,8 @@ export default function GuidesSeniors() {
     script.text = JSON.stringify({
       "@context": "https://schema.org",
       "@type": "HowTo",
-      "name": "How Seniors Can Post a Yard Sale Online",
-      "description": "Simple steps for seniors to list yard sales online",
+      "name": "How Seniors Can Post a Yard Sale, Garage Sale or Stoop Sale Online",
+      "description": "Simple steps for seniors to list yard sales, garage sales, and stoop sales online",
       "step": [
         {"@type": "HowToStep", "text": "Gather your address or nearest intersection"},
         {"@type": "HowToStep", "text": "Choose your date and time"},
