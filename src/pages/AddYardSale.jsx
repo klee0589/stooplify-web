@@ -204,13 +204,6 @@ export default function AddYardSale() {
             const exactLat = parseFloat(geoData[0].lat);
             const exactLon = parseFloat(geoData[0].lon);
 
-            // Validate location is in New York (relaxed bounds)
-            const isInNY = exactLat >= 40.4 && exactLat <= 40.95 && exactLon >= -74.3 && exactLon <= -73.6;
-
-            if (!isInNY) {
-              continue; // Try next query instead of throwing
-            }
-
             // Create approximate coordinates (offset by ~0.01 degrees = ~1km for privacy)
             const latOffset = (Math.random() - 0.5) * 0.02;
             const lonOffset = (Math.random() - 0.5) * 0.02;
@@ -467,23 +460,10 @@ export default function AddYardSale() {
       }
 
       if (geoData.length > 0) {
-        const lat = parseFloat(geoData[0].lat);
-        const lon = parseFloat(geoData[0].lon);
-
-        // Check if within New York bounds (relaxed slightly to be more forgiving)
-        const isInNY = lat >= 40.4 && lat <= 40.95 && lon >= -74.3 && lon <= -73.6;
-
-        if (!isInNY) {
-          setAddressValidation({
-            status: 'invalid',
-            message: '⚠️ Address must be in New York City area'
-          });
-        } else {
-          setAddressValidation({
-            status: 'valid',
-            message: `✓ Address found: ${geoData[0].display_name}`
-          });
-        }
+        setAddressValidation({
+          status: 'valid',
+          message: `✓ Address found: ${geoData[0].display_name}`
+        });
       } else {
         setAddressValidation({
           status: 'invalid',
