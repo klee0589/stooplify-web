@@ -18,6 +18,7 @@ if (SENTRY_DSN) {
     replaysSessionSampleRate: 0.1,
     replaysOnErrorSampleRate: 1.0,
     environment: window.location.hostname === 'localhost' ? 'development' : 'production',
+    sendDefaultPii: true,
     beforeSend(event, hint) {
       const error = hint.originalException;
       if (error && error.message) {
