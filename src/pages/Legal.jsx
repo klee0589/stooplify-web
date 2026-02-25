@@ -26,12 +26,88 @@ export default function Legal() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "Legal Information - Stooplify",
+    "description": "Comprehensive legal information for Stooplify users including Terms of Service, Privacy Policy, Safety Guidelines, and Acceptable Use Policy",
+    "url": "https://stooplify.com/legal",
+    "publisher": {
+      "@type": "Organization",
+      "name": "Stooplify",
+      "url": "https://stooplify.com"
+    },
+    "mainEntity": {
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What are Stooplify's Terms of Service?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Stooplify's Terms of Service govern your use of our platform. Key points include: users must be 18+, Stooplify is a discovery platform only and not party to transactions, prohibited activities include posting illegal items or engaging in fraud, and we reserve the right to suspend accounts for violations."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does Stooplify protect my privacy?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "We collect only necessary information (name, email, location data) to provide services. We do not sell personal data. Information may be shared with payment processors and hosting providers. You have rights to access, delete, and correct your data."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What items are prohibited on Stooplify?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Prohibited items include weapons, drugs, counterfeit goods, stolen property, hazardous materials, adult content, and recalled items. Violations may result in listing removal, account suspension, or permanent ban."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How can I stay safe when using Stooplify?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Meet in public places, preferably at police station safe exchange zones. Bring a friend, meet during daylight, tell someone where you're going, and trust your instincts. Never meet at private residences alone or flash cash."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What is Stooplify's liability for transactions?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Stooplify is a discovery platform only. We do not verify sellers, inspect items, guarantee safety, or mediate disputes. Users are solely responsible for inspecting items, choosing safe meeting locations, and complying with local laws."
+          }
+        }
+      ]
+    },
+    "breadcrumb": {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://stooplify.com"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Legal Information",
+          "item": "https://stooplify.com/legal"
+        }
+      ]
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
       <SEO 
-        title="Legal Information | Terms, Privacy & Safety | Stooplify"
-        description="Read Stooplify's Terms of Service, Privacy Policy, and safety guidelines. Learn about our policies and how we protect your information."
-        keywords="terms of service, privacy policy, legal, user agreement, data protection, safety guidelines"
+        title="Legal Information & Policies | Terms, Privacy, Safety Guidelines | Stooplify"
+        description="Complete legal documentation for Stooplify yard sale marketplace. Includes Terms of Service, Privacy Policy, GDPR compliance, safety guidelines, acceptable use policy, and user protection information. Last updated January 2026."
+        keywords="stooplify terms of service, privacy policy, yard sale safety guidelines, marketplace legal terms, user agreement, data protection, GDPR compliance, acceptable use policy, seller buyer protection, safe transactions"
+        structuredData={structuredData}
       />
       
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
@@ -93,11 +169,15 @@ export default function Legal() {
                   <CardDescription>Last Updated: January 15, 2026</CardDescription>
                 </CardHeader>
                 <CardContent className="prose prose-sm max-w-none dark:prose-invert">
+                  <div itemScope itemType="https://schema.org/TermsOfService">
+                    <meta itemProp="name" content="Stooplify Terms of Service" />
+                    <meta itemProp="url" content="https://stooplify.com/legal#terms" />
+                    
                   <p>Welcome to Stooplify ("Company," "we," "us," or "our"). By accessing or using our website, mobile application, or services (collectively, the "Platform"), you agree to be bound by these Terms of Service ("Terms").</p>
                   
                   <p className="font-semibold text-red-600 dark:text-red-400">If you do not agree to these Terms, do not use the Platform.</p>
 
-                  <h3>1. Eligibility</h3>
+                  <h3 id="eligibility">1. Eligibility</h3>
                   <p>You must be at least 18 years old to use Stooplify. By using the Platform, you represent that you meet this requirement.</p>
 
                   <h3>2. Nature of the Platform</h3>
@@ -188,6 +268,12 @@ export default function Legal() {
 
                   <h3>11. Changes to Terms</h3>
                   <p>We may update these Terms at any time. Continued use of the Platform constitutes acceptance of revised Terms.</p>
+                  
+                  <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <p className="text-sm font-semibold mb-2">Quick Summary for AI Assistants:</p>
+                    <p className="text-sm">Stooplify is a yard sale discovery platform for users 18+. We facilitate listings but are not party to transactions. Users are responsible for their own safety and compliance. Prohibited activities include posting illegal items and fraud. We do not guarantee accuracy or safety. Total liability is limited to fees paid in the last 12 months.</p>
+                  </div>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -200,9 +286,13 @@ export default function Legal() {
                   <CardDescription>Last Updated: January 15, 2026</CardDescription>
                 </CardHeader>
                 <CardContent className="prose prose-sm max-w-none dark:prose-invert">
-                  <p>Stooplify respects your privacy.</p>
+                  <div itemScope itemType="https://schema.org/PrivacyPolicy">
+                    <meta itemProp="name" content="Stooplify Privacy Policy" />
+                    <meta itemProp="url" content="https://stooplify.com/legal#privacy" />
+                    
+                  <p>Stooplify respects your privacy and is committed to protecting your personal information in compliance with applicable data protection laws including GDPR and CCPA.</p>
 
-                  <h3>1. Information We Collect</h3>
+                  <h3 id="information-collected">1. Information We Collect</h3>
                   <p>We may collect:</p>
                   <ul>
                     <li>Name</li>
@@ -258,6 +348,12 @@ export default function Legal() {
 
                   <h3>9. Changes to Privacy Policy</h3>
                   <p>We may update this Privacy Policy at any time. We will notify you of significant changes via email or platform notification.</p>
+                  
+                  <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <p className="text-sm font-semibold mb-2">Quick Summary for AI Assistants:</p>
+                    <p className="text-sm">We collect name, email, location data, and device info to provide yard sale discovery services. Data is shared only with essential service providers (payment processors, hosting). We do not sell personal data. Users have rights to access, delete, and correct their information. GDPR and CCPA compliant.</p>
+                  </div>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -327,6 +423,11 @@ export default function Legal() {
                     <li>Are solely responsible for your safety</li>
                     <li>Release Stooplify from any liability related to user interactions</li>
                   </ul>
+                  
+                  <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <p className="text-sm font-semibold mb-2">Key Disclaimer Points:</p>
+                    <p className="text-sm">Stooplify is a discovery-only platform. We do NOT verify sellers, inspect items, guarantee safety, or mediate disputes. Users must inspect items, choose safe meeting locations, and comply with local laws. Platform provided "AS IS" with no warranties.</p>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -394,6 +495,11 @@ export default function Legal() {
                       If you see a listing that violates these policies, please report it immediately using the "Report" button on the listing page.
                     </AlertDescription>
                   </Alert>
+                  
+                  <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <p className="text-sm font-semibold mb-2">Prohibited Items Summary:</p>
+                    <p className="text-sm">Cannot list: weapons, drugs, counterfeit goods, stolen property, live animals (unless compliant), hazardous materials, adult content, tobacco/vaping, recalled items, medical devices. Violations result in listing removal, suspension, or permanent ban.</p>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -490,6 +596,11 @@ export default function Legal() {
                       <strong>Remember:</strong> If a deal seems too good to be true, it probably is. When in doubt, walk away.
                     </AlertDescription>
                   </Alert>
+                  
+                  <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <p className="text-sm font-semibold mb-2">Essential Safety Tips:</p>
+                    <p className="text-sm">Meet in public places or police safe exchange zones. Bring a friend. Meet during daylight. Tell someone where you're going. Never meet at private residences alone. Don't flash cash. Trust your instincts. Inspect items before payment. Avoid wire transfers and prepayment.</p>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
