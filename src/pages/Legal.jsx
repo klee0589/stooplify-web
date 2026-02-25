@@ -10,14 +10,16 @@ export default function Legal() {
   const [activeTab, setActiveTab] = useState('terms');
 
   useEffect(() => {
-    // Scroll to top when page loads
-    window.scrollTo(0, 0);
-    
     // Get hash from URL if present
     const hash = window.location.hash.replace('#', '');
     if (hash && ['terms', 'privacy', 'disclaimer', 'acceptable-use', 'safety'].includes(hash)) {
       setActiveTab(hash);
     }
+    
+    // Scroll to top after setting tab
+    setTimeout(() => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, 100);
   }, []);
 
   const handleTabChange = (value) => {
