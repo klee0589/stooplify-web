@@ -56,7 +56,14 @@ export default function Favorites() {
       if (favorites.length === 0) return [];
       const allSales = await base44.entities.YardSale.filter({ status: 'approved' });
       const favoriteIds = favorites.map(f => f.yard_sale_id);
-      return allSales.filter(sale => favoriteIds.includes(sale.id));
+      const favoritedSales = allSales.filter(sale => favoriteIds.includes(sale.id));
+      
+      // Filter out finished sales (past end time)
+      const now = new Date();
+      return favoritedSales.filter(sale => {
+        const saleEndDateTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
+        return saleEndDateTime >= now;
+      });
     },
     enabled: favorites.length > 0,
   });
