@@ -57,53 +57,25 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
     { value: 'card', label: language === 'es' ? 'Tarjetas' : 'Cards' },
     { value: 'digital', label: language === 'es' ? 'Digital' : 'Digital' },
   ];
+  const handleCategoryToggle = (value) => {
+    const current = filters.categories || [];
+    const isSelected = current.includes(value);
+    const newCategories = isSelected
+      ? current.filter(c => c !== value)
+      : [...current, value];
+    onFilterChange({ ...filters, categories: newCategories });
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       className="space-y-4"
     >
-      {/* Categories - Multi-select */}
+      {/* All Filters in One Card */}
       <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
-        <div className="flex items-center gap-2 text-[#2E3A59] dark:text-white mb-3">
-          <Filter className="w-4 h-4" />
-          <span className="font-medium text-sm" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            {language === 'es' ? 'Categorías' : 'Categories'}
-          </span>
-        </div>
-        <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-2">
-          {categories.map((cat) => {
-            const isSelected = filters.categories?.includes(cat.value);
-            const Icon = cat.icon;
-            return (
-              <button
-                key={cat.value}
-                onClick={() => {
-                  const current = filters.categories || [];
-                  const newCategories = isSelected
-                    ? current.filter(c => c !== cat.value)
-                    : [...current, cat.value];
-                  onFilterChange({ ...filters, categories: newCategories });
-                }}
-                className={`flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium transition-all ${
-                  isSelected
-                    ? 'bg-[#FF6F61] text-white'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                }`}
-              >
-                <Icon className="w-3 h-3" />
-                <span>{cat.label}</span>
-                {isSelected && <Check className="w-3 h-3" />}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Other Filters */}
-      <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-          {/* Search */}
+        <div className="space-y-3">
+          {/* Search - Full Width */}
           <Input
             placeholder={language === 'es' ? 'Buscar ventas...' : 'Search sales...'}
             value={filters.search || ''}
@@ -111,35 +83,57 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
             className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61]"
           />
           
-          {/* Date */}
-          <DrawerSelect
-            value={filters.date || 'all'}
-            onValueChange={(value) => onFilterChange({ ...filters, date: value })}
-            options={dateOptions}
-            placeholder={language === 'es' ? 'Fecha' : 'Date'}
-            label={language === 'es' ? 'Seleccionar Fecha' : 'Select Date'}
-            triggerClassName="flex h-9 w-full items-center justify-between whitespace-nowrap rounded-xl border border-gray-200 bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-          />
-          
-          {/* Distance */}
-          <DrawerSelect
-            value={filters.distance || 'all'}
-            onValueChange={(value) => onFilterChange({ ...filters, distance: value })}
-            options={distances}
-            placeholder={language === 'es' ? 'Distancia' : 'Distance'}
-            label={language === 'es' ? 'Seleccionar Distancia' : 'Select Distance'}
-            triggerClassName="flex h-9 w-full items-center justify-between whitespace-nowrap rounded-xl border border-gray-200 bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-          />
-          
-          {/* Payment */}
-          <DrawerSelect
-            value={filters.payment || 'all'}
-            onValueChange={(value) => onFilterChange({ ...filters, payment: value })}
-            options={paymentOptions}
-            placeholder={language === 'es' ? 'Pago' : 'Payment'}
-            label={language === 'es' ? 'Seleccionar Pago' : 'Select Payment'}
-            triggerClassName="flex h-9 w-full items-center justify-between whitespace-nowrap rounded-xl border border-gray-200 bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-          />
+          {/* Dropdowns Grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {/* Categories - Multi-select Drawer */}
+            <DrawerSelect
+              value={filters.categories?.length > 0 ? filters.categories[0] : 'all'}
+              onValueChange={handleCategoryToggle}
+              options={[
+                { value: 'all', label: language === 'es' ? 'Todas' : 'All Categories' },
+                ...categories.map(cat => ({ value: cat.value, label: cat.label }))
+              ]}
+              placeholder={
+                filters.categories?.length > 0 
+                  ? `${filters.categories.length} ${language === 'es' ? 'seleccionadas' : 'selected'}`
+                  : (language === 'es' ? 'Categoría' : 'Category')
+              }
+              label={language === 'es' ? 'Seleccionar Categoría' : 'Select Category'}
+              triggerClassName="flex h-9 w-full items-center justify-between whitespace-nowrap rounded-xl border border-gray-200 bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              multiSelect={true}
+              selectedValues={filters.categories || []}
+            />
+            
+            {/* Date */}
+            <DrawerSelect
+              value={filters.date || 'all'}
+              onValueChange={(value) => onFilterChange({ ...filters, date: value })}
+              options={dateOptions}
+              placeholder={language === 'es' ? 'Fecha' : 'Date'}
+              label={language === 'es' ? 'Seleccionar Fecha' : 'Select Date'}
+              triggerClassName="flex h-9 w-full items-center justify-between whitespace-nowrap rounded-xl border border-gray-200 bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            />
+            
+            {/* Distance */}
+            <DrawerSelect
+              value={filters.distance || 'all'}
+              onValueChange={(value) => onFilterChange({ ...filters, distance: value })}
+              options={distances}
+              placeholder={language === 'es' ? 'Distancia' : 'Distance'}
+              label={language === 'es' ? 'Seleccionar Distancia' : 'Select Distance'}
+              triggerClassName="flex h-9 w-full items-center justify-between whitespace-nowrap rounded-xl border border-gray-200 bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            />
+            
+            {/* Payment */}
+            <DrawerSelect
+              value={filters.payment || 'all'}
+              onValueChange={(value) => onFilterChange({ ...filters, payment: value })}
+              options={paymentOptions}
+              placeholder={language === 'es' ? 'Pago' : 'Payment'}
+              label={language === 'es' ? 'Seleccionar Pago' : 'Select Payment'}
+              triggerClassName="flex h-9 w-full items-center justify-between whitespace-nowrap rounded-xl border border-gray-200 bg-transparent px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+            />
+          </div>
         </div>
         
         {/* Reset Button */}
