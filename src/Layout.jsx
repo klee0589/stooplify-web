@@ -591,7 +591,7 @@ function LayoutContent({ children, currentPageName }) {
               <img
                 src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_6963ba60866b343e03d8de8e/f9ad791a3_logo_v1.png?v=2"
                 alt="Stooplify"
-                className="h-10 w-auto brightness-0 invert mb-4" />
+                className="h-10 w-auto mb-4" />
 
               <p className="text-white/70 max-w-sm">
                 Discover amazing finds at yard sales near you. Join our community of treasure hunters today!
