@@ -70,7 +70,7 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
     <motion.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="space-y-4"
+      className="space-y-4 relative z-50"
     >
       {/* All Filters in One Card */}
       <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">

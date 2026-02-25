@@ -154,7 +154,7 @@ export default function SaleMap({ sales, center }) {
   }
 
   return (
-    <div className="w-full h-full rounded-2xl overflow-hidden shadow-lg">
+    <div className="w-full h-full rounded-2xl overflow-hidden shadow-lg relative z-0">
       <style>{`
         .leaflet-tile-pane {
           filter: saturate(0.5) brightness(1.1) sepia(0.25) hue-rotate(-10deg);
