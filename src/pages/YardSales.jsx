@@ -147,12 +147,18 @@ export default function YardSales() {
       return false;
     }
     
-    // Search (title + description)
+    // Search (title, description, and location fields)
     if (filters.search) {
       const searchLower = filters.search.toLowerCase();
       const titleMatch = sale.title?.toLowerCase().includes(searchLower);
       const descMatch = sale.description?.toLowerCase().includes(searchLower);
-      if (!titleMatch && !descMatch) {
+      const generalLocationMatch = sale.general_location?.toLowerCase().includes(searchLower);
+      const addressMatch = sale.address?.toLowerCase().includes(searchLower);
+      const cityMatch = sale.city?.toLowerCase().includes(searchLower);
+      const stateMatch = sale.state?.toLowerCase().includes(searchLower);
+      const zipCodeMatch = sale.zip_code?.toLowerCase().includes(searchLower);
+      
+      if (!titleMatch && !descMatch && !generalLocationMatch && !addressMatch && !cityMatch && !stateMatch && !zipCodeMatch) {
         return false;
       }
     }
