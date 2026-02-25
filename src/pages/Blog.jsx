@@ -47,7 +47,7 @@ export default function Blog() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       <SEO
         title="Blog - Yard Sale Tips, Guides & Stories | Stooplify"
         description="Discover expert tips, guides, and stories about yard sales, garage sales, and secondhand shopping. Learn how to buy, sell, and find amazing deals."
@@ -55,32 +55,39 @@ export default function Blog() {
         structuredData={structuredData}
       />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
-        >
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            Stooplify Blog
-          </h1>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8">
-            Tips, guides, and stories about yard sales, secondhand shopping, and community treasures
-          </p>
+      {/* Hero Section */}
+      <div className="bg-gradient-to-br from-[#14B8FF] to-[#0da3e6] text-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center"
+          >
+            <h1 className="text-5xl md:text-6xl font-bold mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              Stooplify Blog
+            </h1>
+            <p className="text-xl text-white/90 max-w-2xl mx-auto mb-8">
+              Expert tips, guides, and stories about yard sales, secondhand shopping, and finding community treasures
+            </p>
 
-          {/* Search */}
-          <div className="max-w-md mx-auto relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <Input
-              type="text"
-              placeholder="Search articles..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 py-6"
-            />
-          </div>
-        </motion.div>
+            {/* Search */}
+            <div className="max-w-md mx-auto">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                <Input
+                  type="text"
+                  placeholder="Search articles..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-12 py-6 text-lg bg-white"
+                />
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
 
         {/* Blog Posts Grid */}
         {isLoading ? (
@@ -94,20 +101,20 @@ export default function Blog() {
             </p>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredPosts.map((post, index) => (
               <motion.article
                 key={post.id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
+                transition={{ delay: index * 0.05 }}
               >
                 <Link 
                   to={createPageUrl('BlogPost') + `?slug=${post.slug}`}
-                  className="group block bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300"
+                  className="group block h-full bg-white dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-[#14B8FF] hover:shadow-xl transition-all duration-300"
                 >
                   {post.featured_image_url && (
-                    <div className="aspect-video overflow-hidden">
+                    <div className="aspect-[16/9] overflow-hidden bg-gray-100 dark:bg-gray-700">
                       <img
                         src={post.featured_image_url}
                         alt={post.title}
@@ -116,41 +123,41 @@ export default function Blog() {
                     </div>
                   )}
                   
-                  <div className="p-6">
+                  <div className="p-5">
                     {/* Tags */}
                     {post.tags && post.tags.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-3">
                         {post.tags.slice(0, 2).map((tag) => (
-                          <Badge key={tag} variant="secondary" className="text-xs">
+                          <Badge key={tag} className="bg-[#14B8FF]/10 text-[#14B8FF] hover:bg-[#14B8FF]/20 text-xs font-medium">
                             {tag}
                           </Badge>
                         ))}
                       </div>
                     )}
 
-                    <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-[#14B8FF] transition-colors line-clamp-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                    <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-[#14B8FF] transition-colors line-clamp-2 leading-snug" style={{ fontFamily: 'Poppins, sans-serif' }}>
                       {post.title}
                     </h2>
 
-                    <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 mb-4 line-clamp-2 leading-relaxed">
                       {post.excerpt}
                     </p>
 
                     {/* Meta */}
-                    <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-                      <div className="flex items-center gap-4">
+                    <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-100 dark:border-gray-700">
+                      <div className="flex items-center gap-3">
                         <span className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4" />
-                          {format(new Date(post.publish_date), 'MMM d, yyyy')}
+                          <Calendar className="w-3.5 h-3.5" />
+                          {format(new Date(post.publish_date), 'MMM d')}
                         </span>
                         {post.reading_time_minutes && (
                           <span className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
+                            <Clock className="w-3.5 h-3.5" />
                             {post.reading_time_minutes} min
                           </span>
                         )}
                       </div>
-                      <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                      <ArrowRight className="w-4 h-4 text-[#14B8FF] group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>
                 </Link>

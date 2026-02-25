@@ -132,17 +132,17 @@ export default function BlogPost() {
         structuredData={structuredData}
       />
 
-      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <article className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Back button */}
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          className="mb-8"
+          className="mb-6"
         >
           <Button
             variant="ghost"
             onClick={() => navigate(createPageUrl('Blog'))}
-            className="gap-2"
+            className="gap-2 -ml-2 hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Blog
@@ -153,41 +153,45 @@ export default function BlogPost() {
         <motion.header
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-12"
+          className="mb-8"
         >
           {/* Tags */}
           {post.tags && post.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-4">
               {post.tags.map((tag) => (
-                <Badge key={tag} variant="secondary">
+                <Badge key={tag} className="bg-[#14B8FF]/10 text-[#14B8FF] hover:bg-[#14B8FF]/20 font-medium">
                   {tag}
                 </Badge>
               ))}
             </div>
           )}
 
-          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4 leading-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
             {post.title}
           </h1>
 
-          <p className="text-xl text-gray-600 dark:text-gray-300 mb-6">
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
             {post.excerpt}
           </p>
 
           {/* Meta */}
-          <div className="flex items-center justify-between flex-wrap gap-4 pb-6 border-b dark:border-gray-700">
-            <div className="flex items-center gap-6 text-gray-600 dark:text-gray-400">
-              <span className="flex items-center gap-2">
+          <div className="flex items-center justify-between flex-wrap gap-4 py-4 border-y border-gray-200 dark:border-gray-700">
+            <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
+              <span className="flex items-center gap-1.5">
                 <Calendar className="w-4 h-4" />
                 {format(new Date(post.publish_date), 'MMMM d, yyyy')}
               </span>
               {post.reading_time_minutes && (
-                <span className="flex items-center gap-2">
-                  <Clock className="w-4 h-4" />
-                  {post.reading_time_minutes} min read
-                </span>
+                <>
+                  <span className="text-gray-300 dark:text-gray-600">•</span>
+                  <span className="flex items-center gap-1.5">
+                    <Clock className="w-4 h-4" />
+                    {post.reading_time_minutes} min read
+                  </span>
+                </>
               )}
-              <span className="text-sm">
+              <span className="text-gray-300 dark:text-gray-600">•</span>
+              <span>
                 By {post.author_name || 'Stooplify Team'}
               </span>
             </div>
@@ -196,7 +200,7 @@ export default function BlogPost() {
               variant="outline"
               size="sm"
               onClick={handleShare}
-              className="gap-2"
+              className="gap-2 hover:bg-[#14B8FF] hover:text-white hover:border-[#14B8FF]"
             >
               <Share2 className="w-4 h-4" />
               Share
@@ -207,9 +211,9 @@ export default function BlogPost() {
         {/* Featured Image */}
         {post.featured_image_url && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="mb-12 rounded-2xl overflow-hidden"
+            className="my-8 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800"
           >
             <img
               src={post.featured_image_url}
@@ -223,8 +227,18 @@ export default function BlogPost() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-          className="prose prose-lg dark:prose-invert max-w-none prose-headings:font-['Poppins'] prose-headings:font-bold prose-a:text-[#14B8FF] prose-a:no-underline hover:prose-a:underline"
+          transition={{ delay: 0.1 }}
+          className="prose prose-lg dark:prose-invert max-w-none 
+            prose-headings:font-['Poppins'] prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white
+            prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4
+            prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
+            prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-6
+            prose-a:text-[#14B8FF] prose-a:no-underline hover:prose-a:underline prose-a:font-medium
+            prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold
+            prose-ul:my-6 prose-ol:my-6
+            prose-li:text-gray-700 dark:prose-li:text-gray-300 prose-li:my-2
+            prose-blockquote:border-l-4 prose-blockquote:border-[#14B8FF] prose-blockquote:bg-gray-50 dark:prose-blockquote:bg-gray-800 prose-blockquote:py-2 prose-blockquote:px-4
+            prose-code:text-[#14B8FF] prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:text-sm"
         >
           <ReactMarkdown>{post.content}</ReactMarkdown>
         </motion.div>
