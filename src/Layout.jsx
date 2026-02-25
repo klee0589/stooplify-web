@@ -29,6 +29,16 @@ function LayoutContent({ children, currentPageName }) {
   const showBackButton = !isRootScreen;
 
   useEffect(() => {
+    // Set favicon
+    const setFavicon = () => {
+      const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+      link.type = 'image/png';
+      link.rel = 'icon';
+      link.href = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/26a5190cd_Stooplify-07.png';
+      document.head.appendChild(link);
+    };
+    setFavicon();
+
     const checkAuth = async () => {
       try {
         const isAuth = await base44.auth.isAuthenticated();
