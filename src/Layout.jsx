@@ -675,7 +675,7 @@ function LayoutContent({ children, currentPageName }) {
 
 
 
-          <div className="border-t border-white/20 mt-8 pt-8 text-center text-white/60">
+          <div className="border-t border-gray-200 dark:border-white/20 mt-8 pt-8 text-center text-gray-600 dark:text-white/60">
             <p>© {new Date().getFullYear()} Stooplify. {t('allRightsReserved')}.</p>
           </div>
           </div>
