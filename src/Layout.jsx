@@ -268,7 +268,7 @@ function LayoutContent({ children, currentPageName }) {
             ) : (
               <Link to={createPageUrl('Home')} className="flex md:hidden items-center">
                 <motion.img
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/54eeba253_logo_v2.png"
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/ada49740a_Stooplify-01.png"
                   alt="Stooplify"
                   className="h-8 w-auto"
                   whileHover={{ scale: 1.05 }} />
@@ -278,7 +278,7 @@ function LayoutContent({ children, currentPageName }) {
             {/* Desktop: Logo (always visible) */}
             <Link to={createPageUrl('Home')} className="hidden md:flex items-center">
               <motion.img
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/54eeba253_logo_v2.png"
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/ada49740a_Stooplify-01.png"
                 alt="Stooplify"
                 className="h-10 w-auto"
                 whileHover={{ scale: 1.05 }} />
@@ -599,7 +599,7 @@ function LayoutContent({ children, currentPageName }) {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2">
               <img
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/54eeba253_logo_v2.png"
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/ada49740a_Stooplify-01.png"
                 alt="Stooplify"
                 className="h-10 w-auto mb-4" />
 
