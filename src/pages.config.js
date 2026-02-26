@@ -47,62 +47,14 @@
  *
  * The mainPage value must match a key in the PAGES object exactly.
  */
-import AddYardSale from './pages/AddYardSale';
-import AdminCommunityLocations from './pages/AdminCommunityLocations';
-import AdminSupabaseSync from './pages/AdminSupabaseSync';
-import ApplyAsShop from './pages/ApplyAsShop';
 import Calendar from './pages/Calendar';
-import ChatSupport from './pages/ChatSupport';
-import Favorites from './pages/Favorites';
-import Guides from './pages/Guides';
-import GuidesAdvertise from './pages/GuidesAdvertise';
-import GuidesFindSales from './pages/GuidesFindSales';
-import GuidesPermit from './pages/GuidesPermit';
-import GuidesPricing from './pages/GuidesPricing';
-import GuidesSeniors from './pages/GuidesSeniors';
-import GuidesTimings from './pages/GuidesTimings';
-import Home from './pages/Home';
-import Legal from './pages/Legal';
-import Messages from './pages/Messages';
-import MyYardSales from './pages/MyYardSales';
-import Pricing from './pages/Pricing';
-import Profile from './pages/Profile';
-import YardSaleDetails from './pages/YardSaleDetails';
-import YardSales from './pages/YardSales';
-import Blog from './pages/Blog';
-import BlogPost from './pages/BlogPost';
-import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "AddYardSale": AddYardSale,
-    "AdminCommunityLocations": AdminCommunityLocations,
-    "AdminSupabaseSync": AdminSupabaseSync,
-    "ApplyAsShop": ApplyAsShop,
     "Calendar": Calendar,
-    "ChatSupport": ChatSupport,
-    "Favorites": Favorites,
-    "Guides": Guides,
-    "GuidesAdvertise": GuidesAdvertise,
-    "GuidesFindSales": GuidesFindSales,
-    "GuidesPermit": GuidesPermit,
-    "GuidesPricing": GuidesPricing,
-    "GuidesSeniors": GuidesSeniors,
-    "GuidesTimings": GuidesTimings,
-    "Home": Home,
-    "Legal": Legal,
-    "Messages": Messages,
-    "MyYardSales": MyYardSales,
-    "Pricing": Pricing,
-    "Profile": Profile,
-    "YardSaleDetails": YardSaleDetails,
-    "YardSales": YardSales,
-    "Blog": Blog,
-    "BlogPost": BlogPost,
 }
 
 export const pagesConfig = {
-    mainPage: "Home",
+    mainPage: "Calendar",
     Pages: PAGES,
-    Layout: __Layout,
 };

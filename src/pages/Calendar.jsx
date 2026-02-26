@@ -1,118 +1,46 @@
-import React, { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState, useEffect, useMemo } from 'react';
 import { base44 } from '@/api/base44Client';
-import { motion } from 'framer-motion';
-import { Calendar as CalendarIcon, Heart, UserCheck, MapPin, Clock, ArrowRight } from 'lucide-react';
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { format, isSameDay, parseISO } from 'date-fns';
-import { Link } from 'react-router-dom';
-import { createPageUrl } from '../utils';
-import SEO from '../components/SEO';
-import { useTranslation } from '../components/translations';
+import { useQuery } from '@tanstack/react-query';
+import { Calendar as CalendarIcon, MapPin, Clock, Heart, Users, Filter, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Calendar } from '@/components/ui/calendar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import YardSaleCard from '@/components/YardSaleCard';
+import { isSameDay, format } from 'date-fns';
 
-export default function Calendar() {
+export default function CalendarPage() {
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [eventFilter, setEventFilter] = useState('all');
+  const [categoryFilter, setCategoryFilter] = useState('all');
   const [user, setUser] = useState(null);
-  const [selectedDate, setSelectedDate] = useState(new Date());
-  const [language, setLanguage] = useState('en');
-  const [eventFilter, setEventFilter] = useState('all'); // 'all', 'favorites', 'attending'
-  
-  const t = useTranslation(language);
 
   useEffect(() => {
-    const savedLang = localStorage.getItem('stooplify_lang') || 'en';
-    setLanguage(savedLang);
-    
-    const handleLanguageChange = (e) => setLanguage(e.detail);
-    window.addEventListener('languageChange', handleLanguageChange);
-    return () => window.removeEventListener('languageChange', handleLanguageChange);
+    base44.auth.me().then(setUser).catch(() => setUser(null));
   }, []);
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const isAuth = await base44.auth.isAuthenticated();
-        if (isAuth) {
-          const currentUser = await base44.auth.me();
-          setUser(currentUser);
-        } else {
-          base44.auth.redirectToLogin();
-        }
-      } catch (e) {
-        base44.auth.redirectToLogin();
-      }
-    };
-    checkAuth();
-  }, []);
+  const { data: allSales = [] } = useQuery({
+    queryKey: ['yardSales', 'approved'],
+    queryFn: () => base44.entities.YardSale.filter({ status: 'approved' }),
+  });
 
   const { data: favorites = [] } = useQuery({
     queryKey: ['favorites', user?.email],
-    queryFn: async () => {
-      if (!user) return [];
-      return await base44.entities.Favorite.filter({ user_email: user.email });
-    },
+    queryFn: () => user ? base44.entities.Favorite.filter({ user_email: user.email }) : [],
     enabled: !!user,
   });
 
   const { data: attendances = [] } = useQuery({
     queryKey: ['attendances', user?.email],
-    queryFn: async () => {
-      if (!user) return [];
-      return await base44.entities.Attendance.filter({ user_email: user.email });
-    },
+    queryFn: () => user ? base44.entities.Attendance.filter({ user_email: user.email }) : [],
     enabled: !!user,
   });
 
-  const { data: allSales = [] } = useQuery({
-    queryKey: ['calendarSales', favorites, attendances],
-    queryFn: async () => {
-      const saleIds = [
-        ...favorites.map(f => f.yard_sale_id),
-        ...attendances.map(a => a.yard_sale_id)
-      ];
-      const uniqueSaleIds = [...new Set(saleIds)];
-      
-      if (uniqueSaleIds.length === 0) return [];
-      
-      const sales = await base44.entities.YardSale.list();
-      const now = new Date();
-      now.setHours(0, 0, 0, 0); // Start of today
-      
-      // Filter to only include upcoming sales (not past)
-      return sales.filter(sale => {
-        if (!uniqueSaleIds.includes(sale.id)) return false;
-        if (!sale.date) return false;
-        
-        try {
-          const saleDate = new Date(sale.date);
-          return saleDate >= now;
-        } catch (e) {
-          return false;
-        }
-      });
-    },
-    enabled: favorites.length > 0 || attendances.length > 0,
-  });
-
-  // Helper functions
-  const isFavorited = (saleId) => favorites.some(f => f.yard_sale_id === saleId);
-  const isAttending = (saleId) => attendances.some(a => a.yard_sale_id === saleId);
-
-  // Get sales for selected date with filter
-  const salesForSelectedDate = allSales.filter(sale => {
-    if (!sale.date) return false;
-    try {
-      const saleDate = new Date(sale.date);
-      const dateMatch = isSameDay(saleDate, selectedDate);
-      if (!dateMatch) return false;
-      
-      // Apply event filter
-      if (eventFilter === 'favorites') return isFavorited(sale.id);
-      if (eventFilter === 'attending') return isAttending(sale.id);
-      return true; // 'all'
-    } catch (e) {
-      return false;
-    }
-  });
+  const isFavorited = (saleId) => favorites.some(fav => fav.yard_sale_id === saleId);
+  const isAttending = (saleId) => attendances.some(att => att.yard_sale_id === saleId);
 
   // Get dates with events (respecting filter)
   const datesWithEvents = allSales
@@ -134,282 +62,173 @@ export default function Calendar() {
     })
     .filter(date => date !== null);
 
-  console.log('Debug - datesWithEvents:', datesWithEvents);
-  console.log('Debug - allSales:', allSales);
-  console.log('Debug - favorites:', favorites);
-  console.log('Debug - attendances:', attendances);
-  
-  // Count only upcoming attendances
-  const upcomingAttendancesCount = allSales.filter(sale => isAttending(sale.id)).length;
+  // Filter sales for selected date
+  const salesForSelectedDate = useMemo(() => {
+    if (!selectedDate) return [];
+    
+    return allSales.filter(sale => {
+      if (!sale.date) return false;
+      
+      try {
+        // Parse the sale date correctly
+        const [year, month, day] = sale.date.split('-').map(Number);
+        const saleDate = new Date(year, month - 1, day);
+        
+        // Compare dates
+        if (!isSameDay(saleDate, selectedDate)) return false;
+        
+        // Apply filters
+        if (eventFilter === 'favorites' && !isFavorited(sale.id)) return false;
+        if (eventFilter === 'attending' && !isAttending(sale.id)) return false;
+        if (categoryFilter !== 'all' && !sale.categories?.includes(categoryFilter)) return false;
+        
+        return true;
+      } catch (e) {
+        return false;
+      }
+    });
+  }, [selectedDate, allSales, eventFilter, categoryFilter, favorites, attendances]);
 
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900 flex items-center justify-center">
-        <div className="animate-pulse">
-          <CalendarIcon className="w-12 h-12 text-[#14B8FF]" />
-        </div>
-      </div>
-    );
-  }
+  const handleDateSelect = (date) => {
+    setSelectedDate(date);
+  };
 
-  const upcomingSalesCount = allSales.length;
-  
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    "name": "My Yard Sale Calendar",
-    "description": "Your personalized calendar of saved and attending yard sales",
-    "numberOfItems": upcomingSalesCount
+  const modifiers = {
+    hasEvent: datesWithEvents,
+  };
+
+  const modifiersStyles = {
+    hasEvent: {
+      fontWeight: 'bold',
+      textDecoration: 'underline',
+      color: '#000',
+    },
   };
 
   return (
-    <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
-      <SEO 
-        title="My Yard Sale Calendar - Track Favorites & Attending Sales | Stooplify"
-        description={`Manage your ${favorites.length} favorite yard sales and ${upcomingAttendancesCount} sales you're attending. Never miss a local sale with your personalized calendar view.`}
-        keywords="yard sale calendar, my saved sales, attending events, favorite sales, sale reminders, upcoming yard sales"
-        structuredData={structuredData}
-      />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <h1 
-            className="text-3xl md:text-4xl font-bold text-[#2E3A59] dark:text-white mb-2"
-            style={{ fontFamily: 'Poppins, sans-serif' }}
-          >
-            My Calendar
-          </h1>
-          <p className="text-gray-600 dark:text-gray-300">
-            View all your favorited and attending yard sales
-          </p>
-        </motion.div>
-
-        {/* Stats */}
-        <div className="grid grid-cols-2 gap-4 mb-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
-          >
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 bg-[#FF6F61]/10 rounded-lg flex items-center justify-center">
-                <Heart className="w-5 h-5 text-[#FF6F61]" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-[#2E3A59] dark:text-white">
-                  {favorites.length}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-300">Favorites</p>
-              </div>
-            </div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
-          >
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center">
-                <UserCheck className="w-5 h-5 text-green-600" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-[#2E3A59] dark:text-white">
-                  {upcomingAttendancesCount}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-300">Attending</p>
-              </div>
-            </div>
-          </motion.div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 p-4 md:p-8">
+      <div className="max-w-7xl mx-auto">
+        <div className="mb-8">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Yard Sale Calendar</h1>
+          <p className="text-gray-600">Browse upcoming yard sales by date</p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Calendar */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h2 
-                className="text-xl font-bold text-[#2E3A59] dark:text-white"
-                style={{ fontFamily: 'Poppins, sans-serif' }}
-              >
-                Calendar View
-              </h2>
-              <div className="flex gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
-                <button
-                  onClick={() => setEventFilter('all')}
-                  className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-                    eventFilter === 'all'
-                      ? 'bg-white dark:bg-gray-600 text-[#2E3A59] dark:text-white shadow-sm'
-                      : 'text-gray-600 dark:text-gray-300 hover:text-[#2E3A59] dark:hover:text-white'
-                  }`}
-                >
-                  All
-                </button>
-                <button
-                  onClick={() => setEventFilter('favorites')}
-                  className={`px-3 py-1 rounded text-xs font-medium transition-colors flex items-center gap-1 ${
-                    eventFilter === 'favorites'
-                      ? 'bg-white dark:bg-gray-600 text-[#FF6F61] shadow-sm'
-                      : 'text-gray-600 dark:text-gray-300 hover:text-[#FF6F61]'
-                  }`}
-                >
-                  <Heart className="w-3 h-3" />
-                  Favorites
-                </button>
-                <button
-                  onClick={() => setEventFilter('attending')}
-                  className={`px-3 py-1 rounded text-xs font-medium transition-colors flex items-center gap-1 ${
-                    eventFilter === 'attending'
-                      ? 'bg-white dark:bg-gray-600 text-green-600 shadow-sm'
-                      : 'text-gray-600 dark:text-gray-300 hover:text-green-600'
-                  }`}
-                >
-                  <UserCheck className="w-3 h-3" />
-                  Attending
-                </button>
-              </div>
-            </div>
-            <CalendarComponent
-              mode="single"
-              selected={selectedDate}
-              onSelect={(date) => setSelectedDate(date || new Date())}
-              modifiers={{
-                hasEvent: datesWithEvents
-              }}
-              modifiersClassNames={{
-                hasEvent: 'bg-[#14B8FF] text-white font-bold hover:bg-[#14B8FF] hover:text-white'
-              }}
-              className="rounded-xl border-0"
-            />
-            <div className="mt-4 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-              <div className="w-3 h-3 rounded-full bg-[#14B8FF]"></div>
-              <span>Days with events</span>
-            </div>
-          </motion.div>
-
-          {/* Sales for Selected Date */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
-          >
-            <h2 
-              className="text-xl font-bold text-[#2E3A59] dark:text-white mb-4"
-              style={{ fontFamily: 'Poppins, sans-serif' }}
-            >
-              {selectedDate ? format(selectedDate, 'MMMM d, yyyy') : 'Select a date'}
-            </h2>
-
-            {salesForSelectedDate.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <CalendarIcon className="w-8 h-8 text-gray-400" />
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Left Column - Calendar */}
+          <div className="lg:col-span-1">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <CalendarIcon className="w-5 h-5" />
+                  Select a Date
+                </CardTitle>
+                <div className="space-y-3 mt-4">
+                  <Select value={eventFilter} onValueChange={setEventFilter}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Filter events" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Events</SelectItem>
+                      {user && (
+                        <>
+                          <SelectItem value="favorites">My Favorites</SelectItem>
+                          <SelectItem value="attending">I'm Attending</SelectItem>
+                        </>
+                      )}
+                    </SelectContent>
+                  </Select>
                 </div>
-                <p className="text-gray-600 dark:text-gray-300">No events on this date</p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {salesForSelectedDate.map((sale) => (
-                  <motion.div
-                    key={sale.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:border-[#14B8FF] transition-colors"
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <h3 className="font-semibold text-[#2E3A59] dark:text-white">
-                        {sale.title}
-                      </h3>
-                      <div className="flex items-center gap-2">
-                        {isFavorited(sale.id) && (
-                          <Heart className="w-4 h-4 text-[#FF6F61] fill-current" />
-                        )}
-                        {isAttending(sale.id) && (
-                          <UserCheck className="w-4 h-4 text-green-600" />
-                        )}
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2 text-sm text-gray-600 dark:text-gray-300 mb-4">
-                      <div className="flex items-center gap-2">
-                        <Clock className="w-4 h-4 text-[#F5A623]" />
-                        <span>{sale.start_time || '8:00 AM'} - {sale.end_time || '2:00 PM'}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <MapPin className="w-4 h-4 text-[#14B8FF]" />
-                        <span>{sale.general_location || sale.city}</span>
-                      </div>
-                    </div>
+              </CardHeader>
+              <CardContent>
+                <Calendar
+                  mode="single"
+                  selected={selectedDate}
+                  onSelect={handleDateSelect}
+                  month={currentMonth}
+                  onMonthChange={setCurrentMonth}
+                  modifiers={modifiers}
+                  modifiersStyles={modifiersStyles}
+                  className="rounded-md border"
+                />
+                
+                <div className="mt-4 text-sm text-gray-600">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-3 h-3 bg-primary rounded-full"></div>
+                    <span>Selected Date</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-3 h-3 bg-white border-2 border-gray-300 rounded-full font-bold"></div>
+                    <span className="font-bold underline">Dates with Events</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
-                    <Link 
-                      to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}
-                      className="flex items-center justify-center gap-2 w-full py-2 bg-[#14B8FF] text-white rounded-xl text-sm font-medium hover:bg-[#0da3e6] transition-colors"
-                    >
-                      View Details
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
-            )}
-          </motion.div>
+          {/* Right Column - Events List */}
+          <div className="lg:col-span-2">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <span>
+                    {selectedDate 
+                      ? `Events on ${format(selectedDate, 'MMMM d, yyyy')}`
+                      : 'Select a date to view events'}
+                  </span>
+                  {selectedDate && salesForSelectedDate.length > 0 && (
+                    <Badge variant="secondary">{salesForSelectedDate.length} events</Badge>
+                  )}
+                </CardTitle>
+                {selectedDate && salesForSelectedDate.length > 0 && (
+                  <div className="mt-4">
+                    <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                      <SelectTrigger className="w-full md:w-[200px]">
+                        <SelectValue placeholder="Filter by category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Categories</SelectItem>
+                        <SelectItem value="general">General</SelectItem>
+                        <SelectItem value="furniture">Furniture</SelectItem>
+                        <SelectItem value="clothing">Clothing</SelectItem>
+                        <SelectItem value="electronics">Electronics</SelectItem>
+                        <SelectItem value="toys">Toys</SelectItem>
+                        <SelectItem value="antiques">Antiques</SelectItem>
+                        <SelectItem value="books">Books</SelectItem>
+                        <SelectItem value="sports">Sports</SelectItem>
+                        <SelectItem value="multi-family">Multi-Family</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              </CardHeader>
+              <CardContent>
+                {!selectedDate ? (
+                  <div className="text-center py-12">
+                    <CalendarIcon className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                    <p className="text-gray-500 text-lg">Select a date from the calendar to view yard sales</p>
+                  </div>
+                ) : salesForSelectedDate.length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="text-gray-400 text-6xl mb-4">📅</div>
+                    <p className="text-gray-500 text-lg font-medium mb-2">No events on this date</p>
+                    <p className="text-gray-400">Try selecting another date with events</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    {salesForSelectedDate.map((sale) => (
+                      <YardSaleCard 
+                        key={sale.id} 
+                        sale={sale}
+                        isFavorited={isFavorited(sale.id)}
+                        isAttending={isAttending(sale.id)}
+                      />
+                    ))}
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </div>
         </div>
-
-        {/* All Upcoming Events */}
-        {allSales.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="mt-8 bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
-          >
-            <h2 
-              className="text-xl font-bold text-[#2E3A59] dark:text-white mb-4"
-              style={{ fontFamily: 'Poppins, sans-serif' }}
-            >
-              All My Events ({allSales.length})
-            </h2>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {allSales
-                .filter(sale => sale.date)
-                .sort((a, b) => new Date(a.date) - new Date(b.date))
-                .map((sale) => (
-                  <Link
-                    key={sale.id}
-                    to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}
-                    className="block p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-[#14B8FF] transition-colors"
-                  >
-                    <div className="flex items-start justify-between mb-2">
-                      <p className="font-semibold text-[#2E3A59] dark:text-white text-sm">
-                        {sale.title}
-                      </p>
-                      <div className="flex items-center gap-1">
-                        {isFavorited(sale.id) && (
-                          <Heart className="w-3.5 h-3.5 text-[#FF6F61] fill-current" />
-                        )}
-                        {isAttending(sale.id) && (
-                          <UserCheck className="w-3.5 h-3.5 text-green-600" />
-                        )}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
-                      <CalendarIcon className="w-3.5 h-3.5" />
-                      {sale.date ? format(new Date(sale.date), 'MMM d, yyyy') : 'Date TBD'}
-                    </div>
-                  </Link>
-                ))}
-            </div>
-          </motion.div>
-        )}
       </div>
     </div>
   );
