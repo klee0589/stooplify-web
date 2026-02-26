@@ -203,44 +203,59 @@ export default function Calendar() {
 
         {/* Stats */}
         {user && (
-          <div className="grid grid-cols-2 gap-4 mb-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 bg-[#FF6F61]/10 rounded-lg flex items-center justify-center">
-                  <Heart className="w-5 h-5 text-[#FF6F61]" />
+          <>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 bg-[#FF6F61]/10 rounded-lg flex items-center justify-center">
+                    <Heart className="w-5 h-5 text-[#FF6F61]" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-[#2E3A59] dark:text-white">
+                      {favorites.length}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">Favorites</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-2xl font-bold text-[#2E3A59] dark:text-white">
-                    {favorites.length}
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">Favorites</p>
-                </div>
-              </div>
-            </motion.div>
+              </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
-            >
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center">
-                  <UserCheck className="w-5 h-5 text-green-600" />
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+                className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
+              >
+                <div className="flex items-center gap-3 mb-2">
+                  <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center">
+                    <UserCheck className="w-5 h-5 text-green-600" />
+                  </div>
+                  <div>
+                    <p className="text-2xl font-bold text-[#2E3A59] dark:text-white">
+                      {upcomingAttendancesCount}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">Attending</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-2xl font-bold text-[#2E3A59] dark:text-white">
-                    {upcomingAttendancesCount}
-                  </p>
-                  <p className="text-sm text-gray-600 dark:text-gray-300">Attending</p>
-                </div>
-              </div>
-            </motion.div>
-          </div>
+              </motion.div>
+            </div>
+            
+            <div className="mb-8 flex justify-end">
+              <button
+                onClick={() => setShowFinished(!showFinished)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  showFinished
+                    ? 'bg-[#14B8FF] text-white'
+                    : 'bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-300 hover:border-[#14B8FF]'
+                }`}
+              >
+                {showFinished ? 'Hide Finished Sales' : 'Show Finished Sales'}
+              </button>
+            </div>
+          </>
         )}
 
         <div className="grid lg:grid-cols-2 gap-8">
@@ -388,24 +403,12 @@ export default function Calendar() {
             transition={{ delay: 0.2 }}
             className="mt-8 bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
           >
-            <div className="flex items-center justify-between mb-4">
-              <h2 
-                className="text-xl font-bold text-[#2E3A59] dark:text-white"
-                style={{ fontFamily: 'Poppins, sans-serif' }}
-              >
-                My Yard Sales ({myYardSales.length})
-              </h2>
-              <button
-                onClick={() => setShowFinished(!showFinished)}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                  showFinished
-                    ? 'bg-[#14B8FF] text-white'
-                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                }`}
-              >
-                {showFinished ? 'Hide Finished' : 'Show Finished'}
-              </button>
-            </div>
+            <h2 
+              className="text-xl font-bold text-[#2E3A59] dark:text-white mb-4"
+              style={{ fontFamily: 'Poppins, sans-serif' }}
+            >
+              My Yard Sales ({myYardSales.length})
+            </h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {myYardSales.map((sale) => (
                 <Link
