@@ -120,7 +120,7 @@ export default function Home() {
               className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 text-center border border-white/20"
             >
               <div className="text-6xl font-bold text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                2.5K+
+                {userCount}+
               </div>
               <div className="text-2xl font-semibold text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
                 {t('happyShoppers')}
