@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { base44 } from '@/api/base44Client';
 import { toast } from "sonner";
 import { useTranslation } from '../translations';
+import { useQuery } from '@tanstack/react-query';
 
 export default function HeroSection() {
   const [email, setEmail] = useState('');
@@ -30,6 +31,18 @@ export default function HeroSection() {
   }, []);
   
   const t = useTranslation(language);
+
+  // Fetch real data
+  const { data: statsData } = useQuery({
+    queryKey: ['heroStats'],
+    queryFn: async () => {
+      const sales = await base44.entities.YardSale.filter({ status: 'approved' });
+      return {
+        activeSales: sales.length
+      };
+    },
+    initialData: { activeSales: 0 }
+  });
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
