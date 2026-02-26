@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 import { Plus, ArrowRight, Tag, Users, TrendingUp } from 'lucide-react';
 import { useTranslation } from '../translations';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 
 export default function CTASection() {
   const [language, setLanguage] = useState('en');
@@ -25,9 +27,23 @@ export default function CTASection() {
   
   const t = useTranslation(language);
 
+  // Fetch real data
+  const { data: salesData } = useQuery({
+    queryKey: ['ctaStats'],
+    queryFn: async () => {
+      const sales = await base44.entities.YardSale.filter({ status: 'approved' });
+      const users = await base44.entities.User.list();
+      return {
+        activeSales: sales.length,
+        totalUsers: users.length
+      };
+    },
+    initialData: { activeSales: 0, totalUsers: 0 }
+  });
+
   const stats = [
-    { icon: Tag, value: '1,000+', label: t('activeSales') },
-    { icon: Users, value: '50K+', label: t('happyShoppers') },
+    { icon: Tag, value: salesData.activeSales.toString(), label: t('activeSales') },
+    { icon: Users, value: salesData.totalUsers.toString(), label: t('happyShoppers') },
   ];
 
   return (
