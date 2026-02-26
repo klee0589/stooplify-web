@@ -53,6 +53,7 @@ import AdminSupabaseSync from './pages/AdminSupabaseSync';
 import ApplyAsShop from './pages/ApplyAsShop';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
+import Calendar from './pages/Calendar';
 import ChatSupport from './pages/ChatSupport';
 import Favorites from './pages/Favorites';
 import Guides from './pages/Guides';
@@ -70,7 +71,6 @@ import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
 import YardSaleDetails from './pages/YardSaleDetails';
 import YardSales from './pages/YardSales';
-import Calendar from './pages/Calendar';
 import __Layout from './Layout.jsx';
 
 
@@ -81,6 +81,7 @@ export const PAGES = {
     "ApplyAsShop": ApplyAsShop,
     "Blog": Blog,
     "BlogPost": BlogPost,
+    "Calendar": Calendar,
     "ChatSupport": ChatSupport,
     "Favorites": Favorites,
     "Guides": Guides,
@@ -98,7 +99,6 @@ export const PAGES = {
     "Profile": Profile,
     "YardSaleDetails": YardSaleDetails,
     "YardSales": YardSales,
-    "Calendar": Calendar,
 }
 
 export const pagesConfig = {

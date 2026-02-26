@@ -74,8 +74,9 @@ export default function Calendar() {
   });
 
   const { data: allSales = [] } = useQuery({
-    queryKey: ['calendarSales'],
+    queryKey: ['calendarSales', user?.email],
     queryFn: async () => {
+      if (!user) return [];
       const sales = await base44.entities.YardSale.filter({ status: 'approved' });
       const now = new Date();
       now.setHours(0, 0, 0, 0); // Start of today
@@ -87,6 +88,7 @@ export default function Calendar() {
         return saleDate && saleDate >= now;
       });
     },
+    enabled: !!user,
   });
 
   // Helper functions
@@ -341,8 +343,8 @@ export default function Calendar() {
           </motion.div>
         </div>
 
-        {/* All Upcoming Events */}
-        {allSales.length > 0 && (
+        {/* All Upcoming Events - Only show when user is logged in */}
+        {user && allSales.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
