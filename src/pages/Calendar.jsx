@@ -75,13 +75,19 @@ export default function Calendar() {
       
       const sales = await base44.entities.YardSale.list();
       const now = new Date();
+      now.setHours(0, 0, 0, 0); // Start of today
       
       // Filter to only include upcoming sales (not past)
       return sales.filter(sale => {
         if (!uniqueSaleIds.includes(sale.id)) return false;
-        if (!sale.date || !sale.end_time) return true;
-        const saleDateTime = new Date(`${sale.date}T${sale.end_time}`);
-        return saleDateTime >= now;
+        if (!sale.date) return false;
+        
+        try {
+          const saleDate = new Date(sale.date);
+          return saleDate >= now;
+        } catch (e) {
+          return false;
+        }
       });
     },
     enabled: favorites.length > 0 || attendances.length > 0,
@@ -95,7 +101,8 @@ export default function Calendar() {
   const salesForSelectedDate = allSales.filter(sale => {
     if (!sale.date) return false;
     try {
-      const dateMatch = isSameDay(parseISO(sale.date + 'T12:00:00'), selectedDate);
+      const saleDate = new Date(sale.date);
+      const dateMatch = isSameDay(saleDate, selectedDate);
       if (!dateMatch) return false;
       
       // Apply event filter
@@ -118,7 +125,7 @@ export default function Calendar() {
     })
     .map(sale => {
       try {
-        return parseISO(sale.date + 'T12:00:00');
+        return new Date(sale.date);
       } catch (e) {
         return null;
       }
@@ -394,7 +401,7 @@ export default function Calendar() {
                     </div>
                     <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
                       <CalendarIcon className="w-3.5 h-3.5" />
-                      {sale.date ? format(parseISO(sale.date + 'T12:00:00'), 'MMM d, yyyy') : 'Date TBD'}
+                      {sale.date ? format(new Date(sale.date), 'MMM d, yyyy') : 'Date TBD'}
                     </div>
                   </Link>
                 ))}
