@@ -228,22 +228,95 @@ export default function BlogPost() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="prose prose-lg dark:prose-invert max-w-none 
-            prose-headings:font-['Poppins'] prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white
-            prose-h2:text-2xl prose-h2:mt-20 prose-h2:mb-8
-            prose-h3:text-xl prose-h3:mt-16 prose-h3:mb-6
-            prose-h4:mt-12 prose-h4:mb-4
-            prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-8
-            prose-a:text-[#14B8FF] prose-a:no-underline hover:prose-a:underline prose-a:font-medium
-            prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold
-            prose-ul:my-10 prose-ol:my-10
-            prose-li:text-gray-700 dark:prose-li:text-gray-300 prose-li:my-3 prose-li:leading-relaxed
-            prose-blockquote:border-l-4 prose-blockquote:border-[#14B8FF] prose-blockquote:bg-gray-50 dark:prose-blockquote:bg-gray-800 prose-blockquote:py-6 prose-blockquote:px-8 prose-blockquote:my-12
-            prose-code:text-[#14B8FF] prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:text-sm
-            prose-img:my-12 prose-img:rounded-lg
-            prose-hr:my-16 prose-hr:border-gray-200 dark:prose-hr:border-gray-700"
+          className="text-gray-700 dark:text-gray-300"
         >
-          <ReactMarkdown>{post.content}</ReactMarkdown>
+          <ReactMarkdown
+            components={{
+              h1: ({ children }) => (
+                <h1 className="text-4xl font-bold text-gray-900 dark:text-white mt-20 mb-8 font-['Poppins']">
+                  {children}
+                </h1>
+              ),
+              h2: ({ children }) => (
+                <h2 className="text-3xl font-bold text-gray-900 dark:text-white mt-20 mb-8 font-['Poppins']">
+                  {children}
+                </h2>
+              ),
+              h3: ({ children }) => (
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mt-16 mb-6 font-['Poppins']">
+                  {children}
+                </h3>
+              ),
+              h4: ({ children }) => (
+                <h4 className="text-xl font-bold text-gray-900 dark:text-white mt-12 mb-4 font-['Poppins']">
+                  {children}
+                </h4>
+              ),
+              p: ({ children }) => (
+                <p className="text-lg leading-relaxed mb-8 text-gray-700 dark:text-gray-300">
+                  {children}
+                </p>
+              ),
+              a: ({ href, children }) => (
+                <a
+                  href={href}
+                  className="text-[#14B8FF] font-medium hover:underline"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {children}
+                </a>
+              ),
+              strong: ({ children }) => (
+                <strong className="font-semibold text-gray-900 dark:text-white">
+                  {children}
+                </strong>
+              ),
+              ul: ({ children }) => (
+                <ul className="list-disc pl-8 my-10 space-y-3">
+                  {children}
+                </ul>
+              ),
+              ol: ({ children }) => (
+                <ol className="list-decimal pl-8 my-10 space-y-3">
+                  {children}
+                </ol>
+              ),
+              li: ({ children }) => (
+                <li className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+                  {children}
+                </li>
+              ),
+              blockquote: ({ children }) => (
+                <blockquote className="border-l-4 border-[#14B8FF] bg-gray-50 dark:bg-gray-800 py-6 px-8 my-12 rounded-r-lg">
+                  {children}
+                </blockquote>
+              ),
+              code: ({ inline, children }) => (
+                inline ? (
+                  <code className="text-[#14B8FF] bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono text-sm">
+                    {children}
+                  </code>
+                ) : (
+                  <code className="block text-[#14B8FF] bg-gray-100 dark:bg-gray-800 p-4 rounded-lg font-mono text-sm my-8 overflow-x-auto">
+                    {children}
+                  </code>
+                )
+              ),
+              img: ({ src, alt }) => (
+                <img
+                  src={src}
+                  alt={alt}
+                  className="w-full h-auto rounded-lg my-12"
+                />
+              ),
+              hr: () => (
+                <hr className="my-16 border-gray-200 dark:border-gray-700" />
+              ),
+            }}
+          >
+            {post.content}
+          </ReactMarkdown>
         </motion.div>
 
         {/* Footer CTA */}
