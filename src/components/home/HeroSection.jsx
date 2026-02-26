@@ -184,7 +184,7 @@ export default function HeroSection() {
             >
               <div className="flex items-center gap-2">
                 <span className="text-2xl">🏘️</span>
-                <span><strong>1,000+</strong> active sales</span>
+                <span><strong>{statsData.activeSales}</strong> active sales</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-2xl">📍</span>
