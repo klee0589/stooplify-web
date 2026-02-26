@@ -278,13 +278,8 @@ export default function Calendar() {
               modifiers={{
                 hasEvent: datesWithEvents
               }}
-              modifiersStyles={{
-                hasEvent: {
-                  fontWeight: 'bold',
-                  background: '#14B8FF',
-                  color: 'white',
-                  borderRadius: '50%'
-                }
+              modifiersClassNames={{
+                hasEvent: 'bg-[#14B8FF] text-white font-bold hover:bg-[#14B8FF] hover:text-white'
               }}
               className="rounded-xl border-0"
             />
