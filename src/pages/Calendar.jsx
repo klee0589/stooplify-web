@@ -18,6 +18,17 @@ export default function Calendar() {
   
   const t = useTranslation(language);
 
+  // Helper function to parse YYYY-MM-DD dates consistently in local timezone
+  const parseLocalDate = (dateString) => {
+    if (!dateString) return null;
+    try {
+      const [year, month, day] = dateString.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    } catch (e) {
+      return null;
+    }
+  };
+
   useEffect(() => {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
     setLanguage(savedLang);
@@ -72,14 +83,8 @@ export default function Calendar() {
       // Filter to only include upcoming sales (not past)
       return sales.filter(sale => {
         if (!sale.date) return false;
-        
-        try {
-          const [year, month, day] = sale.date.split('-').map(Number);
-          const saleDate = new Date(year, month - 1, day);
-          return saleDate >= now;
-        } catch (e) {
-          return false;
-        }
+        const saleDate = parseLocalDate(sale.date);
+        return saleDate && saleDate >= now;
       });
     },
   });
@@ -91,19 +96,16 @@ export default function Calendar() {
   // Get sales for selected date with filter
   const salesForSelectedDate = allSales.filter(sale => {
     if (!sale.date) return false;
-    try {
-      const [year, month, day] = sale.date.split('-').map(Number);
-      const saleDate = new Date(year, month - 1, day);
-      const dateMatch = isSameDay(saleDate, selectedDate);
-      if (!dateMatch) return false;
-      
-      // Apply event filter
-      if (eventFilter === 'favorites') return isFavorited(sale.id);
-      if (eventFilter === 'attending') return isAttending(sale.id);
-      return true; // 'all'
-    } catch (e) {
-      return false;
-    }
+    const saleDate = parseLocalDate(sale.date);
+    if (!saleDate) return false;
+    
+    const dateMatch = isSameDay(saleDate, selectedDate);
+    if (!dateMatch) return false;
+    
+    // Apply event filter
+    if (eventFilter === 'favorites') return isFavorited(sale.id);
+    if (eventFilter === 'attending') return isAttending(sale.id);
+    return true; // 'all'
   });
 
   // Get dates with events (respecting filter)
@@ -115,21 +117,8 @@ export default function Calendar() {
       if (eventFilter === 'attending') return isAttending(sale.id);
       return true; // 'all'
     })
-    .map(sale => {
-      try {
-        // Parse date string correctly (date is in YYYY-MM-DD format)
-        const [year, month, day] = sale.date.split('-').map(Number);
-        return new Date(year, month - 1, day);
-      } catch (e) {
-        return null;
-      }
-    })
+    .map(sale => parseLocalDate(sale.date))
     .filter(date => date !== null);
-
-  console.log('Debug - datesWithEvents:', datesWithEvents);
-  console.log('Debug - allSales:', allSales);
-  console.log('Debug - favorites:', favorites);
-  console.log('Debug - attendances:', attendances);
   
   // Count only upcoming attendances
   const upcomingAttendancesCount = allSales.filter(sale => isAttending(sale.id)).length;
@@ -369,7 +358,11 @@ export default function Calendar() {
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {allSales
                 .filter(sale => sale.date)
-                .sort((a, b) => new Date(a.date) - new Date(b.date))
+                .sort((a, b) => {
+                  const dateA = parseLocalDate(a.date);
+                  const dateB = parseLocalDate(b.date);
+                  return dateA - dateB;
+                })
                 .map((sale) => (
                   <Link
                     key={sale.id}
@@ -391,7 +384,7 @@ export default function Calendar() {
                     </div>
                     <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
                       <CalendarIcon className="w-3.5 h-3.5" />
-                      {sale.date ? format(new Date(sale.date), 'MMM d, yyyy') : 'Date TBD'}
+                      {sale.date ? format(parseLocalDate(sale.date), 'MMM d, yyyy') : 'Date TBD'}
                     </div>
                   </Link>
                 ))}
