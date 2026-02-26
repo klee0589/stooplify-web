@@ -98,14 +98,27 @@ export default function MyYardSales() {
     return hoursUntilSale >= 2;
   };
 
+  const parseLocalDate = (dateString) => {
+    if (!dateString) return null;
+    try {
+      const [year, month, day] = dateString.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    } catch (e) {
+      return null;
+    }
+  };
+
   const getSaleStatus = (sale) => {
     if (!sale.date) return 'upcoming';
     const now = new Date();
-    const saleStartTime = new Date(`${sale.date}T${sale.start_time || '00:00:00'}`);
-    const saleEndTime = new Date(`${sale.date}T${sale.end_time || '23:59:59'}`);
+    now.setHours(0, 0, 0, 0); // Start of today
     
-    if (now > saleEndTime) return 'finished';
-    if (now >= saleStartTime && now <= saleEndTime) return 'inProgress';
+    const saleDate = parseLocalDate(sale.date);
+    if (!saleDate) return 'upcoming';
+    
+    // Compare just the date, not time
+    if (saleDate < now) return 'finished';
+    if (saleDate.getTime() === now.getTime()) return 'inProgress';
     return 'upcoming';
   };
 
