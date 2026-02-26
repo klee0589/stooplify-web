@@ -125,12 +125,19 @@ export default function Calendar() {
     })
     .map(sale => {
       try {
-        return new Date(sale.date);
+        // Parse date string correctly (date is in YYYY-MM-DD format)
+        const [year, month, day] = sale.date.split('-').map(Number);
+        return new Date(year, month - 1, day);
       } catch (e) {
         return null;
       }
     })
     .filter(date => date !== null);
+
+  console.log('Debug - datesWithEvents:', datesWithEvents);
+  console.log('Debug - allSales:', allSales);
+  console.log('Debug - favorites:', favorites);
+  console.log('Debug - attendances:', attendances);
   
   // Count only upcoming attendances
   const upcomingAttendancesCount = allSales.filter(sale => isAttending(sale.id)).length;
