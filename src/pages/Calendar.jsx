@@ -34,11 +34,9 @@ export default function Calendar() {
         if (isAuth) {
           const currentUser = await base44.auth.me();
           setUser(currentUser);
-        } else {
-          base44.auth.redirectToLogin();
         }
       } catch (e) {
-        base44.auth.redirectToLogin();
+        // User not authenticated, that's okay - set user to null
       }
     };
     checkAuth();
@@ -51,6 +49,7 @@ export default function Calendar() {
       return await base44.entities.Favorite.filter({ user_email: user.email });
     },
     enabled: !!user,
+    initialData: [],
   });
 
   const { data: attendances = [] } = useQuery({
@@ -60,37 +59,29 @@ export default function Calendar() {
       return await base44.entities.Attendance.filter({ user_email: user.email });
     },
     enabled: !!user,
+    initialData: [],
   });
 
   const { data: allSales = [] } = useQuery({
-    queryKey: ['calendarSales', favorites, attendances],
+    queryKey: ['calendarSales'],
     queryFn: async () => {
-      const saleIds = [
-        ...favorites.map(f => f.yard_sale_id),
-        ...attendances.map(a => a.yard_sale_id)
-      ];
-      const uniqueSaleIds = [...new Set(saleIds)];
-      
-      if (uniqueSaleIds.length === 0) return [];
-      
-      const sales = await base44.entities.YardSale.list();
+      const sales = await base44.entities.YardSale.filter({ status: 'approved' });
       const now = new Date();
       now.setHours(0, 0, 0, 0); // Start of today
       
       // Filter to only include upcoming sales (not past)
       return sales.filter(sale => {
-        if (!uniqueSaleIds.includes(sale.id)) return false;
         if (!sale.date) return false;
         
         try {
-          const saleDate = new Date(sale.date);
+          const [year, month, day] = sale.date.split('-').map(Number);
+          const saleDate = new Date(year, month - 1, day);
           return saleDate >= now;
         } catch (e) {
           return false;
         }
       });
     },
-    enabled: favorites.length > 0 || attendances.length > 0,
   });
 
   // Helper functions
@@ -101,7 +92,8 @@ export default function Calendar() {
   const salesForSelectedDate = allSales.filter(sale => {
     if (!sale.date) return false;
     try {
-      const saleDate = new Date(sale.date);
+      const [year, month, day] = sale.date.split('-').map(Number);
+      const saleDate = new Date(year, month - 1, day);
       const dateMatch = isSameDay(saleDate, selectedDate);
       if (!dateMatch) return false;
       
@@ -142,15 +134,7 @@ export default function Calendar() {
   // Count only upcoming attendances
   const upcomingAttendancesCount = allSales.filter(sale => isAttending(sale.id)).length;
 
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900 flex items-center justify-center">
-        <div className="animate-pulse">
-          <CalendarIcon className="w-12 h-12 text-[#14B8FF]" />
-        </div>
-      </div>
-    );
-  }
+
 
   const upcomingSalesCount = allSales.length;
   
@@ -182,52 +166,54 @@ export default function Calendar() {
             className="text-3xl md:text-4xl font-bold text-[#2E3A59] dark:text-white mb-2"
             style={{ fontFamily: 'Poppins, sans-serif' }}
           >
-            My Calendar
+            Yard Sale Calendar
           </h1>
           <p className="text-gray-600 dark:text-gray-300">
-            View all your favorited and attending yard sales
+            Browse upcoming yard sales by date
           </p>
         </motion.div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 gap-4 mb-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
-          >
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 bg-[#FF6F61]/10 rounded-lg flex items-center justify-center">
-                <Heart className="w-5 h-5 text-[#FF6F61]" />
+        {user && (
+          <div className="grid grid-cols-2 gap-4 mb-8">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-[#FF6F61]/10 rounded-lg flex items-center justify-center">
+                  <Heart className="w-5 h-5 text-[#FF6F61]" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-[#2E3A59] dark:text-white">
+                    {favorites.length}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Favorites</p>
+                </div>
               </div>
-              <div>
-                <p className="text-2xl font-bold text-[#2E3A59] dark:text-white">
-                  {favorites.length}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-300">Favorites</p>
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
-          >
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center">
-                <UserCheck className="w-5 h-5 text-green-600" />
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-green-500/10 rounded-lg flex items-center justify-center">
+                  <UserCheck className="w-5 h-5 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-[#2E3A59] dark:text-white">
+                    {upcomingAttendancesCount}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">Attending</p>
+                </div>
               </div>
-              <div>
-                <p className="text-2xl font-bold text-[#2E3A59] dark:text-white">
-                  {upcomingAttendancesCount}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-300">Attending</p>
-              </div>
-            </div>
-          </motion.div>
-        </div>
+            </motion.div>
+          </div>
+        )}
 
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Calendar */}
@@ -243,40 +229,42 @@ export default function Calendar() {
               >
                 Calendar View
               </h2>
-              <div className="flex gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
-                <button
-                  onClick={() => setEventFilter('all')}
-                  className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
-                    eventFilter === 'all'
-                      ? 'bg-white dark:bg-gray-600 text-[#2E3A59] dark:text-white shadow-sm'
-                      : 'text-gray-600 dark:text-gray-300 hover:text-[#2E3A59] dark:hover:text-white'
-                  }`}
-                >
-                  All
-                </button>
-                <button
-                  onClick={() => setEventFilter('favorites')}
-                  className={`px-3 py-1 rounded text-xs font-medium transition-colors flex items-center gap-1 ${
-                    eventFilter === 'favorites'
-                      ? 'bg-white dark:bg-gray-600 text-[#FF6F61] shadow-sm'
-                      : 'text-gray-600 dark:text-gray-300 hover:text-[#FF6F61]'
-                  }`}
-                >
-                  <Heart className="w-3 h-3" />
-                  Favorites
-                </button>
-                <button
-                  onClick={() => setEventFilter('attending')}
-                  className={`px-3 py-1 rounded text-xs font-medium transition-colors flex items-center gap-1 ${
-                    eventFilter === 'attending'
-                      ? 'bg-white dark:bg-gray-600 text-green-600 shadow-sm'
-                      : 'text-gray-600 dark:text-gray-300 hover:text-green-600'
-                  }`}
-                >
-                  <UserCheck className="w-3 h-3" />
-                  Attending
-                </button>
-              </div>
+              {user && (
+                <div className="flex gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
+                  <button
+                    onClick={() => setEventFilter('all')}
+                    className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                      eventFilter === 'all'
+                        ? 'bg-white dark:bg-gray-600 text-[#2E3A59] dark:text-white shadow-sm'
+                        : 'text-gray-600 dark:text-gray-300 hover:text-[#2E3A59] dark:hover:text-white'
+                    }`}
+                  >
+                    All
+                  </button>
+                  <button
+                    onClick={() => setEventFilter('favorites')}
+                    className={`px-3 py-1 rounded text-xs font-medium transition-colors flex items-center gap-1 ${
+                      eventFilter === 'favorites'
+                        ? 'bg-white dark:bg-gray-600 text-[#FF6F61] shadow-sm'
+                        : 'text-gray-600 dark:text-gray-300 hover:text-[#FF6F61]'
+                    }`}
+                  >
+                    <Heart className="w-3 h-3" />
+                    Favorites
+                  </button>
+                  <button
+                    onClick={() => setEventFilter('attending')}
+                    className={`px-3 py-1 rounded text-xs font-medium transition-colors flex items-center gap-1 ${
+                      eventFilter === 'attending'
+                        ? 'bg-white dark:bg-gray-600 text-green-600 shadow-sm'
+                        : 'text-gray-600 dark:text-gray-300 hover:text-green-600'
+                    }`}
+                  >
+                    <UserCheck className="w-3 h-3" />
+                    Attending
+                  </button>
+                </div>
+              )}
             </div>
             <CalendarComponent
               mode="single"

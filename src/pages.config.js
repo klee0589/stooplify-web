@@ -51,7 +51,8 @@ import AddYardSale from './pages/AddYardSale';
 import AdminCommunityLocations from './pages/AdminCommunityLocations';
 import AdminSupabaseSync from './pages/AdminSupabaseSync';
 import ApplyAsShop from './pages/ApplyAsShop';
-import Calendar from './pages/Calendar';
+import Blog from './pages/Blog';
+import BlogPost from './pages/BlogPost';
 import ChatSupport from './pages/ChatSupport';
 import Favorites from './pages/Favorites';
 import Guides from './pages/Guides';
@@ -69,8 +70,7 @@ import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
 import YardSaleDetails from './pages/YardSaleDetails';
 import YardSales from './pages/YardSales';
-import Blog from './pages/Blog';
-import BlogPost from './pages/BlogPost';
+import Calendar from './pages/Calendar';
 import __Layout from './Layout.jsx';
 
 
@@ -79,7 +79,8 @@ export const PAGES = {
     "AdminCommunityLocations": AdminCommunityLocations,
     "AdminSupabaseSync": AdminSupabaseSync,
     "ApplyAsShop": ApplyAsShop,
-    "Calendar": Calendar,
+    "Blog": Blog,
+    "BlogPost": BlogPost,
     "ChatSupport": ChatSupport,
     "Favorites": Favorites,
     "Guides": Guides,
@@ -97,12 +98,11 @@ export const PAGES = {
     "Profile": Profile,
     "YardSaleDetails": YardSaleDetails,
     "YardSales": YardSales,
-    "Blog": Blog,
-    "BlogPost": BlogPost,
+    "Calendar": Calendar,
 }
 
 export const pagesConfig = {
-    mainPage: "Home",
+    mainPage: "Calendar",
     Pages: PAGES,
     Layout: __Layout,
 };
