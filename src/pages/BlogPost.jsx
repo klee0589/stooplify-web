@@ -230,17 +230,18 @@ export default function BlogPost() {
           transition={{ delay: 0.1 }}
           className="prose prose-lg dark:prose-invert max-w-none 
             prose-headings:font-['Poppins'] prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white
-            prose-h2:text-2xl prose-h2:mt-16 prose-h2:mb-6
-            prose-h3:text-xl prose-h3:mt-12 prose-h3:mb-4
-            prose-h4:mt-8 prose-h4:mb-3
-            prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-6
+            prose-h2:text-2xl prose-h2:mt-20 prose-h2:mb-8
+            prose-h3:text-xl prose-h3:mt-16 prose-h3:mb-6
+            prose-h4:mt-12 prose-h4:mb-4
+            prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-8
             prose-a:text-[#14B8FF] prose-a:no-underline hover:prose-a:underline prose-a:font-medium
             prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold
-            prose-ul:my-8 prose-ol:my-8
-            prose-li:text-gray-700 dark:prose-li:text-gray-300 prose-li:my-2 prose-li:leading-relaxed
-            prose-blockquote:border-l-4 prose-blockquote:border-[#14B8FF] prose-blockquote:bg-gray-50 dark:prose-blockquote:bg-gray-800 prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:my-8
+            prose-ul:my-10 prose-ol:my-10
+            prose-li:text-gray-700 dark:prose-li:text-gray-300 prose-li:my-3 prose-li:leading-relaxed
+            prose-blockquote:border-l-4 prose-blockquote:border-[#14B8FF] prose-blockquote:bg-gray-50 dark:prose-blockquote:bg-gray-800 prose-blockquote:py-6 prose-blockquote:px-8 prose-blockquote:my-12
             prose-code:text-[#14B8FF] prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:text-sm
-            prose-img:my-10 prose-img:rounded-lg"
+            prose-img:my-12 prose-img:rounded-lg
+            prose-hr:my-16 prose-hr:border-gray-200 dark:prose-hr:border-gray-700"
         >
           <ReactMarkdown>{post.content}</ReactMarkdown>
         </motion.div>
