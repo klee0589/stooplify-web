@@ -15,6 +15,7 @@ export default function Calendar() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [language, setLanguage] = useState('en');
   const [eventFilter, setEventFilter] = useState('all'); // 'all', 'favorites', 'attending'
+  const [showFinished, setShowFinished] = useState(false);
   
   const t = useTranslation(language);
 
@@ -74,18 +75,54 @@ export default function Calendar() {
   });
 
   const { data: allSales = [] } = useQuery({
-    queryKey: ['calendarSales', user?.email],
+    queryKey: ['calendarSales', user?.email, showFinished],
     queryFn: async () => {
       if (!user) return [];
       const sales = await base44.entities.YardSale.filter({ status: 'approved' });
       const now = new Date();
       now.setHours(0, 0, 0, 0); // Start of today
       
-      // Filter to only include upcoming sales (not past)
+      // Filter based on showFinished toggle
       return sales.filter(sale => {
         if (!sale.date) return false;
         const saleDate = parseLocalDate(sale.date);
-        return saleDate && saleDate >= now;
+        if (!saleDate) return false;
+        
+        // If showFinished is false, only show upcoming/current sales
+        if (!showFinished) {
+          return saleDate >= now;
+        }
+        // If showFinished is true, show all sales
+        return true;
+      });
+    },
+    enabled: !!user,
+  });
+
+  // Get user's own created sales
+  const { data: myYardSales = [] } = useQuery({
+    queryKey: ['myCreatedSales', user?.email, showFinished],
+    queryFn: async () => {
+      if (!user) return [];
+      const sales = await base44.entities.YardSale.filter({ created_by: user.email });
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+      
+      return sales.filter(sale => {
+        if (!sale.date) return false;
+        const saleDate = parseLocalDate(sale.date);
+        if (!saleDate) return false;
+        
+        // If showFinished is false, only show upcoming/current sales
+        if (!showFinished) {
+          return saleDate >= now;
+        }
+        // If showFinished is true, show all sales
+        return true;
+      }).sort((a, b) => {
+        const dateA = parseLocalDate(a.date);
+        const dateB = parseLocalDate(b.date);
+        return dateA - dateB;
       });
     },
     enabled: !!user,
@@ -343,12 +380,67 @@ export default function Calendar() {
           </motion.div>
         </div>
 
+        {/* My Yard Sales - Sales created by user */}
+        {user && myYardSales.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="mt-8 bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h2 
+                className="text-xl font-bold text-[#2E3A59] dark:text-white"
+                style={{ fontFamily: 'Poppins, sans-serif' }}
+              >
+                My Yard Sales ({myYardSales.length})
+              </h2>
+              <button
+                onClick={() => setShowFinished(!showFinished)}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  showFinished
+                    ? 'bg-[#14B8FF] text-white'
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                }`}
+              >
+                {showFinished ? 'Hide Finished' : 'Show Finished'}
+              </button>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {myYardSales.map((sale) => (
+                <Link
+                  key={sale.id}
+                  to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}
+                  className="block p-4 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-[#14B8FF] transition-colors"
+                >
+                  <div className="flex items-start justify-between mb-2">
+                    <p className="font-semibold text-[#2E3A59] dark:text-white text-sm">
+                      {sale.title}
+                    </p>
+                    <span className={`px-2 py-0.5 rounded text-xs font-medium ${
+                      sale.status === 'approved' 
+                        ? 'bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300'
+                        : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300'
+                    }`}>
+                      {sale.status}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-gray-600 dark:text-gray-300">
+                    <CalendarIcon className="w-3.5 h-3.5" />
+                    {sale.date ? format(parseLocalDate(sale.date), 'MMM d, yyyy') : 'Date TBD'}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
         {/* All Upcoming Events - Only show when user is logged in */}
         {user && allSales.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.3 }}
             className="mt-8 bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm"
           >
             <h2 
