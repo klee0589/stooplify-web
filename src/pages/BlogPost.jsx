@@ -153,11 +153,11 @@ export default function BlogPost() {
         <motion.header
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="mb-12"
         >
           {/* Tags */}
           {post.tags && post.tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-4">
+            <div className="flex flex-wrap gap-2 mb-6">
               {post.tags.map((tag) => (
                 <Badge key={tag} className="bg-[#14B8FF]/10 text-[#14B8FF] hover:bg-[#14B8FF]/20 font-medium">
                   {tag}
@@ -166,11 +166,11 @@ export default function BlogPost() {
             </div>
           )}
 
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4 leading-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6 leading-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
             {post.title}
           </h1>
 
-          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
             {post.excerpt}
           </p>
 
@@ -213,7 +213,7 @@ export default function BlogPost() {
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="my-8 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800"
+            className="my-12 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-800"
           >
             <img
               src={post.featured_image_url}
@@ -230,15 +230,17 @@ export default function BlogPost() {
           transition={{ delay: 0.1 }}
           className="prose prose-lg dark:prose-invert max-w-none 
             prose-headings:font-['Poppins'] prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white
-            prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4
-            prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
+            prose-h2:text-2xl prose-h2:mt-16 prose-h2:mb-6
+            prose-h3:text-xl prose-h3:mt-12 prose-h3:mb-4
+            prose-h4:mt-8 prose-h4:mb-3
             prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed prose-p:mb-6
             prose-a:text-[#14B8FF] prose-a:no-underline hover:prose-a:underline prose-a:font-medium
             prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold
-            prose-ul:my-6 prose-ol:my-6
-            prose-li:text-gray-700 dark:prose-li:text-gray-300 prose-li:my-2
-            prose-blockquote:border-l-4 prose-blockquote:border-[#14B8FF] prose-blockquote:bg-gray-50 dark:prose-blockquote:bg-gray-800 prose-blockquote:py-2 prose-blockquote:px-4
-            prose-code:text-[#14B8FF] prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:text-sm"
+            prose-ul:my-8 prose-ol:my-8
+            prose-li:text-gray-700 dark:prose-li:text-gray-300 prose-li:my-2 prose-li:leading-relaxed
+            prose-blockquote:border-l-4 prose-blockquote:border-[#14B8FF] prose-blockquote:bg-gray-50 dark:prose-blockquote:bg-gray-800 prose-blockquote:py-4 prose-blockquote:px-6 prose-blockquote:my-8
+            prose-code:text-[#14B8FF] prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:font-mono prose-code:text-sm
+            prose-img:my-10 prose-img:rounded-lg"
         >
           <ReactMarkdown>{post.content}</ReactMarkdown>
         </motion.div>
@@ -248,7 +250,7 @@ export default function BlogPost() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="mt-16 p-8 bg-gradient-to-r from-[#14B8FF] to-[#0da3e6] rounded-2xl text-white text-center"
+          className="mt-20 p-8 bg-gradient-to-r from-[#14B8FF] to-[#0da3e6] rounded-2xl text-white text-center"
         >
           <h3 className="text-2xl font-bold mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
             Ready to Find Your Next Great Deal?
