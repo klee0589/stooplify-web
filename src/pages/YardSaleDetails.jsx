@@ -529,6 +529,25 @@ export default function YardSaleDetails() {
       } : {})
     },
     "image": photos.length > 0 ? photos : undefined,
+    "offers": {
+      "@type": "Offer",
+      "url": window.location.href,
+      "priceCurrency": "USD",
+      "availability": "https://schema.org/InStock",
+      "itemCondition": "https://schema.org/UsedCondition",
+      "name": "Items for Sale"
+    },
+    "eventStatus": (() => {
+      const now = new Date();
+      const saleStart = new Date(`${sale.date}T${sale.start_time || '08:00'}`);
+      const saleEnd = new Date(`${sale.date}T${sale.end_time || '14:00'}`);
+      if (now > saleEnd) return "https://schema.org/EventCancelled";
+      return "https://schema.org/EventScheduled";
+    })(),
+    "performer": seller ? {
+      "@type": "Person",
+      "name": seller.full_name || seller.email
+    } : undefined,
     "organizer": seller ? {
       "@type": "Person",
       "name": seller.full_name || seller.email
