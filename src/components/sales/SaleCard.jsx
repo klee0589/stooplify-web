@@ -93,11 +93,7 @@ export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance,
             >
               {sale.title}
             </h3>
-            {sale.is_community_event ? (
-              <span className="inline-flex items-center gap-1 px-2 py-0.5 bg-[#14B8FF]/10 text-[#14B8FF] text-xs font-semibold rounded-full">
-                🌐 Community
-              </span>
-            ) : seller && <TrustBadges seller={seller} size="small" />}
+            {seller && <TrustBadges seller={seller} size="small" />}
           </div>
           
           <div className="space-y-1.5 mb-2">
