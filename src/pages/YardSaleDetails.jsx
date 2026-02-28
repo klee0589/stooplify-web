@@ -270,6 +270,32 @@ export default function YardSaleDetails() {
         return;
       }
 
+      // If marking as attending (not removing), verify user is within 1 mile of the event
+      if (!isAttending) {
+        const saleLat = sale?.exact_latitude || sale?.latitude;
+        const saleLon = sale?.exact_longitude || sale?.longitude;
+
+        if (saleLat && saleLon) {
+          const position = await new Promise((resolve, reject) =>
+            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 8000 })
+          );
+
+          const userLat = position.coords.latitude;
+          const userLon = position.coords.longitude;
+          const R = 3958.8;
+          const dLat = (saleLat - userLat) * Math.PI / 180;
+          const dLon = (saleLon - userLon) * Math.PI / 180;
+          const a = Math.sin(dLat/2) ** 2 +
+            Math.cos(userLat * Math.PI / 180) * Math.cos(saleLat * Math.PI / 180) * Math.sin(dLon/2) ** 2;
+          const distance = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+          if (distance > 1) {
+            toast.error(`You must be within 1 mile of the event to mark attending. You are ${distance.toFixed(1)} miles away.`);
+            return;
+          }
+        }
+      }
+
       base44.analytics.track({
         eventName: isAttending ? 'attendance_removed' : 'attendance_marked',
         properties: { sale_id: saleId }
@@ -291,6 +317,11 @@ export default function YardSaleDetails() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['attendance'] });
       toast.success(isAttending ? 'No longer attending' : '🎉 Attending! Exact address unlocked.');
+    },
+    onError: (error) => {
+      if (error?.code === 1) {
+        toast.error('Please enable location access to mark attendance.');
+      }
     },
   });
 
