@@ -65,9 +65,14 @@ export default function YardSales() {
     // Get user's geolocation
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-        () => {} // silently fail
+        (pos) => {
+          setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+          setLocationLoaded(true);
+        },
+        () => setLocationLoaded(true) // fail silently but mark as done
       );
+    } else {
+      setLocationLoaded(true);
     }
   }, []);
 
