@@ -872,55 +872,75 @@ export default function YardSaleDetails() {
                 <h3 className="font-semibold text-[#2E3A59] dark:text-white mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
                   Hosted By
                 </h3>
-                
-                <div className="flex items-start justify-between mb-4">
+
+                {sale.host_name ? (
+                  /* Community / curated event host */
                   <div className="flex items-center gap-4">
-                    <div className="w-16 h-16 bg-gradient-to-br from-[#FF6F61] to-[#F5A623] rounded-full flex items-center justify-center">
+                    <div className="w-16 h-16 bg-gradient-to-br from-[#14B8FF] to-[#0da3e6] rounded-full flex items-center justify-center">
                       <span className="text-2xl font-bold text-white">
-                        {(seller?.full_name || seller?.email || sale.created_by)?.[0]?.toUpperCase()}
+                        {sale.host_name[0].toUpperCase()}
                       </span>
                     </div>
                     <div>
                       <h4 className="text-lg font-semibold text-[#2E3A59] dark:text-white">
-                        {seller?.full_name || sale.created_by?.split('@')[0] || 'Host'}
+                        {sale.host_name}
                       </h4>
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                        {sellerSalesCount > 0 ? `${sellerSalesCount} ${sellerSalesCount === 1 ? 'sale' : 'sales'} hosted` : 'New to Stooplify'}
-                        {sellerAverageRating && ` • ⭐ ${sellerAverageRating.toFixed(1)} rating`}
-                      </p>
-                      {seller?.email && (
-                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">{seller.email}</p>
-                      )}
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Curated community event</p>
                     </div>
                   </div>
-                </div>
-                
-                <SellerReputation 
-                  seller={seller} 
-                  averageRating={sellerAverageRating}
-                  totalReviews={sellerReviews.length}
-                  totalSales={sellerSalesCount}
-                />
-                
-                {sale.created_by !== user?.email && (
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    onClick={() => {
-                      if (!user) {
-                        base44.auth.redirectToLogin();
-                        return;
-                      }
-                      const msgSection = document.getElementById('message-section');
-                      if (msgSection) {
-                        msgSection.scrollIntoView({ behavior: 'smooth' });
-                      }
-                    }}
-                    className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#14B8FF] text-white rounded-xl font-semibold hover:bg-[#0da3e6] transition-colors shadow-md mt-4"
-                  >
-                    <MessageCircle className="w-5 h-5" />
-                    Message Host via Stooplify
-                  </motion.button>
+                ) : (
+                  /* Regular user-hosted sale */
+                  <>
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-16 h-16 bg-gradient-to-br from-[#FF6F61] to-[#F5A623] rounded-full flex items-center justify-center">
+                          <span className="text-2xl font-bold text-white">
+                            {(seller?.full_name || seller?.email || sale.created_by)?.[0]?.toUpperCase()}
+                          </span>
+                        </div>
+                        <div>
+                          <h4 className="text-lg font-semibold text-[#2E3A59] dark:text-white">
+                            {seller?.full_name || sale.created_by?.split('@')[0] || 'Host'}
+                          </h4>
+                          <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                            {sellerSalesCount > 0 ? `${sellerSalesCount} ${sellerSalesCount === 1 ? 'sale' : 'sales'} hosted` : 'New to Stooplify'}
+                            {sellerAverageRating && ` • ⭐ ${sellerAverageRating.toFixed(1)} rating`}
+                          </p>
+                          {seller?.email && (
+                            <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">{seller.email}</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <SellerReputation
+                      seller={seller}
+                      averageRating={sellerAverageRating}
+                      totalReviews={sellerReviews.length}
+                      totalSales={sellerSalesCount}
+                    />
+
+                    {sale.created_by !== user?.email && (
+                      <motion.button
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        onClick={() => {
+                          if (!user) {
+                            base44.auth.redirectToLogin();
+                            return;
+                          }
+                          const msgSection = document.getElementById('message-section');
+                          if (msgSection) {
+                            msgSection.scrollIntoView({ behavior: 'smooth' });
+                          }
+                        }}
+                        className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#14B8FF] text-white rounded-xl font-semibold hover:bg-[#0da3e6] transition-colors shadow-md mt-4"
+                      >
+                        <MessageCircle className="w-5 h-5" />
+                        Message Host via Stooplify
+                      </motion.button>
+                    )}
+                  </>
                 )}
               </div>
             )}
