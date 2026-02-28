@@ -8,7 +8,6 @@ import { Calendar, MapPin, Eye, Loader2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { format } from 'date-fns';
-import { toast } from "sonner";
 import { useTranslation } from '../components/translations';
 import SEO from '../components/SEO';
 
