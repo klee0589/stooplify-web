@@ -261,8 +261,6 @@ export default function YardSales() {
     
     // Distance filtering (if coordinates available)
     if (filters.distance !== 'all' && sale.latitude && sale.longitude) {
-      // For now, just pass through - distance filtering would require user's location
-      // This can be enhanced with geolocation API in future
       return true;
     }
     
@@ -307,7 +305,7 @@ export default function YardSales() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Yard Sales Near You",
+    "name": "Brooklyn Stoop Sales & Yard Sales Near You",
     "numberOfItems": filteredSales.length,
     "itemListElement": filteredSales.slice(0, 10).map((sale, index) => ({
       "@type": "Event",
@@ -337,9 +335,9 @@ export default function YardSales() {
     <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
       <SEO 
-        title={`${filteredSales.length} Yard Sales Near You | Find Local Garage & Estate Sales | Stooplify`}
-        description={`Browse ${filteredSales.length} upcoming yard sales, garage sales, and estate sales in your area. Find furniture, clothing, antiques, electronics and more at unbeatable prices. Filter by location, category, and date.`}
-        keywords="yard sales near me, garage sales today, estate sales, weekend yard sales, local sales, secondhand furniture, thrift shopping, neighborhood sales, bargain hunting"
+        title={`${filteredSales.length} Brooklyn Stoop Sales & Yard Sales Near You | Stooplify`}
+        description={`Browse ${filteredSales.length} upcoming Brooklyn stoop sales, yard sales, garage sales, and estate sales in your area. Find furniture, clothing, antiques, electronics and more at unbeatable prices.`}
+        keywords="brooklyn stoop sale, stoop sales brooklyn, yard sales near me, garage sales today, estate sales, weekend yard sales, local sales, secondhand furniture, thrift shopping, neighborhood sales, NYC stoop sale"
         structuredData={structuredData}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
