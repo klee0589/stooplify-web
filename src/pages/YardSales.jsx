@@ -60,6 +60,14 @@ export default function YardSales() {
       }
     };
     checkAuth();
+
+    // Get user's geolocation
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+        () => {} // silently fail
+      );
+    }
   }, []);
 
   const { data: sales = [], isLoading, refetch, error } = useQuery({
