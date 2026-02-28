@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
-import { Calendar, MapPin, Eye, Loader2 } from 'lucide-react';
+import { Calendar, MapPin, Edit, Trash2, Eye, Loader2, Plus } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { format } from 'date-fns';
+import { toast } from "sonner";
 import { useTranslation } from '../components/translations';
 import SEO from '../components/SEO';
 
@@ -15,6 +16,8 @@ export default function MyYardSales() {
   const [user, setUser] = useState(null);
   const [language, setLanguage] = useState('en');
   const [showFinishedSales, setShowFinishedSales] = useState(false);
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const t = useTranslation(language);
 
   useEffect(() => {
@@ -46,29 +49,54 @@ export default function MyYardSales() {
     checkAuth();
   }, []);
 
-  const { data: attendanceRecords = [], isLoading: isLoadingAttendance } = useQuery({
-    queryKey: ['myAttendance', user?.email],
+  const { data: sales = [], isLoading } = useQuery({
+    queryKey: ['myYardSales', user?.email],
     queryFn: async () => {
       if (!user) return [];
-      return await base44.entities.Attendance.filter({ user_email: user.email });
+      const allSales = await base44.entities.YardSale.filter({ created_by: user.email }, '-date');
+      return allSales;
     },
     enabled: !!user,
   });
 
-  const { data: sales = [], isLoading: isLoadingSales } = useQuery({
-    queryKey: ['myAttendedSales', user?.email, attendanceRecords.map(a => a.yard_sale_id).join(',')],
-    queryFn: async () => {
-      if (!user || attendanceRecords.length === 0) return [];
-      const saleIds = attendanceRecords.map(a => a.yard_sale_id);
-      const allSales = await Promise.all(
-        saleIds.map(id => base44.entities.YardSale.filter({ id }))
-      );
-      return allSales.flat();
+  const deleteMutation = useMutation({
+    mutationFn: async (saleId) => {
+      await base44.entities.YardSale.delete(saleId);
     },
-    enabled: !!user && attendanceRecords.length >= 0,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['myYardSales'] });
+      toast.success('Sale deleted successfully');
+    },
+    onError: () => {
+      toast.error('Failed to delete sale');
+    },
   });
 
-  const isLoading = isLoadingAttendance || isLoadingSales;
+  const handleDelete = (sale) => {
+    // Check if sale is more than 2 hours away
+    if (sale?.date && sale?.start_time) {
+      const saleDateTime = new Date(`${sale.date}T${sale.start_time}`);
+      const now = new Date();
+      const hoursUntilSale = (saleDateTime - now) / (1000 * 60 * 60);
+      
+      if (hoursUntilSale < 2) {
+        toast.error('Cannot delete sale within 2 hours of start time');
+        return;
+      }
+    }
+    
+    if (window.confirm('Are you sure you want to delete this sale? This action cannot be undone.')) {
+      deleteMutation.mutate(sale.id);
+    }
+  };
+
+  const canDeleteSale = (sale) => {
+    if (!sale?.date || !sale?.start_time) return true;
+    const saleDateTime = new Date(`${sale.date}T${sale.start_time}`);
+    const now = new Date();
+    const hoursUntilSale = (saleDateTime - now) / (1000 * 60 * 60);
+    return hoursUntilSale >= 2;
+  };
 
   const parseLocalDate = (dateString) => {
     if (!dateString) return null;
@@ -121,19 +149,27 @@ export default function MyYardSales() {
               className="text-3xl font-bold text-[#2E3A59] dark:text-white mb-2"
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
-              My Yard Sales
+              {t('myYardSales')}
             </h1>
             <p className="text-gray-600 dark:text-gray-400">
-              Sales you're attending: {sales.length}
+              {sales.length} {sales.length === 1 ? t('sale') : t('sales')} total
             </p>
           </div>
-          <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 cursor-pointer">
-            <Switch
-              checked={showFinishedSales}
-              onCheckedChange={setShowFinishedSales}
-            />
-            <span>Show finished</span>
-          </label>
+          <div className="flex items-center gap-4">
+            <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 cursor-pointer">
+              <Switch
+                checked={showFinishedSales}
+                onCheckedChange={setShowFinishedSales}
+              />
+              <span>Show finished</span>
+            </label>
+            <Link to={createPageUrl('AddYardSale')}>
+              <Button className="bg-[#FF6F61] hover:bg-[#e55a4d] gap-2">
+                <Plus className="w-4 h-4" />
+                {t('addNewSale')}
+              </Button>
+            </Link>
+          </div>
         </div>
 
         {/* Sales Sections */}
@@ -147,14 +183,14 @@ export default function MyYardSales() {
               <MapPin className="w-10 h-10 text-[#FF6F61]" />
             </div>
             <h3 className="text-xl font-bold text-[#2E3A59] dark:text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              No attending sales yet
+              {t('noYardSalesYet')}
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Mark yourself as attending on any yard sale to see it here.
+              Get started by creating your first yard sale listing
             </p>
-            <Link to={createPageUrl('YardSales')}>
+            <Link to={createPageUrl('AddYardSale')}>
               <Button className="bg-[#FF6F61] hover:bg-[#e55a4d]">
-                Browse Sales
+                {t('listYourSale')}
               </Button>
             </Link>
           </motion.div>
