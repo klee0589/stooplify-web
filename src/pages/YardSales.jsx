@@ -181,13 +181,14 @@ export default function YardSales() {
     const isFavorited = favorites.includes(sale.id);
     const isAttending = attendingSaleIds.has(sale.id);
     if (isFavorited || isAttending) return true;
+    if (!locationLoaded) return false; // Wait until we know location status
+
     if (userLocation) {
-      // If sale has no coordinates, exclude it (can't verify distance)
       if (!sale.latitude || !sale.longitude) return false;
       return getDistanceMiles(userLocation.lat, userLocation.lng, sale.latitude, sale.longitude) <= 25;
     }
-    // No user location available — don't show unless favorited/attending
-    return false;
+    // Location denied/unavailable — show all sales (can't filter by distance)
+    return true;
   };
 
   // Filter sales
