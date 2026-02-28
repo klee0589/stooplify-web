@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -12,6 +12,15 @@ import { format } from 'date-fns';
 
 export default function Blog() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [language, setLanguage] = useState(() => localStorage.getItem('stooplify_lang') || 'en');
+
+  useEffect(() => {
+    const handleLanguageChange = (e) => setLanguage(e.detail);
+    window.addEventListener('languageChange', handleLanguageChange);
+    return () => window.removeEventListener('languageChange', handleLanguageChange);
+  }, []);
+
+  const isSpanish = language === 'es';
 
   const { data: posts = [], isLoading } = useQuery({
     queryKey: ['blogPosts'],
@@ -30,9 +39,12 @@ export default function Blog() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Blog",
-    "name": "Stooplify Blog",
-    "description": "Tips, guides, and insights about yard sales, garage sales, and secondhand shopping",
+    "name": isSpanish ? "Blog de Stooplify" : "Stooplify Blog",
+    "description": isSpanish
+      ? "Consejos, guías e historias sobre ventas de garaje, ventas de acera en Brooklyn y compras de segunda mano"
+      : "Tips, guides, and insights about yard sales, Brooklyn stoop sales, garage sales, and secondhand shopping",
     "url": typeof window !== 'undefined' ? window.location.href : 'https://stooplify.com/blog',
+    "inLanguage": isSpanish ? "es" : "en",
     "blogPost": posts.slice(0, 10).map(post => ({
       "@type": "BlogPosting",
       "headline": post.title,
@@ -49,9 +61,15 @@ export default function Blog() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <SEO
-        title="Blog - Yard Sale Tips, Guides & Stories | Stooplify"
-        description="Discover expert tips, guides, and stories about yard sales, garage sales, and secondhand shopping. Learn how to buy, sell, and find amazing deals."
-        keywords="yard sale blog, garage sale tips, secondhand shopping, thrift tips, selling tips, buying guides"
+        title={isSpanish
+          ? "Blog - Consejos de Ventas de Garaje y Ventas de Acera en Brooklyn | Stooplify"
+          : "Blog - Brooklyn Stoop Sales, Yard Sale Tips & Guides | Stooplify"}
+        description={isSpanish
+          ? "Descubre consejos de expertos, guías e historias sobre ventas de garaje, ventas de acera en Brooklyn y compras de segunda mano. Aprende a comprar, vender y encontrar increíbles ofertas."
+          : "Discover expert tips, guides, and stories about Brooklyn stoop sales, yard sales, garage sales, and secondhand shopping. Learn how to buy, sell, and find amazing deals."}
+        keywords={isSpanish
+          ? "blog ventas de garaje, ventas de acera brooklyn, consejos de segunda mano, ventas de garaje NYC, venta de acera nueva york"
+          : "yard sale blog, brooklyn stoop sale tips, garage sale guides, secondhand shopping NYC, stoop sales brooklyn, yard sale tips"}
         structuredData={structuredData}
       />
 
@@ -64,10 +82,12 @@ export default function Blog() {
             className="text-center"
           >
             <h1 className="text-5xl md:text-6xl font-bold mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              Stooplify Blog
+              {isSpanish ? 'Blog de Stooplify' : 'Stooplify Blog'}
             </h1>
             <p className="text-xl text-white/90 max-w-2xl mx-auto mb-8">
-              Expert tips, guides, and stories about yard sales, secondhand shopping, and finding community treasures
+              {isSpanish
+                ? 'Consejos de expertos, guías e historias sobre ventas de garaje, ventas de acera en Brooklyn y tesoros de segunda mano'
+                : 'Expert tips, guides, and stories about Brooklyn stoop sales, yard sales, secondhand shopping, and finding community treasures'}
             </p>
 
             {/* Search */}
@@ -76,7 +96,7 @@ export default function Blog() {
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <Input
                   type="text"
-                  placeholder="Search articles..."
+                  placeholder={isSpanish ? 'Buscar artículos...' : 'Search articles...'}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-12 py-6 text-lg bg-white"
@@ -88,8 +108,6 @@ export default function Blog() {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-
-        {/* Blog Posts Grid */}
         {isLoading ? (
           <div className="text-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#14B8FF] border-t-transparent mx-auto" />
@@ -97,7 +115,9 @@ export default function Blog() {
         ) : filteredPosts.length === 0 ? (
           <div className="text-center py-20">
             <p className="text-gray-600 dark:text-gray-400 text-lg">
-              {searchTerm ? 'No articles found matching your search.' : 'No blog posts yet. Check back soon!'}
+              {searchTerm
+                ? (isSpanish ? 'No se encontraron artículos.' : 'No articles found matching your search.')
+                : (isSpanish ? 'No hay artículos aún. ¡Vuelve pronto!' : 'No blog posts yet. Check back soon!')}
             </p>
           </div>
         ) : (
@@ -124,7 +144,6 @@ export default function Blog() {
                   )}
                   
                   <div className="p-5">
-                    {/* Tags */}
                     {post.tags && post.tags.length > 0 && (
                       <div className="flex flex-wrap gap-2 mb-3">
                         {post.tags.slice(0, 2).map((tag) => (
@@ -143,7 +162,6 @@ export default function Blog() {
                       {post.excerpt}
                     </p>
 
-                    {/* Meta */}
                     <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-100 dark:border-gray-700">
                       <div className="flex items-center gap-3">
                         <span className="flex items-center gap-1">
