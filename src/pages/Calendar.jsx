@@ -169,6 +169,16 @@ export default function Calendar() {
   const isFavorited = (saleId) => favorites.some(f => f.yard_sale_id === saleId);
   const isAttending = (saleId) => attendances.some(a => a.yard_sale_id === saleId);
 
+  // Filter sales by map bounds; always include sales the user is attending
+  const isInMapBounds = useCallback((sale) => {
+    if (attendances.some(a => a.yard_sale_id === sale.id)) return true;
+    if (!sale.latitude || !sale.longitude) return false;
+    if (mapBounds) {
+      return mapBounds.contains([sale.latitude, sale.longitude]);
+    }
+    return getDistanceMiles(userLocation.lat, userLocation.lng, sale.latitude, sale.longitude) <= 25;
+  }, [mapBounds, userLocation, attendances]);
+
   // Sales visible in map area
   const visibleSales = allSales.filter(isInMapBounds);
 
