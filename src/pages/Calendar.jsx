@@ -67,18 +67,6 @@ export default function Calendar() {
     }
   }, []);
 
-  // Filter sales by map bounds; always include sales the user is attending
-  const isInMapBounds = useCallback((sale) => {
-    // Always show events the user is attending regardless of location
-    if (attendances.some(a => a.yard_sale_id === sale.id)) return true;
-    if (!sale.latitude || !sale.longitude) return false;
-    if (mapBounds) {
-      return mapBounds.contains([sale.latitude, sale.longitude]);
-    }
-    // Default: 25 mile radius
-    return getDistanceMiles(userLocation.lat, userLocation.lng, sale.latitude, sale.longitude) <= 25;
-  }, [mapBounds, userLocation, attendances]);
-
   useEffect(() => {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
     setLanguage(savedLang);
