@@ -112,25 +112,17 @@ export default function Calendar() {
   });
 
   const { data: allSales = [] } = useQuery({
-    queryKey: ['calendarSales', user?.email, showFinished],
+    queryKey: ['calendarSales', user?.email],
     queryFn: async () => {
       if (!user) return [];
       const sales = await base44.entities.YardSale.filter({ status: 'approved' });
       const now = new Date();
       now.setHours(0, 0, 0, 0); // Start of today
-      
-      // Filter based on showFinished toggle
+      // Only upcoming/live sales
       return sales.filter(sale => {
         if (!sale.date) return false;
         const saleDate = parseLocalDate(sale.date);
-        if (!saleDate) return false;
-        
-        // If showFinished is false, only show upcoming/current sales
-        if (!showFinished) {
-          return saleDate >= now;
-        }
-        // If showFinished is true, show all sales
-        return true;
+        return saleDate && saleDate >= now;
       });
     },
     enabled: !!user,
