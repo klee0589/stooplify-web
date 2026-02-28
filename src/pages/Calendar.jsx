@@ -512,8 +512,8 @@ export default function Calendar() {
           </motion.div>
         )}
 
-        {/* All Upcoming Events - Only attending */}
-        {user && allSales.filter(sale => isAttending(sale.id)).length > 0 && (
+        {/* All Upcoming Events - Only attending, filtered by map */}
+        {user && visibleSales.filter(sale => isAttending(sale.id)).length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
