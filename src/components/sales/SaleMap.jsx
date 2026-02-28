@@ -126,8 +126,22 @@ export default function SaleMap({ sales, center, onVisibleSalesChange }) {
      },
    });
 
+   // Filter sales to only those visible in current map bounds
+   const visibleSales = mapBounds
+     ? sales.filter(sale => {
+         if (!sale.latitude || !sale.longitude) return false;
+         return mapBounds.contains([sale.latitude, sale.longitude]);
+       })
+     : sales;
+
+   useEffect(() => {
+     if (onVisibleSalesChange) {
+       onVisibleSalesChange(visibleSales);
+     }
+   }, [visibleSales.length, mapBounds]);
+
    // Group sales by general location
-   const groupedByLocation = sales.reduce((acc, sale) => {
+   const groupedByLocation = visibleSales.reduce((acc, sale) => {
      if (!sale.latitude || !sale.longitude) return acc;
      const key = sale.general_location || 'Unknown';
      if (!acc[key]) {
