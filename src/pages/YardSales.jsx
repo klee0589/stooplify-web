@@ -180,8 +180,8 @@ export default function YardSales() {
       if (!sale.latitude || !sale.longitude) return false;
       return getDistanceMiles(userLocation.lat, userLocation.lng, sale.latitude, sale.longitude) <= 25;
     }
-    // Location not yet available — show all until we know
-    return true;
+    // No user location available — don't show unless favorited/attending
+    return false;
   };
 
   // Filter sales
