@@ -475,7 +475,7 @@ export default function Calendar() {
               className="text-xl font-bold text-[#2E3A59] dark:text-white mb-4"
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
-              My Yard Sales ({myYardSales.length})
+              My Yard Sales ({myYardSales.filter(isInMapBounds).length})
             </h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {myYardSales.filter(isInMapBounds).map((sale) => (
