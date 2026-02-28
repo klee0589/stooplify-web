@@ -29,7 +29,7 @@ function MapBoundsWatcher({ onBoundsChange }) {
     moveend: () => onBoundsChange(map.getBounds()),
     zoomend: () => onBoundsChange(map.getBounds()),
   });
-  useEffect(() => {
+  React.useEffect(() => {
     onBoundsChange(map.getBounds());
   }, []);
   return null;
