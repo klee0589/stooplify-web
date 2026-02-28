@@ -468,8 +468,8 @@ export default function Calendar() {
               </div>
             )}
           </motion.div>
-          </div>
-        </div>
+          </div>{/* end flex flex-col */}
+        </div>{/* end grid lg:grid-cols-2 */}
 
         {/* My Yard Sales - Sales created by user */}
         {user && myYardSales.length > 0 && (
