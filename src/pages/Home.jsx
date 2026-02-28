@@ -57,7 +57,7 @@ export default function Home() {
     "@type": "WebSite",
     "name": "Stooplify",
     "url": "https://stooplify.com",
-    "description": "Discover amazing yard sales, garage sales, and estate sales near you. Find hidden treasures at unbeatable prices from local sellers in your neighborhood.",
+    "description": "Discover amazing yard sales, garage sales, estate sales, and Brooklyn stoop sales near you. Find hidden treasures at unbeatable prices from local sellers in your neighborhood.",
     "potentialAction": {
       "@type": "SearchAction",
       "target": "https://stooplify.com/YardSales?search={search_term_string}",
@@ -68,9 +68,9 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <SEO 
-        title="Stooplify - Find Local Yard Sales, Garage Sales & Estate Sales Near You"
-        description="Discover amazing deals at yard sales, garage sales, and estate sales in your neighborhood. Browse thousands of local sales, save favorites, and find hidden treasures at unbeatable prices."
-        keywords="yard sales near me, garage sales, estate sales, local sales, secondhand shopping, thrift sales, neighborhood sales, treasure hunting, bargain shopping, NYC yard sales"
+        title="Stooplify - Find Brooklyn Stoop Sales, Yard Sales, Garage Sales & Estate Sales Near You"
+        description="Discover amazing deals at Brooklyn stoop sales, yard sales, garage sales, and estate sales in your neighborhood. Browse thousands of local sales, save favorites, and find hidden treasures at unbeatable prices."
+        keywords="brooklyn stoop sale, stoop sales brooklyn, yard sales near me, garage sales, estate sales, local sales, secondhand shopping, thrift sales, neighborhood sales, treasure hunting, bargain shopping, NYC yard sales, NYC stoop sale"
         structuredData={structuredData}
       />
       <HeroSection />
@@ -154,6 +154,26 @@ export default function Home() {
       <HowItWorks />
       <FeaturedSales sales={sales} />
       <CTASection />
+
+      {/* Brooklyn Stoop Sales SEO Section */}
+      <section className="bg-gray-50 dark:bg-gray-900 py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-[#2E3A59] dark:text-white mb-6 text-center" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            Brooklyn Stoop Sales & NYC Yard Sales
+          </h2>
+          <div className="prose prose-lg max-w-none text-gray-600 dark:text-gray-300 space-y-4 text-center">
+            <p>
+              Looking for a <strong>Brooklyn stoop sale</strong> this weekend? Stooplify is the easiest way to find stoop sales, yard sales, and garage sales across Brooklyn, Queens, the Bronx, Manhattan, and all of NYC.
+            </p>
+            <p>
+              Brooklyn stoop sales are a beloved New York City tradition — neighbors set up right outside their stoops to sell furniture, clothing, vintage finds, books, and more. Stooplify brings these local gems online so you never miss a deal in your neighborhood.
+            </p>
+            <p>
+              Browse upcoming stoop sales in Williamsburg, Park Slope, Bushwick, Crown Heights, Bed-Stuy, and beyond — or <a href="/AddYardSale" className="text-[#14B8FF] hover:underline">list your own stoop sale for free</a>.
+            </p>
+          </div>
+        </div>
+      </section>
       
       {/* From the Founder */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
