@@ -322,7 +322,12 @@ export default function YardSales() {
         >
           <div className="flex items-center gap-4">
             <p className="text-gray-600 dark:text-gray-300">
-              <span className="font-semibold text-[#2E3A59] dark:text-white">{filteredSales.length}</span> {t('salesFound')}
+              <span className="font-semibold text-[#2E3A59] dark:text-white">
+                {viewMode === 'map' && visibleMapSales.length > 0 ? visibleMapSales.length : filteredSales.length}
+              </span> {t('salesFound')}
+              {viewMode === 'map' && visibleMapSales.length > 0 && visibleMapSales.length < filteredSales.length && (
+                <span className="text-xs text-gray-400 ml-1">(in view)</span>
+              )}
             </p>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
