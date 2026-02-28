@@ -131,6 +131,17 @@ export default function YardSales() {
     }
   }, [userFavorites]);
 
+  const { data: userAttendances = [] } = useQuery({
+    queryKey: ['attendances', user?.email],
+    queryFn: async () => {
+      if (!user) return [];
+      return await base44.entities.Attendance.filter({ user_email: user.email });
+    },
+    enabled: !!user,
+  });
+
+  const attendingSaleIds = new Set(userAttendances.map(a => a.yard_sale_id));
+
   const favoriteMutation = useMutation({
     mutationFn: async (saleId) => {
       if (!user) {
