@@ -177,8 +177,11 @@ export default function Calendar() {
   const isFavorited = (saleId) => favorites.some(f => f.yard_sale_id === saleId);
   const isAttending = (saleId) => attendances.some(a => a.yard_sale_id === saleId);
 
-  // Get sales for selected date with filter
-  const salesForSelectedDate = allSales.filter(sale => {
+  // Sales visible in map area
+  const visibleSales = allSales.filter(isInMapBounds);
+
+  // Get sales for selected date with filter (location-filtered)
+  const salesForSelectedDate = visibleSales.filter(sale => {
     if (!sale.date) return false;
     const saleDate = parseLocalDate(sale.date);
     if (!saleDate) return false;
@@ -192,8 +195,8 @@ export default function Calendar() {
     return true; // 'all'
   });
 
-  // Get dates with events (respecting filter)
-  const datesWithEvents = allSales
+  // Get dates with events (respecting filter + location)
+  const datesWithEvents = visibleSales
     .filter(sale => {
       if (!sale.date) return false;
       // Apply event filter
