@@ -100,10 +100,22 @@ function MapUpdater({ center }) {
   return null;
 }
 
-export default function SaleMap({ sales, center }) {
+function MapBoundsWatcher({ onBoundsChange }) {
+  const map = useMapEvents({
+    moveend: () => onBoundsChange(map.getBounds()),
+    zoomend: () => onBoundsChange(map.getBounds()),
+  });
+  useEffect(() => {
+    onBoundsChange(map.getBounds());
+  }, []);
+  return null;
+}
+
+export default function SaleMap({ sales, center, onVisibleSalesChange }) {
    const [mapReady, setMapReady] = useState(false);
    const [userLocation, setUserLocation] = useState(null);
    const [expandedLocation, setExpandedLocation] = useState(null);
+   const [mapBounds, setMapBounds] = useState(null);
    const defaultCenter = center || userLocation || [40.7128, -74.0060]; // NYC default
 
    // Fetch community locations
