@@ -25,11 +25,13 @@ function getDistanceMiles(lat1, lon1, lat2, lon2) {
 
 // Component to watch map bounds
 function MapBoundsWatcher({ onBoundsChange }) {
-  useMapEvents({
-    moveend: (e) => onBoundsChange(e.target.getBounds()),
-    zoomend: (e) => onBoundsChange(e.target.getBounds()),
-    load: (e) => onBoundsChange(e.target.getBounds()),
+  const map = useMapEvents({
+    moveend: () => onBoundsChange(map.getBounds()),
+    zoomend: () => onBoundsChange(map.getBounds()),
   });
+  useEffect(() => {
+    onBoundsChange(map.getBounds());
+  }, []);
   return null;
 }
 
