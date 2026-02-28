@@ -49,54 +49,29 @@ export default function MyYardSales() {
     checkAuth();
   }, []);
 
-  const { data: sales = [], isLoading } = useQuery({
-    queryKey: ['myYardSales', user?.email],
+  const { data: attendanceRecords = [], isLoading: isLoadingAttendance } = useQuery({
+    queryKey: ['myAttendance', user?.email],
     queryFn: async () => {
       if (!user) return [];
-      const allSales = await base44.entities.YardSale.filter({ created_by: user.email }, '-date');
-      return allSales;
+      return await base44.entities.Attendance.filter({ user_email: user.email });
     },
     enabled: !!user,
   });
 
-  const deleteMutation = useMutation({
-    mutationFn: async (saleId) => {
-      await base44.entities.YardSale.delete(saleId);
+  const { data: sales = [], isLoading: isLoadingSales } = useQuery({
+    queryKey: ['myAttendedSales', user?.email, attendanceRecords.map(a => a.yard_sale_id).join(',')],
+    queryFn: async () => {
+      if (!user || attendanceRecords.length === 0) return [];
+      const saleIds = attendanceRecords.map(a => a.yard_sale_id);
+      const allSales = await Promise.all(
+        saleIds.map(id => base44.entities.YardSale.filter({ id }))
+      );
+      return allSales.flat();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['myYardSales'] });
-      toast.success('Sale deleted successfully');
-    },
-    onError: () => {
-      toast.error('Failed to delete sale');
-    },
+    enabled: !!user && attendanceRecords.length >= 0,
   });
 
-  const handleDelete = (sale) => {
-    // Check if sale is more than 2 hours away
-    if (sale?.date && sale?.start_time) {
-      const saleDateTime = new Date(`${sale.date}T${sale.start_time}`);
-      const now = new Date();
-      const hoursUntilSale = (saleDateTime - now) / (1000 * 60 * 60);
-      
-      if (hoursUntilSale < 2) {
-        toast.error('Cannot delete sale within 2 hours of start time');
-        return;
-      }
-    }
-    
-    if (window.confirm('Are you sure you want to delete this sale? This action cannot be undone.')) {
-      deleteMutation.mutate(sale.id);
-    }
-  };
-
-  const canDeleteSale = (sale) => {
-    if (!sale?.date || !sale?.start_time) return true;
-    const saleDateTime = new Date(`${sale.date}T${sale.start_time}`);
-    const now = new Date();
-    const hoursUntilSale = (saleDateTime - now) / (1000 * 60 * 60);
-    return hoursUntilSale >= 2;
-  };
+  const isLoading = isLoadingAttendance || isLoadingSales;
 
   const parseLocalDate = (dateString) => {
     if (!dateString) return null;
