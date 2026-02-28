@@ -20,6 +20,7 @@ export default function YardSales() {
   const [favorites, setFavorites] = useState([]);
   const [user, setUser] = useState(null);
   const [language, setLanguage] = useState('en');
+  const [visibleMapSales, setVisibleMapSales] = useState([]);
   
   useEffect(() => {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
