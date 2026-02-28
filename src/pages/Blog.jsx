@@ -12,9 +12,12 @@ import { format } from 'date-fns';
 
 export default function Blog() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [language, setLanguage] = useState(() => localStorage.getItem('stooplify_lang') || 'en');
+  const [language, setLanguage] = useState('en');
 
   useEffect(() => {
+    const savedLang = localStorage.getItem('stooplify_lang') || 'en';
+    setLanguage(savedLang);
+
     const handleLangChange = (e) => setLanguage(e.detail);
     window.addEventListener('languageChange', handleLangChange);
     return () => window.removeEventListener('languageChange', handleLangChange);

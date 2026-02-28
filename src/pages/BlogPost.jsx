@@ -17,14 +17,14 @@ export default function BlogPost() {
   const urlParams = new URLSearchParams(window.location.search);
   const slug = urlParams.get('slug');
 
-  // Read language from URL param first, then localStorage
-  const [language, setLanguage] = useState(() => {
-    return urlParams.get('lang') || localStorage.getItem('stooplify_lang') || 'en';
-  });
+  const [language, setLanguage] = useState('en');
   const [translated, setTranslated] = useState(null);
   const [isTranslating, setIsTranslating] = useState(false);
 
   useEffect(() => {
+    const savedLang = urlParams.get('lang') || localStorage.getItem('stooplify_lang') || 'en';
+    setLanguage(savedLang);
+
     const handleLangChange = (e) => setLanguage(e.detail);
     window.addEventListener('languageChange', handleLangChange);
     return () => window.removeEventListener('languageChange', handleLangChange);
