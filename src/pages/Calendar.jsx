@@ -12,12 +12,35 @@ import { createPageUrl } from '../utils';
 import SEO from '../components/SEO';
 import { useTranslation } from '../components/translations';
 
+// Haversine distance in miles
+function getDistanceMiles(lat1, lon1, lat2, lon2) {
+  const R = 3958.8;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon/2) * Math.sin(dLon/2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+
+// Component to watch map bounds
+function MapBoundsWatcher({ onBoundsChange }) {
+  useMapEvents({
+    moveend: (e) => onBoundsChange(e.target.getBounds()),
+    zoomend: (e) => onBoundsChange(e.target.getBounds()),
+    load: (e) => onBoundsChange(e.target.getBounds()),
+  });
+  return null;
+}
+
 export default function Calendar() {
   const [user, setUser] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [language, setLanguage] = useState('en');
   const [eventFilter, setEventFilter] = useState('all'); // 'all', 'favorites', 'attending'
   const [showFinished, setShowFinished] = useState(false);
+  const [mapBounds, setMapBounds] = useState(null);
+  const [userLocation, setUserLocation] = useState({ lat: 40.7128, lng: -74.006 }); // Default NYC
   
   const t = useTranslation(language);
 
@@ -31,6 +54,26 @@ export default function Calendar() {
       return null;
     }
   };
+
+  // Try to get user's location
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => setUserLocation({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+        () => {} // keep default on error
+      );
+    }
+  }, []);
+
+  // Filter sales by map bounds
+  const isInMapBounds = useCallback((sale) => {
+    if (!sale.latitude || !sale.longitude) return false;
+    if (mapBounds) {
+      return mapBounds.contains([sale.latitude, sale.longitude]);
+    }
+    // Default: 25 mile radius
+    return getDistanceMiles(userLocation.lat, userLocation.lng, sale.latitude, sale.longitude) <= 25;
+  }, [mapBounds, userLocation]);
 
   useEffect(() => {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
