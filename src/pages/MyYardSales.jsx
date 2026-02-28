@@ -121,27 +121,19 @@ export default function MyYardSales() {
               className="text-3xl font-bold text-[#2E3A59] dark:text-white mb-2"
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
-              {t('myYardSales')}
+              My Yard Sales
             </h1>
             <p className="text-gray-600 dark:text-gray-400">
-              {sales.length} {sales.length === 1 ? t('sale') : t('sales')} total
+              Sales you're attending: {sales.length}
             </p>
           </div>
-          <div className="flex items-center gap-4">
-            <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 cursor-pointer">
-              <Switch
-                checked={showFinishedSales}
-                onCheckedChange={setShowFinishedSales}
-              />
-              <span>Show finished</span>
-            </label>
-            <Link to={createPageUrl('AddYardSale')}>
-              <Button className="bg-[#FF6F61] hover:bg-[#e55a4d] gap-2">
-                <Plus className="w-4 h-4" />
-                {t('addNewSale')}
-              </Button>
-            </Link>
-          </div>
+          <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 cursor-pointer">
+            <Switch
+              checked={showFinishedSales}
+              onCheckedChange={setShowFinishedSales}
+            />
+            <span>Show finished</span>
+          </label>
         </div>
 
         {/* Sales Sections */}
