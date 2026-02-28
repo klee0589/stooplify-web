@@ -12,9 +12,7 @@ export function ThemeProvider({ children }) {
     const saved = localStorage.getItem('stooplify_theme');
     if (saved) return saved;
     
-    // Detect system preference
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    return prefersDark ? 'dark' : 'light';
+    return 'light';
   });
 
   useEffect(() => {
