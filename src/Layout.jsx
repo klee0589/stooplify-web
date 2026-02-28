@@ -10,7 +10,6 @@ import { toast } from 'sonner';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import BottomNavBar from '../components/BottomNavBar';
 import SentryErrorBoundary, { setUserContext } from '../components/SentryErrorBoundary';
-import FloatingChatWidget from '../components/FloatingChatWidget';
 
 function LayoutContent({ children, currentPageName }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
