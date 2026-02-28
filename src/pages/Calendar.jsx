@@ -438,8 +438,8 @@ export default function Calendar() {
           </motion.div>
         )}
 
-        {/* All Upcoming Events - Only show when user is logged in */}
-        {user && allSales.length > 0 && (
+        {/* All Upcoming Events - Only attending */}
+        {user && allSales.filter(sale => isAttending(sale.id)).length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -450,11 +450,11 @@ export default function Calendar() {
               className="text-xl font-bold text-[#2E3A59] dark:text-white mb-4"
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
-              All My Events ({allSales.length})
+              Events I'm Attending ({allSales.filter(sale => isAttending(sale.id)).length})
             </h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {allSales
-                .filter(sale => sale.date)
+                .filter(sale => sale.date && isAttending(sale.id))
                 .sort((a, b) => {
                   const dateA = parseLocalDate(a.date);
                   const dateB = parseLocalDate(b.date);
