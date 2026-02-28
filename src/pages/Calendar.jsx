@@ -398,6 +398,11 @@ export default function Calendar() {
                   attribution='&copy; OpenStreetMap contributors'
                 />
                 <MapBoundsWatcher onBoundsChange={setMapBounds} />
+                {allSales.filter(s => s.latitude && s.longitude).map(sale => (
+                  <Marker key={sale.id} position={[sale.latitude, sale.longitude]}>
+                    <Popup>{sale.title}</Popup>
+                  </Marker>
+                ))}
               </MapContainer>
             </motion.div>
             <p className="text-xs text-gray-500 dark:text-gray-400 text-center -mt-2">
