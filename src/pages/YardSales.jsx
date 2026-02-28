@@ -175,11 +175,13 @@ export default function YardSales() {
     const isFavorited = favorites.includes(sale.id);
     const isAttending = attendingSaleIds.has(sale.id);
     if (isFavorited || isAttending) return true;
-    if (userLocation && sale.latitude && sale.longitude) {
+    if (userLocation) {
+      // If sale has no coordinates, exclude it (can't verify distance)
+      if (!sale.latitude || !sale.longitude) return false;
       return getDistanceMiles(userLocation.lat, userLocation.lng, sale.latitude, sale.longitude) <= 25;
     }
-    // If no location yet, show all
-    return !userLocation;
+    // Location not yet available — show all until we know
+    return true;
   };
 
   // Filter sales
