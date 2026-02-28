@@ -6,8 +6,17 @@ import { Calendar as CalendarIcon, Heart, UserCheck, MapPin, Clock, ArrowRight }
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { format, isSameDay } from 'date-fns';
 import { Link } from 'react-router-dom';
-import { MapContainer, TileLayer, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, useMapEvents, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// Fix default Leaflet marker icons
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+  iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+});
 import { createPageUrl } from '../utils';
 import SEO from '../components/SEO';
 import { useTranslation } from '../components/translations';
