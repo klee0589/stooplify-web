@@ -464,7 +464,7 @@ export default function Calendar() {
         </div>{/* end grid lg:grid-cols-2 */}
 
         {/* My Yard Sales - Sales created by user */}
-        {user && myYardSales.length > 0 && (
+        {user && myYardSales.filter(isInMapBounds).length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
