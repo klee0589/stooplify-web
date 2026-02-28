@@ -596,9 +596,6 @@ function LayoutContent({ children, currentPageName }) {
       {/* Bottom Navigation - Mobile Only */}
       <BottomNavBar />
 
-      {/* Floating Chat Widget */}
-      <FloatingChatWidget />
-
       {/* Footer */}
       <footer className="bg-white dark:bg-gray-950 text-gray-900 dark:text-white" role="contentinfo">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
