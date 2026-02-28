@@ -478,7 +478,7 @@ export default function Calendar() {
               My Yard Sales ({myYardSales.length})
             </h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {myYardSales.map((sale) => (
+              {myYardSales.filter(isInMapBounds).map((sale) => (
                 <Link
                   key={sale.id}
                   to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}
