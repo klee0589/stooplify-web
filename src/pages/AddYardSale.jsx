@@ -168,6 +168,39 @@ export default function AddYardSale() {
 
   const createMutation = useMutation({
     mutationFn: async (data) => {
+      // For new listings only, verify user is within 0.5 miles of the address
+      if (!isEditMode) {
+        const position = await new Promise((resolve, reject) =>
+          navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000 })
+        );
+        const userLat = position.coords.latitude;
+        const userLon = position.coords.longitude;
+
+        // Geocode the address first to get its coordinates for distance check
+        const geoCheckQuery = `${data.address}, ${data.city}, ${data.state} ${data.zip_code}`;
+        const geoCheckRes = await fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(geoCheckQuery)}&format=json&limit=1`,
+          { headers: { 'User-Agent': 'Stooplify/1.0' } }
+        );
+        const geoCheckData = await geoCheckRes.json();
+
+        if (geoCheckData.length > 0) {
+          const addrLat = parseFloat(geoCheckData[0].lat);
+          const addrLon = parseFloat(geoCheckData[0].lon);
+          const R = 3958.8;
+          const dLat = (addrLat - userLat) * Math.PI / 180;
+          const dLon = (addrLon - userLon) * Math.PI / 180;
+          const a = Math.sin(dLat/2) ** 2 +
+            Math.cos(userLat * Math.PI / 180) * Math.cos(addrLat * Math.PI / 180) * Math.sin(dLon/2) ** 2;
+          const distance = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+          if (distance > 0.5) {
+            toast.error(`You must be within 0.5 miles of the sale address to create a listing. You are ${distance.toFixed(1)} miles away.`);
+            throw new Error('Too far from event location');
+          }
+        }
+      }
+
       // Geocode the address to get coordinates
       let coordinates = {};
 
