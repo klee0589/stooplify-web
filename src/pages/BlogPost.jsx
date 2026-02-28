@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '@/utils';
 import { motion } from 'framer-motion';
@@ -11,26 +11,52 @@ import SEO from '@/components/SEO';
 import ReactMarkdown from 'react-markdown';
 import { format } from 'date-fns';
 
+const ui = {
+  en: {
+    backToBlog: 'Back to Blog',
+    minRead: 'min read',
+    by: 'By',
+    share: 'Share',
+    translating: 'Translating to Spanish...',
+    readyToFindDeal: 'Ready to Find Your Next Great Deal?',
+    discoverDeals: 'Discover amazing yard sales and secondhand treasures in your neighborhood',
+    browseSales: 'Browse Yard Sales',
+    noPost: 'No post specified',
+    postNotFound: 'Post not found',
+    backBtn: 'Back to Blog',
+  },
+  es: {
+    backToBlog: 'Volver al Blog',
+    minRead: 'min de lectura',
+    by: 'Por',
+    share: 'Compartir',
+    translating: 'Traduciendo al español...',
+    readyToFindDeal: '¿Listo para Encontrar tu Próxima Gran Oferta?',
+    discoverDeals: 'Descubre increíbles ventas de garaje y tesoros de segunda mano en tu vecindario',
+    browseSales: 'Ver Ventas',
+    noPost: 'No se especificó publicación',
+    postNotFound: 'Publicación no encontrada',
+    backBtn: 'Volver al Blog',
+  }
+};
+
 export default function BlogPost() {
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
   const urlParams = new URLSearchParams(window.location.search);
   const slug = urlParams.get('slug');
 
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState(() => localStorage.getItem('stooplify_lang') || 'en');
   const [translated, setTranslated] = useState(null);
   const [isTranslating, setIsTranslating] = useState(false);
 
   useEffect(() => {
-    const savedLang = urlParams.get('lang') || localStorage.getItem('stooplify_lang') || 'en';
-    setLanguage(savedLang);
-
     const handleLangChange = (e) => setLanguage(e.detail);
     window.addEventListener('languageChange', handleLangChange);
     return () => window.removeEventListener('languageChange', handleLangChange);
   }, []);
 
   const isSpanish = language === 'es';
+  const t = ui[language] || ui.en;
 
   const { data: post, isLoading, error } = useQuery({
     queryKey: ['blogPost', slug],
@@ -48,7 +74,7 @@ export default function BlogPost() {
       setTranslated(null);
       return;
     }
-    if (translated) return; // already translated
+    if (translated) return;
 
     const translate = async () => {
       setIsTranslating(true);
@@ -105,7 +131,7 @@ Return a JSON with keys: title, excerpt, content`,
       } catch (err) {}
     } else {
       navigator.clipboard.writeText(window.location.href);
-      alert('Link copied to clipboard!');
+      alert(isSpanish ? '¡Enlace copiado!' : 'Link copied to clipboard!');
     }
   };
 
@@ -113,8 +139,8 @@ Return a JSON with keys: title, excerpt, content`,
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">No post specified</h1>
-          <Button onClick={() => navigate(createPageUrl('Blog'))}>Back to Blog</Button>
+          <h1 className="text-2xl font-bold mb-4">{t.noPost}</h1>
+          <Button onClick={() => navigate(createPageUrl('Blog'))}>{t.backBtn}</Button>
         </div>
       </div>
     );
@@ -132,14 +158,13 @@ Return a JSON with keys: title, excerpt, content`,
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Post not found</h1>
-          <Button onClick={() => navigate(createPageUrl('Blog'))}>Back to Blog</Button>
+          <h1 className="text-2xl font-bold mb-4">{t.postNotFound}</h1>
+          <Button onClick={() => navigate(createPageUrl('Blog'))}>{t.backBtn}</Button>
         </div>
       </div>
     );
   }
 
-  // Use translated content if available and Spanish is active
   const displayPost = isSpanish && translated ? { ...post, ...translated } : post;
 
   const structuredData = {
@@ -159,10 +184,7 @@ Return a JSON with keys: title, excerpt, content`,
     "publisher": {
       "@type": "Organization",
       "name": "Stooplify",
-      "logo": {
-        "@type": "ImageObject",
-        "url": "https://stooplify.com/logo.png"
-      }
+      "logo": { "@type": "ImageObject", "url": "https://stooplify.com/logo.png" }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
@@ -174,11 +196,9 @@ Return a JSON with keys: title, excerpt, content`,
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <SEO
-        title={`${displayPost.title} | Stooplify Blog`}
+        title={`${displayPost.title} | ${isSpanish ? 'Blog de Stooplify' : 'Stooplify Blog'}`}
         description={post.meta_description || post.excerpt}
-        keywords={isSpanish
-          ? (post.meta_keywords?.map(k => k + ' español').join(', ') || '')
-          : post.meta_keywords?.join(', ')}
+        keywords={post.meta_keywords?.join(', ')}
         image={post.featured_image_url}
         type="article"
         structuredData={structuredData}
@@ -193,7 +213,7 @@ Return a JSON with keys: title, excerpt, content`,
             className="gap-2 -ml-2 hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             <ArrowLeft className="w-4 h-4" />
-            {isSpanish ? 'Volver al Blog' : 'Back to Blog'}
+            {t.backToBlog}
           </Button>
         </motion.div>
 
@@ -228,12 +248,12 @@ Return a JSON with keys: title, excerpt, content`,
                   <span className="text-gray-300 dark:text-gray-600">•</span>
                   <span className="flex items-center gap-1.5">
                     <Clock className="w-4 h-4" />
-                    {post.reading_time_minutes} {isSpanish ? 'min de lectura' : 'min read'}
+                    {post.reading_time_minutes} {t.minRead}
                   </span>
                 </>
               )}
               <span className="text-gray-300 dark:text-gray-600">•</span>
-              <span>{isSpanish ? 'Por' : 'By'} {post.author_name || 'Stooplify Team'}</span>
+              <span>{t.by} {post.author_name || 'Stooplify Team'}</span>
             </div>
 
             <Button
@@ -243,7 +263,7 @@ Return a JSON with keys: title, excerpt, content`,
               className="gap-2 hover:bg-[#14B8FF] hover:text-white hover:border-[#14B8FF]"
             >
               <Share2 className="w-4 h-4" />
-              {isSpanish ? 'Compartir' : 'Share'}
+              {t.share}
             </Button>
           </div>
         </motion.header>
@@ -263,7 +283,7 @@ Return a JSON with keys: title, excerpt, content`,
         {isTranslating && (
           <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mb-8">
             <Loader2 className="w-4 h-4 animate-spin" />
-            <span className="text-sm">Traduciendo al español...</span>
+            <span className="text-sm">{t.translating}</span>
           </div>
         )}
 
@@ -308,18 +328,16 @@ Return a JSON with keys: title, excerpt, content`,
           className="mt-20 p-8 bg-gradient-to-r from-[#14B8FF] to-[#0da3e6] rounded-2xl text-white text-center"
         >
           <h3 className="text-2xl font-bold mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            {isSpanish ? '¿Listo para Encontrar tu Próxima Gran Oferta?' : 'Ready to Find Your Next Great Deal?'}
+            {t.readyToFindDeal}
           </h3>
           <p className="mb-6 text-white/90">
-            {isSpanish
-              ? 'Descubre increíbles ventas de garaje y tesoros de segunda mano en tu vecindario'
-              : 'Discover amazing yard sales and secondhand treasures in your neighborhood'}
+            {t.discoverDeals}
           </p>
           <Button
             onClick={() => navigate(createPageUrl('YardSales'))}
             className="bg-white text-[#14B8FF] hover:bg-gray-100"
           >
-            {isSpanish ? 'Ver Ventas' : 'Browse Yard Sales'}
+            {t.browseSales}
           </Button>
         </motion.div>
       </article>

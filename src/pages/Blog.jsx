@@ -10,19 +10,40 @@ import { Badge } from '@/components/ui/badge';
 import SEO from '@/components/SEO';
 import { format } from 'date-fns';
 
+const blogTranslations = {
+  en: {
+    title: 'Stooplify Blog',
+    subtitle: 'Expert tips, guides, and stories about yard sales, secondhand shopping, and finding community treasures',
+    searchPlaceholder: 'Search articles...',
+    noResults: 'No articles found matching your search.',
+    noPosts: 'No blog posts yet. Check back soon!',
+    minRead: 'min read',
+    seoTitle: 'Blog - Yard Sale Tips, Guides & Stories | Stooplify',
+    seoDesc: 'Discover expert tips, guides, and stories about yard sales, garage sales, and secondhand shopping.',
+  },
+  es: {
+    title: 'Blog de Stooplify',
+    subtitle: 'Consejos de expertos, guías e historias sobre ventas de garaje, compras de segunda mano y tesoros comunitarios',
+    searchPlaceholder: 'Buscar artículos...',
+    noResults: 'No se encontraron artículos.',
+    noPosts: 'Aún no hay publicaciones. ¡Vuelve pronto!',
+    minRead: 'min de lectura',
+    seoTitle: 'Blog - Consejos y Guías sobre Ventas de Garaje | Stooplify',
+    seoDesc: 'Descubre consejos de expertos, guías e historias sobre ventas de garaje y compras de segunda mano.',
+  }
+};
+
 export default function Blog() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState(() => localStorage.getItem('stooplify_lang') || 'en');
 
   useEffect(() => {
-    const savedLang = localStorage.getItem('stooplify_lang') || 'en';
-    setLanguage(savedLang);
-
     const handleLangChange = (e) => setLanguage(e.detail);
     window.addEventListener('languageChange', handleLangChange);
     return () => window.removeEventListener('languageChange', handleLangChange);
   }, []);
 
+  const t = blogTranslations[language] || blogTranslations.en;
   const isSpanish = language === 'es';
 
   const { data: posts = [], isLoading } = useQuery({
@@ -41,10 +62,8 @@ export default function Blog() {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Blog",
-    "name": isSpanish ? "Blog de Stooplify" : "Stooplify Blog",
-    "description": isSpanish
-      ? "Consejos, guías e historias sobre ventas de garaje, ventas de segunda mano y compras de segunda mano"
-      : "Tips, guides, and insights about yard sales, garage sales, and secondhand shopping",
+    "name": t.title,
+    "description": t.subtitle,
     "url": typeof window !== 'undefined' ? window.location.href : 'https://stooplify.com/blog',
     "inLanguage": isSpanish ? "es" : "en",
     "blogPost": posts.slice(0, 10).map(post => ({
@@ -60,15 +79,11 @@ export default function Blog() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <SEO
-        title={isSpanish
-          ? "Blog - Consejos y Guías sobre Ventas de Garaje | Stooplify"
-          : "Blog - Yard Sale Tips, Guides & Stories | Stooplify"}
-        description={isSpanish
-          ? "Descubre consejos de expertos, guías e historias sobre ventas de garaje, ventas en los stoops de Brooklyn y compras de segunda mano."
-          : "Discover expert tips, guides, and stories about yard sales, garage sales, and secondhand shopping. Learn how to buy, sell, and find amazing deals."}
+        title={t.seoTitle}
+        description={t.seoDesc}
         keywords={isSpanish
-          ? "blog ventas de garaje, consejos venta en stoop brooklyn, compras segunda mano, venta garage, guías de venta"
-          : "yard sale blog, garage sale tips, brooklyn stoop sale, secondhand shopping, thrift tips, selling tips, buying guides"}
+          ? "blog ventas de garaje, consejos venta en stoop brooklyn, compras segunda mano"
+          : "yard sale blog, garage sale tips, brooklyn stoop sale, secondhand shopping"}
         structuredData={structuredData}
       />
 
@@ -81,12 +96,10 @@ export default function Blog() {
             className="text-center"
           >
             <h1 className="text-5xl md:text-6xl font-bold mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              {isSpanish ? 'Blog de Stooplify' : 'Stooplify Blog'}
+              {t.title}
             </h1>
             <p className="text-xl text-white/90 max-w-2xl mx-auto mb-8">
-              {isSpanish
-                ? 'Consejos de expertos, guías e historias sobre ventas de garaje, compras de segunda mano y tesoros comunitarios'
-                : 'Expert tips, guides, and stories about yard sales, secondhand shopping, and finding community treasures'}
+              {t.subtitle}
             </p>
 
             {/* Search */}
@@ -95,7 +108,7 @@ export default function Blog() {
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <Input
                   type="text"
-                  placeholder={isSpanish ? 'Buscar artículos...' : 'Search articles...'}
+                  placeholder={t.searchPlaceholder}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-12 py-6 text-lg bg-white"
@@ -114,9 +127,7 @@ export default function Blog() {
         ) : filteredPosts.length === 0 ? (
           <div className="text-center py-20">
             <p className="text-gray-600 dark:text-gray-400 text-lg">
-              {searchTerm
-                ? (isSpanish ? 'No se encontraron artículos.' : 'No articles found matching your search.')
-                : (isSpanish ? 'Aún no hay publicaciones. ¡Vuelve pronto!' : 'No blog posts yet. Check back soon!')}
+              {searchTerm ? t.noResults : t.noPosts}
             </p>
           </div>
         ) : (
@@ -170,7 +181,7 @@ export default function Blog() {
                         {post.reading_time_minutes && (
                           <span className="flex items-center gap-1">
                             <Clock className="w-3.5 h-3.5" />
-                            {post.reading_time_minutes} {isSpanish ? 'min' : 'min'}
+                            {post.reading_time_minutes} {t.minRead}
                           </span>
                         )}
                       </div>
