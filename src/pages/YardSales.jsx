@@ -170,10 +170,27 @@ export default function YardSales() {
     favoriteMutation.mutate(saleId);
   };
 
+  // In list mode, only show sales within 25 miles OR that the user is attending/favorited
+  const isNearbyOrEngaged = (sale) => {
+    const isFavorited = favorites.includes(sale.id);
+    const isAttending = attendingSaleIds.has(sale.id);
+    if (isFavorited || isAttending) return true;
+    if (userLocation && sale.latitude && sale.longitude) {
+      return getDistanceMiles(userLocation.lat, userLocation.lng, sale.latitude, sale.longitude) <= 25;
+    }
+    // If no location yet, show all
+    return !userLocation;
+  };
+
   // Filter sales
   const filteredSales = sales.filter(sale => {
     // Hide ended sales by default
     if (!showEndedSales && sale.isPast) {
+      return false;
+    }
+
+    // In list mode: only show nearby or engaged sales
+    if (viewMode === 'list' && !isNearbyOrEngaged(sale)) {
       return false;
     }
     
