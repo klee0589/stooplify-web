@@ -209,6 +209,7 @@ export default function SaleMap({ sales, center, onVisibleSalesChange }) {
         scrollWheelZoom={true}
       >
         <MapUpdater center={center} />
+        <MapBoundsWatcher onBoundsChange={setMapBounds} />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
