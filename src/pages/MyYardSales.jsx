@@ -147,14 +147,14 @@ export default function MyYardSales() {
               <MapPin className="w-10 h-10 text-[#FF6F61]" />
             </div>
             <h3 className="text-xl font-bold text-[#2E3A59] dark:text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              {t('noYardSalesYet')}
+              No attending sales yet
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Get started by creating your first yard sale listing
+              Mark yourself as attending on any yard sale to see it here.
             </p>
-            <Link to={createPageUrl('AddYardSale')}>
+            <Link to={createPageUrl('YardSales')}>
               <Button className="bg-[#FF6F61] hover:bg-[#e55a4d]">
-                {t('listYourSale')}
+                Browse Sales
               </Button>
             </Link>
           </motion.div>
