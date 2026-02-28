@@ -466,6 +466,7 @@ export default function Calendar() {
               </div>
             )}
           </motion.div>
+          </div>
         </div>
 
         {/* My Yard Sales - Sales created by user */}
