@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '@/utils';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, ArrowLeft, Share2, Loader2 } from 'lucide-react';
+import { Calendar, Clock, ArrowLeft, Share2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import SEO from '@/components/SEO';
@@ -17,26 +17,26 @@ const ui = {
     minRead: 'min read',
     by: 'By',
     share: 'Share',
-    translating: 'Translating to Spanish...',
     readyToFindDeal: 'Ready to Find Your Next Great Deal?',
     discoverDeals: 'Discover amazing yard sales and secondhand treasures in your neighborhood',
     browseSales: 'Browse Yard Sales',
     noPost: 'No post specified',
     postNotFound: 'Post not found',
     backBtn: 'Back to Blog',
+    noSpanish: 'Spanish version coming soon.',
   },
   es: {
     backToBlog: 'Volver al Blog',
     minRead: 'min de lectura',
     by: 'Por',
     share: 'Compartir',
-    translating: 'Traduciendo al español...',
     readyToFindDeal: '¿Listo para Encontrar tu Próxima Gran Oferta?',
     discoverDeals: 'Descubre increíbles ventas de garaje y tesoros de segunda mano en tu vecindario',
     browseSales: 'Ver Ventas',
     noPost: 'No se especificó publicación',
     postNotFound: 'Publicación no encontrada',
     backBtn: 'Volver al Blog',
+    noSpanish: 'Versión en español próximamente.',
   }
 };
 
@@ -46,8 +46,6 @@ export default function BlogPost() {
   const slug = urlParams.get('slug');
 
   const [language, setLanguage] = useState(() => localStorage.getItem('stooplify_lang') || 'en');
-  const [translated, setTranslated] = useState(null);
-  const [isTranslating, setIsTranslating] = useState(false);
 
   useEffect(() => {
     const handleLangChange = (e) => setLanguage(e.detail);
@@ -68,45 +66,6 @@ export default function BlogPost() {
     enabled: !!slug
   });
 
-  // Translate content when language switches to Spanish
-  useEffect(() => {
-    if (!post || !isSpanish) {
-      setTranslated(null);
-      return;
-    }
-    if (translated) return;
-
-    const translate = async () => {
-      setIsTranslating(true);
-      try {
-        const result = await base44.integrations.Core.InvokeLLM({
-          prompt: `Translate the following blog post content to Spanish. Keep all markdown formatting intact. Only return the translated content, nothing else.
-
-Title: ${post.title}
-Excerpt: ${post.excerpt}
-Content:
-${post.content}
-
-Return a JSON with keys: title, excerpt, content`,
-          response_json_schema: {
-            type: "object",
-            properties: {
-              title: { type: "string" },
-              excerpt: { type: "string" },
-              content: { type: "string" }
-            }
-          }
-        });
-        setTranslated(result);
-      } catch (e) {
-        console.error('Translation failed', e);
-      }
-      setIsTranslating(false);
-    };
-
-    translate();
-  }, [post?.id, isSpanish]);
-
   const incrementViewMutation = useMutation({
     mutationFn: async () => {
       if (!post) return;
@@ -124,8 +83,8 @@ Return a JSON with keys: title, excerpt, content`,
     if (navigator.share) {
       try {
         await navigator.share({
-          title: displayPost?.title || post?.title,
-          text: displayPost?.excerpt || post?.excerpt,
+          title: displayTitle,
+          text: displayExcerpt,
           url: window.location.href
         });
       } catch (err) {}
@@ -165,21 +124,24 @@ Return a JSON with keys: title, excerpt, content`,
     );
   }
 
-  const displayPost = isSpanish && translated ? { ...post, ...translated } : post;
+  // Use stored Spanish fields if available, otherwise fall back to English
+  const displayTitle = isSpanish ? (post.title_es || post.title) : post.title;
+  const displayExcerpt = isSpanish ? (post.excerpt_es || post.excerpt) : post.excerpt;
+  const displayContent = isSpanish ? (post.content_es || post.content) : post.content;
+  const hasSpanish = !!(post.title_es && post.content_es);
 
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
-    "headline": displayPost.title,
-    "description": post.meta_description || post.excerpt,
+    "headline": displayTitle,
+    "description": (isSpanish ? post.meta_description_es : post.meta_description) || post.excerpt,
     "image": post.featured_image_url,
     "datePublished": post.publish_date,
     "dateModified": post.updated_date || post.publish_date,
     "inLanguage": isSpanish ? "es" : "en",
     "author": {
       "@type": "Person",
-      "name": post.author_name || "Stooplify Team",
-      "email": post.author_email
+      "name": post.author_name || "Stooplify Team"
     },
     "publisher": {
       "@type": "Organization",
@@ -196,8 +158,8 @@ Return a JSON with keys: title, excerpt, content`,
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <SEO
-        title={`${displayPost.title} | ${isSpanish ? 'Blog de Stooplify' : 'Stooplify Blog'}`}
-        description={post.meta_description || post.excerpt}
+        title={`${displayTitle} | ${isSpanish ? 'Blog de Stooplify' : 'Stooplify Blog'}`}
+        description={(isSpanish ? post.meta_description_es : post.meta_description) || post.excerpt}
         keywords={post.meta_keywords?.join(', ')}
         image={post.featured_image_url}
         type="article"
@@ -230,11 +192,11 @@ Return a JSON with keys: title, excerpt, content`,
           )}
 
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6 leading-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            {isTranslating ? post.title : displayPost.title}
+            {displayTitle}
           </h1>
 
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 leading-relaxed">
-            {isTranslating ? post.excerpt : displayPost.excerpt}
+            {displayExcerpt}
           </p>
 
           <div className="flex items-center justify-between flex-wrap gap-4 py-4 border-y border-gray-200 dark:border-gray-700">
@@ -279,11 +241,10 @@ Return a JSON with keys: title, excerpt, content`,
           </motion.div>
         )}
 
-        {/* Translating indicator */}
-        {isTranslating && (
-          <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 mb-8">
-            <Loader2 className="w-4 h-4 animate-spin" />
-            <span className="text-sm">{t.translating}</span>
+        {/* No Spanish version notice */}
+        {isSpanish && !hasSpanish && (
+          <div className="mb-8 px-4 py-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg text-sm text-yellow-700 dark:text-yellow-400">
+            {t.noSpanish}
           </div>
         )}
 
@@ -316,7 +277,7 @@ Return a JSON with keys: title, excerpt, content`,
               hr: () => <hr className="my-16 border-gray-200 dark:border-gray-700" />,
             }}
           >
-            {isTranslating ? post.content : displayPost.content}
+            {displayContent}
           </ReactMarkdown>
         </motion.div>
 
