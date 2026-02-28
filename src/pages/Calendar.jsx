@@ -524,10 +524,10 @@ export default function Calendar() {
               className="text-xl font-bold text-[#2E3A59] dark:text-white mb-4"
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
-              Events I'm Attending ({allSales.filter(sale => isAttending(sale.id)).length})
+              Events I'm Attending ({visibleSales.filter(sale => isAttending(sale.id)).length})
             </h2>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {allSales
+              {visibleSales
                 .filter(sale => sale.date && isAttending(sale.id))
                 .sort((a, b) => {
                   const dateA = parseLocalDate(a.date);
