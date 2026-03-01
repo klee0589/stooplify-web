@@ -77,6 +77,19 @@ Return a JSON object with:
 
         console.log('AI response received:', response);
 
+        // Generate a featured image for the blog post
+        let featured_image_url = null;
+        try {
+            const imageResult = await base44.asServiceRole.integrations.Core.GenerateImage({
+                prompt: `A vibrant, realistic photo of a neighborhood yard sale or garage sale scene related to: ${response.title}. Colorful items on tables, sunny day, suburban neighborhood feel, welcoming atmosphere.`
+            });
+            featured_image_url = imageResult.url;
+            console.log('Featured image generated:', featured_image_url);
+        } catch (imgError) {
+            console.error('Image generation failed, using fallback:', imgError);
+            featured_image_url = 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1200&q=80';
+        }
+
         // Create the blog post
         const blogPost = await base44.asServiceRole.entities.BlogPost.create({
             title: response.title,
