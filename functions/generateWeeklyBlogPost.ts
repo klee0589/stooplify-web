@@ -104,6 +104,7 @@ Return a JSON object with:
             publish_date: new Date().toISOString(),
             status: "published",
             reading_time_minutes: response.reading_time_minutes || 5,
+            featured_image_url: featured_image_url,
             view_count: 0,
             title_es: response.title_es || null,
             excerpt_es: response.excerpt_es || null,
