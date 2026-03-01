@@ -53,11 +53,15 @@ export default function Blog() {
     }
   });
 
-  const filteredPosts = posts.filter(post =>
-    post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    post.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  const filteredPosts = posts.filter(post => {
+    const title = isSpanish ? (post.title_es || post.title) : post.title;
+    const excerpt = isSpanish ? (post.excerpt_es || post.excerpt) : post.excerpt;
+    return (
+      title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      post.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
+  });
 
   const structuredData = {
     "@context": "https://schema.org",
