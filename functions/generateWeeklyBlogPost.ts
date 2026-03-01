@@ -28,6 +28,7 @@ Requirements:
 - Include practical tips and actionable advice
 - Use markdown formatting with headers, lists, and emphasis
 - Make it helpful for both buyers and sellers
+- Also provide full Spanish translations of the title, excerpt, meta_description, and content
 
 Return a JSON object with:
 {
@@ -38,7 +39,11 @@ Return a JSON object with:
   "meta_description": "SEO meta description (150-160 chars)",
   "meta_keywords": ["keyword1", "keyword2", "keyword3", "keyword4", "keyword5"],
   "tags": ["tag1", "tag2", "tag3"],
-  "reading_time_minutes": 5
+  "reading_time_minutes": 5,
+  "title_es": "Spanish title",
+  "excerpt_es": "Spanish excerpt",
+  "content_es": "Full blog post content in Spanish markdown",
+  "meta_description_es": "Spanish SEO meta description"
 }`;
 
         const response = await base44.asServiceRole.integrations.Core.InvokeLLM({
