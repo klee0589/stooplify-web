@@ -535,54 +535,62 @@ export default function YardSaleDetails() {
     ? reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length 
     : null;
 
+  const parseTimeTo24h = (timeStr) => {
+    if (!timeStr) return '09:00:00';
+    const m = timeStr.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+    if (!m) return '09:00:00';
+    let h = parseInt(m[1]);
+    const min = m[2];
+    const period = m[3]?.toUpperCase();
+    if (period === 'PM' && h !== 12) h += 12;
+    if (period === 'AM' && h === 12) h = 0;
+    return `${String(h).padStart(2, '0')}:${min}:00`;
+  };
+
+  const saleEventStatus = (() => {
+    const now = new Date();
+    const saleEnd = new Date(`${sale.date}T${parseTimeTo24h(sale.end_time)}`);
+    return now > saleEnd ? "https://schema.org/EventCompleted" : "https://schema.org/EventScheduled";
+  })();
+
+  const defaultImage = "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/ada49740a_Stooplify-01.png";
+  const organizerInfo = seller?.full_name
+    ? { "@type": "Person", "name": seller.full_name }
+    : { "@type": "Organization", "name": "Stooplify", "url": "https://stooplify.com" };
+
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Event",
     "name": sale.title,
-    "description": sale.description,
-    "startDate": `${sale.date}T${sale.start_time}`,
-    "endDate": `${sale.date}T${sale.end_time}`,
+    "startDate": `${sale.date}T${parseTimeTo24h(sale.start_time)}-05:00`,
+    "endDate": `${sale.date}T${parseTimeTo24h(sale.end_time)}-05:00`,
+    "eventStatus": saleEventStatus,
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "image": photos.length > 0 ? photos : [defaultImage],
     "location": {
       "@type": "Place",
-      "name": sale.general_location,
+      "name": sale.general_location || `${sale.city}, ${sale.state}`,
       "address": {
         "@type": "PostalAddress",
-        "addressLocality": sale.city,
-        "addressRegion": sale.state,
-        "postalCode": sale.zip_code
-      },
-      ...(sale.exact_latitude && sale.exact_longitude ? {
-        "geo": {
-          "@type": "GeoCoordinates",
-          "latitude": sale.exact_latitude,
-          "longitude": sale.exact_longitude
-        }
-      } : {})
+        "addressLocality": sale.city || "Brooklyn",
+        "addressRegion": sale.state || "NY",
+        "addressCountry": "US",
+        ...(sale.zip_code ? { "postalCode": sale.zip_code } : {})
+      }
     },
-    "image": photos.length > 0 ? photos : undefined,
     "offers": {
       "@type": "Offer",
-      "url": window.location.href,
+      "price": "0",
       "priceCurrency": "USD",
       "availability": "https://schema.org/InStock",
-      "itemCondition": "https://schema.org/UsedCondition",
-      "name": "Items for Sale"
+      "url": window.location.href
     },
-    "eventStatus": (() => {
-      const now = new Date();
-      const saleStart = new Date(`${sale.date}T${sale.start_time || '08:00'}`);
-      const saleEnd = new Date(`${sale.date}T${sale.end_time || '14:00'}`);
-      if (now > saleEnd) return "https://schema.org/EventCancelled";
-      return "https://schema.org/EventScheduled";
-    })(),
-    "performer": seller ? {
-      "@type": "Person",
-      "name": seller.full_name || seller.email
-    } : undefined,
-    "organizer": seller ? {
-      "@type": "Person",
-      "name": seller.full_name || seller.email
-    } : undefined,
+    "organizer": organizerInfo,
+    "performer": {
+      "@type": "Organization",
+      "name": "Local Yard Sale Hosts"
+    },
+    ...(sale.description ? { "description": sale.description } : {}),
     ...(averageRating ? {
       "aggregateRating": {
         "@type": "AggregateRating",
