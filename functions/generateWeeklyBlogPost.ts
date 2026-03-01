@@ -65,7 +65,11 @@ Return a JSON object with:
                         type: "array",
                         items: { type: "string" }
                     },
-                    reading_time_minutes: { type: "number" }
+                    reading_time_minutes: { type: "number" },
+                    title_es: { type: "string" },
+                    excerpt_es: { type: "string" },
+                    content_es: { type: "string" },
+                    meta_description_es: { type: "string" }
                 },
                 required: ["title", "slug", "excerpt", "content", "meta_description", "meta_keywords", "tags"]
             }
