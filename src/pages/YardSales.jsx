@@ -302,27 +302,39 @@ export default function YardSales() {
     });
   }, [viewMode]);
 
+  // Convert "9:00 AM" or "14:00" to "HH:MM:SS" 24h format
+  const parseTimeTo24h = (timeStr) => {
+    if (!timeStr) return '09:00:00';
+    const m = timeStr.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+    if (!m) return '09:00:00';
+    let h = parseInt(m[1]);
+    const min = m[2];
+    const period = m[3]?.toUpperCase();
+    if (period === 'PM' && h !== 12) h += 12;
+    if (period === 'AM' && h === 12) h = 0;
+    return `${String(h).padStart(2, '0')}:${min}:00`;
+  };
+
   const structuredData = {
     "@context": "https://schema.org",
-    "@type": "ItemList",
-    "name": "Brooklyn Stoop Sales & Yard Sales Near You",
-    "numberOfItems": filteredSales.length,
-    "itemListElement": filteredSales.slice(0, 10).map((sale, index) => ({
+    "@graph": filteredSales.slice(0, 10).filter(sale => sale.date).map((sale) => ({
       "@type": "Event",
-      "position": index + 1,
       "name": sale.title,
-      "description": sale.description,
-      "startDate": `${sale.date}T${sale.start_time}`,
-      "endDate": `${sale.date}T${sale.end_time}`,
+      "startDate": `${sale.date}T${parseTimeTo24h(sale.start_time)}-05:00`,
+      "endDate": `${sale.date}T${parseTimeTo24h(sale.end_time)}-05:00`,
+      "eventStatus": "https://schema.org/EventScheduled",
+      "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
       "location": {
         "@type": "Place",
-        "name": sale.general_location,
+        "name": sale.general_location || `${sale.city}, ${sale.state}`,
         "address": {
           "@type": "PostalAddress",
-          "addressLocality": sale.city,
-          "addressRegion": sale.state
+          "addressLocality": sale.city || "Brooklyn",
+          "addressRegion": sale.state || "NY",
+          "addressCountry": "US"
         }
-      }
+      },
+      ...(sale.description ? { "description": sale.description } : {})
     }))
   };
 
