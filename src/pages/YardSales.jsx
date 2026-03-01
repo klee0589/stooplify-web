@@ -317,25 +317,49 @@ export default function YardSales() {
 
   const structuredData = {
     "@context": "https://schema.org",
-    "@graph": filteredSales.slice(0, 10).filter(sale => sale.date).map((sale) => ({
-      "@type": "Event",
-      "name": sale.title,
-      "startDate": `${sale.date}T${parseTimeTo24h(sale.start_time)}-05:00`,
-      "endDate": `${sale.date}T${parseTimeTo24h(sale.end_time)}-05:00`,
-      "eventStatus": "https://schema.org/EventScheduled",
-      "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-      "location": {
-        "@type": "Place",
-        "name": sale.general_location || `${sale.city}, ${sale.state}`,
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": sale.city || "Brooklyn",
-          "addressRegion": sale.state || "NY",
-          "addressCountry": "US"
-        }
-      },
-      ...(sale.description ? { "description": sale.description } : {})
-    }))
+    "@graph": filteredSales.slice(0, 10).filter(sale => sale.date).map((sale) => {
+      const primaryImage = sale.photos?.[0] || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/5937bd15f_s-2426613-s9fq3f3gayb673oi-t.jpg";
+      const eventStatus = sale.isPast
+        ? "https://schema.org/EventCompleted"
+        : "https://schema.org/EventScheduled";
+      const saleSlug = sale.id;
+      const organizerName = sale.seller?.full_name || null;
+
+      return {
+        "@type": "Event",
+        "name": sale.title,
+        "startDate": `${sale.date}T${parseTimeTo24h(sale.start_time)}-05:00`,
+        "endDate": `${sale.date}T${parseTimeTo24h(sale.end_time)}-05:00`,
+        "eventStatus": eventStatus,
+        "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+        "image": [primaryImage],
+        "location": {
+          "@type": "Place",
+          "name": sale.general_location || `${sale.city}, ${sale.state}`,
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": sale.city || "Brooklyn",
+            "addressRegion": sale.state || "NY",
+            "addressCountry": "US"
+          }
+        },
+        "organizer": organizerName
+          ? { "@type": "Person", "name": organizerName }
+          : { "@type": "Organization", "name": "Stooplify", "url": "https://stooplify.com" },
+        "performer": {
+          "@type": "Organization",
+          "name": "Local Yard Sale Hosts"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock",
+          "url": `https://stooplify.com/YardSaleDetails?id=${saleSlug}`
+        },
+        ...(sale.description ? { "description": sale.description } : {})
+      };
+    })
   };
 
   const handleRefresh = async () => {
