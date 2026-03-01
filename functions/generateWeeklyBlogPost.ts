@@ -87,7 +87,11 @@ Return a JSON object with:
             publish_date: new Date().toISOString(),
             status: "published",
             reading_time_minutes: response.reading_time_minutes || 5,
-            view_count: 0
+            view_count: 0,
+            title_es: response.title_es || null,
+            excerpt_es: response.excerpt_es || null,
+            content_es: response.content_es || null,
+            meta_description_es: response.meta_description_es || null
         });
 
         console.log('Blog post created successfully:', blogPost.id);
