@@ -165,11 +165,11 @@ export default function Blog() {
                     )}
 
                     <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-[#14B8FF] transition-colors line-clamp-2 leading-snug" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                      {post.title}
+                      {isSpanish ? (post.title_es || post.title) : post.title}
                     </h2>
 
                     <p className="text-sm text-gray-600 dark:text-gray-300 mb-4 line-clamp-2 leading-relaxed">
-                      {post.excerpt}
+                      {isSpanish ? (post.excerpt_es || post.excerpt) : post.excerpt}
                     </p>
 
                     <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-100 dark:border-gray-700">
