@@ -175,7 +175,23 @@ export default function AddYardSale() {
 
   const createMutation = useMutation({
     mutationFn: async (data) => {
-      // For new listings only (non-admins), verify user is within 0.5 miles of the address
+      // Geocode via backend function (avoids CORS issues with Nominatim)
+      const geoResult = await base44.functions.invoke('geocodeAddress', {
+        address: data.address,
+        city: data.city,
+        state: data.state,
+        zip_code: data.zip_code
+      });
+
+      if (!geoResult?.data?.success) {
+        toast.error('Could not locate address. Please check the address and try again.');
+        throw new Error('Could not locate address');
+      }
+
+      const { exact_latitude, exact_longitude, latitude, longitude } = geoResult.data;
+      const coordinates = { exact_latitude, exact_longitude, latitude, longitude };
+
+      // For new listings only (non-admins), verify user is within 1 mile of the address
       const isAdmin = user?.role === 'admin';
       if (!isEditMode && !isAdmin) {
         const position = await new Promise((resolve, reject) =>
@@ -183,94 +199,17 @@ export default function AddYardSale() {
         );
         const userLat = position.coords.latitude;
         const userLon = position.coords.longitude;
+        const R = 3958.8;
+        const dLat = (exact_latitude - userLat) * Math.PI / 180;
+        const dLon = (exact_longitude - userLon) * Math.PI / 180;
+        const a = Math.sin(dLat/2) ** 2 +
+          Math.cos(userLat * Math.PI / 180) * Math.cos(exact_latitude * Math.PI / 180) * Math.sin(dLon/2) ** 2;
+        const distance = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-        // Geocode the address first to get its coordinates for distance check
-        const geoCheckQuery = `${data.address}, ${data.city}, ${data.state} ${data.zip_code}`;
-        const geoCheckRes = await fetch(
-          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(geoCheckQuery)}&format=json&limit=1`,
-          { headers: { 'User-Agent': 'Stooplify/1.0' } }
-        );
-        const geoCheckData = await geoCheckRes.json();
-
-        if (geoCheckData.length > 0) {
-          const addrLat = parseFloat(geoCheckData[0].lat);
-          const addrLon = parseFloat(geoCheckData[0].lon);
-          const R = 3958.8;
-          const dLat = (addrLat - userLat) * Math.PI / 180;
-          const dLon = (addrLon - userLon) * Math.PI / 180;
-          const a = Math.sin(dLat/2) ** 2 +
-            Math.cos(userLat * Math.PI / 180) * Math.cos(addrLat * Math.PI / 180) * Math.sin(dLon/2) ** 2;
-          const distance = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-          if (distance > 1) {
-            toast.error(`You must be within 1 mile of the sale address to create a listing. You are ${distance.toFixed(1)} miles away.`);
-            throw new Error('Too far from event location');
-          }
+        if (distance > 1) {
+          toast.error(`You must be within 1 mile of the sale address to create a listing. You are ${distance.toFixed(1)} miles away.`);
+          throw new Error('Too far from event location');
         }
-      }
-
-      // Geocode the address to get coordinates
-      let coordinates = {};
-
-      // Try multiple query formats for better geocoding results
-      const queries = [
-        `${data.address}, ${data.city}, ${data.state} ${data.zip_code}`,
-        `${data.address}, ${data.zip_code}`,
-        `${data.address}, ${data.city}, ${data.state}`,
-        `${data.city}, ${data.state} ${data.zip_code}`,
-        `${data.city}, ${data.state}`,
-        `${data.address}`
-      ].filter(q => q.trim());
-
-      for (let i = 0; i < queries.length; i++) {
-        const query = queries[i];
-
-        try {
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5`,
-            {
-              headers: {
-                'User-Agent': 'Stooplify/1.0'
-              }
-            }
-          );
-
-          if (!response.ok) {
-            continue;
-          }
-
-          const geoData = await response.json();
-
-          if (geoData.length > 0) {
-            const exactLat = parseFloat(geoData[0].lat);
-            const exactLon = parseFloat(geoData[0].lon);
-
-            // Create approximate coordinates (offset by ~0.01 degrees = ~1km for privacy)
-            const latOffset = (Math.random() - 0.5) * 0.02;
-            const lonOffset = (Math.random() - 0.5) * 0.02;
-
-            coordinates = {
-              exact_latitude: exactLat,
-              exact_longitude: exactLon,
-              latitude: exactLat + latOffset,
-              longitude: exactLon + lonOffset
-            };
-
-            break; // Success, exit loop
-          }
-
-          // Wait a bit between requests to respect rate limits
-          if (i < queries.length - 1) {
-            await new Promise((resolve) => setTimeout(resolve, 500));
-          }
-        } catch (error) {
-          // Continue to next query on error
-        }
-      }
-
-      if (!coordinates.latitude) {
-        toast.error('Could not locate address. Please check the address and try again.');
-        throw new Error('Could not locate address');
       }
 
       if (isEditMode) {
