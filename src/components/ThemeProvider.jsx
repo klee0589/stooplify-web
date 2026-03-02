@@ -11,7 +11,7 @@ export function ThemeProvider({ children }) {
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem('stooplify_theme');
     if (saved) return saved;
-    
+    // Default to light regardless of system preference
     return 'light';
   });
 
