@@ -240,7 +240,7 @@ export default function AddYardSale() {
     },
     onSuccess: (data) => {
       toast.success(isEditMode ? 'Your yard sale has been updated!' : 'Your yard sale is now live!');
-      // Redirect to the sale details page
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       setTimeout(() => {
         navigate(createPageUrl('YardSaleDetails') + `?id=${data.id}`);
       }, 1000);
