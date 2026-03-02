@@ -173,7 +173,7 @@ export default function MyYardSales() {
                     View Plans ($4 single / $9/mo unlimited)
                   </Button>
                 </Link>
-                <Button size="sm" variant="ghost" className="text-amber-700" onClick={() => setShowUpgradebanner(false)}>
+                <Button size="sm" variant="ghost" className="text-amber-700" onClick={() => setShowUpgradeBanner(false)}>
                   Dismiss
                 </Button>
               </div>
