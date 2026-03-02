@@ -1055,6 +1055,20 @@ export default function YardSaleDetails() {
           </motion.div>
         </div>
 
+        {/* QR Code Section - Seller sees their QR code, buyer sees scan button */}
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+          {user && sale.created_by === user.email ? (
+            <QRCodeDisplay saleId={saleId} saleTitle={sale.title} />
+          ) : user && sale.created_by !== user.email ? (
+            <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm">
+              <h3 className="font-semibold text-[#2E3A59] dark:text-white mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                📱 Are you at this sale?
+              </h3>
+              <ScanQRButton saleId={saleId} sale={sale} user={user} />
+            </div>
+          ) : null}
+        </div>
+
         {/* Printable Flyer Section */}
         {user && sale.created_by === user.email && (
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 mt-12">
