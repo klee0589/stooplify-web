@@ -396,7 +396,6 @@ export default function AddYardSale() {
   const validateAddress = async (currentFormData = formData) => {
     const { address, city, state, zip_code } = currentFormData;
 
-    // Skip if not enough info
     if (!address) {
       setAddressValidation({ status: 'idle', message: '' });
       return;
@@ -406,50 +405,14 @@ export default function AddYardSale() {
     setAddressValidation({ status: 'checking', message: 'Checking address...' });
 
     try {
-      // Try multiple query formats to increase success rate
-      const queries = [
-        `${address}, ${city}, ${state} ${zip_code}`,
-        `${address}, ${zip_code}`,
-        `${address}, ${city}, ${state}`,
-        `${city}, ${state} ${zip_code}`,
-        `${city}, ${state}`,
-        `${address}`
-      ].filter(q => q.trim());
-
-      let geoData = [];
-      for (const query of queries) {
-        try {
-          const response = await fetch(
-            `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=5`,
-            { headers: { 'User-Agent': 'Stooplify/1.0' } }
-          );
-          const data = await response.json();
-          if (data.length > 0) {
-            geoData = data;
-            break;
-          }
-        } catch (err) {
-          // Continue to next query on error
-          continue;
-        }
-      }
-
-      if (geoData.length > 0) {
-        setAddressValidation({
-          status: 'valid',
-          message: `✓ Address found: ${geoData[0].display_name}`
-        });
+      const result = await base44.functions.invoke('geocodeAddress', { address, city, state, zip_code });
+      if (result?.data?.success) {
+        setAddressValidation({ status: 'valid', message: `✓ Address found: ${result.data.display_name}` });
       } else {
-        setAddressValidation({
-          status: 'invalid',
-          message: '⚠️ Address not found - try entering just the street address or city/state'
-        });
+        setAddressValidation({ status: 'invalid', message: '⚠️ Address not found - try entering the street address and city' });
       }
     } catch (error) {
-      setAddressValidation({
-        status: 'error',
-        message: '⚠️ Could not verify address - you can still continue'
-      });
+      setAddressValidation({ status: 'error', message: '⚠️ Could not verify address - you can still continue' });
     } finally {
       setIsValidatingAddress(false);
     }
