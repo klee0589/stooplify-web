@@ -27,6 +27,8 @@ import ReviewForm from '../components/reviews/ReviewForm';
 import PrintableFlyer from '../components/sales/PrintableFlyer';
 import MessageThread from '../components/messaging/MessageThread';
 import { useTranslation } from '../components/translations';
+import QRCodeDisplay from '../components/sales/QRCodeDisplay';
+import ScanQRButton from '../components/sales/ScanQRButton';
 
 export default function YardSaleDetails() {
   const urlParams = new URLSearchParams(window.location.search);
