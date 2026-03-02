@@ -16,7 +16,7 @@ export default function MyYardSales() {
   const [user, setUser] = useState(null);
   const [language, setLanguage] = useState('en');
   const [showFinishedSales, setShowFinishedSales] = useState(false);
-  const [showUpgradeBanner, setShowUpgradebanner] = useState(false);
+  const [showUpgradeBanner, setShowUpgradeBanner] = useState(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const t = useTranslation(language);
