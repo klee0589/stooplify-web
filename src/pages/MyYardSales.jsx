@@ -34,6 +34,14 @@ export default function MyYardSales() {
   }, []);
 
   useEffect(() => {
+    // Check if redirected here due to listing limit
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('upgrade') === 'true') {
+      setShowUpgradebanner(true);
+    }
+  }, []);
+
+  useEffect(() => {
     const checkAuth = async () => {
       try {
         const isAuth = await base44.auth.isAuthenticated();
