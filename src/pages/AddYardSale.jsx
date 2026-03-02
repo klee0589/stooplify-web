@@ -515,24 +515,8 @@ export default function AddYardSale() {
     }
   };
 
-  // Debounce address validation
-  const validateAddressDebounced = (() => {
-    let timeout;
-    return () => {
-      clearTimeout(timeout);
-      timeout = setTimeout(validateAddress, 1000);
-    };
-  })();
-
-  // Trigger validation when address fields are autofilled
-  useEffect(() => {
-    if (formData.address && formData.zip_code && addressValidation.status === 'idle') {
-      validateAddress();
-    }
-  }, [formData.address, formData.zip_code]);
-
   const isStep1Valid = formData.title && formData.date && formData.categories?.length > 0;
-  const isStep2Valid = formData.general_location && formData.address && addressValidation.status === 'valid';
+  const isStep2Valid = formData.general_location && formData.address && formData.city && formData.state;
 
   if (isLoadingSale) {
     return (
