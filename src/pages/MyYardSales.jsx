@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
-import { Calendar, MapPin, Edit, Trash2, Eye, Loader2, Plus } from 'lucide-react';
+import { Calendar, MapPin, Edit, Trash2, Eye, Loader2, Plus, AlertCircle, CreditCard } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { format } from 'date-fns';
