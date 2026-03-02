@@ -1003,15 +1003,15 @@ export default function AddYardSale() {
                 <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                disabled={!isStep2Valid}
-                onClick={() => {
+                disabled={!isStep2Valid || isValidatingAddress}
+                onClick={async () => {
+                  await validateAddress();
                   setStep(3);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="flex-1 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 style={{ fontFamily: 'Poppins, sans-serif' }}>
-
-                  {t('continue')}
+                  {isValidatingAddress ? <><Loader2 className="w-4 h-4 animate-spin" /> Checking...</> : t('continue')}
                 </motion.button>
               </div>
             </motion.div>
