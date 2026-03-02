@@ -37,7 +37,7 @@ export default function MyYardSales() {
     // Check if redirected here due to listing limit
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.get('upgrade') === 'true') {
-      setShowUpgradebanner(true);
+      setShowUpgradeBanner(true);
     }
   }, []);
 
