@@ -102,7 +102,7 @@ export const PAGES = {
 }
 
 export const pagesConfig = {
-    mainPage: "Calendar",
+    mainPage: "Home",
     Pages: PAGES,
     Layout: __Layout,
 };
