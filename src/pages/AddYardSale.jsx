@@ -453,8 +453,8 @@ export default function AddYardSale() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const validateAddress = async () => {
-    const { address, city, state, zip_code } = formData;
+  const validateAddress = async (currentFormData = formData) => {
+    const { address, city, state, zip_code } = currentFormData;
 
     // Skip if not enough info
     if (!address) {
