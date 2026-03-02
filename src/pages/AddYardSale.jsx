@@ -451,11 +451,6 @@ export default function AddYardSale() {
 
   const updateField = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-
-    // Trigger address validation when relevant fields change
-    if (['address', 'city', 'state', 'zip_code'].includes(field)) {
-      validateAddressDebounced();
-    }
   };
 
   const validateAddress = async () => {
