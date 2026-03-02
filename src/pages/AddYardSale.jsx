@@ -1005,7 +1005,7 @@ export default function AddYardSale() {
                 whileTap={{ scale: 0.98 }}
                 disabled={!isStep2Valid || isValidatingAddress}
                 onClick={async () => {
-                  await validateAddress();
+                  await validateAddress(formData);
                   setStep(3);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
