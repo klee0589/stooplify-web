@@ -114,6 +114,13 @@ export default function AddYardSale() {
              // Admins don't need payment, payment needed if: they've used free listing AND don't have subscription
              const needsPay = !isAdmin && hasUsedFreeListing && !hasSubscription;
              setNeedsPayment(needsPay);
+
+             // If they have no subscription and have used their free listing, redirect to MyYardSales with explanation
+             if (needsPay) {
+               toast.error("You've used your free listing. Please upgrade to post more sales.", { duration: 6000 });
+               navigate(createPageUrl('MyYardSales') + '?upgrade=true');
+               return;
+             }
            }
 
           // Load existing sale data if editing
