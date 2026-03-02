@@ -175,8 +175,9 @@ export default function AddYardSale() {
 
   const createMutation = useMutation({
     mutationFn: async (data) => {
-      // For new listings only, verify user is within 0.5 miles of the address
-      if (!isEditMode) {
+      // For new listings only (non-admins), verify user is within 0.5 miles of the address
+      const isAdmin = user?.role === 'admin';
+      if (!isEditMode && !isAdmin) {
         const position = await new Promise((resolve, reject) =>
           navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000 })
         );
