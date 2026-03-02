@@ -202,8 +202,8 @@ export default function AddYardSale() {
             Math.cos(userLat * Math.PI / 180) * Math.cos(addrLat * Math.PI / 180) * Math.sin(dLon/2) ** 2;
           const distance = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
-          if (distance > 0.5) {
-            toast.error(`You must be within 0.5 miles of the sale address to create a listing. You are ${distance.toFixed(1)} miles away.`);
+          if (distance > 1) {
+            toast.error(`You must be within 1 mile of the sale address to create a listing. You are ${distance.toFixed(1)} miles away.`);
             throw new Error('Too far from event location');
           }
         }
