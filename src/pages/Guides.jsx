@@ -324,20 +324,24 @@ export default function Guides() {
         <section aria-label="Seller guides" style={{ display: activeTab === 'sellers' ? 'block' : 'none' }}>
           <motion.div key="sellers" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
             <h2 className="text-2xl font-bold text-[#2E3A59] dark:text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              How to Host a Yard Sale with Stooplify
+              {language === 'es' ? 'Cómo Organizar una Venta de Garaje con Stooplify' : 'How to Host a Yard Sale with Stooplify'}
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              List your garage sale, stoop sale, or estate sale in minutes. Reach local buyers with QR codes, printable flyers, social sharing, and smart neighborhood alerts.
+              {language === 'es'
+                ? 'Publica tu venta de garaje, venta de porche o venta de bienes raíces en minutos. Llega a compradores locales con códigos QR, volantes imprimibles, redes sociales y alertas inteligentes.'
+                : 'List your garage sale, stoop sale, or estate sale in minutes. Reach local buyers with QR codes, printable flyers, social sharing, and smart neighborhood alerts.'}
             </p>
             <div className="grid md:grid-cols-2 gap-4 mb-10">
               {sellerFeatures.map((f, i) => <FeatureCard key={i} feature={f} />)}
             </div>
 
             <h2 className="text-2xl font-bold text-[#2E3A59] dark:text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              Yard Sale Seller Guides
+              {language === 'es' ? 'Guías para Vendedores' : 'Yard Sale Seller Guides'}
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              In-depth tips on advertising, timing, permits, pricing, and more — everything you need to host a successful yard sale in NYC or your neighborhood.
+              {language === 'es'
+                ? 'Consejos detallados sobre publicidad, horarios, permisos, precios y más: todo lo que necesitas para organizar una venta exitosa.'
+                : 'In-depth tips on advertising, timing, permits, pricing, and more — everything you need to host a successful yard sale in NYC or your neighborhood.'}
             </p>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {sellerGuides.map((guide, index) => (
