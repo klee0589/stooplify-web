@@ -289,21 +289,25 @@ export default function Guides() {
           <button className={tabClass('buyers')} onClick={() => setActiveTab('buyers')}>🛍️ For Buyers</button>
         </div>
 
-        {/* Seller Section */}
-        {activeTab === 'sellers' && (
+        {/* Seller Section - always rendered for SEO, visually hidden when not active */}
+        <section aria-label="Seller guides" style={{ display: activeTab === 'sellers' ? 'block' : 'none' }}>
           <motion.div key="sellers" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
             <h2 className="text-2xl font-bold text-[#2E3A59] dark:text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              How to Use Stooplify as a Seller
+              How to Host a Yard Sale with Stooplify
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">Features to help you list, promote, and run a successful yard sale.</p>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              List your garage sale, stoop sale, or estate sale in minutes. Reach local buyers with QR codes, printable flyers, social sharing, and smart neighborhood alerts.
+            </p>
             <div className="grid md:grid-cols-2 gap-4 mb-10">
               {sellerFeatures.map((f, i) => <FeatureCard key={i} feature={f} />)}
             </div>
 
             <h2 className="text-2xl font-bold text-[#2E3A59] dark:text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              Seller Guides
+              Yard Sale Seller Guides
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">In-depth tips for hosting a great yard sale.</p>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              In-depth tips on advertising, timing, permits, pricing, and more — everything you need to host a successful yard sale in NYC or your neighborhood.
+            </p>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {sellerGuides.map((guide, index) => (
                 <motion.div key={guide.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.07 }}>
@@ -312,23 +316,27 @@ export default function Guides() {
               ))}
             </div>
           </motion.div>
-        )}
+        </section>
 
-        {/* Buyer Section */}
-        {activeTab === 'buyers' && (
+        {/* Buyer Section - always rendered for SEO, visually hidden when not active */}
+        <section aria-label="Buyer guides" style={{ display: activeTab === 'buyers' ? 'block' : 'none' }}>
           <motion.div key="buyers" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
             <h2 className="text-2xl font-bold text-[#2E3A59] dark:text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              How to Use Stooplify as a Buyer
+              How to Find Yard Sales Near You with Stooplify
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">Everything you need to find great deals, scan QR codes, and earn credits.</p>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              Browse local yard sales on the map, scan QR codes to verify attendance and earn credits, get smart alerts for new sales in your area, and message sellers directly.
+            </p>
             <div className="grid md:grid-cols-2 gap-4 mb-10">
               {buyerFeatures.map((f, i) => <FeatureCard key={i} feature={f} />)}
             </div>
 
             <h2 className="text-2xl font-bold text-[#2E3A59] dark:text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              Buyer Guides
+              Yard Sale Buyer Guides
             </h2>
-            <p className="text-gray-600 dark:text-gray-300 mb-6">Tips for finding the best local yard sales.</p>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              Tips on where to find the best local garage sales, estate sales, and stoop sales this weekend near you.
+            </p>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {buyerGuides.map((guide, index) => (
                 <motion.div key={guide.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.07 }}>
@@ -337,7 +345,7 @@ export default function Guides() {
               ))}
             </div>
           </motion.div>
-        )}
+        </section>
 
         {/* FAQ Section */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-16 mb-12">
