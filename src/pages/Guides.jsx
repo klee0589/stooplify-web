@@ -398,9 +398,9 @@ export default function Guides() {
           {/* FAQ Tab + Search */}
           <div className="flex flex-col sm:flex-row gap-3 items-center justify-between mb-6 max-w-3xl mx-auto">
             <div className="flex gap-2">
-              <button className={faqTabClass('sellers')} onClick={() => setFaqTab('sellers')}>🏷️ Sellers</button>
-              <button className={faqTabClass('buyers')} onClick={() => setFaqTab('buyers')}>🛍️ Buyers</button>
-              <button className={faqTabClass('all')} onClick={() => setFaqTab('all')}>All</button>
+              <button className={faqTabClass('sellers')} onClick={() => setFaqTab('sellers')}>🏷️ {language === 'es' ? 'Vendedores' : 'Sellers'}</button>
+              <button className={faqTabClass('buyers')} onClick={() => setFaqTab('buyers')}>🛍️ {language === 'es' ? 'Compradores' : 'Buyers'}</button>
+              <button className={faqTabClass('all')} onClick={() => setFaqTab('all')}>{language === 'es' ? 'Todos' : 'All'}</button>
             </div>
             <div className="relative w-full sm:w-72">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
