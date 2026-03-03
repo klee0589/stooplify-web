@@ -205,6 +205,84 @@ export default function ShareModal({ sale, isOpen, onClose }) {
                 </motion.button>
               ))}
             </div>
+
+            {/* Share Flyer */}
+            <div className="mt-4 pt-4 border-t border-gray-100">
+              <p className="text-xs text-gray-500 mb-3 text-center">Or share as a flyer image</p>
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={generateFlyerImage}
+                disabled={isGeneratingFlyer}
+                className="w-full flex items-center justify-center gap-3 px-4 py-3 rounded-xl text-white font-medium bg-[#FF6F61] hover:bg-[#e85d51] transition-all shadow-sm disabled:opacity-60"
+              >
+                {isGeneratingFlyer ? (
+                  <div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <ImageIcon className="w-5 h-5" />
+                )}
+                <span>{isGeneratingFlyer ? 'Generating...' : 'Share as Flyer Image'}</span>
+              </motion.button>
+            </div>
+
+            {/* Hidden Flyer Template */}
+            <div style={{ position: 'fixed', left: '-9999px', top: '-9999px' }}>
+              <div
+                ref={flyerRef}
+                style={{ width: '600px', padding: '48px', backgroundColor: '#ffffff', fontFamily: 'Arial, sans-serif' }}
+              >
+                <div style={{ textAlign: 'center', marginBottom: '32px', borderBottom: '4px solid #FF6F61', paddingBottom: '24px' }}>
+                  <h1 style={{ fontSize: '48px', fontWeight: '900', color: '#2E3A59', margin: '0 0 8px 0', letterSpacing: '-1px' }}>YARD SALE</h1>
+                  <h2 style={{ fontSize: '28px', fontWeight: '700', color: '#FF6F61', margin: '0' }}>{sale.title}</h2>
+                </div>
+
+                <div style={{ display: 'flex', gap: '32px', marginBottom: '32px' }}>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ marginBottom: '20px' }}>
+                      <p style={{ fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 4px 0' }}>Date</p>
+                      <p style={{ fontSize: '22px', fontWeight: '700', color: '#2E3A59', margin: '0' }}>
+                        {sale.date ? new Date(sale.date + 'T00:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' }) : ''}
+                      </p>
+                    </div>
+                    <div style={{ marginBottom: '20px' }}>
+                      <p style={{ fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 4px 0' }}>Time</p>
+                      <p style={{ fontSize: '22px', fontWeight: '700', color: '#2E3A59', margin: '0' }}>{sale.start_time} – {sale.end_time}</p>
+                    </div>
+                    <div>
+                      <p style={{ fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 4px 0' }}>Location</p>
+                      <p style={{ fontSize: '20px', fontWeight: '700', color: '#2E3A59', margin: '0 0 4px 0' }}>{sale.general_location}</p>
+                      <p style={{ fontSize: '16px', color: '#6b7280', margin: '0' }}>{sale.city}, {sale.state}</p>
+                    </div>
+                  </div>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                    <img src={qrCodeUrl} alt="QR Code" style={{ width: '160px', height: '160px' }} crossOrigin="anonymous" />
+                    <p style={{ fontSize: '12px', color: '#6b7280', textAlign: 'center', marginTop: '8px' }}>Scan for details</p>
+                  </div>
+                </div>
+
+                {sale.description && (
+                  <div style={{ backgroundColor: '#f9fafb', borderRadius: '12px', padding: '20px', marginBottom: '24px' }}>
+                    <p style={{ fontSize: '11px', color: '#9ca3af', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 8px 0' }}>What's Available</p>
+                    <p style={{ fontSize: '16px', color: '#374151', lineHeight: '1.6', margin: '0' }}>{sale.description}</p>
+                  </div>
+                )}
+
+                {sale.photos && sale.photos.length > 0 && (
+                  <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
+                    {sale.photos.slice(0, 3).map((photo, i) => (
+                      <img key={i} src={photo} alt="" crossOrigin="anonymous" style={{ width: '180px', height: '120px', objectFit: 'cover', borderRadius: '8px' }} />
+                    ))}
+                  </div>
+                )}
+
+                <div style={{ borderTop: '2px dashed #e5e7eb', paddingTop: '20px', textAlign: 'center' }}>
+                  <p style={{ fontSize: '14px', color: '#6b7280', margin: '0 0 4px 0' }}>
+                    Posted on <span style={{ fontWeight: '700', color: '#FF6F61' }}>Stooplify</span>
+                  </p>
+                  <p style={{ fontSize: '12px', color: '#9ca3af', margin: '0' }}>Find more local yard sales at stooplify.com</p>
+                </div>
+              </div>
+            </div>
           </motion.div>
         </motion.div>
       )}
