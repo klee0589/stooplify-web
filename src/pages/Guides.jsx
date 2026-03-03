@@ -263,9 +263,9 @@ export default function Guides() {
   return (
     <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
       <SEO 
-        title="Yard Sale Guides & FAQ | Stooplify"
-        description="Complete guides for buyers and sellers at yard sales. Learn how to use QR codes, print flyers, share sales, and find great local deals with Stooplify."
-        keywords="yard sale guide, how to host yard sale, yard sale pricing, yard sale tips, garage sale FAQ, QR code yard sale, print flyer"
+        title="Yard Sale Guides & FAQ | How to Host, Find & Use Stooplify"
+        description="Complete guides for yard sale buyers and sellers. Learn how to list a sale, print a flyer, share with QR codes, find local garage sales near you, and earn credits on Stooplify."
+        keywords="yard sale guide, how to host a yard sale, garage sale tips, how to find yard sales near me, yard sale QR code, print yard sale flyer, yard sale FAQ, how to list a garage sale, stooplify guide, sell items locally, buy at yard sales"
         structuredData={structuredData}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
