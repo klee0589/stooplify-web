@@ -316,8 +316,8 @@ export default function Guides() {
 
         {/* Buyer / Seller Tab Toggle */}
         <div className="flex justify-center gap-3 mb-8">
-          <button className={tabClass('sellers')} onClick={() => setActiveTab('sellers')}>🏷️ For Sellers</button>
-          <button className={tabClass('buyers')} onClick={() => setActiveTab('buyers')}>🛍️ For Buyers</button>
+          <button className={tabClass('sellers')} onClick={() => setActiveTab('sellers')}>🏷️ {language === 'es' ? 'Para Vendedores' : 'For Sellers'}</button>
+          <button className={tabClass('buyers')} onClick={() => setActiveTab('buyers')}>🛍️ {language === 'es' ? 'Para Compradores' : 'For Buyers'}</button>
         </div>
 
         {/* Seller Section - always rendered for SEO, visually hidden when not active */}
