@@ -71,84 +71,113 @@ const buyerGuides = [
   },
 ];
 
-// Stooplify feature guides - inline content
-const sellerFeatures = [
-  {
-    icon: Share2,
-    color: 'bg-blue-100 text-blue-600',
-    title: 'Share Your Sale',
-    description: 'Every listing has a Share button. Tap it to share your sale directly to Facebook, WhatsApp, Instagram, X (Twitter), and more. The more you share, the more foot traffic you get!',
-  },
-  {
-    icon: Printer,
-    color: 'bg-green-100 text-green-600',
-    title: 'Print a Flyer',
-    description: 'On your sale\'s detail page, tap "Print Flyer" to generate a beautiful PDF flyer with your sale info, photos, and a QR code. Print it and hang it up near your block to drive local foot traffic.',
-  },
-  {
-    icon: QrCode,
-    color: 'bg-purple-100 text-purple-600',
-    title: 'Your Sale\'s QR Code',
-    description: 'Each listing has a unique QR code. Display it at your sale so buyers can scan it to verify attendance. The QR code is also printed on your flyer automatically. You can download it separately from the sale page.',
-  },
-  {
-    icon: Tag,
-    color: 'bg-yellow-100 text-yellow-600',
-    title: 'Set Payment Methods',
-    description: 'Let buyers know what payment you accept: Cash, Credit/Debit cards, or digital payments like Venmo and PayPal. You can also mark Cash as preferred. Buyers can filter sales by payment method!',
-  },
-  {
-    icon: Star,
-    color: 'bg-pink-100 text-pink-600',
-    title: 'Build Your Seller Reputation',
-    description: 'After buyers attend your sale, they can leave a star rating and review. A strong reputation score builds trust and gets more buyers excited to show up to your future sales.',
-  },
-  {
-    icon: Clock,
-    color: 'bg-orange-100 text-orange-600',
-    title: 'Address Privacy',
-    description: 'Your exact street address is kept private until the day of your sale. It unlocks automatically on the sale date, or when a buyer taps "I\'m Attending." Only your general neighborhood is shown publicly.',
-  },
-];
+const getSellerFeatures = (language) => {
+  const isEs = language === 'es';
+  return [
+    {
+      icon: Share2,
+      color: 'bg-blue-100 text-blue-600',
+      title: isEs ? 'Comparte tu Venta' : 'Share Your Sale',
+      description: isEs
+        ? 'Cada anuncio tiene un botón de Compartir. Tócalo para compartir tu venta directamente en Facebook, WhatsApp, Instagram, X (Twitter) y más. ¡Cuanto más compartes, más tráfico obtienes!'
+        : 'Every listing has a Share button. Tap it to share your sale directly to Facebook, WhatsApp, Instagram, X (Twitter), and more. The more you share, the more foot traffic you get!',
+    },
+    {
+      icon: Printer,
+      color: 'bg-green-100 text-green-600',
+      title: isEs ? 'Imprime un Volante' : 'Print a Flyer',
+      description: isEs
+        ? 'En la página de detalles de tu venta, toca "Imprimir Volante" para generar un hermoso PDF con tu información, fotos y un código QR. Imprímelo y cuélgalo cerca de tu cuadra.'
+        : 'On your sale\'s detail page, tap "Print Flyer" to generate a beautiful PDF flyer with your sale info, photos, and a QR code. Print it and hang it up near your block to drive local foot traffic.',
+    },
+    {
+      icon: QrCode,
+      color: 'bg-purple-100 text-purple-600',
+      title: isEs ? 'Código QR de tu Venta' : 'Your Sale\'s QR Code',
+      description: isEs
+        ? 'Cada anuncio tiene un código QR único. Muéstralo en tu venta para que los compradores lo escaneen y verifiquen su asistencia. El código QR también se imprime automáticamente en tu volante.'
+        : 'Each listing has a unique QR code. Display it at your sale so buyers can scan it to verify attendance. The QR code is also printed on your flyer automatically. You can download it separately from the sale page.',
+    },
+    {
+      icon: Tag,
+      color: 'bg-yellow-100 text-yellow-600',
+      title: isEs ? 'Configura Métodos de Pago' : 'Set Payment Methods',
+      description: isEs
+        ? 'Informa a los compradores qué métodos de pago aceptas: efectivo, tarjetas de crédito/débito o pagos digitales como Venmo y PayPal. ¡Los compradores pueden filtrar ventas por método de pago!'
+        : 'Let buyers know what payment you accept: Cash, Credit/Debit cards, or digital payments like Venmo and PayPal. You can also mark Cash as preferred. Buyers can filter sales by payment method!',
+    },
+    {
+      icon: Star,
+      color: 'bg-pink-100 text-pink-600',
+      title: isEs ? 'Construye tu Reputación' : 'Build Your Seller Reputation',
+      description: isEs
+        ? 'Después de que los compradores asistan a tu venta, pueden dejar una calificación y reseña. Una buena reputación genera confianza y atrae más compradores a tus futuras ventas.'
+        : 'After buyers attend your sale, they can leave a star rating and review. A strong reputation score builds trust and gets more buyers excited to show up to your future sales.',
+    },
+    {
+      icon: Clock,
+      color: 'bg-orange-100 text-orange-600',
+      title: isEs ? 'Privacidad de Dirección' : 'Address Privacy',
+      description: isEs
+        ? 'Tu dirección exacta se mantiene privada hasta el día de la venta. Se desbloquea automáticamente en la fecha de la venta o cuando un comprador toca "Asistiré". Solo se muestra públicamente tu vecindario general.'
+        : 'Your exact street address is kept private until the day of your sale. It unlocks automatically on the sale date, or when a buyer taps "I\'m Attending." Only your general neighborhood is shown publicly.',
+    },
+  ];
+};
 
-const buyerFeatures = [
-  {
-    icon: QrCode,
-    color: 'bg-purple-100 text-purple-600',
-    title: 'Scan QR Codes to Earn Credits',
-    description: 'When you arrive at a sale, look for the seller\'s QR code (on their flyer or phone). Scan it with Stooplify to verify your attendance and earn credits. You must be physically nearby for the scan to count.',
-  },
-  {
-    icon: Bell,
-    color: 'bg-blue-100 text-blue-600',
-    title: 'Smart Sale Alerts',
-    description: 'Set up alerts in your profile to get notified when new sales pop up near you or in categories you love (furniture, clothing, antiques, etc.). Never miss a great sale in your neighborhood again.',
-  },
-  {
-    icon: Calendar,
-    color: 'bg-green-100 text-green-600',
-    title: 'Use the Calendar View',
-    description: 'The Calendar page shows all upcoming sales in a monthly view. See which days have sales near you, filter by category or distance, and plan your treasure-hunting route in advance.',
-  },
-  {
-    icon: MapPin,
-    color: 'bg-orange-100 text-orange-600',
-    title: 'Browse the Map',
-    description: 'Switch to Map view on the Browse page to see sales plotted near you. Tap any pin to preview the sale. Use filters to narrow by category, date, or distance so you only see what\'s relevant.',
-  },
-  {
-    icon: MessageCircle,
-    color: 'bg-yellow-100 text-yellow-600',
-    title: 'Message the Seller',
-    description: 'Have a question about a specific item? Tap the message button on any sale page to send the seller a direct message. You\'ll get notified when they reply.',
-  },
-  {
-    icon: Star,
-    color: 'bg-pink-100 text-pink-600',
-    title: 'Leave Reviews',
-    description: 'After attending a sale, help the community by leaving a star rating and review. Mark yourself as "Attending" first, then after the sale you can share your experience to help future buyers.',
-  },
-];
+const getBuyerFeatures = (language) => {
+  const isEs = language === 'es';
+  return [
+    {
+      icon: QrCode,
+      color: 'bg-purple-100 text-purple-600',
+      title: isEs ? 'Escanea Códigos QR para Ganar Créditos' : 'Scan QR Codes to Earn Credits',
+      description: isEs
+        ? 'Cuando llegues a una venta, busca el código QR del vendedor (en su volante o teléfono). Escanéalo con Stooplify para verificar tu asistencia y ganar créditos. Debes estar físicamente cerca para que cuente.'
+        : 'When you arrive at a sale, look for the seller\'s QR code (on their flyer or phone). Scan it with Stooplify to verify your attendance and earn credits. You must be physically nearby for the scan to count.',
+    },
+    {
+      icon: Bell,
+      color: 'bg-blue-100 text-blue-600',
+      title: isEs ? 'Alertas Inteligentes de Ventas' : 'Smart Sale Alerts',
+      description: isEs
+        ? 'Configura alertas en tu perfil para recibir notificaciones cuando aparezcan nuevas ventas cerca de ti o en categorías que te gustan. ¡Nunca más te pierdas una gran venta en tu vecindario!'
+        : 'Set up alerts in your profile to get notified when new sales pop up near you or in categories you love (furniture, clothing, antiques, etc.). Never miss a great sale in your neighborhood again.',
+    },
+    {
+      icon: Calendar,
+      color: 'bg-green-100 text-green-600',
+      title: isEs ? 'Usa la Vista de Calendario' : 'Use the Calendar View',
+      description: isEs
+        ? 'La página de Calendario muestra todas las ventas próximas en una vista mensual. Ve qué días hay ventas cerca, filtra por categoría o distancia y planifica tu ruta de caza de tesoros.'
+        : 'The Calendar page shows all upcoming sales in a monthly view. See which days have sales near you, filter by category or distance, and plan your treasure-hunting route in advance.',
+    },
+    {
+      icon: MapPin,
+      color: 'bg-orange-100 text-orange-600',
+      title: isEs ? 'Explora el Mapa' : 'Browse the Map',
+      description: isEs
+        ? 'Cambia a la vista de Mapa en la página de Explorar para ver ventas cerca de ti. Toca cualquier marcador para previsualizar la venta. Usa filtros para ver solo lo que es relevante.'
+        : 'Switch to Map view on the Browse page to see sales plotted near you. Tap any pin to preview the sale. Use filters to narrow by category, date, or distance so you only see what\'s relevant.',
+    },
+    {
+      icon: MessageCircle,
+      color: 'bg-yellow-100 text-yellow-600',
+      title: isEs ? 'Envía Mensajes al Vendedor' : 'Message the Seller',
+      description: isEs
+        ? '¿Tienes una pregunta sobre un artículo específico? Toca el botón de mensaje en cualquier página de venta para enviar un mensaje directo al vendedor. Recibirás una notificación cuando responda.'
+        : 'Have a question about a specific item? Tap the message button on any sale page to send the seller a direct message. You\'ll get notified when they reply.',
+    },
+    {
+      icon: Star,
+      color: 'bg-pink-100 text-pink-600',
+      title: isEs ? 'Deja Reseñas' : 'Leave Reviews',
+      description: isEs
+        ? 'Después de asistir a una venta, ayuda a la comunidad dejando una calificación y reseña. Márcate primero como "Asistiré" y después comparte tu experiencia para ayudar a futuros compradores.'
+        : 'After attending a sale, help the community by leaving a star rating and review. Mark yourself as "Attending" first, then after the sale you can share your experience to help future buyers.',
+    },
+  ];
+};
 
 const getFaqData = (t) => [
   { question: t('faq.questions.whatIs.q'), answer: t('faq.questions.whatIs.a'), tab: 'all' },
