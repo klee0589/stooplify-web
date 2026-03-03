@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Facebook, Twitter, Linkedin, MessageCircle, Link as LinkIcon, Instagram } from 'lucide-react';
+import { X, Facebook, Twitter, Linkedin, MessageCircle, Link as LinkIcon, Instagram, Download, Image as ImageIcon } from 'lucide-react';
 import { toast } from "sonner";
+import html2canvas from 'html2canvas';
 
 export default function ShareModal({ sale, isOpen, onClose }) {
   if (!sale) return null;
