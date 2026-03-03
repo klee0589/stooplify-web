@@ -303,8 +303,12 @@ export const translations = {
           a: 'Stooplify is an app that helps you list, find, and buy items from garage sales, estate sales, and local sellers—all in one place. Think of it as a digital garage sale with built-in foot traffic.'
         },
         howToList: {
-          q: 'How do I list an item?',
-          a: 'Simply open the app, click \'List a Sale,\' upload photos, add a description, select date/time, and specify your location. You can also choose which payment methods you accept.'
+          q: 'How do I list a sale?',
+          a: 'Simply open the app, click "List a Sale," upload photos, add a description, select date/time, and specify your location. You can also choose which payment methods you accept. Our AI will automatically generate a description from your photos!'
+        },
+        aiDescription: {
+          q: 'How does the AI description feature work?',
+          a: 'When you upload photos of your sale items, our AI automatically analyzes them and writes an appealing description for you. You can edit it or use it as-is. It\'s a quick way to create a great listing without having to write anything yourself.'
         },
         furniture: {
           q: 'Can I sell furniture and large items?',
@@ -312,15 +316,35 @@ export const translations = {
         },
         payment: {
           q: 'Can I specify payment types?',
-          a: 'Absolutely. Sellers can mark which payment methods they accept: cash, credit/debit cards, or digital payments (Venmo, PayPal, etc.). You can even mark cash as preferred if you accept multiple methods.'
+          a: 'Absolutely. Sellers can mark which payment methods they accept: cash, credit/debit cards, or digital payments (Venmo, PayPal, etc.). You can even mark cash as preferred if you accept multiple methods. Buyers can filter sales by payment method.'
         },
         howBuyersFind: {
           q: 'How do buyers find my listings?',
-          a: 'Buyers can search by category, location, date, and even filter by payment methods. Stooplify also has a Smart Alerts feature that notifies users of new sales in their followed neighborhoods and categories.'
+          a: 'Buyers can search by category, location, date, and filter by payment methods. Stooplify also has a Smart Alerts feature that notifies users of new sales in their followed neighborhoods and categories. Sales also appear on the interactive map.'
+        },
+        address: {
+          q: 'When is my exact address revealed to buyers?',
+          a: 'Your exact address is kept private until the day of your sale. It unlocks automatically on the sale date, or immediately when a buyer clicks "I\'m Attending." This protects your privacy while still letting interested buyers find you.'
         },
         pickup: {
-          q: 'How do I handle pickup or delivery?',
-          a: 'You set the exact address and date/time for your sale. Buyers can message you through the app to coordinate details. The exact address is revealed 24 hours before the sale or when someone marks they\'re attending.'
+          q: 'How do buyers contact me?',
+          a: 'Buyers can message you directly through the app to ask questions or coordinate details. You\'ll get notified of new messages and can reply from your profile.'
+        },
+        qrCode: {
+          q: 'What is the QR code and attendance verification?',
+          a: 'Each sale has a unique QR code that buyers can scan when they arrive. This verifies their attendance and earns them credits on the platform. As a seller, it\'s a great way to track real foot traffic to your sale.'
+        },
+        credits: {
+          q: 'How do credits work?',
+          a: 'Buyers earn credits by scanning the QR code at a sale when they are physically nearby. Credits are awarded for verified visits and can be used for future platform features. It\'s our way of rewarding real community engagement.'
+        },
+        shareFlyer: {
+          q: 'Can I share my sale on social media?',
+          a: 'Yes! Each sale has a Share button with options to share on Facebook, WhatsApp, Instagram, X (Twitter), and more. You can also generate and download a shareable flyer image or a printable PDF flyer—perfect for posting in neighborhood groups or printing to hang up nearby.'
+        },
+        calendar: {
+          q: 'Is there a calendar view?',
+          a: 'Yes! The Calendar page lets you browse all upcoming sales in a monthly calendar format. You can see which days have sales, filter by category or distance, and also view sales on a map to plan your treasure-hunting route.'
         },
         free: {
           q: 'Is Stooplify free to use?',
@@ -330,9 +354,13 @@ export const translations = {
           q: 'Can I schedule a garage sale in the app?',
           a: 'Yes! You can list an upcoming garage sale with date, time, and location. Buyers can favorite your sale and get reminders. You can also generate a printable flyer with a QR code to promote it locally.'
         },
+        sellerRating: {
+          q: 'What is seller reputation?',
+          a: 'After attending a sale, buyers can leave a star rating and review. Sellers build a reputation score based on these reviews, which helps buyers feel confident about showing up. Higher-rated sellers get more trust from the community.'
+        },
         difference: {
           q: 'What makes Stooplify different from Facebook Marketplace or Craigslist?',
-          a: 'Stooplify is centralized, local, and focused on yard sales specifically. Unlike general marketplaces, we offer features like printable flyers with QR codes, smart neighborhood alerts, payment method filtering, and a trust system with seller ratings. Plus, you don\'t need to spam social groups or rely on chance.'
+          a: 'Stooplify is centralized, local, and focused on yard sales specifically. Unlike general marketplaces, we offer AI-generated descriptions from photos, printable & shareable flyers with QR codes, attendance verification with credits, a calendar view, smart neighborhood alerts, payment method filtering, and a seller trust/rating system. No spam, no sketchy listings—just real neighbors.'
         },
         noGarage: {
           q: 'I don\'t have a garage. Can I still sell?',
