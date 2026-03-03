@@ -235,10 +235,11 @@ export default function Guides() {
     return matchesTab && matchesSearch;
   });
 
+  // Always include ALL FAQs in structured data so search engines index everything
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "mainEntity": filteredFaqs.map(faq => ({
+    "mainEntity": allFaqData.map(faq => ({
       "@type": "Question",
       "name": faq.question,
       "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
