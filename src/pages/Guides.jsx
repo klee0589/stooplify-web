@@ -357,20 +357,24 @@ export default function Guides() {
         <section aria-label="Buyer guides" style={{ display: activeTab === 'buyers' ? 'block' : 'none' }}>
           <motion.div key="buyers" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
             <h2 className="text-2xl font-bold text-[#2E3A59] dark:text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              How to Find Yard Sales Near You with Stooplify
+              {language === 'es' ? 'Cómo Encontrar Ventas de Garaje Cerca de Ti' : 'How to Find Yard Sales Near You with Stooplify'}
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              Browse local yard sales on the map, scan QR codes to verify attendance and earn credits, get smart alerts for new sales in your area, and message sellers directly.
+              {language === 'es'
+                ? 'Explora ventas locales en el mapa, escanea códigos QR para verificar asistencia y ganar créditos, recibe alertas inteligentes y envía mensajes a los vendedores directamente.'
+                : 'Browse local yard sales on the map, scan QR codes to verify attendance and earn credits, get smart alerts for new sales in your area, and message sellers directly.'}
             </p>
             <div className="grid md:grid-cols-2 gap-4 mb-10">
               {buyerFeatures.map((f, i) => <FeatureCard key={i} feature={f} />)}
             </div>
 
             <h2 className="text-2xl font-bold text-[#2E3A59] dark:text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              Yard Sale Buyer Guides
+              {language === 'es' ? 'Guías para Compradores' : 'Yard Sale Buyer Guides'}
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              Tips on where to find the best local garage sales, estate sales, and stoop sales this weekend near you.
+              {language === 'es'
+                ? 'Consejos sobre dónde encontrar las mejores ventas de garaje, ventas de bienes raíces y ventas de porche este fin de semana cerca de ti.'
+                : 'Tips on where to find the best local garage sales, estate sales, and stoop sales this weekend near you.'}
             </p>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {buyerGuides.map((guide, index) => (
