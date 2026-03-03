@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
 import { 
-  ArrowLeft, Calendar, MapPin, Shield, DollarSign, 
-  Users, Search, ExternalLink, Mail, Book, FileText, ArrowRight
+  Calendar, MapPin, Shield, DollarSign, 
+  Users, Search, Book, FileText, ArrowRight,
+  QrCode, Printer, Share2, Star, MessageCircle, Bell, Tag, Clock
 } from 'lucide-react';
 import { useTranslation } from '../components/translations';
 import { Input } from "@/components/ui/input";
@@ -16,7 +17,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-const guides = [
+const sellerGuides = [
   {
     id: 'advertise',
     title: 'How to Advertise a Yard Sale in NYC',
@@ -57,6 +58,9 @@ const guides = [
     color: 'bg-pink-100 text-pink-600',
     page: 'GuidesSeniors'
   },
+];
+
+const buyerGuides = [
   {
     id: 'find',
     title: 'Where to Find Yard Sales Near You',
@@ -67,17 +71,103 @@ const guides = [
   },
 ];
 
+// Stooplify feature guides - inline content
+const sellerFeatures = [
+  {
+    icon: Share2,
+    color: 'bg-blue-100 text-blue-600',
+    title: 'Share Your Sale',
+    description: 'Every listing has a Share button. Tap it to share your sale directly to Facebook, WhatsApp, Instagram, X (Twitter), and more. The more you share, the more foot traffic you get!',
+  },
+  {
+    icon: Printer,
+    color: 'bg-green-100 text-green-600',
+    title: 'Print a Flyer',
+    description: 'On your sale\'s detail page, tap "Print Flyer" to generate a beautiful PDF flyer with your sale info, photos, and a QR code. Print it and hang it up near your block to drive local foot traffic.',
+  },
+  {
+    icon: QrCode,
+    color: 'bg-purple-100 text-purple-600',
+    title: 'Your Sale\'s QR Code',
+    description: 'Each listing has a unique QR code. Display it at your sale so buyers can scan it to verify attendance. The QR code is also printed on your flyer automatically. You can download it separately from the sale page.',
+  },
+  {
+    icon: Tag,
+    color: 'bg-yellow-100 text-yellow-600',
+    title: 'Set Payment Methods',
+    description: 'Let buyers know what payment you accept: Cash, Credit/Debit cards, or digital payments like Venmo and PayPal. You can also mark Cash as preferred. Buyers can filter sales by payment method!',
+  },
+  {
+    icon: Star,
+    color: 'bg-pink-100 text-pink-600',
+    title: 'Build Your Seller Reputation',
+    description: 'After buyers attend your sale, they can leave a star rating and review. A strong reputation score builds trust and gets more buyers excited to show up to your future sales.',
+  },
+  {
+    icon: Clock,
+    color: 'bg-orange-100 text-orange-600',
+    title: 'Address Privacy',
+    description: 'Your exact street address is kept private until the day of your sale. It unlocks automatically on the sale date, or when a buyer taps "I\'m Attending." Only your general neighborhood is shown publicly.',
+  },
+];
+
+const buyerFeatures = [
+  {
+    icon: QrCode,
+    color: 'bg-purple-100 text-purple-600',
+    title: 'Scan QR Codes to Earn Credits',
+    description: 'When you arrive at a sale, look for the seller\'s QR code (on their flyer or phone). Scan it with Stooplify to verify your attendance and earn credits. You must be physically nearby for the scan to count.',
+  },
+  {
+    icon: Bell,
+    color: 'bg-blue-100 text-blue-600',
+    title: 'Smart Sale Alerts',
+    description: 'Set up alerts in your profile to get notified when new sales pop up near you or in categories you love (furniture, clothing, antiques, etc.). Never miss a great sale in your neighborhood again.',
+  },
+  {
+    icon: Calendar,
+    color: 'bg-green-100 text-green-600',
+    title: 'Use the Calendar View',
+    description: 'The Calendar page shows all upcoming sales in a monthly view. See which days have sales near you, filter by category or distance, and plan your treasure-hunting route in advance.',
+  },
+  {
+    icon: MapPin,
+    color: 'bg-orange-100 text-orange-600',
+    title: 'Browse the Map',
+    description: 'Switch to Map view on the Browse page to see sales plotted near you. Tap any pin to preview the sale. Use filters to narrow by category, date, or distance so you only see what\'s relevant.',
+  },
+  {
+    icon: MessageCircle,
+    color: 'bg-yellow-100 text-yellow-600',
+    title: 'Message the Seller',
+    description: 'Have a question about a specific item? Tap the message button on any sale page to send the seller a direct message. You\'ll get notified when they reply.',
+  },
+  {
+    icon: Star,
+    color: 'bg-pink-100 text-pink-600',
+    title: 'Leave Reviews',
+    description: 'After attending a sale, help the community by leaving a star rating and review. Mark yourself as "Attending" first, then after the sale you can share your experience to help future buyers.',
+  },
+];
+
 const getFaqData = (t) => [
-  { question: t('faq.questions.whatIs.q'), answer: t('faq.questions.whatIs.a') },
-  { question: t('faq.questions.howToList.q'), answer: t('faq.questions.howToList.a') },
-  { question: t('faq.questions.furniture.q'), answer: t('faq.questions.furniture.a') },
-  { question: t('faq.questions.payment.q'), answer: t('faq.questions.payment.a') },
-  { question: t('faq.questions.howBuyersFind.q'), answer: t('faq.questions.howBuyersFind.a') },
-  { question: t('faq.questions.pickup.q'), answer: t('faq.questions.pickup.a') },
-  { question: t('faq.questions.free.q'), answer: t('faq.questions.free.a') },
-  { question: t('faq.questions.schedule.q'), answer: t('faq.questions.schedule.a') },
-  { question: t('faq.questions.difference.q'), answer: t('faq.questions.difference.a') },
-  { question: t('faq.questions.noGarage.q'), answer: t('faq.questions.noGarage.a') }
+  { question: t('faq.questions.whatIs.q'), answer: t('faq.questions.whatIs.a'), tab: 'all' },
+  { question: t('faq.questions.howToList.q'), answer: t('faq.questions.howToList.a'), tab: 'sellers' },
+  { question: t('faq.questions.aiDescription.q'), answer: t('faq.questions.aiDescription.a'), tab: 'sellers' },
+  { question: t('faq.questions.furniture.q'), answer: t('faq.questions.furniture.a'), tab: 'sellers' },
+  { question: t('faq.questions.payment.q'), answer: t('faq.questions.payment.a'), tab: 'sellers' },
+  { question: t('faq.questions.address.q'), answer: t('faq.questions.address.a'), tab: 'sellers' },
+  { question: t('faq.questions.shareFlyer.q'), answer: t('faq.questions.shareFlyer.a'), tab: 'sellers' },
+  { question: t('faq.questions.sellerRating.q'), answer: t('faq.questions.sellerRating.a'), tab: 'sellers' },
+  { question: t('faq.questions.free.q'), answer: t('faq.questions.free.a'), tab: 'sellers' },
+  { question: t('faq.questions.schedule.q'), answer: t('faq.questions.schedule.a'), tab: 'sellers' },
+  { question: t('faq.questions.noGarage.q'), answer: t('faq.questions.noGarage.a'), tab: 'sellers' },
+  { question: t('faq.questions.howBuyersFind.q'), answer: t('faq.questions.howBuyersFind.a'), tab: 'buyers' },
+  { question: t('faq.questions.pickup.q'), answer: t('faq.questions.pickup.a'), tab: 'buyers' },
+  { question: t('faq.questions.qrCode.q'), answer: t('faq.questions.qrCode.a'), tab: 'buyers' },
+  { question: t('faq.questions.credits.q'), answer: t('faq.questions.credits.a'), tab: 'buyers' },
+  { question: t('faq.questions.calendar.q'), answer: t('faq.questions.calendar.a'), tab: 'buyers' },
+  { question: t('faq.questions.difference.q'), answer: t('faq.questions.difference.a'), tab: 'all' },
 ];
 
 export default function Guides() {
