@@ -170,37 +170,70 @@ const getFaqData = (t) => [
   { question: t('faq.questions.difference.q'), answer: t('faq.questions.difference.a'), tab: 'all' },
 ];
 
+function GuideCard({ guide, t }) {
+  return (
+    <Link to={createPageUrl(guide.page)}>
+      <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 group h-full">
+        <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl ${guide.color} mb-4`}>
+          <guide.icon className="w-6 h-6" />
+        </div>
+        <h3 className="text-lg font-bold text-[#2E3A59] dark:text-white mb-2 group-hover:text-[#FF6F61] transition-colors" style={{ fontFamily: 'Poppins, sans-serif' }}>
+          {t(`guides.cards.${guide.id}.title`)}
+        </h3>
+        <p className="text-gray-600 dark:text-gray-300 text-sm mb-4">
+          {t(`guides.cards.${guide.id}.description`)}
+        </p>
+        <div className="flex items-center text-[#FF6F61] font-medium text-sm">
+          {t('guides.readMore')}
+          <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+        </div>
+      </div>
+    </Link>
+  );
+}
+
+function FeatureCard({ feature }) {
+  const Icon = feature.icon;
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-md flex gap-4">
+      <div className={`inline-flex items-center justify-center w-11 h-11 rounded-xl flex-shrink-0 ${feature.color}`}>
+        <Icon className="w-5 h-5" />
+      </div>
+      <div>
+        <h4 className="font-bold text-[#2E3A59] dark:text-white mb-1" style={{ fontFamily: 'Poppins, sans-serif' }}>
+          {feature.title}
+        </h4>
+        <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+          {feature.description}
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function Guides() {
   const [language, setLanguage] = useState('en');
   const [searchTerm, setSearchTerm] = useState('');
+  const [activeTab, setActiveTab] = useState('sellers');
+  const [faqTab, setFaqTab] = useState('sellers');
   const t = useTranslation(language);
-  const faqData = getFaqData(t);
-  const [filteredFaqs, setFilteredFaqs] = useState(faqData);
+  const allFaqData = getFaqData(t);
 
   useEffect(() => {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
     setLanguage(savedLang);
-
-    const handleLanguageChange = (e) => {
-      setLanguage(e.detail);
-    };
-
+    const handleLanguageChange = (e) => setLanguage(e.detail);
     window.addEventListener('languageChange', handleLanguageChange);
     return () => window.removeEventListener('languageChange', handleLanguageChange);
   }, []);
 
-  useEffect(() => {
-    if (searchTerm) {
-      const filtered = faqData.filter(
-        faq =>
-          faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          faq.answer.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      setFilteredFaqs(filtered);
-    } else {
-      setFilteredFaqs(faqData);
-    }
-  }, [searchTerm, faqData]);
+  const filteredFaqs = allFaqData.filter(faq => {
+    const matchesTab = faqTab === 'all' || faq.tab === faqTab || faq.tab === 'all';
+    const matchesSearch = !searchTerm || 
+      faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      faq.answer.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesTab && matchesSearch;
+  });
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -208,35 +241,40 @@ export default function Guides() {
     "mainEntity": filteredFaqs.map(faq => ({
       "@type": "Question",
       "name": faq.question,
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": faq.answer
-      }
+      "acceptedAnswer": { "@type": "Answer", "text": faq.answer }
     }))
   };
+
+  const tabClass = (tab) =>
+    `px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${
+      activeTab === tab
+        ? 'bg-[#FF6F61] text-white shadow'
+        : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+    }`;
+
+  const faqTabClass = (tab) =>
+    `px-5 py-2.5 rounded-xl font-semibold text-sm transition-all ${
+      faqTab === tab
+        ? 'bg-[#14B8FF] text-white shadow'
+        : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+    }`;
 
   return (
     <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
       <SEO 
         title="Yard Sale Guides & FAQ | Stooplify"
-        description="Complete guides on hosting yard sales, pricing items, advertising, and frequently asked questions about using Stooplify."
-        keywords="yard sale guide, how to host yard sale, yard sale pricing, yard sale tips, garage sale FAQ"
+        description="Complete guides for buyers and sellers at yard sales. Learn how to use QR codes, print flyers, share sales, and find great local deals with Stooplify."
+        keywords="yard sale guide, how to host yard sale, yard sale pricing, yard sale tips, garage sale FAQ, QR code yard sale, print flyer"
         structuredData={structuredData}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
+        <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-10">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-[#FF6F61]/10 rounded-2xl mb-4">
             <Book className="w-8 h-8 text-[#FF6F61]" />
           </div>
-          <h1 
-            className="text-3xl md:text-4xl font-bold text-[#2E3A59] dark:text-white mb-4"
-            style={{ fontFamily: 'Poppins, sans-serif' }}
-          >
+          <h1 className="text-3xl md:text-4xl font-bold text-[#2E3A59] dark:text-white mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
             {t('guides.title')}
           </h1>
           <p className="text-gray-600 dark:text-gray-300 text-lg max-w-2xl mx-auto">
@@ -244,71 +282,90 @@ export default function Guides() {
           </p>
         </motion.div>
 
-        {/* Guide Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
-          {guides.map((guide, index) => (
-            <motion.div
-              key={guide.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-            >
-              <Link to={createPageUrl(guide.page)}>
-                <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 group h-full">
-                  <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl ${guide.color} mb-4`}>
-                    <guide.icon className="w-6 h-6" />
-                  </div>
-                  <h3 
-                    className="text-xl font-bold text-[#2E3A59] dark:text-white mb-3 group-hover:text-[#FF6F61] transition-colors"
-                    style={{ fontFamily: 'Poppins, sans-serif' }}
-                  >
-                    {t(`guides.cards.${guide.id}.title`)}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-300 mb-4">
-                    {t(`guides.cards.${guide.id}.description`)}
-                  </p>
-                  <div className="flex items-center text-[#FF6F61] font-medium group-hover:gap-2 transition-all">
-                    {t('guides.readMore')}
-                    <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-          ))}
+        {/* Buyer / Seller Tab Toggle */}
+        <div className="flex justify-center gap-3 mb-8">
+          <button className={tabClass('sellers')} onClick={() => setActiveTab('sellers')}>🏷️ For Sellers</button>
+          <button className={tabClass('buyers')} onClick={() => setActiveTab('buyers')}>🛍️ For Buyers</button>
         </div>
 
+        {/* Seller Section */}
+        {activeTab === 'sellers' && (
+          <motion.div key="sellers" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <h2 className="text-2xl font-bold text-[#2E3A59] dark:text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              How to Use Stooplify as a Seller
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">Features to help you list, promote, and run a successful yard sale.</p>
+            <div className="grid md:grid-cols-2 gap-4 mb-10">
+              {sellerFeatures.map((f, i) => <FeatureCard key={i} feature={f} />)}
+            </div>
+
+            <h2 className="text-2xl font-bold text-[#2E3A59] dark:text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              Seller Guides
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">In-depth tips for hosting a great yard sale.</p>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {sellerGuides.map((guide, index) => (
+                <motion.div key={guide.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.07 }}>
+                  <GuideCard guide={guide} t={t} />
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Buyer Section */}
+        {activeTab === 'buyers' && (
+          <motion.div key="buyers" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+            <h2 className="text-2xl font-bold text-[#2E3A59] dark:text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              How to Use Stooplify as a Buyer
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">Everything you need to find great deals, scan QR codes, and earn credits.</p>
+            <div className="grid md:grid-cols-2 gap-4 mb-10">
+              {buyerFeatures.map((f, i) => <FeatureCard key={i} feature={f} />)}
+            </div>
+
+            <h2 className="text-2xl font-bold text-[#2E3A59] dark:text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              Buyer Guides
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">Tips for finding the best local yard sales.</p>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {buyerGuides.map((guide, index) => (
+                <motion.div key={guide.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.07 }}>
+                  <GuideCard guide={guide} t={t} />
+                </motion.div>
+              ))}
+            </div>
+          </motion.div>
+        )}
+
         {/* FAQ Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mb-12"
-        >
-          <h2 
-            className="text-3xl font-bold text-[#2E3A59] dark:text-white mb-3 text-center"
-            style={{ fontFamily: 'Poppins, sans-serif' }}
-          >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-16 mb-12">
+          <h2 className="text-3xl font-bold text-[#2E3A59] dark:text-white mb-3 text-center" style={{ fontFamily: 'Poppins, sans-serif' }}>
             {t('faq.title')}
           </h2>
-          <p className="text-gray-600 dark:text-gray-300 text-center mb-8 max-w-2xl mx-auto">
+          <p className="text-gray-600 dark:text-gray-300 text-center mb-6 max-w-2xl mx-auto">
             {t('faq.subtitle')}
           </p>
 
-          {/* Search */}
-          <div className="mb-6">
-            <div className="relative max-w-xl mx-auto">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+          {/* FAQ Tab + Search */}
+          <div className="flex flex-col sm:flex-row gap-3 items-center justify-between mb-6 max-w-3xl mx-auto">
+            <div className="flex gap-2">
+              <button className={faqTabClass('sellers')} onClick={() => setFaqTab('sellers')}>🏷️ Sellers</button>
+              <button className={faqTabClass('buyers')} onClick={() => setFaqTab('buyers')}>🛍️ Buyers</button>
+              <button className={faqTabClass('all')} onClick={() => setFaqTab('all')}>All</button>
+            </div>
+            <div className="relative w-full sm:w-72">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
               <Input
                 type="text"
                 placeholder={t('faq.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-12 py-6 rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+                className="pl-10 py-5 rounded-xl border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
               />
             </div>
           </div>
 
-          {/* FAQ Accordion */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
             {filteredFaqs.length === 0 ? (
               <div className="text-center py-8">
@@ -317,15 +374,13 @@ export default function Guides() {
             ) : (
               <Accordion type="single" collapsible className="space-y-2">
                 {filteredFaqs.map((faq, index) => (
-                  <AccordionItem 
-                    key={index} 
+                  <AccordionItem
+                    key={index}
                     value={`item-${index}`}
                     className="border border-gray-200 dark:border-gray-700 rounded-xl px-4 data-[state=open]:bg-[#14B8FF]/5"
                   >
                     <AccordionTrigger className="hover:no-underline py-4">
-                      <span className="text-left font-semibold text-[#2E3A59] dark:text-white">
-                        {faq.question}
-                      </span>
+                      <span className="text-left font-semibold text-[#2E3A59] dark:text-white">{faq.question}</span>
                     </AccordionTrigger>
                     <AccordionContent className="pb-4 text-gray-600 dark:text-gray-300 leading-relaxed">
                       {faq.answer}
@@ -338,22 +393,12 @@ export default function Guides() {
         </motion.div>
 
         {/* Contact Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="bg-gradient-to-br from-[#14B8FF] to-[#2E3A59] rounded-2xl p-8 text-center text-white"
-        >
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="bg-gradient-to-br from-[#14B8FF] to-[#2E3A59] rounded-2xl p-8 text-center text-white">
           <h3 className="text-2xl font-bold mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
             {t('faq.contactTitle')}
           </h3>
-          <p className="mb-4 opacity-90">
-            {t('faq.contactSubtitle')}
-          </p>
-          <a 
-            href="mailto:daniel@stooplify.com"
-            className="inline-block px-6 py-3 bg-white text-[#14B8FF] rounded-xl font-semibold hover:bg-gray-100 transition-colors"
-          >
+          <p className="mb-4 opacity-90">{t('faq.contactSubtitle')}</p>
+          <a href="mailto:daniel@stooplify.com" className="inline-block px-6 py-3 bg-white text-[#14B8FF] rounded-xl font-semibold hover:bg-gray-100 transition-colors">
             {t('faq.contactButton')}
           </a>
         </motion.div>
