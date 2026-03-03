@@ -673,8 +673,12 @@ export const translations = {
           a: 'Stooplify es una aplicación que te ayuda a listar, encontrar y comprar artículos de ventas de garaje, ventas de bienes raíces y vendedores locales, todo en un solo lugar. Piénsalo como una venta de garaje digital con tráfico incorporado.'
         },
         howToList: {
-          q: '¿Cómo publico un artículo?',
-          a: 'Simplemente abre la aplicación, haz clic en \'Publicar una Venta\', sube fotos, agrega una descripción, selecciona fecha/hora y especifica tu ubicación. También puedes elegir qué métodos de pago aceptas.'
+          q: '¿Cómo publico una venta?',
+          a: 'Simplemente abre la aplicación, haz clic en "Publicar una Venta", sube fotos, agrega una descripción, selecciona fecha/hora y especifica tu ubicación. También puedes elegir qué métodos de pago aceptas. ¡Nuestra IA generará automáticamente una descripción a partir de tus fotos!'
+        },
+        aiDescription: {
+          q: '¿Cómo funciona la descripción generada por IA?',
+          a: 'Cuando subes fotos de tus artículos, nuestra IA las analiza y escribe automáticamente una descripción atractiva. Puedes editarla o usarla tal cual. Es una forma rápida de crear un gran anuncio sin tener que escribir nada tú mismo.'
         },
         furniture: {
           q: '¿Puedo vender muebles y artículos grandes?',
@@ -682,15 +686,35 @@ export const translations = {
         },
         payment: {
           q: '¿Puedo especificar tipos de pago?',
-          a: 'Absolutamente. Los vendedores pueden marcar qué métodos de pago aceptan: efectivo, tarjetas de crédito/débito o pagos digitales (Venmo, PayPal, etc.). Incluso puedes marcar efectivo como preferido si aceptas múltiples métodos.'
+          a: 'Absolutamente. Los vendedores pueden marcar qué métodos de pago aceptan: efectivo, tarjetas de crédito/débito o pagos digitales (Venmo, PayPal, etc.). Incluso puedes marcar efectivo como preferido si aceptas múltiples métodos. Los compradores pueden filtrar ventas por método de pago.'
         },
         howBuyersFind: {
           q: '¿Cómo encuentran los compradores mis listados?',
-          a: 'Los compradores pueden buscar por categoría, ubicación, fecha e incluso filtrar por métodos de pago. Stooplify también tiene una función de Alertas Inteligentes que notifica a los usuarios sobre nuevas ventas en sus vecindarios y categorías seguidas.'
+          a: 'Los compradores pueden buscar por categoría, ubicación, fecha y filtrar por métodos de pago. Stooplify también tiene alertas inteligentes que notifican a los usuarios sobre nuevas ventas en sus vecindarios. Las ventas también aparecen en el mapa interactivo.'
+        },
+        address: {
+          q: '¿Cuándo se revela mi dirección exacta a los compradores?',
+          a: 'Tu dirección exacta se mantiene privada hasta el día de la venta. Se desbloquea automáticamente en la fecha de la venta o inmediatamente cuando un comprador hace clic en "Asistiré". Esto protege tu privacidad mientras permite que los compradores interesados te encuentren.'
         },
         pickup: {
-          q: '¿Cómo manejo la recogida o entrega?',
-          a: 'Estableces la dirección exacta y la fecha/hora de tu venta. Los compradores pueden enviarte mensajes a través de la aplicación para coordinar detalles. La dirección exacta se revela 24 horas antes de la venta o cuando alguien marca que asistirá.'
+          q: '¿Cómo me contactan los compradores?',
+          a: 'Los compradores pueden enviarte mensajes directamente a través de la aplicación para hacer preguntas o coordinar detalles. Recibirás notificaciones de nuevos mensajes y podrás responder desde tu perfil.'
+        },
+        qrCode: {
+          q: '¿Qué es el código QR y la verificación de asistencia?',
+          a: 'Cada venta tiene un código QR único que los compradores pueden escanear al llegar. Esto verifica su asistencia y les otorga créditos en la plataforma. Como vendedor, es una excelente manera de rastrear el tráfico real a tu venta.'
+        },
+        credits: {
+          q: '¿Cómo funcionan los créditos?',
+          a: 'Los compradores ganan créditos al escanear el código QR en una venta cuando están físicamente cerca. Los créditos se otorgan por visitas verificadas. Es nuestra forma de recompensar el compromiso real de la comunidad.'
+        },
+        shareFlyer: {
+          q: '¿Puedo compartir mi venta en redes sociales?',
+          a: '¡Sí! Cada venta tiene un botón de Compartir con opciones para compartir en Facebook, WhatsApp, Instagram, X (Twitter) y más. También puedes generar y descargar una imagen de volante compartible o un volante PDF imprimible, perfecto para publicar en grupos del vecindario o imprimir para colgar.'
+        },
+        calendar: {
+          q: '¿Hay una vista de calendario?',
+          a: '¡Sí! La página de Calendario te permite explorar todas las ventas próximas en formato de calendario mensual. Puedes ver qué días hay ventas, filtrar por categoría o distancia, y también ver las ventas en un mapa.'
         },
         free: {
           q: '¿Stooplify es gratuito?',
@@ -698,11 +722,15 @@ export const translations = {
         },
         schedule: {
           q: '¿Puedo programar una venta de garaje en la aplicación?',
-          a: '¡Sí! Puedes listar una próxima venta de garaje con fecha, hora y ubicación. Los compradores pueden marcar tu venta como favorita y recibir recordatorios. También puedes generar un volante imprimible con código QR para promocionarlo localmente.'
+          a: '¡Sí! Puedes listar una próxima venta con fecha, hora y ubicación. Los compradores pueden marcarla como favorita y recibir recordatorios. También puedes generar un volante imprimible con código QR para promocionarla localmente.'
+        },
+        sellerRating: {
+          q: '¿Qué es la reputación del vendedor?',
+          a: 'Después de asistir a una venta, los compradores pueden dejar una calificación de estrellas y una reseña. Los vendedores acumulan una puntuación de reputación basada en estas reseñas, lo que ayuda a los compradores a confiar en ellos. Los vendedores con mejor calificación generan más confianza en la comunidad.'
         },
         difference: {
           q: '¿Qué hace diferente a Stooplify de Facebook Marketplace o Craigslist?',
-          a: 'Stooplify está centralizado, es local y se enfoca específicamente en ventas de garaje. A diferencia de los mercados generales, ofrecemos funciones como volantes imprimibles con códigos QR, alertas inteligentes de vecindario, filtrado por método de pago y un sistema de confianza con calificaciones de vendedores. Además, no necesitas enviar spam a grupos sociales ni depender de la suerte.'
+          a: 'Stooplify está centralizado, es local y se enfoca específicamente en ventas de garaje. Ofrecemos descripciones generadas por IA desde fotos, volantes imprimibles y compartibles con códigos QR, verificación de asistencia con créditos, vista de calendario, alertas inteligentes de vecindario, filtrado por método de pago y sistema de calificaciones de vendedores. Sin spam, sin listados sospechosos—solo vecinos reales.'
         },
         noGarage: {
           q: 'No tengo garaje. ¿Aún puedo vender?',
