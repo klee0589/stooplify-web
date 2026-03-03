@@ -247,6 +247,8 @@ export default function Guides() {
   const [faqTab, setFaqTab] = useState('sellers');
   const t = useTranslation(language);
   const allFaqData = getFaqData(t);
+  const sellerFeatures = getSellerFeatures(language);
+  const buyerFeatures = getBuyerFeatures(language);
 
   useEffect(() => {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
