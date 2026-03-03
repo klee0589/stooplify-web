@@ -7,8 +7,64 @@ import html2canvas from 'html2canvas';
 export default function ShareModal({ sale, isOpen, onClose }) {
   if (!sale) return null;
 
+  const flyerRef = useRef(null);
+  const [isGeneratingFlyer, setIsGeneratingFlyer] = useState(false);
+
   const shareUrl = window.location.href;
   const shareText = `Check out this yard sale: ${sale.title}`;
+  const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(shareUrl)}`;
+
+  const generateFlyerImage = async () => {
+    setIsGeneratingFlyer(true);
+    const toastId = toast.loading('Generating flyer image...');
+    try {
+      const element = flyerRef.current;
+      const canvas = await html2canvas(element, {
+        scale: 2,
+        backgroundColor: '#ffffff',
+        useCORS: true,
+        allowTaint: true,
+      });
+      toast.dismiss(toastId);
+
+      // Try native share with file if supported
+      canvas.toBlob(async (blob) => {
+        const file = new File([blob], `${sale.title}-flyer.png`, { type: 'image/png' });
+        if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              title: sale.title,
+              text: shareText,
+              url: shareUrl,
+              files: [file],
+            });
+            toast.success('Shared!');
+          } catch (err) {
+            if (err.name !== 'AbortError') {
+              // Fallback: download
+              const link = document.createElement('a');
+              link.download = `${sale.title}-flyer.png`;
+              link.href = canvas.toDataURL('image/png');
+              link.click();
+              toast.success('Flyer downloaded!');
+            }
+          }
+        } else {
+          // Fallback: download
+          const link = document.createElement('a');
+          link.download = `${sale.title}-flyer.png`;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+          toast.success('Flyer downloaded!');
+        }
+      }, 'image/png');
+    } catch (error) {
+      toast.dismiss(toastId);
+      toast.error('Failed to generate flyer');
+    } finally {
+      setIsGeneratingFlyer(false);
+    }
+  };
 
   const shareOptions = [
     {
