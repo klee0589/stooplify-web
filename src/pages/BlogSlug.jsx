@@ -269,12 +269,7 @@ export default function BlogSlug() {
         )}
 
         {/* Content */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="text-gray-700 dark:text-gray-300"
-        >
+        <div className="text-gray-700 dark:text-gray-300">
           <ReactMarkdown
             components={{
               h1: ({ children }) => <h1 className="text-4xl font-bold text-gray-900 dark:text-white mt-20 mb-8 font-['Poppins']">{children}</h1>,
