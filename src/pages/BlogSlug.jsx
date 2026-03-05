@@ -49,14 +49,18 @@ export default function BlogSlug() {
   const slug = pathParts[pathParts.length - 1] || null;
 
   const [language, setLanguage] = useState(() => localStorage.getItem('stooplify_lang') || 'en');
+  const [postLang, setPostLang] = useState(() => localStorage.getItem('stooplify_lang') || 'en');
 
   useEffect(() => {
-    const handleLangChange = (e) => setLanguage(e.detail);
+    const handleLangChange = (e) => {
+      setLanguage(e.detail);
+      setPostLang(e.detail);
+    };
     window.addEventListener('languageChange', handleLangChange);
     return () => window.removeEventListener('languageChange', handleLangChange);
   }, []);
 
-  const isSpanish = language === 'es';
+  const isSpanish = postLang === 'es';
   const t = ui[language] || ui.en;
 
   const { data: post, isLoading, error } = useQuery({
