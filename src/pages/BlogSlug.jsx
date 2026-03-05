@@ -271,6 +271,7 @@ export default function BlogSlug() {
         {/* Content */}
         <div className="text-gray-700 dark:text-gray-300">
           <ReactMarkdown
+            key={postLang}
             components={{
               h1: ({ children }) => <h1 className="text-4xl font-bold text-gray-900 dark:text-white mt-20 mb-8 font-['Poppins']">{children}</h1>,
               h2: ({ children }) => <h2 className="text-3xl font-bold text-gray-900 dark:text-white mt-20 mb-8 font-['Poppins']">{children}</h2>,
