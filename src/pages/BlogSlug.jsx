@@ -50,6 +50,8 @@ export default function BlogSlug() {
 
   const [language, setLanguage] = useState(() => localStorage.getItem('stooplify_lang') || 'en');
   const [postLang, setPostLang] = useState(() => localStorage.getItem('stooplify_lang') || 'en');
+  const [aiTranslation, setAiTranslation] = useState(null);
+  const [isTranslating, setIsTranslating] = useState(false);
 
   useEffect(() => {
     const handleLangChange = (e) => {
