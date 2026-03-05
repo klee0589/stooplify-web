@@ -20,7 +20,6 @@ Deno.serve(async (req) => {
     { url: 'https://stooplify.com/Legal', priority: '0.4', changefreq: 'monthly' },
   ];
 
-  // Fetch all published blog posts
   let blogPosts = [];
   try {
     blogPosts = await base44.asServiceRole.entities.BlogPost.filter({ status: 'published' });
@@ -30,26 +29,24 @@ Deno.serve(async (req) => {
 
   const today = new Date().toISOString().split('T')[0];
 
-  const staticEntries = staticPages.map(page => `
-  <url>
+  const staticEntries = staticPages.map(page => `  <url>
     <loc>${page.url}</loc>
     <lastmod>${today}</lastmod>
     <changefreq>${page.changefreq}</changefreq>
     <priority>${page.priority}</priority>
-  </url>`).join('');
+  </url>`).join('\n');
 
   const blogEntries = blogPosts.map(post => {
     const lastmod = post.updated_date
       ? new Date(post.updated_date).toISOString().split('T')[0]
       : (post.publish_date ? new Date(post.publish_date).toISOString().split('T')[0] : today);
-    return `
-  <url>
+    return `  <url>
     <loc>https://stooplify.com/BlogPost?slug=${encodeURIComponent(post.slug)}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>`;
-  }).join('');
+  }).join('\n');
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
