@@ -134,8 +134,8 @@ function LayoutContent({ children, currentPageName }) {
 
   const navLinks = [
   { name: 'Find Sales', page: 'YardSales', icon: MapPin },
-  { name: t('listSale'), page: 'AddYardSale', icon: PlusCircle },
-  ...(userSales.length > 0 ? [{ name: t('myYardSales'), page: 'MyYardSales', icon: MapPin }] : []),
+  { name: 'List Sale', page: 'AddYardSale', icon: PlusCircle },
+  ...(userSales.length > 0 ? [{ name: 'My Sales', page: 'MyYardSales', icon: MapPin }] : []),
   { name: 'Calendar', page: 'Calendar', icon: Settings },
   { name: 'Guides', page: 'Guides', icon: Settings },
   { name: 'Blog', page: 'Blog', icon: Settings }];
