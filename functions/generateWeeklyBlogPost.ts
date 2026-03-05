@@ -7,8 +7,32 @@ Deno.serve(async (req) => {
         console.log('Starting weekly blog post generation...');
 
         // Generate blog post content using AI
-        const prompt = `You are a content writer for Stooplify, a yard sale marketplace app. 
-Write a helpful, engaging blog post about yard sales, garage sales, or secondhand shopping.
+        // Check recently created slugs to avoid duplicates
+        const recentPosts = await base44.asServiceRole.entities.BlogPost.list('-publish_date', 20);
+        const existingSlugs = recentPosts.map(p => p.slug);
+        const existingTitles = recentPosts.map(p => p.title?.toLowerCase());
+
+        const prompt = `You are a content writer for Stooplify, a yard sale and stoop sale marketplace app focused on NYC (especially Brooklyn, Queens, Bronx, Manhattan) but also other US cities.
+Write a helpful, engaging blog post about yard sales, garage sales, stoop sales, or secondhand shopping.
+
+IMPORTANT: Do NOT write about any of these already-published topics (by slug): ${existingSlugs.join(', ')}
+
+Topics to consider (pick something DIFFERENT from what's already covered):
+- How to host a stoop sale in NYC
+- Brooklyn stoop sale neighborhoods guide
+- NYC stoop sale laws and permits
+- Yard sale pricing guide
+- Best items to sell at a garage sale
+- How to find the best deals at yard sales
+- Multi-family garage sale tips
+- Vintage and antique finds at yard sales
+- Eco-friendly shopping through stoop sales
+- Seasonal yard sale tips (spring, summer, fall)
+- How to advertise a yard sale online
+- Negotiation tips for yard sale buyers
+- Estate sales vs garage sales vs stoop sales
+- Best secondhand items to buy at yard sales
+- How to organize a successful yard sale
 
 Topics to consider:
 - Yard sale tips and tricks
