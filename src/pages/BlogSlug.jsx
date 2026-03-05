@@ -232,11 +232,10 @@ export default function BlogSlug() {
                 variant="outline"
                 size="sm"
                 onClick={handleToggleTranslation}
-                disabled={isTranslating}
                 className="gap-2 hover:bg-[#14B8FF] hover:text-white hover:border-[#14B8FF]"
               >
-                <Globe className={`w-4 h-4 ${isTranslating ? 'animate-spin' : ''}`} />
-                {isTranslating ? 'Translating...' : isSpanish ? 'English' : 'Español'}
+                <Globe className="w-4 h-4" />
+                {isSpanish ? 'English' : 'Español'}
               </Button>
               <Button
                 variant="outline"
