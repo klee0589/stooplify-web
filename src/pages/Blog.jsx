@@ -36,6 +36,7 @@ const blogTranslations = {
 export default function Blog() {
   const [searchTerm, setSearchTerm] = useState('');
   const [language, setLanguage] = useState(() => localStorage.getItem('stooplify_lang') || 'en');
+  const [blogLang, setBlogLang] = useState(() => localStorage.getItem('stooplify_lang') || 'en');
 
   useEffect(() => {
     const handleLangChange = (e) => setLanguage(e.detail);
