@@ -118,27 +118,27 @@ export default function Blog() {
             </div>
 
             {/* City Links */}
-            <div className="flex flex-wrap justify-center gap-2">
-              {[
-                { label: 'Brooklyn', href: '/stoop-sales-brooklyn' },
-                { label: 'Queens', href: '/stoop-sales-queens' },
-                { label: 'Manhattan', href: '/stoop-sales-manhattan' },
-                { label: 'Bronx', href: '/stoop-sales-bronx' },
-                { label: 'Jersey City', href: '/stoop-sales-jersey-city' },
-                { label: 'Los Angeles', href: '/garage-sales-los-angeles' },
-                { label: 'San Francisco', href: '/garage-sales-san-francisco' },
-                { label: 'NYC This Weekend', href: '/stoop-sales-nyc-this-weekend' },
-                { label: 'Brooklyn Weekend', href: '/brooklyn-stoop-sales-this-weekend' },
-              ].map(({ label, href }) => (
-                <a
-                  key={href}
-                  href={href}
-                  className="px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white text-sm font-medium rounded-full border border-white/30 transition-colors"
-                >
-                  {label}
-                </a>
-              ))}
-            </div>
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
           </motion.div>
         </div>
       </div>
