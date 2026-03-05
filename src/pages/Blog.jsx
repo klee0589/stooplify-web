@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '@/utils';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, ArrowRight, Search, Globe } from 'lucide-react';
+import { Calendar, Clock, ArrowRight, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import SEO from '@/components/SEO';
@@ -36,19 +36,15 @@ const blogTranslations = {
 export default function Blog() {
   const [searchTerm, setSearchTerm] = useState('');
   const [language, setLanguage] = useState(() => localStorage.getItem('stooplify_lang') || 'en');
-  const [blogLang, setBlogLang] = useState(() => localStorage.getItem('stooplify_lang') || 'en');
 
   useEffect(() => {
-    const handleLangChange = (e) => {
-      setLanguage(e.detail);
-      setBlogLang(e.detail);
-    };
+    const handleLangChange = (e) => setLanguage(e.detail);
     window.addEventListener('languageChange', handleLangChange);
     return () => window.removeEventListener('languageChange', handleLangChange);
   }, []);
 
   const t = blogTranslations[language] || blogTranslations.en;
-  const isSpanish = blogLang === 'es';
+  const isSpanish = language === 'es';
 
   const { data: posts = [], isLoading } = useQuery({
     queryKey: ['blogPosts'],
@@ -111,7 +107,7 @@ export default function Blog() {
             </p>
 
             {/* Search */}
-            <div className="max-w-md mx-auto mb-4">
+            <div className="max-w-md mx-auto mb-6">
               <div className="relative">
                 <Input
                   type="text"
@@ -120,15 +116,6 @@ export default function Blog() {
                   onChange={(e) => setSearchTerm(e.target.value)} className="bg-white text-slate-950 pl-4 px-3 py-6 text-lg rounded-md flex h-9 w-full border border-input shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring" />
               </div>
             </div>
-
-            {/* Language toggle */}
-            <button
-              onClick={() => setBlogLang(isSpanish ? 'en' : 'es')}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 text-white text-sm font-medium rounded-full border border-white/30 transition-colors"
-            >
-              <Globe className="w-4 h-4" />
-              {isSpanish ? 'English' : 'Español'}
-            </button>
 
             {/* City Links */}
             
