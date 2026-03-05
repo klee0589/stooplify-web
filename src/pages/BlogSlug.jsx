@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '@/utils';
@@ -40,17 +40,13 @@ const ui = {
   }
 };
 
-export default function BlogPost() {
+export default function BlogSlug() {
   const navigate = useNavigate();
-  const urlParams = new URLSearchParams(window.location.search);
-  const slug = urlParams.get('slug');
+  const location = useLocation();
 
-  // 301 redirect old ?slug= URLs to clean /blog/:slug paths
-  useEffect(() => {
-    if (slug) {
-      window.location.replace(`/blog/${slug}`);
-    }
-  }, [slug]);
+  // Extract slug from the path: /blog/some-slug → "some-slug"
+  const pathParts = location.pathname.split('/');
+  const slug = pathParts[pathParts.length - 1] || null;
 
   const [language, setLanguage] = useState(() => localStorage.getItem('stooplify_lang') || 'en');
 
@@ -87,16 +83,13 @@ export default function BlogPost() {
   }, [post?.id]);
 
   const handleShare = async () => {
+    const shareUrl = `https://stooplify.com/blog/${slug}`;
     if (navigator.share) {
       try {
-        await navigator.share({
-          title: displayTitle,
-          text: displayExcerpt,
-          url: window.location.href
-        });
+        await navigator.share({ title: displayTitle, text: displayExcerpt, url: shareUrl });
       } catch (err) {}
     } else {
-      navigator.clipboard.writeText(window.location.href);
+      navigator.clipboard.writeText(shareUrl);
       alert(isSpanish ? '¡Enlace copiado!' : 'Link copied to clipboard!');
     }
   };
@@ -131,11 +124,11 @@ export default function BlogPost() {
     );
   }
 
-  // Use stored Spanish fields if available, otherwise fall back to English
   const displayTitle = isSpanish ? (post.title_es || post.title) : post.title;
   const displayExcerpt = isSpanish ? (post.excerpt_es || post.excerpt) : post.excerpt;
   const displayContent = isSpanish ? (post.content_es || post.content) : post.content;
   const hasSpanish = !!(post.title_es && post.content_es);
+  const canonicalUrl = `https://stooplify.com/blog/${slug}`;
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -153,11 +146,11 @@ export default function BlogPost() {
     "publisher": {
       "@type": "Organization",
       "name": "Stooplify",
-      "logo": { "@type": "ImageObject", "url": "https://stooplify.com/logo.png" }
+      "logo": { "@type": "ImageObject", "url": "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/ada49740a_Stooplify-01.png" }
     },
     "mainEntityOfPage": {
       "@type": "WebPage",
-      "@id": typeof window !== 'undefined' ? window.location.href : ''
+      "@id": canonicalUrl
     },
     "keywords": post.meta_keywords?.join(', ')
   };
@@ -169,6 +162,7 @@ export default function BlogPost() {
         description={(isSpanish ? post.meta_description_es : post.meta_description) || post.excerpt}
         keywords={post.meta_keywords?.join(', ')}
         image={post.featured_image_url}
+        url={canonicalUrl}
         type="article"
         structuredData={structuredData}
       />
