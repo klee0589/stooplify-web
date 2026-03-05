@@ -13,28 +13,7 @@ export default function PageNotFound({}) {
         return <BlogSlug />;
     }
 
-    // Handle SEO city & weekend landing pages via clean URL paths
-    const seoRoutes = {
-        'stoop-sales-brooklyn': () => import('../pages/StoopSalesBrooklyn.jsx'),
-        'stoop-sales-queens': () => import('../pages/StoopSalesQueens.jsx'),
-        'stoop-sales-manhattan': () => import('../pages/StoopSalesManhattan.jsx'),
-        'stoop-sales-bronx': () => import('../pages/StoopSalesBronx.jsx'),
-        'stoop-sales-jersey-city': () => import('../pages/StoopSalesJerseyCity.jsx'),
-        'garage-sales-los-angeles': () => import('../pages/GarageSalesLosAngeles.jsx'),
-        'garage-sales-san-francisco': () => import('../pages/GarageSalesSanFrancisco.jsx'),
-        'stoop-sales-nyc-this-weekend': () => import('../pages/StoopSalesNYCWeekend.jsx'),
-        'brooklyn-stoop-sales-this-weekend': () => import('../pages/BrooklynStoopSalesWeekend.jsx'),
-        'yard-sales-near-me-this-weekend': () => import('../pages/YardSalesNearMeWeekend.jsx'),
-    };
-
-    if (seoRoutes[pageName]) {
-        const [Comp, setComp] = React.useState(null);
-        React.useEffect(() => {
-            seoRoutes[pageName]().then(m => setComp(() => m.default));
-        }, [pageName]);
-        if (!Comp) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-10 w-10 border-4 border-[#14B8FF] border-t-transparent" /></div>;
-        return <Comp />;
-    }
+    // Handle SEO city & weekend landing pages via clean URL paths - handled by direct imports below
 
     const { data: authData, isFetched } = useQuery({
         queryKey: ['user'],
