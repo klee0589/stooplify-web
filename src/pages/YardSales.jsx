@@ -355,6 +355,7 @@ export default function YardSales() {
           "price": "0",
           "priceCurrency": "USD",
           "availability": "https://schema.org/InStock",
+          "validFrom": sale.created_date ? new Date(sale.created_date).toISOString() : new Date().toISOString(),
           "url": `https://stooplify.com/YardSaleDetails?id=${saleSlug}`
         },
         ...(sale.description ? { "description": sale.description } : {})
