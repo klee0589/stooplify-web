@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { createPageUrl } from '@/utils';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, ArrowRight, Search } from 'lucide-react';
+import { Calendar, Clock, ArrowRight, Search, Globe } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import SEO from '@/components/SEO';
