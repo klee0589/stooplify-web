@@ -53,6 +53,7 @@ import AdminSupabaseSync from './pages/AdminSupabaseSync';
 import ApplyAsShop from './pages/ApplyAsShop';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
+import BlogSlug from './pages/BlogSlug';
 import Calendar from './pages/Calendar';
 import ChatSupport from './pages/ChatSupport';
 import Favorites from './pages/Favorites';
@@ -71,7 +72,16 @@ import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
 import YardSaleDetails from './pages/YardSaleDetails';
 import YardSales from './pages/YardSales';
-import BlogSlug from './pages/BlogSlug';
+import StoopSalesBrooklyn from './pages/StoopSalesBrooklyn';
+import StoopSalesQueens from './pages/StoopSalesQueens';
+import StoopSalesManhattan from './pages/StoopSalesManhattan';
+import StoopSalesBronx from './pages/StoopSalesBronx';
+import StoopSalesJerseyCity from './pages/StoopSalesJerseyCity';
+import GarageSalesLosAngeles from './pages/GarageSalesLosAngeles';
+import GarageSalesSanFrancisco from './pages/GarageSalesSanFrancisco';
+import StoopSalesNYCWeekend from './pages/StoopSalesNYCWeekend';
+import BrooklynStoopSalesWeekend from './pages/BrooklynStoopSalesWeekend';
+import YardSalesNearMeWeekend from './pages/YardSalesNearMeWeekend';
 import __Layout from './Layout.jsx';
 
 
@@ -82,6 +92,7 @@ export const PAGES = {
     "ApplyAsShop": ApplyAsShop,
     "Blog": Blog,
     "BlogPost": BlogPost,
+    "BlogSlug": BlogSlug,
     "Calendar": Calendar,
     "ChatSupport": ChatSupport,
     "Favorites": Favorites,
@@ -100,7 +111,16 @@ export const PAGES = {
     "Profile": Profile,
     "YardSaleDetails": YardSaleDetails,
     "YardSales": YardSales,
-    "BlogSlug": BlogSlug,
+    "StoopSalesBrooklyn": StoopSalesBrooklyn,
+    "StoopSalesQueens": StoopSalesQueens,
+    "StoopSalesManhattan": StoopSalesManhattan,
+    "StoopSalesBronx": StoopSalesBronx,
+    "StoopSalesJerseyCity": StoopSalesJerseyCity,
+    "GarageSalesLosAngeles": GarageSalesLosAngeles,
+    "GarageSalesSanFrancisco": GarageSalesSanFrancisco,
+    "StoopSalesNYCWeekend": StoopSalesNYCWeekend,
+    "BrooklynStoopSalesWeekend": BrooklynStoopSalesWeekend,
+    "YardSalesNearMeWeekend": YardSalesNearMeWeekend,
 }
 
 export const pagesConfig = {
