@@ -5,7 +5,7 @@ export default function SEO({
   description = 'Discover amazing yard sales, garage sales, and estate sales in your neighborhood. Buy and sell locally with Stooplify - the digital marketplace for local treasures.',
   keywords = 'yard sale, garage sale, estate sale, local sales, secondhand, thrift, buy local, sell items, neighborhood sales',
   image = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_6963ba60866b343e03d8de8e/f9ad791a3_logo_v1.png',
-  url = typeof window !== 'undefined' ? window.location.href : 'https://stooplify.com',
+  url = typeof window !== 'undefined' ? `https://stooplify.com${window.location.pathname}${window.location.search}` : 'https://stooplify.com',
   type = 'website',
   structuredData
 }) {
