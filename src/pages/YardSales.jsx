@@ -436,6 +436,69 @@ export default function YardSales() {
           </p>
         </motion.div>
 
+        {/* Discovery Directory */}
+        <div className="mb-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+          {/* Browse by City */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+            <div className="flex items-center gap-2 mb-3">
+              <Building2 className="w-4 h-4 text-[#14B8FF]" />
+              <h2 className="font-semibold text-[#2E3A59] dark:text-white text-sm">Browse by City</h2>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {CITY_PAGES.map(c => (
+                <Link key={c.url} to={c.url} className="text-xs px-2.5 py-1 bg-[#14B8FF]/10 text-[#14B8FF] rounded-full hover:bg-[#14B8FF] hover:text-white transition-colors font-medium">
+                  {c.emoji} {c.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Browse by Neighborhood */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+            <div className="flex items-center gap-2 mb-3">
+              <MapPin className="w-4 h-4 text-[#FF6F61]" />
+              <h2 className="font-semibold text-[#2E3A59] dark:text-white text-sm">Browse by Neighborhood</h2>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {NEIGHBORHOOD_PAGES.map(n => (
+                <Link key={n.url} to={n.url} className="text-xs px-2.5 py-1 bg-[#FF6F61]/10 text-[#FF6F61] rounded-full hover:bg-[#FF6F61] hover:text-white transition-colors font-medium">
+                  {n.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Browse by Date */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+            <div className="flex items-center gap-2 mb-3">
+              <Calendar className="w-4 h-4 text-[#F5A623]" />
+              <h2 className="font-semibold text-[#2E3A59] dark:text-white text-sm">Browse by Date</h2>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {DATE_PAGES.map(d => (
+                <Link key={d.url} to={d.url} className="text-xs px-2.5 py-1 bg-[#F5A623]/10 text-[#F5A623] rounded-full hover:bg-[#F5A623] hover:text-white transition-colors font-medium">
+                  {d.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Browse by Category */}
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
+            <div className="flex items-center gap-2 mb-3">
+              <Tag className="w-4 h-4 text-purple-500" />
+              <h2 className="font-semibold text-[#2E3A59] dark:text-white text-sm">Browse by Category</h2>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {CATEGORY_PAGES.map(cat => (
+                <Link key={cat.url} to={cat.url} className="text-xs px-2.5 py-1 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 rounded-full hover:bg-purple-500 hover:text-white transition-colors font-medium">
+                  {cat.emoji} {cat.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+
         {/* Filters */}
         <div className="mb-6">
           <SaleFilters 
