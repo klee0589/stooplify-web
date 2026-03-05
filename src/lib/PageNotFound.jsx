@@ -12,6 +12,7 @@ import GarageSalesSanFrancisco from '../pages/GarageSalesSanFrancisco';
 import StoopSalesNYCWeekend from '../pages/StoopSalesNYCWeekend';
 import BrooklynStoopSalesWeekend from '../pages/BrooklynStoopSalesWeekend';
 import YardSalesNearMeWeekend from '../pages/YardSalesNearMeWeekend';
+import SalePage from '../pages/SalePage';
 
 
 export default function PageNotFound({}) {

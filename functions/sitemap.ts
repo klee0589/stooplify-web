@@ -39,6 +39,24 @@ Deno.serve(async (req) => {
     console.error('Failed to fetch blog posts:', e.message);
   }
 
+  let yardsales = [];
+  try {
+    const now = new Date().toISOString().split('T')[0];
+    yardsales = await base44.asServiceRole.entities.YardSale.filter({ status: 'approved' });
+    // Only include upcoming/today sales
+    yardsales = yardsales.filter(s => s.date >= now);
+  } catch (e) {
+    console.error('Failed to fetch yard sales:', e.message);
+  }
+
+  const slugify = (s) => (s || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  const buildSaleSlug = (sale) => {
+    const city = slugify(sale.city || sale.state || 'local');
+    const hood = slugify((sale.general_location || '').split(',')[0]);
+    const id = sale.id.slice(-8);
+    return [city, hood, id].filter(Boolean).join('-');
+  };
+
   const today = new Date().toISOString().split('T')[0];
 
   const staticEntries = staticPages.map(page => `  <url>
