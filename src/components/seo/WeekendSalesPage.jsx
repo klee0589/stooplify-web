@@ -7,7 +7,7 @@ import { MapPin, Calendar, Clock, ArrowRight, PlusCircle, Search } from 'lucide-
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import SEO from '@/components/SEO';
-import { format, parseISO, startOfWeekend, endOfWeekend, isWithinInterval, nextSaturday, nextSunday, isSaturday, isSunday, addDays } from 'date-fns';
+import { format, parseISO, addDays } from 'date-fns';
 import { createPageUrl } from '@/utils';
 
 function getThisWeekend() {
