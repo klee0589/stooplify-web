@@ -18,6 +18,18 @@ Deno.serve(async (req) => {
     { url: 'https://stooplify.com/Calendar', priority: '0.7', changefreq: 'daily' },
     { url: 'https://stooplify.com/Pricing', priority: '0.7', changefreq: 'monthly' },
     { url: 'https://stooplify.com/Legal', priority: '0.4', changefreq: 'monthly' },
+    // City landing pages
+    { url: 'https://stooplify.com/stoop-sales-brooklyn', priority: '0.9', changefreq: 'daily' },
+    { url: 'https://stooplify.com/stoop-sales-queens', priority: '0.8', changefreq: 'daily' },
+    { url: 'https://stooplify.com/stoop-sales-manhattan', priority: '0.8', changefreq: 'daily' },
+    { url: 'https://stooplify.com/stoop-sales-bronx', priority: '0.8', changefreq: 'daily' },
+    { url: 'https://stooplify.com/stoop-sales-jersey-city', priority: '0.7', changefreq: 'daily' },
+    { url: 'https://stooplify.com/garage-sales-los-angeles', priority: '0.7', changefreq: 'daily' },
+    { url: 'https://stooplify.com/garage-sales-san-francisco', priority: '0.7', changefreq: 'daily' },
+    // Weekend search pages
+    { url: 'https://stooplify.com/stoop-sales-nyc-this-weekend', priority: '0.9', changefreq: 'daily' },
+    { url: 'https://stooplify.com/brooklyn-stoop-sales-this-weekend', priority: '0.9', changefreq: 'daily' },
+    { url: 'https://stooplify.com/yard-sales-near-me-this-weekend', priority: '0.9', changefreq: 'daily' },
   ];
 
   let blogPosts = [];
