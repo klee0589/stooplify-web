@@ -21,9 +21,9 @@ export default function CategoryLandingPage({ config }) {
       const now = new Date();
       return allSales.filter((sale) => {
         const cats = sale.categories || (sale.category ? [sale.category] : []);
-        const matchesCat = cats.some(c => c.toLowerCase() === category.toLowerCase()) ||
-          (sale.title || '').toLowerCase().includes(category.toLowerCase()) ||
-          (sale.description || '').toLowerCase().includes(category.toLowerCase());
+        const matchesCat = cats.some((c) => c.toLowerCase() === category.toLowerCase()) ||
+        (sale.title || '').toLowerCase().includes(category.toLowerCase()) ||
+        (sale.description || '').toLowerCase().includes(category.toLowerCase());
         const saleEnd = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
         return matchesCat && saleEnd >= now;
       });
@@ -52,7 +52,7 @@ export default function CategoryLandingPage({ config }) {
               <Button onClick={() => navigate(createPageUrl('YardSales'))} className="bg-white text-[#1a2842] hover:bg-gray-100 font-semibold px-8 py-6 text-lg">
                 Browse All Sales
               </Button>
-              <Button onClick={() => navigate(createPageUrl('AddYardSale'))} variant="outline" className="border-white text-white hover:bg-white/10 px-8 py-6 text-lg">
+              <Button onClick={() => navigate(createPageUrl('AddYardSale'))} variant="outline" className="bg-background text-slate-950 px-8 py-6 text-lg font-medium rounded-md inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border shadow-sm hover:text-accent-foreground h-9 border-white hover:bg-white/10">
                 <PlusCircle className="w-5 h-5 mr-2" /> List Your Sale Free
               </Button>
             </div>
@@ -65,24 +65,24 @@ export default function CategoryLandingPage({ config }) {
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
             Upcoming {title} — Live Listings
           </h2>
-          {isLoading ? (
-            <div className="flex justify-center py-12">
+          {isLoading ?
+          <div className="flex justify-center py-12">
               <div className="animate-spin rounded-full h-10 w-10 border-4 border-[#14B8FF] border-t-transparent" />
-            </div>
-          ) : sales.length === 0 ? (
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-12 text-center">
+            </div> :
+          sales.length === 0 ?
+          <div className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-12 text-center">
               <MapPin className="w-12 h-12 text-gray-300 mx-auto mb-4" />
               <p className="text-gray-500 dark:text-gray-400 text-lg mb-4">No upcoming {title.toLowerCase()} right now</p>
               <Button onClick={() => navigate(createPageUrl('AddYardSale'))} className="bg-[#14B8FF] text-white">
                 List Your Sale Free
               </Button>
-            </div>
-          ) : (
-            <div className="grid md:grid-cols-2 gap-4">
-              {sales.map((sale, i) => (
-                <motion.div key={sale.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
+            </div> :
+
+          <div className="grid md:grid-cols-2 gap-4">
+              {sales.map((sale, i) =>
+            <motion.div key={sale.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
                   <Link to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}
-                    className="block bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:border-[#14B8FF] hover:shadow-lg transition-all group">
+              className="block bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:border-[#14B8FF] hover:shadow-lg transition-all group">
                     <div className="flex justify-between items-start mb-2">
                       <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-[#14B8FF] transition-colors">{sale.title}</h3>
                       <ArrowRight className="w-4 h-4 text-[#14B8FF] opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 mt-0.5" />
@@ -92,16 +92,16 @@ export default function CategoryLandingPage({ config }) {
                       {sale.start_time && <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" />{sale.start_time}</span>}
                       <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{sale.city}, {sale.state}</span>
                     </div>
-                    {sale.categories?.length > 0 && (
-                      <div className="flex gap-1 mt-2">
-                        {sale.categories.slice(0, 3).map(c => <Badge key={c} className="bg-[#14B8FF]/10 text-[#14B8FF] text-xs">{c}</Badge>)}
+                    {sale.categories?.length > 0 &&
+                <div className="flex gap-1 mt-2">
+                        {sale.categories.slice(0, 3).map((c) => <Badge key={c} className="bg-[#14B8FF]/10 text-[#14B8FF] text-xs">{c}</Badge>)}
                       </div>
-                    )}
+                }
                   </Link>
                 </motion.div>
-              ))}
+            )}
             </div>
-          )}
+          }
           <div className="mt-6 text-center">
             <Link to={createPageUrl('YardSales')} className="inline-flex items-center gap-2 text-[#14B8FF] font-medium hover:underline">
               View all sales on the map <ArrowRight className="w-4 h-4" />
@@ -117,6 +117,6 @@ export default function CategoryLandingPage({ config }) {
           </Button>
         </div>
       </div>
-    </div>
-  );
+    </div>);
+
 }
