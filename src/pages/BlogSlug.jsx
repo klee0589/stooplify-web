@@ -262,17 +262,16 @@ export default function BlogSlug() {
             </div>
 
             <div className="flex items-center gap-2">
-              {hasTranslation && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setPostLang(isSpanish ? 'en' : 'es')}
-                  className="gap-2 hover:bg-[#14B8FF] hover:text-white hover:border-[#14B8FF]"
-                >
-                  <Globe className="w-4 h-4" />
-                  {isSpanish ? 'English' : 'Español'}
-                </Button>
-              )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleToggleTranslation}
+                disabled={isTranslating}
+                className="gap-2 hover:bg-[#14B8FF] hover:text-white hover:border-[#14B8FF]"
+              >
+                <Globe className={`w-4 h-4 ${isTranslating ? 'animate-spin' : ''}`} />
+                {isTranslating ? 'Translating...' : isSpanish ? 'English' : 'Español'}
+              </Button>
               <Button
                 variant="outline"
                 size="sm"
