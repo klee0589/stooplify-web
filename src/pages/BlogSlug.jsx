@@ -130,11 +130,46 @@ export default function BlogSlug() {
     );
   }
 
-  const displayTitle = isSpanish ? (post.title_es || post.title) : post.title;
-  const displayExcerpt = isSpanish ? (post.excerpt_es || post.excerpt) : post.excerpt;
-  const displayContent = isSpanish ? (post.content_es || post.content) : post.content;
   const hasSpanish = !!(post.title_es && post.content_es);
-  const hasTranslation = hasSpanish;
+
+  const displayTitle = isSpanish
+    ? (post.title_es || aiTranslation?.title || post.title)
+    : post.title;
+  const displayExcerpt = isSpanish
+    ? (post.excerpt_es || aiTranslation?.excerpt || post.excerpt)
+    : post.excerpt;
+  const displayContent = isSpanish
+    ? (post.content_es || aiTranslation?.content || post.content)
+    : post.content;
+
+  const handleToggleTranslation = async () => {
+    if (!isSpanish) {
+      setPostLang('es');
+      if (!hasSpanish && !aiTranslation) {
+        setIsTranslating(true);
+        try {
+          const result = await base44.integrations.Core.InvokeLLM({
+            prompt: `Translate the following blog post to Spanish. Return ONLY a JSON object with keys "title", "excerpt", and "content" (keeping markdown formatting in content). Do not include any other text.\n\nTitle: ${post.title}\n\nExcerpt: ${post.excerpt}\n\nContent:\n${post.content}`,
+            response_json_schema: {
+              type: 'object',
+              properties: {
+                title: { type: 'string' },
+                excerpt: { type: 'string' },
+                content: { type: 'string' }
+              }
+            }
+          });
+          setAiTranslation(result);
+        } catch (e) {
+          console.error('Translation failed', e);
+        } finally {
+          setIsTranslating(false);
+        }
+      }
+    } else {
+      setPostLang('en');
+    }
+  };
   const canonicalUrl = `https://stooplify.com/blog/${slug}`;
 
   const structuredData = {
