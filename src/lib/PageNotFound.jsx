@@ -23,7 +23,24 @@ export default function PageNotFound({}) {
         return <BlogSlug />;
     }
 
-    // Handle SEO city & weekend landing pages via clean URL paths - handled by direct imports below
+    // Handle SEO city & weekend landing pages via clean URL paths
+    const seoPageMap = {
+        'stoop-sales-brooklyn': StoopSalesBrooklyn,
+        'stoop-sales-queens': StoopSalesQueens,
+        'stoop-sales-manhattan': StoopSalesManhattan,
+        'stoop-sales-bronx': StoopSalesBronx,
+        'stoop-sales-jersey-city': StoopSalesJerseyCity,
+        'garage-sales-los-angeles': GarageSalesLosAngeles,
+        'garage-sales-san-francisco': GarageSalesSanFrancisco,
+        'stoop-sales-nyc-this-weekend': StoopSalesNYCWeekend,
+        'brooklyn-stoop-sales-this-weekend': BrooklynStoopSalesWeekend,
+        'yard-sales-near-me-this-weekend': YardSalesNearMeWeekend,
+    };
+
+    if (seoPageMap[pageName]) {
+        const SeoComp = seoPageMap[pageName];
+        return <SeoComp />;
+    }
 
     const { data: authData, isFetched } = useQuery({
         queryKey: ['user'],
