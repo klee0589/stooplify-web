@@ -3,11 +3,22 @@ import { useTranslation } from '../components/translations';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import HeroSection from '../components/home/HeroSection';
 import HowItWorks from '../components/home/HowItWorks';
 import FeaturedSales from '../components/home/FeaturedSales';
 import CTASection from '../components/home/CTASection';
+
+const CITY_CARDS = [
+  { label: 'Brooklyn', url: '/stoop-sales-brooklyn', emoji: '🏙️', sub: 'Stoop Sales' },
+  { label: 'Queens', url: '/stoop-sales-queens', emoji: '🌆', sub: 'Stoop Sales' },
+  { label: 'Manhattan', url: '/stoop-sales-manhattan', emoji: '🗽', sub: 'Stoop Sales' },
+  { label: 'Bronx', url: '/stoop-sales-bronx', emoji: '🏘️', sub: 'Stoop Sales' },
+  { label: 'Jersey City', url: '/stoop-sales-jersey-city', emoji: '🌉', sub: 'Stoop Sales' },
+  { label: 'Los Angeles', url: '/garage-sales-los-angeles', emoji: '☀️', sub: 'Garage Sales' },
+  { label: 'San Francisco', url: '/garage-sales-san-francisco', emoji: '🌁', sub: 'Garage Sales' },
+];
 
 export default function Home() {
   const [language, setLanguage] = useState('en');
