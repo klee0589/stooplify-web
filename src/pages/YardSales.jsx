@@ -3,7 +3,7 @@ import { useTranslation } from '../components/translations';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Map, List, Loader2 } from 'lucide-react';
+import { Map, List, Loader2, MapPin, Calendar, Tag, Building2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import SEO from '../components/SEO';
 import SaleCard from '../components/sales/SaleCard';
@@ -12,6 +12,47 @@ import SaleMap from '../components/sales/SaleMap';
 import { startOfDay, endOfDay, startOfWeek, endOfWeek, addDays, isWithinInterval } from 'date-fns';
 import moment from 'moment';
 import PullToRefresh from '../components/PullToRefresh';
+import { Link } from 'react-router-dom';
+
+const CITY_PAGES = [
+  { label: 'Brooklyn', url: '/stoop-sales-brooklyn', emoji: '🏙️' },
+  { label: 'Queens', url: '/stoop-sales-queens', emoji: '🌆' },
+  { label: 'Manhattan', url: '/stoop-sales-manhattan', emoji: '🗽' },
+  { label: 'Bronx', url: '/stoop-sales-bronx', emoji: '🏘️' },
+  { label: 'Jersey City', url: '/stoop-sales-jersey-city', emoji: '🌉' },
+  { label: 'Los Angeles', url: '/garage-sales-los-angeles', emoji: '☀️' },
+  { label: 'San Francisco', url: '/garage-sales-san-francisco', emoji: '🌁' },
+];
+
+const NEIGHBORHOOD_PAGES = [
+  { label: 'Williamsburg', url: '/stoop-sales-williamsburg-brooklyn' },
+  { label: 'Park Slope', url: '/stoop-sales-park-slope-brooklyn' },
+  { label: 'Bushwick', url: '/stoop-sales-bushwick-brooklyn' },
+  { label: 'Bed-Stuy', url: '/stoop-sales-bed-stuy-brooklyn' },
+  { label: 'Crown Heights', url: '/stoop-sales-crown-heights-brooklyn' },
+  { label: 'Greenpoint', url: '/stoop-sales-greenpoint-brooklyn' },
+  { label: 'Astoria', url: '/stoop-sales-astoria-queens' },
+  { label: 'Upper West Side', url: '/stoop-sales-upper-west-side-manhattan' },
+  { label: 'Harlem', url: '/stoop-sales-harlem-manhattan' },
+];
+
+const DATE_PAGES = [
+  { label: 'Today', url: '/yard-sales-near-me-today' },
+  { label: 'This Saturday', url: '/yard-sales-near-me-saturday' },
+  { label: 'This Sunday', url: '/yard-sales-near-me-sunday' },
+  { label: 'This Weekend', url: '/yard-sales-near-me-this-weekend' },
+  { label: 'NYC Today', url: '/stoop-sales-nyc-today' },
+  { label: 'NYC This Weekend', url: '/stoop-sales-nyc-this-weekend' },
+];
+
+const CATEGORY_PAGES = [
+  { label: 'Furniture', url: '/furniture-yard-sales', emoji: '🛋️' },
+  { label: 'Vintage Clothing', url: '/vintage-clothing-stoop-sales', emoji: '👗' },
+  { label: 'Books', url: '/book-sales', emoji: '📚' },
+  { label: 'Electronics', url: '/electronics-yard-sales', emoji: '💻' },
+  { label: 'Antiques', url: '/antique-yard-sales', emoji: '🏺' },
+  { label: 'Toys', url: '/toy-yard-sales', emoji: '🧸' },
+];
 
 export default function YardSales() {
   const [viewMode, setViewMode] = useState('map');
