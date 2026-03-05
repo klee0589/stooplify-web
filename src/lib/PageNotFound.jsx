@@ -13,6 +13,10 @@ import StoopSalesNYCWeekend from '../pages/StoopSalesNYCWeekend';
 import BrooklynStoopSalesWeekend from '../pages/BrooklynStoopSalesWeekend';
 import YardSalesNearMeWeekend from '../pages/YardSalesNearMeWeekend';
 import SalePage from '../pages/SalePage';
+import SellerPage from '../pages/SellerPage';
+import NeighborhoodLandingPage from '../components/seo/NeighborhoodLandingPage';
+import DateLandingPage from '../components/seo/DateLandingPage';
+import CategoryLandingPage from '../components/seo/CategoryLandingPage';
 
 
 export default function PageNotFound({}) {

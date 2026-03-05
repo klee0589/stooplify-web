@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -15,7 +15,7 @@ export default function DateLandingPage({ config }) {
   const navigate = useNavigate();
   const { dateFilter, locationFilter, title, metaTitle, metaDescription, keywords, h1, intro, canonicalUrl } = config;
 
-  const targetDate = React.useMemo(() => {
+  const targetDate = useMemo(() => {
     const now = new Date();
     if (dateFilter === 'today') return now;
     if (dateFilter === 'tomorrow') { const d = new Date(now); d.setDate(d.getDate() + 1); return d; }
