@@ -55,7 +55,7 @@ export default function DateLandingPage({ config }) {
       <SEO title={metaTitle} description={metaDescription} keywords={keywords} url={canonicalUrl} structuredData={structuredData} />
 
       {/* Hero */}
-      <div className="bg-gradient-to-br from-[#1a2842] to-[#14B8FF] text-white py-20">
+      <div className="bg-gradient-to-br from-[#1a2842] to-[#14B8FF] text-white pt-32 md:pt-36 pb-20">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             <div className="inline-flex items-center gap-2 bg-white/10 rounded-full px-4 py-2 text-sm font-medium mb-6">
