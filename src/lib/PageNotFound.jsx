@@ -2,6 +2,16 @@ import { useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import BlogSlug from '../pages/BlogSlug';
+import StoopSalesBrooklyn from '../pages/StoopSalesBrooklyn';
+import StoopSalesQueens from '../pages/StoopSalesQueens';
+import StoopSalesManhattan from '../pages/StoopSalesManhattan';
+import StoopSalesBronx from '../pages/StoopSalesBronx';
+import StoopSalesJerseyCity from '../pages/StoopSalesJerseyCity';
+import GarageSalesLosAngeles from '../pages/GarageSalesLosAngeles';
+import GarageSalesSanFrancisco from '../pages/GarageSalesSanFrancisco';
+import StoopSalesNYCWeekend from '../pages/StoopSalesNYCWeekend';
+import BrooklynStoopSalesWeekend from '../pages/BrooklynStoopSalesWeekend';
+import YardSalesNearMeWeekend from '../pages/YardSalesNearMeWeekend';
 
 
 export default function PageNotFound({}) {
