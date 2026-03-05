@@ -39,13 +39,16 @@ export default function Blog() {
   const [blogLang, setBlogLang] = useState(() => localStorage.getItem('stooplify_lang') || 'en');
 
   useEffect(() => {
-    const handleLangChange = (e) => setLanguage(e.detail);
+    const handleLangChange = (e) => {
+      setLanguage(e.detail);
+      setBlogLang(e.detail);
+    };
     window.addEventListener('languageChange', handleLangChange);
     return () => window.removeEventListener('languageChange', handleLangChange);
   }, []);
 
   const t = blogTranslations[language] || blogTranslations.en;
-  const isSpanish = language === 'es';
+  const isSpanish = blogLang === 'es';
 
   const { data: posts = [], isLoading } = useQuery({
     queryKey: ['blogPosts'],
