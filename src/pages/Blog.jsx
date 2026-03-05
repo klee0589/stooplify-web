@@ -19,7 +19,7 @@ const blogTranslations = {
     noPosts: 'No blog posts yet. Check back soon!',
     minRead: 'min read',
     seoTitle: 'Blog - Yard Sale Tips, Guides & Stories | Stooplify',
-    seoDesc: 'Discover expert tips, guides, and stories about yard sales, garage sales, and secondhand shopping.',
+    seoDesc: 'Discover expert tips, guides, and stories about yard sales, garage sales, and secondhand shopping.'
   },
   es: {
     title: 'Blog de Stooplify',
@@ -29,7 +29,7 @@ const blogTranslations = {
     noPosts: 'Aún no hay publicaciones. ¡Vuelve pronto!',
     minRead: 'min de lectura',
     seoTitle: 'Blog - Consejos y Guías sobre Ventas de Garaje | Stooplify',
-    seoDesc: 'Descubre consejos de expertos, guías e historias sobre ventas de garaje y compras de segunda mano.',
+    seoDesc: 'Descubre consejos de expertos, guías e historias sobre ventas de garaje y compras de segunda mano.'
   }
 };
 
@@ -53,14 +53,14 @@ export default function Blog() {
     }
   });
 
-  const filteredPosts = posts.filter(post => {
-    const title = isSpanish ? (post.title_es || post.title) : post.title;
-    const excerpt = isSpanish ? (post.excerpt_es || post.excerpt) : post.excerpt;
+  const filteredPosts = posts.filter((post) => {
+    const title = isSpanish ? post.title_es || post.title : post.title;
+    const excerpt = isSpanish ? post.excerpt_es || post.excerpt : post.excerpt;
     return (
       title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      post.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
+      post.tags?.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase())));
+
   });
 
   const structuredData = {
@@ -70,7 +70,7 @@ export default function Blog() {
     "description": t.subtitle,
     "url": typeof window !== 'undefined' ? window.location.href : 'https://stooplify.com/blog',
     "inLanguage": isSpanish ? "es" : "en",
-    "blogPost": posts.slice(0, 10).map(post => ({
+    "blogPost": posts.slice(0, 10).map((post) => ({
       "@type": "BlogPosting",
       "headline": post.title,
       "description": post.meta_description || post.excerpt,
@@ -85,11 +85,11 @@ export default function Blog() {
       <SEO
         title={t.seoTitle}
         description={t.seoDesc}
-        keywords={isSpanish
-          ? "blog ventas de garaje, consejos venta en stoop brooklyn, compras segunda mano"
-          : "yard sale blog, garage sale tips, brooklyn stoop sale, secondhand shopping"}
-        structuredData={structuredData}
-      />
+        keywords={isSpanish ?
+        "blog ventas de garaje, consejos venta en stoop brooklyn, compras segunda mano" :
+        "yard sale blog, garage sale tips, brooklyn stoop sale, secondhand shopping"}
+        structuredData={structuredData} />
+
 
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-[#14B8FF] to-[#0da3e6] text-white">
@@ -97,8 +97,8 @@ export default function Blog() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center"
-          >
+            className="text-center">
+
             <h1 className="text-5xl md:text-6xl font-bold mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
               {t.title}
             </h1>
@@ -114,9 +114,9 @@ export default function Blog() {
                   type="text"
                   placeholder={t.searchPlaceholder}
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-12 py-6 text-lg bg-white"
-                />
+                  onChange={(e) => setSearchTerm(e.target.value)} className="bg-white text-slate-950 pl-12 px-3 py-6 text-lg rounded-md flex h-9 w-full border border-input shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm" />
+
+
               </div>
             </div>
           </motion.div>
@@ -124,56 +124,56 @@ export default function Blog() {
       </div>
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {isLoading ? (
-          <div className="text-center py-20">
+        {isLoading ?
+        <div className="text-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#14B8FF] border-t-transparent mx-auto" />
-          </div>
-        ) : filteredPosts.length === 0 ? (
-          <div className="text-center py-20">
+          </div> :
+        filteredPosts.length === 0 ?
+        <div className="text-center py-20">
             <p className="text-gray-600 dark:text-gray-400 text-lg">
               {searchTerm ? t.noResults : t.noPosts}
             </p>
-          </div>
-        ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredPosts.map((post, index) => (
-              <motion.article
-                key={post.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-              >
+          </div> :
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredPosts.map((post, index) =>
+          <motion.article
+            key={post.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.05 }}>
+
                 <Link
-                  to={`/blog/${post.slug}`}
-                  className="group block h-full bg-white dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-[#14B8FF] hover:shadow-xl transition-all duration-300"
-                >
-                  {post.featured_image_url && (
-                    <div className="aspect-[16/9] overflow-hidden bg-gray-100 dark:bg-gray-700">
+              to={`/blog/${post.slug}`}
+              className="group block h-full bg-white dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-[#14B8FF] hover:shadow-xl transition-all duration-300">
+
+                  {post.featured_image_url &&
+              <div className="aspect-[16/9] overflow-hidden bg-gray-100 dark:bg-gray-700">
                       <img
-                        src={post.featured_image_url}
-                        alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
+                  src={post.featured_image_url}
+                  alt={post.title}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+
                     </div>
-                  )}
+              }
 
                   <div className="p-5">
-                    {post.tags && post.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mb-3">
-                        {post.tags.slice(0, 2).map((tag) => (
-                          <Badge key={tag} className="bg-[#14B8FF]/10 text-[#14B8FF] hover:bg-[#14B8FF]/20 text-xs font-medium">
+                    {post.tags && post.tags.length > 0 &&
+                <div className="flex flex-wrap gap-2 mb-3">
+                        {post.tags.slice(0, 2).map((tag) =>
+                  <Badge key={tag} className="bg-[#14B8FF]/10 text-[#14B8FF] hover:bg-[#14B8FF]/20 text-xs font-medium">
                             {tag}
                           </Badge>
-                        ))}
+                  )}
                       </div>
-                    )}
+                }
 
                     <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-[#14B8FF] transition-colors line-clamp-2 leading-snug" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                      {isSpanish ? (post.title_es || post.title) : post.title}
+                      {isSpanish ? post.title_es || post.title : post.title}
                     </h2>
 
                     <p className="text-sm text-gray-600 dark:text-gray-300 mb-4 line-clamp-2 leading-relaxed">
-                      {isSpanish ? (post.excerpt_es || post.excerpt) : post.excerpt}
+                      {isSpanish ? post.excerpt_es || post.excerpt : post.excerpt}
                     </p>
 
                     <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-100 dark:border-gray-700">
@@ -182,22 +182,22 @@ export default function Blog() {
                           <Calendar className="w-3.5 h-3.5" />
                           {format(new Date(post.publish_date), 'MMM d')}
                         </span>
-                        {post.reading_time_minutes && (
-                          <span className="flex items-center gap-1">
+                        {post.reading_time_minutes &&
+                    <span className="flex items-center gap-1">
                             <Clock className="w-3.5 h-3.5" />
                             {post.reading_time_minutes} {t.minRead}
                           </span>
-                        )}
+                    }
                       </div>
                       <ArrowRight className="w-4 h-4 text-[#14B8FF] group-hover:translate-x-1 transition-transform" />
                     </div>
                   </div>
                 </Link>
               </motion.article>
-            ))}
+          )}
           </div>
-        )}
+        }
       </div>
-    </div>
-  );
+    </div>);
+
 }
