@@ -132,6 +132,7 @@ export default function BlogSlug() {
   const displayExcerpt = isSpanish ? (post.excerpt_es || post.excerpt) : post.excerpt;
   const displayContent = isSpanish ? (post.content_es || post.content) : post.content;
   const hasSpanish = !!(post.title_es && post.content_es);
+  const hasTranslation = hasSpanish;
   const canonicalUrl = `https://stooplify.com/blog/${slug}`;
 
   const structuredData = {
