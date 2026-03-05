@@ -144,7 +144,7 @@ export default function Blog() {
                 transition={{ delay: index * 0.05 }}
               >
                 <Link
-                  to={createPageUrl('BlogPost') + `?slug=${post.slug}&lang=${language}`}
+                  to={`/blog/${post.slug}`}
                   className="group block h-full bg-white dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-[#14B8FF] hover:shadow-xl transition-all duration-300"
                 >
                   {post.featured_image_url && (

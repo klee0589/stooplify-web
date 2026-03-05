@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
       ? new Date(post.updated_date).toISOString().split('T')[0]
       : (post.publish_date ? new Date(post.publish_date).toISOString().split('T')[0] : today);
     return `  <url>
-    <loc>https://stooplify.com/BlogPost?slug=${encodeURIComponent(post.slug)}</loc>
+    <loc>https://stooplify.com/blog/${post.slug}</loc>
     <lastmod>${lastmod}</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
