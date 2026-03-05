@@ -111,7 +111,7 @@ export default function Blog() {
             </p>
 
             {/* Search */}
-            <div className="max-w-md mx-auto mb-6">
+            <div className="max-w-md mx-auto mb-4">
               <div className="relative">
                 <Input
                   type="text"
@@ -120,6 +120,15 @@ export default function Blog() {
                   onChange={(e) => setSearchTerm(e.target.value)} className="bg-white text-slate-950 pl-4 px-3 py-6 text-lg rounded-md flex h-9 w-full border border-input shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring" />
               </div>
             </div>
+
+            {/* Language toggle */}
+            <button
+              onClick={() => setBlogLang(isSpanish ? 'en' : 'es')}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 hover:bg-white/30 text-white text-sm font-medium rounded-full border border-white/30 transition-colors"
+            >
+              <Globe className="w-4 h-4" />
+              {isSpanish ? 'English' : 'Español'}
+            </button>
 
             {/* City Links */}
             
