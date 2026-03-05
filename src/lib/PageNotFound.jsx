@@ -33,6 +33,11 @@ export default function PageNotFound({}) {
         return <SalePage />;
     }
 
+    // Handle /seller/:username
+    if (location.pathname.startsWith('/seller/') && location.pathname.length > 8) {
+        return <SellerPage />;
+    }
+
     // Handle SEO city & weekend landing pages via clean URL paths
     const seoPageMap = {
         'stoop-sales-brooklyn': StoopSalesBrooklyn,
@@ -50,6 +55,86 @@ export default function PageNotFound({}) {
     if (seoPageMap[pageName]) {
         const SeoComp = seoPageMap[pageName];
         return <SeoComp />;
+    }
+
+    // Neighborhood pages: /stoop-sales-{neighborhood}-{city}
+    const neighborhoodRoutes = {
+        'stoop-sales-williamsburg-brooklyn': { neighborhood: 'Williamsburg', city: 'Brooklyn', state: 'NY' },
+        'stoop-sales-park-slope-brooklyn': { neighborhood: 'Park Slope', city: 'Brooklyn', state: 'NY' },
+        'stoop-sales-bushwick-brooklyn': { neighborhood: 'Bushwick', city: 'Brooklyn', state: 'NY' },
+        'stoop-sales-bed-stuy-brooklyn': { neighborhood: 'Bed-Stuy', city: 'Brooklyn', state: 'NY' },
+        'stoop-sales-crown-heights-brooklyn': { neighborhood: 'Crown Heights', city: 'Brooklyn', state: 'NY' },
+        'stoop-sales-greenpoint-brooklyn': { neighborhood: 'Greenpoint', city: 'Brooklyn', state: 'NY' },
+        'stoop-sales-cobble-hill-brooklyn': { neighborhood: 'Cobble Hill', city: 'Brooklyn', state: 'NY' },
+        'stoop-sales-astoria-queens': { neighborhood: 'Astoria', city: 'Queens', state: 'NY' },
+        'stoop-sales-jackson-heights-queens': { neighborhood: 'Jackson Heights', city: 'Queens', state: 'NY' },
+        'stoop-sales-upper-west-side-manhattan': { neighborhood: 'Upper West Side', city: 'Manhattan', state: 'NY' },
+        'stoop-sales-upper-east-side-manhattan': { neighborhood: 'Upper East Side', city: 'Manhattan', state: 'NY' },
+        'stoop-sales-harlem-manhattan': { neighborhood: 'Harlem', city: 'Manhattan', state: 'NY' },
+        'stoop-sales-west-village-manhattan': { neighborhood: 'West Village', city: 'Manhattan', state: 'NY' },
+    };
+
+    if (neighborhoodRoutes[pageName]) {
+        const { neighborhood, city, state } = neighborhoodRoutes[pageName];
+        const config = {
+            neighborhood, city, state,
+            title: `${neighborhood} Stoop Sales`,
+            metaTitle: `Stoop Sales in ${neighborhood}, ${city} | Stooplify`,
+            metaDescription: `Find upcoming stoop sales and yard sales in ${neighborhood}, ${city}. Browse live listings on Stooplify.`,
+            keywords: `stoop sales ${neighborhood}, yard sales ${neighborhood} ${city}, garage sales ${neighborhood}`,
+            h1: `Stoop Sales in ${neighborhood}, ${city}`,
+            intro: `Browse upcoming stoop sales, yard sales, and garage sales happening in ${neighborhood}.`,
+            canonicalUrl: `https://stooplify.com/${pageName}`,
+        };
+        return <NeighborhoodLandingPage config={config} />;
+    }
+
+    // Date pages: /stoop-sales-nyc-today, /stoop-sales-nyc-saturday, etc.
+    const dateRoutes = {
+        'stoop-sales-nyc-today': { dateFilter: 'today', locationFilter: ['brooklyn', 'queens', 'manhattan', 'bronx', 'new york'], title: 'NYC Stoop Sales Today', h1: 'NYC Stoop Sales Today' },
+        'stoop-sales-nyc-tomorrow': { dateFilter: 'tomorrow', locationFilter: ['brooklyn', 'queens', 'manhattan', 'bronx', 'new york'], title: 'NYC Stoop Sales Tomorrow', h1: 'NYC Stoop Sales Tomorrow' },
+        'stoop-sales-nyc-saturday': { dateFilter: 'saturday', locationFilter: ['brooklyn', 'queens', 'manhattan', 'bronx', 'new york'], title: 'NYC Stoop Sales This Saturday', h1: 'NYC Stoop Sales This Saturday' },
+        'stoop-sales-nyc-sunday': { dateFilter: 'sunday', locationFilter: ['brooklyn', 'queens', 'manhattan', 'bronx', 'new york'], title: 'NYC Stoop Sales This Sunday', h1: 'NYC Stoop Sales This Sunday' },
+        'garage-sales-los-angeles-today': { dateFilter: 'today', locationFilter: ['los angeles', 'la'], title: 'Los Angeles Garage Sales Today', h1: 'Garage Sales in LA Today' },
+        'garage-sales-los-angeles-saturday': { dateFilter: 'saturday', locationFilter: ['los angeles', 'la'], title: 'LA Garage Sales This Saturday', h1: 'Los Angeles Garage Sales This Saturday' },
+        'yard-sales-near-me-today': { dateFilter: 'today', locationFilter: null, title: 'Yard Sales Near Me Today', h1: 'Yard Sales Happening Today' },
+        'yard-sales-near-me-saturday': { dateFilter: 'saturday', locationFilter: null, title: 'Yard Sales Near Me This Saturday', h1: 'Yard Sales This Saturday Near You' },
+        'yard-sales-near-me-sunday': { dateFilter: 'sunday', locationFilter: null, title: 'Yard Sales Near Me This Sunday', h1: 'Yard Sales This Sunday Near You' },
+    };
+
+    if (dateRoutes[pageName]) {
+        const { dateFilter, locationFilter, title, h1 } = dateRoutes[pageName];
+        const config = {
+            dateFilter, locationFilter, title, h1,
+            metaTitle: `${title} | Stooplify`,
+            metaDescription: `Find ${title.toLowerCase()} on Stooplify. Live listings updated in real-time.`,
+            keywords: `${title.toLowerCase()}, yard sales today, stoop sales near me`,
+            intro: 'Live listings updated in real-time. Browse, plan your route, and find hidden gems.',
+            canonicalUrl: `https://stooplify.com/${pageName}`,
+        };
+        return <DateLandingPage config={config} />;
+    }
+
+    // Category pages
+    const categoryRoutes = {
+        'furniture-yard-sales': { category: 'furniture', title: 'Furniture Yard Sales', h1: 'Furniture Yard Sales Near You', intro: 'Browse yard sales and stoop sales with furniture, sofas, tables, and more.' },
+        'vintage-clothing-stoop-sales': { category: 'clothing', title: 'Vintage Clothing Sales', h1: 'Vintage Clothing Stoop Sales', intro: 'Find vintage clothing, fashion, and accessories at local stoop and yard sales.' },
+        'book-sales': { category: 'books', title: 'Book Sales', h1: 'Book Sales Near You', intro: 'Browse yard sales with books, novels, textbooks, and rare finds.' },
+        'electronics-yard-sales': { category: 'electronics', title: 'Electronics Yard Sales', h1: 'Electronics at Yard Sales Near You', intro: 'Find electronics, gadgets, and tech at local yard and garage sales.' },
+        'antique-yard-sales': { category: 'antiques', title: 'Antique Yard Sales', h1: 'Antique & Vintage Yard Sales Near You', intro: 'Browse antiques, collectibles, and vintage treasures at local sales.' },
+        'toy-yard-sales': { category: 'toys', title: 'Toy Sales', h1: 'Kids & Toy Sales Near You', intro: 'Find toys, games, and kids items at yard sales near you.' },
+    };
+
+    if (categoryRoutes[pageName]) {
+        const { category, title, h1, intro } = categoryRoutes[pageName];
+        const config = {
+            category, title, h1, intro,
+            metaTitle: `${title} Near You | Stooplify`,
+            metaDescription: `Find ${title.toLowerCase()} near you on Stooplify. Browse live listings.`,
+            keywords: `${title.toLowerCase()}, ${category} yard sale, ${category} stoop sale`,
+            canonicalUrl: `https://stooplify.com/${pageName}`,
+        };
+        return <CategoryLandingPage config={config} />;
     }
 
     const { data: authData, isFetched } = useQuery({
