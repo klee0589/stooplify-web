@@ -54,9 +54,12 @@ import ApplyAsShop from './pages/ApplyAsShop';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import BlogSlug from './pages/BlogSlug';
+import BrooklynStoopSalesWeekend from './pages/BrooklynStoopSalesWeekend';
 import Calendar from './pages/Calendar';
 import ChatSupport from './pages/ChatSupport';
 import Favorites from './pages/Favorites';
+import GarageSalesLosAngeles from './pages/GarageSalesLosAngeles';
+import GarageSalesSanFrancisco from './pages/GarageSalesSanFrancisco';
 import Guides from './pages/Guides';
 import GuidesAdvertise from './pages/GuidesAdvertise';
 import GuidesFindSales from './pages/GuidesFindSales';
@@ -70,20 +73,17 @@ import Messages from './pages/Messages';
 import MyYardSales from './pages/MyYardSales';
 import Pricing from './pages/Pricing';
 import Profile from './pages/Profile';
-import YardSaleDetails from './pages/YardSaleDetails';
-import YardSales from './pages/YardSales';
-import StoopSalesBrooklyn from './pages/StoopSalesBrooklyn';
-import StoopSalesQueens from './pages/StoopSalesQueens';
-import StoopSalesManhattan from './pages/StoopSalesManhattan';
-import StoopSalesBronx from './pages/StoopSalesBronx';
-import StoopSalesJerseyCity from './pages/StoopSalesJerseyCity';
-import GarageSalesLosAngeles from './pages/GarageSalesLosAngeles';
-import GarageSalesSanFrancisco from './pages/GarageSalesSanFrancisco';
-import StoopSalesNYCWeekend from './pages/StoopSalesNYCWeekend';
-import BrooklynStoopSalesWeekend from './pages/BrooklynStoopSalesWeekend';
-import YardSalesNearMeWeekend from './pages/YardSalesNearMeWeekend';
 import SalePage from './pages/SalePage';
 import SellerPage from './pages/SellerPage';
+import StoopSalesBronx from './pages/StoopSalesBronx';
+import StoopSalesBrooklyn from './pages/StoopSalesBrooklyn';
+import StoopSalesJerseyCity from './pages/StoopSalesJerseyCity';
+import StoopSalesManhattan from './pages/StoopSalesManhattan';
+import StoopSalesNYCWeekend from './pages/StoopSalesNYCWeekend';
+import StoopSalesQueens from './pages/StoopSalesQueens';
+import YardSaleDetails from './pages/YardSaleDetails';
+import YardSales from './pages/YardSales';
+import YardSalesNearMeWeekend from './pages/YardSalesNearMeWeekend';
 import __Layout from './Layout.jsx';
 
 
@@ -95,9 +95,12 @@ export const PAGES = {
     "Blog": Blog,
     "BlogPost": BlogPost,
     "BlogSlug": BlogSlug,
+    "BrooklynStoopSalesWeekend": BrooklynStoopSalesWeekend,
     "Calendar": Calendar,
     "ChatSupport": ChatSupport,
     "Favorites": Favorites,
+    "GarageSalesLosAngeles": GarageSalesLosAngeles,
+    "GarageSalesSanFrancisco": GarageSalesSanFrancisco,
     "Guides": Guides,
     "GuidesAdvertise": GuidesAdvertise,
     "GuidesFindSales": GuidesFindSales,
@@ -111,20 +114,17 @@ export const PAGES = {
     "MyYardSales": MyYardSales,
     "Pricing": Pricing,
     "Profile": Profile,
-    "YardSaleDetails": YardSaleDetails,
-    "YardSales": YardSales,
-    "StoopSalesBrooklyn": StoopSalesBrooklyn,
-    "StoopSalesQueens": StoopSalesQueens,
-    "StoopSalesManhattan": StoopSalesManhattan,
-    "StoopSalesBronx": StoopSalesBronx,
-    "StoopSalesJerseyCity": StoopSalesJerseyCity,
-    "GarageSalesLosAngeles": GarageSalesLosAngeles,
-    "GarageSalesSanFrancisco": GarageSalesSanFrancisco,
-    "StoopSalesNYCWeekend": StoopSalesNYCWeekend,
-    "BrooklynStoopSalesWeekend": BrooklynStoopSalesWeekend,
-    "YardSalesNearMeWeekend": YardSalesNearMeWeekend,
     "SalePage": SalePage,
     "SellerPage": SellerPage,
+    "StoopSalesBronx": StoopSalesBronx,
+    "StoopSalesBrooklyn": StoopSalesBrooklyn,
+    "StoopSalesJerseyCity": StoopSalesJerseyCity,
+    "StoopSalesManhattan": StoopSalesManhattan,
+    "StoopSalesNYCWeekend": StoopSalesNYCWeekend,
+    "StoopSalesQueens": StoopSalesQueens,
+    "YardSaleDetails": YardSaleDetails,
+    "YardSales": YardSales,
+    "YardSalesNearMeWeekend": YardSalesNearMeWeekend,
 }
 
 export const pagesConfig = {
