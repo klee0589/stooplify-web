@@ -294,7 +294,7 @@ export default function BlogSlug() {
           >
             {displayContent}
           </ReactMarkdown>
-        </motion.div>
+        </div>
 
         {/* Footer CTA */}
         <motion.div
