@@ -24,6 +24,11 @@ export default function PageNotFound({}) {
         return <BlogSlug />;
     }
 
+    // Handle /sale/:slug clean URLs
+    if (location.pathname.startsWith('/sale/') && location.pathname.length > 6) {
+        return <SalePage />;
+    }
+
     // Handle SEO city & weekend landing pages via clean URL paths
     const seoPageMap = {
         'stoop-sales-brooklyn': StoopSalesBrooklyn,

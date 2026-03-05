@@ -66,6 +66,19 @@ Deno.serve(async (req) => {
     <priority>${page.priority}</priority>
   </url>`).join('\n');
 
+  const saleEntries = yardsales.map(sale => {
+    const slug = buildSaleSlug(sale);
+    const lastmod = sale.updated_date
+      ? new Date(sale.updated_date).toISOString().split('T')[0]
+      : today;
+    return `  <url>
+    <loc>https://stooplify.com/sale/${slug}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.8</priority>
+  </url>`;
+  }).join('\n');
+
   const blogEntries = blogPosts.map(post => {
     const lastmod = post.updated_date
       ? new Date(post.updated_date).toISOString().split('T')[0]
