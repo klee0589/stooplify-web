@@ -224,15 +224,28 @@ export default function BlogSlug() {
               <span>{t.by} {post.author_name || 'Stooplify Team'}</span>
             </div>
 
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleShare}
-              className="gap-2 hover:bg-[#14B8FF] hover:text-white hover:border-[#14B8FF]"
-            >
-              <Share2 className="w-4 h-4" />
-              {t.share}
-            </Button>
+            <div className="flex items-center gap-2">
+              {hasTranslation && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setPostLang(isSpanish ? 'en' : 'es')}
+                  className="gap-2 hover:bg-[#14B8FF] hover:text-white hover:border-[#14B8FF]"
+                >
+                  <Globe className="w-4 h-4" />
+                  {isSpanish ? 'English' : 'Español'}
+                </Button>
+              )}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleShare}
+                className="gap-2 hover:bg-[#14B8FF] hover:text-white hover:border-[#14B8FF]"
+              >
+                <Share2 className="w-4 h-4" />
+                {t.share}
+              </Button>
+            </div>
           </div>
         </motion.header>
 
