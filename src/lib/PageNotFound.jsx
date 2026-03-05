@@ -1,11 +1,17 @@
 import { useLocation } from 'react-router-dom';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
+import BlogSlug from '../pages/BlogSlug';
 
 
 export default function PageNotFound({}) {
     const location = useLocation();
     const pageName = location.pathname.substring(1);
+
+    // Handle /blog/:slug clean URLs
+    if (location.pathname.startsWith('/blog/') && location.pathname.length > 6) {
+        return <BlogSlug />;
+    }
 
     const { data: authData, isFetched } = useQuery({
         queryKey: ['user'],
