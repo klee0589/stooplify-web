@@ -296,6 +296,7 @@ export default function BlogSlug() {
           </ReactMarkdown>
         </div>
 
+
         {/* Footer CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
