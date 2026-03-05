@@ -107,17 +107,37 @@ export default function Blog() {
             </p>
 
             {/* Search */}
-            <div className="max-w-md mx-auto">
+            <div className="max-w-md mx-auto mb-6">
               <div className="relative">
-                
                 <Input
                   type="text"
                   placeholder={t.searchPlaceholder}
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)} className="bg-white text-slate-950 pl-12 px-3 py-6 text-lg rounded-md flex h-9 w-full border border-input shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 md:text-sm" />
-
-
+                  onChange={(e) => setSearchTerm(e.target.value)} className="bg-white text-slate-950 pl-4 px-3 py-6 text-lg rounded-md flex h-9 w-full border border-input shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring" />
               </div>
+            </div>
+
+            {/* City Links */}
+            <div className="flex flex-wrap justify-center gap-2">
+              {[
+                { label: 'Brooklyn', href: '/stoop-sales-brooklyn' },
+                { label: 'Queens', href: '/stoop-sales-queens' },
+                { label: 'Manhattan', href: '/stoop-sales-manhattan' },
+                { label: 'Bronx', href: '/stoop-sales-bronx' },
+                { label: 'Jersey City', href: '/stoop-sales-jersey-city' },
+                { label: 'Los Angeles', href: '/garage-sales-los-angeles' },
+                { label: 'San Francisco', href: '/garage-sales-san-francisco' },
+                { label: 'NYC This Weekend', href: '/stoop-sales-nyc-this-weekend' },
+                { label: 'Brooklyn Weekend', href: '/brooklyn-stoop-sales-this-weekend' },
+              ].map(({ label, href }) => (
+                <a
+                  key={href}
+                  href={href}
+                  className="px-3 py-1.5 bg-white/20 hover:bg-white/30 text-white text-sm font-medium rounded-full border border-white/30 transition-colors"
+                >
+                  {label}
+                </a>
+              ))}
             </div>
           </motion.div>
         </div>
