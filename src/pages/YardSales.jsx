@@ -64,7 +64,6 @@ export default function YardSales() {
    const [visibleMapSales, setVisibleMapSales] = useState([]);
    const [userLocation, setUserLocation] = useState(null);
    const [locationLoaded, setLocationLoaded] = useState(false);
-   const gridRef = useRef(null);
   
   useEffect(() => {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
