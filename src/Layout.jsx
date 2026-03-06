@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import posthog from 'posthog-js';
 import { createPageUrl } from './utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Home, MapPin, PlusCircle, User, Heart, Settings, Globe, Moon, Sun, LogOut, ChevronDown, MessageCircle, Instagram, ArrowLeft } from 'lucide-react';
@@ -10,8 +11,15 @@ import { toast } from 'sonner';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import BottomNavBar from '../components/BottomNavBar';
 import SentryErrorBoundary, { setUserContext } from '../components/SentryErrorBoundary';
-import { getPostHog } from '../components/utils/lazyIntegrations';
-import ChunkLoadMonitor from '../components/ChunkLoadMonitor';
+
+// Initialize PostHog once
+if (typeof window !== 'undefined' && !posthog.__loaded) {
+  posthog.init('phc_O1v6eh3WZWysCmiW5sODyx8YScYNMEligZyMHZGEekb', {
+    api_host: 'https://us.i.posthog.com',
+    person_profiles: 'identified_only',
+    capture_pageview: false, // We'll capture manually for SPA
+  });
+}
 
 function LayoutContent({ children, currentPageName }) {
   const location = useLocation();
@@ -103,12 +111,9 @@ function LayoutContent({ children, currentPageName }) {
     document.documentElement.lang = savedLang;
   }, []);
 
-  // Track page views on route change (lazy load PostHog)
+  // Track page views on route change
   useEffect(() => {
-    const posthog = getPostHog();
-    if (posthog) {
-      posthog.capture('$pageview', { page: currentPageName });
-    }
+    posthog.capture('$pageview', { page: currentPageName });
   }, [location.pathname]);
 
   useEffect(() => {
@@ -196,7 +201,6 @@ function LayoutContent({ children, currentPageName }) {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
-      <ChunkLoadMonitor />
       <a href="#main-content" className="skip-to-content">Skip to main content</a>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
@@ -296,25 +300,6 @@ function LayoutContent({ children, currentPageName }) {
         }
       `}</style>
 
-      <style>{`
-        /* Responsive images */
-        img {
-          max-width: 100%;
-          height: auto;
-          display: block;
-        }
-        /* Lazy loading optimization */
-        img[loading="lazy"] {
-          background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-          background-size: 200% 100%;
-          animation: loading 1.5s infinite;
-        }
-        @keyframes loading {
-          0% { background-position: 200% 0; }
-          100% { background-position: -200% 0; }
-        }
-      `}</style>
-
       {/* Header */}
       <motion.header
         initial={{ y: -100 }}
@@ -341,7 +326,6 @@ function LayoutContent({ children, currentPageName }) {
             ) : (
               <Link to={createPageUrl('Home')} className="flex md:hidden items-center">
                 <motion.img
-                  loading="lazy"
                   src={theme === 'dark' 
                     ? "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/9da695e20_Stooplify1-02.png"
                     : "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/ada49740a_Stooplify-01.png"
@@ -355,7 +339,6 @@ function LayoutContent({ children, currentPageName }) {
             {/* Desktop: Logo (always visible) */}
             <Link to={createPageUrl('Home')} className="hidden md:flex items-center">
               <motion.img
-                loading="lazy"
                 src={theme === 'dark' 
                   ? "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/9da695e20_Stooplify1-02.png"
                   : "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/ada49740a_Stooplify-01.png"
@@ -688,7 +671,6 @@ function LayoutContent({ children, currentPageName }) {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2">
               <img
-                loading="lazy"
                 src={theme === 'dark' 
                   ? "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/9da695e20_Stooplify1-02.png"
                   : "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/ada49740a_Stooplify-01.png"
