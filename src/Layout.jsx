@@ -362,6 +362,7 @@ function LayoutContent({ children, currentPageName }) {
                 }
                 alt="Stooplify"
                 className="h-10 w-auto"
+                style={{ filter: theme === 'light' ? 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' : 'none' }}
                 whileHover={{ scale: 1.05 }} />
             </Link>
 
