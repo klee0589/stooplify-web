@@ -72,47 +72,60 @@ export default function BottomNavBar() {
   ];
 
   return (
-    <nav 
+    <motion.nav 
       className="md:hidden fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 z-[1001]"
       style={{ 
         paddingBottom: 'env(safe-area-inset-bottom)',
         userSelect: 'none',
         WebkitTouchCallout: 'none'
       }}
+      initial={{ y: 100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.3 }}
     >
       <div className="flex items-center justify-around h-16">
         {navItems.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.path);
           return (
-            <Link
+            <motion.div
               key={item.path}
-              to={createPageUrl(item.path)}
-              onClick={(e) => handleNavClick(e, item.path)}
-              className={`flex flex-col items-center justify-center flex-1 h-full transition-colors relative ${
-                item.highlight 
-                  ? 'text-[#FF6F61]' 
-                  : active 
-                  ? 'text-[#14B8FF]' 
-                  : 'text-gray-500 dark:text-gray-400'
-              }`}
-              style={{ userSelect: 'none', WebkitTouchCallout: 'none' }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
             >
-              <div className="relative">
-                <Icon className={`w-6 h-6 ${item.highlight ? 'w-7 h-7' : ''}`} />
-                {item.badge && (
-                  <span className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
-                    {item.badge > 9 ? '9+' : item.badge}
-                  </span>
-                )}
-              </div>
-              <span className={`text-xs mt-1 ${item.highlight ? 'font-semibold' : ''}`}>
-                {item.name}
-              </span>
-            </Link>
+              <Link
+                to={createPageUrl(item.path)}
+                onClick={(e) => handleNavClick(e, item.path)}
+                className={`flex flex-col items-center justify-center flex-1 h-16 transition-colors relative ${
+                  item.highlight 
+                    ? 'text-[#FF6F61]' 
+                    : active 
+                    ? 'text-[#14B8FF]' 
+                    : 'text-gray-500 dark:text-gray-400'
+                }`}
+                style={{ userSelect: 'none', WebkitTouchCallout: 'none' }}
+              >
+                <div className="relative">
+                  <Icon className={`w-6 h-6 ${item.highlight ? 'w-7 h-7' : ''}`} />
+                  {item.badge && (
+                    <motion.span 
+                      className="absolute -top-2 -right-2 bg-green-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center"
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {item.badge > 9 ? '9+' : item.badge}
+                    </motion.span>
+                  )}
+                </div>
+                <span className={`text-xs mt-1 ${item.highlight ? 'font-semibold' : ''}`}>
+                  {item.name}
+                </span>
+              </Link>
+            </motion.div>
           );
         })}
       </div>
-    </nav>
+    </motion.nav>
   );
 }
