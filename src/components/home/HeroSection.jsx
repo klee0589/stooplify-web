@@ -102,13 +102,14 @@ export default function HeroSection() {
         />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
+            className="text-center lg:text-left"
           >
             {/* Value Prop Badge */}
             <motion.div
@@ -117,9 +118,9 @@ export default function HeroSection() {
               transition={{ delay: 0.2 }}
               className="inline-flex items-center gap-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg mb-6"
             >
-              <span className="text-2xl">🎯</span>
-              <span className="text-sm font-semibold text-[#2E3A59] dark:text-white">
-                Real neighborhood sales. No spam. No freebie hunters.
+              <span className="text-lg">🎯</span>
+              <span className="text-xs sm:text-sm font-semibold text-[#2E3A59] dark:text-white">
+                Real neighborhood sales. No spam.
               </span>
             </motion.div>
 
@@ -127,7 +128,7 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#2E3A59] dark:text-white leading-tight mb-6"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#2E3A59] dark:text-white leading-tight mb-4"
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
               {t('heroTitle')}
@@ -137,7 +138,7 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-lg"
+              className="text-base sm:text-lg text-gray-600 dark:text-gray-300 mb-6 max-w-lg mx-auto lg:mx-0"
             >
               {t('heroSubtitle')}
             </motion.p>
@@ -147,9 +148,9 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="flex flex-col sm:flex-row gap-4 mb-8"
+              className="flex flex-col sm:flex-row gap-3 mb-6 justify-center lg:justify-start"
             >
-              <Link to={createPageUrl('YardSales')}>
+              <Link to={createPageUrl('YardSales')} className="w-full sm:w-auto">
                 <motion.button
                   whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(20, 184, 255, 0.3)' }}
                   whileTap={{ scale: 0.95 }}
@@ -161,7 +162,7 @@ export default function HeroSection() {
                   {t('findSales')}
                 </motion.button>
               </Link>
-              <Link to={createPageUrl('AddYardSale')}>
+              <Link to={createPageUrl('AddYardSale')} className="w-full sm:w-auto">
                 <motion.button
                   whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(255, 111, 97, 0.3)' }}
                   whileTap={{ scale: 0.95 }}
@@ -180,18 +181,18 @@ export default function HeroSection() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="flex flex-wrap items-center justify-start gap-6 text-sm text-gray-600 dark:text-gray-400 mb-10"
+              className="flex flex-wrap items-center justify-center lg:justify-start gap-4 text-sm text-gray-600 dark:text-gray-400 mb-8"
             >
               <div className="flex items-center gap-2">
-                <span className="text-2xl">🏘️</span>
+                <span className="text-xl">🏘️</span>
                 <span><strong>{statsData.activeSales}</strong> active sales</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-2xl">📍</span>
+                <span className="text-xl">📍</span>
                 <span>Live in <strong>NYC</strong></span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-2xl">⚡</span>
+                <span className="text-xl">⚡</span>
                 <span>Local-only visibility</span>
               </div>
             </motion.div>
@@ -201,12 +202,12 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.7 }}
-              className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-6 shadow-xl border border-gray-100 dark:border-gray-700 max-w-md"
+              className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm rounded-2xl p-5 shadow-xl border border-gray-100 dark:border-gray-700 max-w-md mx-auto lg:mx-0"
             >
               <p className="text-sm font-medium text-[#2E3A59] dark:text-white mb-3">
                 🔔 {t('emailNotify')}
               </p>
-              <form onSubmit={handleEmailSubmit} className="flex gap-3">
+              <form onSubmit={handleEmailSubmit} className="flex gap-2">
                 <Input
                   type="email"
                   placeholder={t('emailPlaceholder')}
@@ -217,7 +218,7 @@ export default function HeroSection() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="bg-[#14B8FF] hover:bg-[#0da3e6] rounded-xl px-6"
+                  className="bg-[#14B8FF] hover:bg-[#0da3e6] rounded-xl px-4 shrink-0"
                 >
                   {isSubmitting ? t('joining') : t('join')}
                 </Button>
