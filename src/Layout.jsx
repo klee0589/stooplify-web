@@ -200,6 +200,19 @@ function LayoutContent({ children, currentPageName }) {
     window.dispatchEvent(new CustomEvent('languageChange', { detail: newLang }));
   };
 
+  // Helper function to map old guide page names to SEO-friendly URLs
+  const getSeoUrl = (pageName) => {
+    const seoMap = {
+      'GuidesAdvertise': 'guides-advertise-yard-sale',
+      'GuidesFindSales': 'guides-find-yard-sales',
+      'GuidesPermit': 'guides-permit-requirements-nyc',
+      'GuidesPricing': 'guides-pricing-yard-sale-items',
+      'GuidesTimings': 'guides-best-time-yard-sale',
+      'GuidesSeniors': 'guides-seniors-yard-sales'
+    };
+    return seoMap[pageName] || pageName;
+  };
+
   const navLinks = [
   { name: 'Find Sales', page: 'yard-sales', icon: MapPin },
   { name: 'List Sale', page: 'add-yard-sale', icon: PlusCircle },
@@ -367,17 +380,19 @@ function LayoutContent({ children, currentPageName }) {
 
             {/* Desktop Navigation */}
             <nav className="hidden md:flex items-center gap-8" role="navigation" aria-label="Main navigation">
-              {navLinks.map((link) =>
-              <Link
-                key={link.page}
-                to={createPageUrl(link.page)}
-                className={`font-medium transition-colors hover:text-[#14B8FF] ${
-                currentPageName === link.page ? 'text-[#14B8FF]' : 'text-[#2E3A59] dark:text-white'}`
-                }>
-
-                  {link.name}
-                </Link>
-              )}
+              {navLinks.map((link) => {
+                const seoUrl = getSeoUrl(link.page);
+                return (
+                  <Link
+                    key={link.page}
+                    to={createPageUrl(seoUrl)}
+                    className={`font-medium transition-colors hover:text-[#14B8FF] ${
+                    currentPageName === link.page ? 'text-[#14B8FF]' : 'text-[#2E3A59] dark:text-white'}`
+                    }>
+                      {link.name}
+                    </Link>
+                );
+              })}
             </nav>
 
             {/* Language Toggle & User Menu */}
@@ -564,21 +579,23 @@ function LayoutContent({ children, currentPageName }) {
             className="md:hidden bg-white dark:bg-gray-900 border-t shadow-lg">
 
               <div className="px-4 py-4 space-y-2">
-                {navLinks.map((link) =>
-              <Link
-                key={link.page}
-                to={createPageUrl(link.page)}
-                onClick={() => setIsMenuOpen(false)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
-                currentPageName === link.page ?
-                'bg-[#14B8FF]/10 text-[#14B8FF]' :
-                'text-[#2E3A59] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'}`
-                }>
-
-                    <link.icon size={20} />
-                    <span className="font-medium">{link.name}</span>
-                  </Link>
-              )}
+                {navLinks.map((link) => {
+                  const seoUrl = getSeoUrl(link.page);
+                  return (
+                    <Link
+                      key={link.page}
+                      to={createPageUrl(seoUrl)}
+                      onClick={() => setIsMenuOpen(false)}
+                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                      currentPageName === link.page ?
+                      'bg-[#14B8FF]/10 text-[#14B8FF]' :
+                      'text-[#2E3A59] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'}`
+                      }>
+                        <link.icon size={20} />
+                        <span className="font-medium">{link.name}</span>
+                      </Link>
+                  );
+                })}
 
                 {user &&
               <>
