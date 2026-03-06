@@ -102,9 +102,12 @@ function LayoutContent({ children, currentPageName }) {
     document.documentElement.lang = savedLang;
   }, []);
 
-  // Track page views on route change
+  // Track page views on route change (lazy load PostHog)
   useEffect(() => {
-    posthog.capture('$pageview', { page: currentPageName });
+    const posthog = getPostHog();
+    if (posthog) {
+      posthog.capture('$pageview', { page: currentPageName });
+    }
   }, [location.pathname]);
 
   useEffect(() => {
