@@ -82,8 +82,8 @@ export default function FeaturedSales({ sales = [] }) {
                           alt={sale.title}
                           className="w-full h-full object-cover"
                           loading="lazy"
-                          width={600}
-                          height={400}
+                          width={300}
+                          height={200}
                         />
                     ) : (
                        <div className="w-full h-full flex items-center justify-center">
