@@ -10,7 +10,6 @@ import SaleCard from '../components/sales/SaleCard';
 import SaleFilters from '../components/sales/SaleFilters';
 import SaleMap from '../components/sales/SaleMap';
 import MobileDiscovery from '../components/sales/MobileDiscovery';
-import VirtualSalesList from '../components/sales/VirtualSalesList';
 import { startOfDay, endOfDay, startOfWeek, endOfWeek, addDays, isWithinInterval } from 'date-fns';
 import PullToRefresh from '../components/PullToRefresh';
 import { Link } from 'react-router-dom';
@@ -56,15 +55,15 @@ const CATEGORY_PAGES = [
 ];
 
 export default function YardSales() {
-   const [viewMode, setViewMode] = useState('map');
-   const [filters, setFilters] = useState({ categories: [], date: 'all', distance: 'all', payment: 'all', search: '' });
-   const [showEndedSales, setShowEndedSales] = useState(false);
-   const [favorites, setFavorites] = useState([]);
-   const [user, setUser] = useState(null);
-   const [language, setLanguage] = useState('en');
-   const [visibleMapSales, setVisibleMapSales] = useState([]);
-   const [userLocation, setUserLocation] = useState(null);
-   const [locationLoaded, setLocationLoaded] = useState(false);
+  const [viewMode, setViewMode] = useState('map');
+  const [filters, setFilters] = useState({ categories: [], date: 'all', distance: 'all', payment: 'all', search: '' });
+  const [showEndedSales, setShowEndedSales] = useState(false);
+  const [favorites, setFavorites] = useState([]);
+  const [user, setUser] = useState(null);
+  const [language, setLanguage] = useState('en');
+  const [visibleMapSales, setVisibleMapSales] = useState([]);
+  const [userLocation, setUserLocation] = useState(null);
+  const [locationLoaded, setLocationLoaded] = useState(false);
   
   useEffect(() => {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
@@ -561,21 +560,37 @@ export default function YardSales() {
                 transition={{ duration: 0.3 }}
               >
                 {filteredSales.length === 0 ? (
-                   <div className="text-center py-20">
-                     <div className="w-20 h-20 bg-[#FF6F61]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                       <Map className="w-10 h-10 text-[#FF6F61]" />
-                     </div>
-                     <h3 className="text-xl font-semibold text-[#2E3A59] dark:text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                       {t('noSalesFound')}
-                     </h3>
-                     <p className="text-gray-600 dark:text-gray-300 mb-4">{t('tryAdjustingFilters')}</p>
-                     <Button onClick={resetFilters} className="bg-[#FF6F61] hover:bg-[#e55a4d]">
-                       {t('resetFilters')}
-                     </Button>
-                   </div>
-                 ) : (
-                   <VirtualSalesList sales={filteredSales} favorites={favorites} onToggleFavorite={handleToggleFavorite} />
-                 )}
+                  <div className="text-center py-20">
+                    <div className="w-20 h-20 bg-[#FF6F61]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <Map className="w-10 h-10 text-[#FF6F61]" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-[#2E3A59] dark:text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                      {t('noSalesFound')}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-300 mb-4">{t('tryAdjustingFilters')}</p>
+                    <Button onClick={resetFilters} className="bg-[#FF6F61] hover:bg-[#e55a4d]">
+                      {t('resetFilters')}
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {filteredSales.map((sale, index) => (
+                      <motion.div
+                        key={sale.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: index * 0.05 }}
+                      >
+                        <SaleCard
+                          sale={sale}
+                          isFavorite={favorites.includes(sale.id)}
+                          onToggleFavorite={handleToggleFavorite}
+                          isPast={sale.isPast}
+                        />
+                      </motion.div>
+                    ))}
+                  </div>
+                )}
               </motion.div>
             ) : (
               <motion.div
@@ -590,13 +605,29 @@ export default function YardSales() {
                   <SaleMap sales={filteredSales} onVisibleSalesChange={setVisibleMapSales} />
                 </div>
                 {visibleMapSales.length > 0 && (
-                   <div className="mt-6 hidden md:block">
-                     <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-4">
-                       {visibleMapSales.length} sale{visibleMapSales.length !== 1 ? 's' : ''} in current map view
-                     </p>
-                     <VirtualSalesList sales={visibleMapSales} favorites={favorites} onToggleFavorite={handleToggleFavorite} />
-                   </div>
-                 )}
+                  <div className="mt-6 hidden md:block">
+                    <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-4">
+                      {visibleMapSales.length} sale{visibleMapSales.length !== 1 ? 's' : ''} in current map view
+                    </p>
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                      {visibleMapSales.map((sale, index) => (
+                        <motion.div
+                          key={sale.id}
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: index * 0.05 }}
+                        >
+                          <SaleCard
+                            sale={sale}
+                            isFavorite={favorites.includes(sale.id)}
+                            onToggleFavorite={handleToggleFavorite}
+                            isPast={sale.isPast}
+                          />
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </motion.div>
             )}
           </AnimatePresence>
