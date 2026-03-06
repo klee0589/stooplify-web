@@ -590,29 +590,13 @@ export default function YardSales() {
                   <SaleMap sales={filteredSales} onVisibleSalesChange={setVisibleMapSales} />
                 </div>
                 {visibleMapSales.length > 0 && (
-                  <div className="mt-6 hidden md:block">
-                    <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-4">
-                      {visibleMapSales.length} sale{visibleMapSales.length !== 1 ? 's' : ''} in current map view
-                    </p>
-                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                      {visibleMapSales.map((sale, index) => (
-                        <motion.div
-                          key={sale.id}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.05 }}
-                        >
-                          <SaleCard
-                            sale={sale}
-                            isFavorite={favorites.includes(sale.id)}
-                            onToggleFavorite={handleToggleFavorite}
-                            isPast={sale.isPast}
-                          />
-                        </motion.div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+                   <div className="mt-6 hidden md:block">
+                     <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-4">
+                       {visibleMapSales.length} sale{visibleMapSales.length !== 1 ? 's' : ''} in current map view
+                     </p>
+                     <VirtualSalesList sales={visibleMapSales} favorites={favorites} onToggleFavorite={handleToggleFavorite} />
+                   </div>
+                 )}
               </motion.div>
             )}
           </AnimatePresence>
