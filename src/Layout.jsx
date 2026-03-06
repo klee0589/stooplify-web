@@ -320,7 +320,7 @@ function LayoutContent({ children, currentPageName }) {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         className={`fixed top-0 left-0 right-0 z-[1000] transition-all duration-300 ${
-        isScrolled ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent'}`
+        isScrolled ? 'bg-transparent/50 dark:bg-gray-900/50 backdrop-blur-md shadow-lg' : 'bg-transparent'}`
         }
         style={{ paddingTop: 'env(safe-area-inset-top)' }}
         role="banner"
