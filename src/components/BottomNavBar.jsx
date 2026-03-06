@@ -10,24 +10,9 @@ export default function BottomNavBar() {
   const [user, setUser] = useState(null);
   const scrollPositions = useRef({});
 
-  // Save scroll position when navigating away
+  // Scroll to top on every navigation
   useEffect(() => {
-    const saveScrollPosition = () => {
-      scrollPositions.current[location.pathname] = window.scrollY;
-    };
-
-    return saveScrollPosition;
-  }, [location.pathname]);
-
-  // Restore scroll position when returning to a tab
-  useEffect(() => {
-    const savedPosition = scrollPositions.current[location.pathname];
-    
-    if (savedPosition !== undefined) {
-      setTimeout(() => {
-        window.scrollTo(0, savedPosition);
-      }, 0);
-    }
+    window.scrollTo(0, 0);
   }, [location.pathname]);
 
   useEffect(() => {
