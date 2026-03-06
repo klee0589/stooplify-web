@@ -583,10 +583,9 @@ export default function YardSales() {
                       >
                         <SaleCard
                           sale={sale}
-                            isFavorite={favorites.includes(sale.id)}
-                            onToggleFavorite={handleToggleFavorite}
-                            seller={sale.seller}
-                            isPast={sale.isPast}
+                          isFavorite={favorites.includes(sale.id)}
+                          onToggleFavorite={handleToggleFavorite}
+                          isPast={sale.isPast}
                         />
                       </motion.div>
                     ))}
