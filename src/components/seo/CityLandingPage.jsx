@@ -20,13 +20,14 @@ export default function CityLandingPage({ config }) {
       const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
       const now = new Date();
       return allSales.filter((sale) => {
-        const matchesCity = (sale.state?.toLowerCase() === state.toLowerCase()) && 
-          (sale.city?.toLowerCase().includes(city.toLowerCase()) ||
-          sale.general_location?.toLowerCase().includes(city.toLowerCase()) ||
-          (neighborhoods || []).some((n) =>
-            sale.general_location?.toLowerCase().includes(n.toLowerCase()) ||
-            sale.city?.toLowerCase().includes(n.toLowerCase())
-          ));
+        const stateMatch = sale.state?.toLowerCase().trim() === state.toLowerCase().trim();
+        const cityMatch = sale.city?.toLowerCase().includes(city.toLowerCase()) ||
+          sale.general_location?.toLowerCase().includes(city.toLowerCase());
+        const neighborhoodMatch = (neighborhoods || []).some((n) =>
+          sale.general_location?.toLowerCase().includes(n.toLowerCase()) ||
+          sale.city?.toLowerCase().includes(n.toLowerCase())
+        );
+        const matchesCity = stateMatch && (cityMatch || neighborhoodMatch);
         const saleEnd = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
         return matchesCity && saleEnd >= now;
       });
