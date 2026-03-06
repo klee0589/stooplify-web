@@ -1,31 +1,38 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useState, useEffect } from 'react';
 import { VariableSizeGrid } from 'react-window';
 import { motion } from 'framer-motion';
 import SaleCard from './SaleCard';
 
 export default function VirtualSalesList({ sales, favorites, onToggleFavorite }) {
-  const gridRef = useRef(null);
+  const containerRef = useRef(null);
+  const [containerWidth, setContainerWidth] = useState(0);
 
-  // Get column count based on viewport width
+  useEffect(() => {
+    if (!containerRef.current) return;
+    
+    const updateWidth = () => {
+      setContainerWidth(containerRef.current?.offsetWidth || 0);
+    };
+    
+    updateWidth();
+    window.addEventListener('resize', updateWidth);
+    return () => window.removeEventListener('resize', updateWidth);
+  }, []);
+
+  // Get column count based on container width
   const getColumnCount = () => {
-    if (typeof window === 'undefined') return 1;
-    const width = window.innerWidth;
-    if (width >= 1536) return 4; // xl:grid-cols-4
-    if (width >= 1024) return 3; // lg:grid-cols-3
-    if (width >= 640) return 2;  // sm:grid-cols-2
+    if (containerWidth >= 1536) return 4;
+    if (containerWidth >= 1024) return 3;
+    if (containerWidth >= 640) return 2;
     return 1;
   };
 
   const columnCount = getColumnCount();
-  const itemWidth = 100 / columnCount;
-  const itemHeight = 380; // Approximate height of a SaleCard + gap
+  const itemHeight = 380;
 
   const getColumnWidth = useCallback(
-    (index) => {
-      const containerWidth = gridRef.current?.parentElement?.offsetWidth || 1024;
-      return (containerWidth - 24) / columnCount; // 24px for gaps and padding
-    },
-    [columnCount]
+    () => (containerWidth - 24) / columnCount,
+    [columnCount, containerWidth]
   );
 
   const getRowHeight = () => itemHeight;
