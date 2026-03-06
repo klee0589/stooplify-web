@@ -59,16 +59,22 @@ function LayoutContent({ children, currentPageName }) {
     }
 
     const checkAuth = async () => {
-      try {
-        const isAuth = await base44.auth.isAuthenticated();
-        if (isAuth) {
-          const currentUser = await base44.auth.me();
-          setUser(currentUser);
-          setUserContext(currentUser);
-        }
-      } catch (e) {
-        console.log('Not authenticated');
+    try {
+      const isAuth = await base44.auth.isAuthenticated();
+      if (isAuth) {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
+        setUserContext(currentUser);
+        // Identify user in PostHog
+        posthog.identify(currentUser.email, {
+          email: currentUser.email,
+          name: currentUser.full_name,
+          role: currentUser.role,
+        });
       }
+    } catch (e) {
+      console.log('Not authenticated');
+    }
     };
     checkAuth();
 
