@@ -118,7 +118,9 @@ function LayoutContent({ children, currentPageName }) {
 
   // Track page views on route change
   useEffect(() => {
-    posthog.capture('$pageview', { page: currentPageName });
+    if (posthog) {
+      posthog.capture('$pageview', { page: currentPageName });
+    }
   }, [location.pathname]);
 
   useEffect(() => {
