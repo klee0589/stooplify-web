@@ -19,7 +19,8 @@ export default function CityLandingPage({ config }) {
     queryFn: async () => {
       const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
       const now = new Date();
-      return allSales.filter((sale) => {
+      console.log(`Filtering for ${city}, ${state}. Total approved sales: ${allSales.length}`);
+      const filtered = allSales.filter((sale) => {
         const stateMatch = sale.state?.toLowerCase().trim() === state.toLowerCase().trim();
         const cityMatch = sale.city?.toLowerCase().includes(city.toLowerCase()) ||
           sale.general_location?.toLowerCase().includes(city.toLowerCase());
@@ -29,8 +30,14 @@ export default function CityLandingPage({ config }) {
         );
         const matchesCity = stateMatch && (cityMatch || neighborhoodMatch);
         const saleEnd = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
-        return matchesCity && saleEnd >= now;
+        const isUpcoming = saleEnd >= now;
+        if (!matchesCity || !isUpcoming) {
+          console.log(`Filtered out: ${sale.title}`, { state: sale.state, city: sale.city, date: sale.date, stateMatch, cityMatch, isUpcoming });
+        }
+        return matchesCity && isUpcoming;
       });
+      console.log(`Matched sales: ${filtered.length}`, filtered);
+      return filtered;
     }
   });
 
