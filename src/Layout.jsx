@@ -342,28 +342,21 @@ function LayoutContent({ children, currentPageName }) {
               <Link to={createPageUrl('Home')} className="flex md:hidden items-center">
                 <motion.img
                   loading="lazy"
-                  src={theme === 'dark' 
-                    ? "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/9da695e20_Stooplify1-02.png"
-                    : "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/ada49740a_Stooplify-01.png"
-                  }
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/4ba37a53b_Stooplify1-02.png"
                   alt="Stooplify"
                   className="h-8 w-auto"
                   whileHover={{ scale: 1.05 }} />
-              </Link>
-            )}
+                </Link>
+                )}
 
-            {/* Desktop: Logo (always visible) */}
-            <Link to={createPageUrl('Home')} className="hidden md:flex items-center">
-              <motion.img
-                loading="lazy"
-                src={theme === 'dark' 
-                  ? "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/9da695e20_Stooplify1-02.png"
-                  : "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/ada49740a_Stooplify-01.png"
-                }
-                alt="Stooplify"
-                className="h-10 w-auto"
-                style={{ filter: theme === 'light' ? 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' : 'none' }}
-                whileHover={{ scale: 1.05 }} />
+                {/* Desktop: Logo (always visible) */}
+                <Link to={createPageUrl('Home')} className="hidden md:flex items-center">
+                <motion.img
+                  loading="lazy"
+                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/4ba37a53b_Stooplify1-02.png"
+                  alt="Stooplify"
+                  className="h-10 w-auto"
+                  whileHover={{ scale: 1.05 }} />
             </Link>
 
             {/* Desktop Navigation */}
