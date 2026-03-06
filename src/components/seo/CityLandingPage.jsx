@@ -32,7 +32,18 @@ export default function CityLandingPage({ config }) {
         const saleEnd = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
         const isUpcoming = saleEnd >= now;
         if (!matchesCity || !isUpcoming) {
-          console.log(`Filtered out: ${sale.title}`, { state: sale.state, city: sale.city, date: sale.date, stateMatch, cityMatch, isUpcoming });
+          console.log(`Filtered out: "${sale.title}"`, { 
+            saleState: sale.state, 
+            expectedState: state,
+            saleCity: sale.city, 
+            saleGeneralLocation: sale.general_location,
+            expectedCity: city,
+            saleDate: sale.date,
+            stateMatch, 
+            cityMatch,
+            neighborhoodMatch,
+            isUpcoming
+          });
         }
         return matchesCity && isUpcoming;
       });
