@@ -11,7 +11,6 @@ export default function BottomNavBar() {
 
   // Scroll to top on navigation, but preserve scroll for root tabs when returning
   const ROOT_TABS = ['', 'Home', 'YardSales', 'Messages', 'Profile'];
-  const scrollPositions = React.useRef({});
 
   useEffect(() => {
     // Always scroll to top on any navigation
