@@ -24,6 +24,9 @@ const initPostHog = () => {
         });
       }
       posthog = ph;
+    }).catch(err => {
+      console.log('PostHog failed to load:', err);
+      posthog = null;
     });
   }
 };
