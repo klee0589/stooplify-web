@@ -120,37 +120,13 @@ export default function YardSales() {
   const { data: sales = [], isLoading, refetch, error } = useQuery({
     queryKey: ['yardSales'],
     queryFn: async () => {
-      try {
-        const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
-        
-        // Fetch sellers for each sale and mark if past using moment
-        const salesWithSellers = await Promise.all(
-          allSales.map(async (sale) => {
-            try {
-              // Parse date and time - handle both date and time properly
-              const dateStr = sale.date; // e.g., "2026-01-15"
-              const timeStr = sale.end_time || '23:59'; // e.g., "14:00" or "2:00 PM"
-              
-              // Combine date and time into a single moment object
-              const saleEndMoment = moment(`${dateStr} ${timeStr}`, ['YYYY-MM-DD HH:mm', 'YYYY-MM-DD h:mm A']);
-              const now = moment();
-              const isPast = saleEndMoment.isBefore(now);
-              
-              if (sale.created_by) {
-                const sellers = await base44.entities.User.filter({ email: sale.created_by });
-                return { ...sale, seller: sellers[0] || null, isPast };
-              }
-              return { ...sale, seller: null, isPast };
-            } catch (err) {
-              return { ...sale, seller: null, isPast: false };
-            }
-          })
-        );
-        
-        return salesWithSellers;
-      } catch (err) {
-        throw err;
-      }
+      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
+      const now = new Date();
+      return allSales.map((sale) => {
+        const endStr = sale.end_time || '23:59';
+        const saleEnd = new Date(`${sale.date}T${endStr.includes(':') ? endStr : '23:59'}`);
+        return { ...sale, isPast: saleEnd < now };
+      });
     },
   });
 
