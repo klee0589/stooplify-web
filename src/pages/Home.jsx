@@ -80,7 +80,6 @@ export default function Home() {
         structuredData={structuredData}
       />
       <HeroSection />
-      
       <HowItWorks />
       <FeaturedSales sales={sales} />
       <CTASection />
