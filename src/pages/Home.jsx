@@ -41,33 +41,19 @@ export default function Home() {
     base44.analytics.track({ eventName: 'home_page_viewed' });
   }, []);
   
+  // Featured sales - defer with suspense boundary
   const { data: sales = [] } = useQuery({
     queryKey: ['featuredSales'],
     queryFn: async () => {
-      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
-      // Filter to show only upcoming sales (not ended)
+      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 50);
       const now = new Date();
       return allSales.filter(sale => {
         const saleDate = new Date(sale.date);
-        saleDate.setHours(23, 59, 59); // End of day
+        saleDate.setHours(23, 59, 59);
         return saleDate >= now;
       }).slice(0, 6);
     },
-  });
-  
-  // Get count of all live sales this weekend
-  const { data: allLiveSalesCount = 0 } = useQuery({
-    queryKey: ['allLiveSalesCount'],
-    queryFn: async () => {
-      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 500);
-      const now = new Date();
-      const count = allSales.filter(sale => {
-        const saleDate = new Date(sale.date);
-        saleDate.setHours(23, 59, 59);
-        return saleDate >= now;
-      }).length;
-      return count;
-    },
+    staleTime: 180000 // Cache for 3 minutes
   });
 
   const userCount = 500; // Approximate community size
