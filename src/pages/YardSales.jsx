@@ -436,9 +436,11 @@ export default function YardSales() {
           </p>
         </motion.div>
 
-        {/* Discovery Directory */}
-        <div className="mb-8 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-          {/* Browse by City */}
+        {/* Discovery Directory — Desktop: 4-col grid | Mobile: accordion tabs */}
+        <MobileDiscovery />
+
+        {/* Desktop only */}
+        <div className="hidden md:grid mb-8 grid-cols-2 xl:grid-cols-4 gap-4">
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
             <div className="flex items-center gap-2 mb-3">
               <Building2 className="w-4 h-4 text-[#14B8FF]" />
@@ -452,8 +454,6 @@ export default function YardSales() {
               ))}
             </div>
           </div>
-
-          {/* Browse by Neighborhood */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
             <div className="flex items-center gap-2 mb-3">
               <MapPin className="w-4 h-4 text-[#FF6F61]" />
@@ -467,8 +467,6 @@ export default function YardSales() {
               ))}
             </div>
           </div>
-
-          {/* Browse by Date */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
             <div className="flex items-center gap-2 mb-3">
               <Calendar className="w-4 h-4 text-[#F5A623]" />
@@ -482,8 +480,6 @@ export default function YardSales() {
               ))}
             </div>
           </div>
-
-          {/* Browse by Category */}
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
             <div className="flex items-center gap-2 mb-3">
               <Tag className="w-4 h-4 text-purple-500" />
