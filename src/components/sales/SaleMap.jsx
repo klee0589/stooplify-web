@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
-import { MapPin, Calendar, Clock, ArrowRight } from 'lucide-react';
+import { MapPin, Calendar, Clock, ArrowRight, LocateFixed } from 'lucide-react';
 import { format } from 'date-fns';
 import { base44 } from '@/api/base44Client';
 import 'leaflet/dist/leaflet.css';
@@ -15,24 +15,15 @@ const customIcon = new L.DivIcon({
   className: 'custom-marker',
   html: `
     <div style="
-      width: 40px;
-      height: 40px;
+      width: 40px; height: 40px;
       background: #14B8FF;
       border-radius: 50% 50% 50% 0;
       transform: rotate(-45deg);
       border: 3px solid white;
       box-shadow: 0 4px 15px rgba(20, 184, 255, 0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
     ">
-      <div style="
-        transform: rotate(45deg);
-        color: white;
-        font-size: 16px;
-      ">
-        🏷️
-      </div>
+      <div style="transform: rotate(45deg); color: white; font-size: 16px;">🏷️</div>
     </div>
   `,
   iconSize: [40, 40],
@@ -40,23 +31,17 @@ const customIcon = new L.DivIcon({
   popupAnchor: [0, -40],
 });
 
-// Cluster icon for multiple sales at same location
 const createClusterIcon = (count) => new L.DivIcon({
   className: 'cluster-marker',
   html: `
     <div style="
-      width: 50px;
-      height: 50px;
+      width: 50px; height: 50px;
       background: #FF6F61;
       border-radius: 50%;
       border: 3px solid white;
       box-shadow: 0 4px 15px rgba(255, 111, 97, 0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      color: white;
-      font-size: 18px;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: bold; color: white; font-size: 18px;
     ">
       ${count}
     </div>
@@ -66,20 +51,16 @@ const createClusterIcon = (count) => new L.DivIcon({
   popupAnchor: [0, -25],
 });
 
-// Community location icon
 const createCommunityIcon = (emoji) => new L.DivIcon({
   className: 'community-marker',
   html: `
     <div style="
-      width: 45px;
-      height: 45px;
+      width: 45px; height: 45px;
       background: #2E3A59;
       border-radius: 50%;
       border: 3px solid gold;
       box-shadow: 0 4px 15px rgba(46, 58, 89, 0.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       font-size: 22px;
     ">
       ${emoji}
@@ -90,83 +71,103 @@ const createCommunityIcon = (emoji) => new L.DivIcon({
   popupAnchor: [0, -45],
 });
 
+// Cluster sales by proximity based on current zoom
+function clusterSales(sales, zoom) {
+  const clusterRadius = Math.max(0.005, 0.15 / Math.pow(2, zoom - 11));
+  const clusters = [];
+  const assigned = new Set();
+
+  sales.forEach((sale, i) => {
+    if (assigned.has(i)) return;
+    const cluster = [sale];
+    assigned.add(i);
+
+    sales.forEach((other, j) => {
+      if (assigned.has(j)) return;
+      const latDiff = Math.abs(sale.latitude - other.latitude);
+      const lonDiff = Math.abs(sale.longitude - other.longitude);
+      if (latDiff < clusterRadius && lonDiff < clusterRadius) {
+        cluster.push(other);
+        assigned.add(j);
+      }
+    });
+    clusters.push(cluster);
+  });
+
+  return clusters;
+}
+
 function MapUpdater({ center }) {
   const map = useMap();
   useEffect(() => {
-    if (center) {
-      map.setView(center, map.getZoom());
-    }
+    if (center) map.setView(center, map.getZoom());
   }, [center, map]);
   return null;
 }
 
-function MapBoundsWatcher({ onBoundsChange }) {
+function MapBoundsWatcher({ onBoundsChange, onZoomChange }) {
   const map = useMapEvents({
     moveend: () => onBoundsChange(map.getBounds()),
-    zoomend: () => onBoundsChange(map.getBounds()),
+    zoomend: () => {
+      onBoundsChange(map.getBounds());
+      onZoomChange(map.getZoom());
+    },
   });
   useEffect(() => {
     onBoundsChange(map.getBounds());
+    onZoomChange(map.getZoom());
   }, []);
   return null;
 }
 
+function RecenterButton({ userLocation }) {
+  const map = useMap();
+  if (!userLocation) return null;
+
+  return (
+    <button
+      onClick={() => map.flyTo(userLocation, 14, { animate: true, duration: 0.8 })}
+      className="absolute bottom-6 right-4 z-[1000] bg-white dark:bg-gray-800 shadow-lg rounded-full p-3 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+      title="Re-center on my location"
+      style={{ touchAction: 'none' }}
+    >
+      <LocateFixed className="w-5 h-5 text-[#14B8FF]" />
+    </button>
+  );
+}
+
 export default function SaleMap({ sales, center, onVisibleSalesChange }) {
-   const [mapReady, setMapReady] = useState(false);
-   const [userLocation, setUserLocation] = useState(null);
-   const [expandedLocation, setExpandedLocation] = useState(null);
-   const [mapBounds, setMapBounds] = useState(null);
-   const defaultCenter = center || userLocation || [40.7128, -74.0060]; // NYC default
+  const [mapReady, setMapReady] = useState(false);
+  const [userLocation, setUserLocation] = useState(null);
+  const [mapBounds, setMapBounds] = useState(null);
+  const [zoom, setZoom] = useState(11);
+  const defaultCenter = center || userLocation || [40.7128, -74.0060];
 
-   // Fetch community locations
-   const { data: communityLocations = [] } = useQuery({
-     queryKey: ['communityLocations'],
-     queryFn: async () => {
-       return await base44.entities.CommunityLocation.filter({ is_active: true });
-     },
-   });
-
-   // Filter sales to only those visible in current map bounds
-   const visibleSales = mapBounds
-     ? sales.filter(sale => {
-         if (!sale.latitude || !sale.longitude) return false;
-         return mapBounds.contains([sale.latitude, sale.longitude]);
-       })
-     : sales;
-
-   useEffect(() => {
-     if (onVisibleSalesChange) {
-       onVisibleSalesChange(visibleSales);
-     }
-   }, [visibleSales.length, mapBounds]);
-
-   // Group sales by general location
-   const groupedByLocation = visibleSales.reduce((acc, sale) => {
-     if (!sale.latitude || !sale.longitude) return acc;
-     const key = sale.general_location || 'Unknown';
-     if (!acc[key]) {
-       acc[key] = [];
-     }
-     acc[key].push(sale);
-     return acc;
-   }, {});
-
-
+  const { data: communityLocations = [] } = useQuery({
+    queryKey: ['communityLocations'],
+    queryFn: () => base44.entities.CommunityLocation.filter({ is_active: true }),
+  });
 
   useEffect(() => {
-    // Get user's current location
     if (navigator.geolocation && !center) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation([position.coords.latitude, position.coords.longitude]);
-        },
-        () => {
-          // Location access denied, use default
-        }
+        (pos) => setUserLocation([pos.coords.latitude, pos.coords.longitude]),
+        () => {}
       );
     }
     setMapReady(true);
   }, []);
+
+  const visibleSales = mapBounds
+    ? sales.filter(s => s.latitude && s.longitude && mapBounds.contains([s.latitude, s.longitude]))
+    : sales;
+
+  useEffect(() => {
+    if (onVisibleSalesChange) onVisibleSalesChange(visibleSales);
+  }, [visibleSales.length, mapBounds]);
+
+  const salesWithCoords = visibleSales.filter(s => s.latitude && s.longitude);
+  const clusters = clusterSales(salesWithCoords, zoom);
 
   if (!mapReady) {
     return (
@@ -182,25 +183,11 @@ export default function SaleMap({ sales, center, onVisibleSalesChange }) {
   return (
     <div className="w-full h-full rounded-2xl overflow-hidden shadow-lg relative z-0">
       <style>{`
-        .leaflet-tile-pane {
-          filter: saturate(0.5) brightness(1.1) sepia(0.25) hue-rotate(-10deg);
-        }
-        .leaflet-popup-content-wrapper {
-          border-radius: 16px;
-          padding: 0;
-          box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        }
-        .leaflet-popup-content {
-          margin: 0;
-          min-width: 250px;
-        }
-        .leaflet-popup-tip {
-          background: white;
-        }
-        .custom-marker {
-          background: transparent;
-          border: none;
-        }
+        .leaflet-tile-pane { filter: saturate(0.5) brightness(1.1) sepia(0.25) hue-rotate(-10deg); }
+        .leaflet-popup-content-wrapper { border-radius: 16px; padding: 0; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        .leaflet-popup-content { margin: 0; min-width: 250px; }
+        .leaflet-popup-tip { background: white; }
+        .custom-marker { background: transparent; border: none; }
       `}</style>
       <MapContainer
         center={defaultCenter}
@@ -209,151 +196,129 @@ export default function SaleMap({ sales, center, onVisibleSalesChange }) {
         scrollWheelZoom={true}
       >
         <MapUpdater center={center} />
-        <MapBoundsWatcher onBoundsChange={setMapBounds} />
+        <MapBoundsWatcher onBoundsChange={setMapBounds} onZoomChange={setZoom} />
+        <RecenterButton userLocation={userLocation} />
+
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           maxZoom={19}
         />
+
         {/* Community Locations */}
-        {communityLocations.map((location) => (
+        {communityLocations.map((loc) => (
           <Marker
-            key={`community-${location.id}`}
-            position={[location.latitude, location.longitude]}
-            icon={createCommunityIcon(location.icon)}
+            key={`community-${loc.id}`}
+            position={[loc.latitude, loc.longitude]}
+            icon={createCommunityIcon(loc.icon)}
           >
             <Popup>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="p-4"
-              >
-                <h3 
-                  className="font-bold text-[#2E3A59] mb-2 text-lg"
-                  style={{ fontFamily: 'Poppins, sans-serif' }}
-                >
-                  {location.name}
+              <div className="p-4">
+                <h3 className="font-bold text-[#2E3A59] mb-2 text-lg" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                  {loc.name}
                 </h3>
-                <p className="text-sm text-gray-600 mb-2">{location.description}</p>
-                <p className="text-xs text-gray-500">
-                  {location.address}, {location.city}
-                </p>
+                <p className="text-sm text-gray-600 mb-2">{loc.description}</p>
+                <p className="text-xs text-gray-500">{loc.address}, {loc.city}</p>
                 <div className="mt-2 inline-block text-xs bg-gray-100 px-2 py-1 rounded">
-                  {location.category.replace(/_/g, ' ')}
+                  {loc.category.replace(/_/g, ' ')}
                 </div>
-              </motion.div>
+              </div>
             </Popup>
           </Marker>
         ))}
 
-        {/* Sales Locations */}
-        {Object.entries(groupedByLocation).map(([location, locationSales]) => {
-           if (locationSales.length === 0) return null;
+        {/* Sale clusters / single pins */}
+        {clusters.map((cluster, idx) => {
+          const avgLat = cluster.reduce((s, c) => s + c.latitude, 0) / cluster.length;
+          const avgLon = cluster.reduce((s, c) => s + c.longitude, 0) / cluster.length;
 
-           // Calculate average coordinates for this location
-           const avgLat = locationSales.reduce((sum, s) => sum + s.latitude, 0) / locationSales.length;
-           const avgLon = locationSales.reduce((sum, s) => sum + s.longitude, 0) / locationSales.length;
+          if (cluster.length === 1) {
+            const sale = cluster[0];
+            return (
+              <Marker key={sale.id} position={[sale.latitude, sale.longitude]} icon={customIcon}>
+                <Popup>
+                  <div className="p-4">
+                    {sale.photos?.length > 0 && (
+                      <div className="w-full h-28 rounded-xl overflow-hidden mb-3">
+                        <img src={sale.photos[0]} alt={sale.title} className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                    <h3 className="font-bold text-[#2E3A59] mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                      {sale.title}
+                    </h3>
+                    <div className="space-y-1 text-sm text-gray-600 mb-3">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-3.5 h-3.5 text-[#14B8FF]" />
+                        <span>{sale.date ? format(new Date(sale.date), 'EEE, MMM d') : 'Date TBD'}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-3.5 h-3.5 text-[#F5A623]" />
+                        <span>{sale.start_time || '8 AM'} - {sale.end_time || '2 PM'}</span>
+                      </div>
+                    </div>
+                    <Link
+                      to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}
+                      className="flex items-center justify-center gap-1 w-full py-2 bg-[#14B8FF] text-white rounded-xl text-sm font-medium hover:bg-[#0da3e6] transition-colors"
+                    >
+                      View Details <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+                </Popup>
+              </Marker>
+            );
+          }
 
-           // If only one sale, show it directly
-           if (locationSales.length === 1) {
-             const sale = locationSales[0];
-             return (
-               <Marker
-                 key={sale.id}
-                 position={[sale.latitude, sale.longitude]}
-                 icon={customIcon}
-               >
-                 <Popup>
-                   <motion.div
-                     initial={{ opacity: 0, scale: 0.9 }}
-                     animate={{ opacity: 1, scale: 1 }}
-                     className="p-4"
-                   >
-                     {sale.photos && sale.photos.length > 0 && (
-                       <div className="w-full h-28 rounded-xl overflow-hidden mb-3">
-                         <img
-                           src={sale.photos[0]}
-                           alt={sale.title}
-                           className="w-full h-full object-cover"
-                         />
-                       </div>
-                     )}
-                     <h3 
-                       className="font-bold text-[#2E3A59] mb-2"
-                       style={{ fontFamily: 'Poppins, sans-serif' }}
-                     >
-                       {sale.title}
-                     </h3>
-                     <div className="space-y-1 text-sm text-gray-600 mb-3">
-                       <div className="flex items-center gap-2">
-                         <Calendar className="w-3.5 h-3.5 text-[#14B8FF]" />
-                         <span>
-                           {sale.date ? format(new Date(sale.date), 'EEE, MMM d') : 'Date TBD'}
-                         </span>
-                       </div>
-                       <div className="flex items-center gap-2">
-                         <Clock className="w-3.5 h-3.5 text-[#F5A623]" />
-                         <span>{sale.start_time || '8 AM'} - {sale.end_time || '2 PM'}</span>
-                       </div>
-                     </div>
-                     <Link 
-                       to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}
-                       className="flex items-center justify-center gap-1 w-full py-2 bg-[#14B8FF] text-white rounded-xl text-sm font-medium hover:bg-[#0da3e6] transition-colors"
-                     >
-                       View Details
-                       <ArrowRight className="w-3.5 h-3.5" />
-                     </Link>
-                   </motion.div>
-                 </Popup>
-               </Marker>
-             );
-           }
-
-           // If multiple sales, show cluster marker
-           return (
-             <Marker
-               key={`cluster-${location}`}
-               position={[avgLat, avgLon]}
-               icon={createClusterIcon(locationSales.length)}
-               eventHandlers={{
-                 click: () => setExpandedLocation(expandedLocation === location ? null : location)
-               }}
-             >
-               <Popup>
-                 <motion.div
-                   initial={{ opacity: 0, scale: 0.9 }}
-                   animate={{ opacity: 1, scale: 1 }}
-                   className="p-4 max-w-sm"
-                 >
-                   <h3 
-                     className="font-bold text-[#2E3A59] mb-4"
-                     style={{ fontFamily: 'Poppins, sans-serif' }}
-                   >
-                     {locationSales.length} Sales in {location}
-                   </h3>
-                   <div className="space-y-3 max-h-80 overflow-y-auto">
-                     {locationSales.map((sale) => (
-                       <Link
-                         key={sale.id}
-                         to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}
-                         className="block p-2 bg-gray-50 rounded-lg hover:bg-blue-50 transition-colors"
-                       >
-                         <p className="font-medium text-[#2E3A59] text-sm mb-1">
-                           {sale.title}
-                         </p>
-                         <p className="text-xs text-gray-600 flex items-center gap-1">
-                           <Calendar className="w-3 h-3" />
-                           {sale.date ? format(new Date(sale.date), 'MMM d') : 'Date TBD'}
-                         </p>
-                       </Link>
-                     ))}
-                   </div>
-                 </motion.div>
-               </Popup>
-             </Marker>
-           );
-         })}
+          // Cluster marker — clicking zooms in
+          return (
+            <ClusterMarker
+              key={`cluster-${idx}`}
+              position={[avgLat, avgLon]}
+              cluster={cluster}
+              icon={createClusterIcon(cluster.length)}
+            />
+          );
+        })}
       </MapContainer>
     </div>
+  );
+}
+
+function ClusterMarker({ position, cluster, icon }) {
+  const map = useMap();
+
+  const handleClick = useCallback(() => {
+    const currentZoom = map.getZoom();
+    map.flyTo(position, Math.min(currentZoom + 3, 18), { animate: true, duration: 0.6 });
+  }, [map, position]);
+
+  return (
+    <Marker
+      position={position}
+      icon={icon}
+      eventHandlers={{ click: handleClick }}
+    >
+      <Popup>
+        <div className="p-4 max-w-sm">
+          <h3 className="font-bold text-[#2E3A59] mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            {cluster.length} Sales nearby — tap to zoom in
+          </h3>
+          <div className="space-y-3 max-h-64 overflow-y-auto">
+            {cluster.map((sale) => (
+              <Link
+                key={sale.id}
+                to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}
+                className="block p-2 bg-gray-50 rounded-lg hover:bg-blue-50 transition-colors"
+              >
+                <p className="font-medium text-[#2E3A59] text-sm mb-1">{sale.title}</p>
+                <p className="text-xs text-gray-600 flex items-center gap-1">
+                  <Calendar className="w-3 h-3" />
+                  {sale.date ? format(new Date(sale.date), 'MMM d') : 'Date TBD'}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </Popup>
+    </Marker>
   );
 }
