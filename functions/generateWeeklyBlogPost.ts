@@ -101,18 +101,6 @@ Return a JSON object with:
 
         console.log('AI response received:', response);
 
-        if (!response || !response.title || !response.slug || !response.content) {
-            console.error('LLM returned null or incomplete response:', response);
-            return Response.json({ success: false, error: 'LLM returned null or incomplete response' }, { status: 500 });
-        }
-
-        // Ensure slug is unique
-        let slug = response.slug;
-        if (existingSlugs.includes(slug)) {
-            slug = `${slug}-${Date.now()}`;
-            console.log('Slug conflict, using:', slug);
-        }
-
         // Generate a featured image for the blog post
         let featured_image_url = null;
         try {
@@ -129,7 +117,7 @@ Return a JSON object with:
         // Create the blog post
         const blogPost = await base44.asServiceRole.entities.BlogPost.create({
             title: response.title,
-            slug: slug,
+            slug: response.slug,
             author_name: "Stooplify Team",
             author_email: "daniel@stooplify.com",
             excerpt: response.excerpt,
