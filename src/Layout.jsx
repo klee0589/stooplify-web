@@ -340,8 +340,8 @@ function LayoutContent({ children, currentPageName }) {
               <Link to={createPageUrl('Home')} className="flex md:hidden items-center">
                 <motion.img
                   src={theme === 'dark' 
-                    ? "https://base44files.s3.us-east-1.amazonaws.com/stooplify/Stooplify1-02-dark.png"
-                    : "https://base44files.s3.us-east-1.amazonaws.com/stooplify/Stooplify-01-light.png"
+                    ? "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/3e64c6f8d_Stooplify1-02.png"
+                    : "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/283ee8687_logo_v2.png"
                   }
                   alt="Stooplify"
                   className="h-8 w-auto"
@@ -355,8 +355,8 @@ function LayoutContent({ children, currentPageName }) {
             <Link to={createPageUrl('Home')} className="hidden md:flex items-center">
               <motion.img
                 src={theme === 'dark' 
-                  ? "https://base44files.s3.us-east-1.amazonaws.com/stooplify/Stooplify1-02-dark.png"
-                  : "https://base44files.s3.us-east-1.amazonaws.com/stooplify/Stooplify-01-light.png"
+                  ? "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/3e64c6f8d_Stooplify1-02.png"
+                  : "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/283ee8687_logo_v2.png"
                 }
                 alt="Stooplify"
                 className="h-10 w-auto"
@@ -689,8 +689,8 @@ function LayoutContent({ children, currentPageName }) {
             <div className="col-span-1 md:col-span-2">
               <img
                 src={theme === 'dark' 
-                  ? "https://base44files.s3.us-east-1.amazonaws.com/stooplify/Stooplify1-02-dark.png"
-                  : "https://base44files.s3.us-east-1.amazonaws.com/stooplify/Stooplify-01-light.png"
+                  ? "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/3e64c6f8d_Stooplify1-02.png"
+                  : "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/283ee8687_logo_v2.png"
                 }
                 alt="Stooplify"
                 className="h-10 w-auto mb-4"
