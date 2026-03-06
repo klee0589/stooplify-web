@@ -605,7 +605,7 @@ export default function YardSales() {
                   <SaleMap sales={filteredSales} onVisibleSalesChange={setVisibleMapSales} />
                 </div>
                 {visibleMapSales.length > 0 && (
-                  <div className="mt-6">
+                  <div className="mt-6 hidden md:block">
                     <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-4">
                       {visibleMapSales.length} sale{visibleMapSales.length !== 1 ? 's' : ''} in current map view
                     </p>
