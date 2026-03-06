@@ -48,7 +48,7 @@ export default function FeaturedSales({ sales = [] }) {
               {t('featuredSubtitle')}
             </p>
           </div>
-          <Link to={createPageUrl('YardSales')}>
+          <Link to={createPageUrl('yard-sales')}>
             <motion.button
               whileHover={{ x: 5 }}
               className="flex items-center gap-2 text-[#14B8FF] font-medium"
@@ -76,12 +76,14 @@ export default function FeaturedSales({ sales = [] }) {
                   {/* Image */}
                   <div className="relative h-48 bg-gradient-to-br from-[#14B8FF]/20 to-[#F5A623]/20">
                     {sale.photos && sale.photos.length > 0 ? (
-                      <img
-                        src={sale.photos[0]}
-                        alt={sale.title}
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                      />
+                       <img
+                         src={sale.photos[0]}
+                         alt={sale.title}
+                         className="w-full h-full object-cover"
+                         loading="lazy"
+                         width={600}
+                         height={400}
+                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center">
                         <MapPin className="w-12 h-12 text-[#14B8FF]/40" />

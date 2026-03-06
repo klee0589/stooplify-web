@@ -150,7 +150,7 @@ export default function HeroSection() {
               transition={{ delay: 0.5 }}
               className="flex flex-col sm:flex-row gap-3 mb-6 justify-center lg:justify-start"
             >
-              <Link to={createPageUrl('YardSales')} className="w-full sm:w-auto">
+              <Link to={createPageUrl('yard-sales')} className="w-full sm:w-auto">
                 <motion.button
                   whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(20, 184, 255, 0.3)' }}
                   whileTap={{ scale: 0.95 }}
@@ -162,7 +162,7 @@ export default function HeroSection() {
                   {t('findSales')}
                 </motion.button>
               </Link>
-              <Link to={createPageUrl('AddYardSale')} className="w-full sm:w-auto">
+              <Link to={createPageUrl('add-yard-sale')} className="w-full sm:w-auto">
                 <motion.button
                   whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(255, 111, 97, 0.3)' }}
                   whileTap={{ scale: 0.95 }}
@@ -241,11 +241,14 @@ export default function HeroSection() {
                 className="absolute inset-0"
               >
                 <div className="w-full h-full bg-gradient-to-br from-[#FF6F61]/20 to-[#F5A623]/20 rounded-[3rem] overflow-hidden">
-                  <img
-                    src="https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=800&q=80"
-                    alt="Outdoor garage sale with tables full of items for sale"
-                    className="w-full h-full object-cover"
-                  />
+                   <img
+                     src="https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=800&q=80"
+                     alt="Outdoor garage sale with tables full of items for sale"
+                     className="w-full h-full object-cover"
+                     width={800}
+                     height={800}
+                     loading="lazy"
+                   />
                 </div>
               </motion.div>
 

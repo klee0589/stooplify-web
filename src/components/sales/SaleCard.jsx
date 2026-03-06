@@ -49,6 +49,8 @@ export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance,
               alt={sale.title}
               className={`w-full h-full object-cover ${isPast ? 'grayscale' : ''}`}
               loading="lazy"
+              width={400}
+              height={300}
             />
           );
         })()}
