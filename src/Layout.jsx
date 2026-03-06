@@ -38,6 +38,15 @@ function LayoutContent({ children, currentPageName }) {
     };
     setFavicon();
 
+    // Inject Google AdSense script
+    if (!document.querySelector('script[src*="adsbygoogle"]')) {
+      const adsScript = document.createElement('script');
+      adsScript.async = true;
+      adsScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9420381871665480';
+      adsScript.crossOrigin = 'anonymous';
+      document.head.appendChild(adsScript);
+    }
+
     const checkAuth = async () => {
       try {
         const isAuth = await base44.auth.isAuthenticated();

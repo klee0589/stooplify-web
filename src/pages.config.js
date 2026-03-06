@@ -51,6 +51,7 @@ import AddYardSale from './pages/AddYardSale';
 import AdminCommunityLocations from './pages/AdminCommunityLocations';
 import AdminSupabaseSync from './pages/AdminSupabaseSync';
 import ApplyAsShop from './pages/ApplyAsShop';
+import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
 import BlogSlug from './pages/BlogSlug';
 import BrooklynStoopSalesWeekend from './pages/BrooklynStoopSalesWeekend';
@@ -83,7 +84,6 @@ import StoopSalesQueens from './pages/StoopSalesQueens';
 import YardSaleDetails from './pages/YardSaleDetails';
 import YardSales from './pages/YardSales';
 import YardSalesNearMeWeekend from './pages/YardSalesNearMeWeekend';
-import Blog from './pages/Blog';
 import __Layout from './Layout.jsx';
 
 
@@ -92,6 +92,7 @@ export const PAGES = {
     "AdminCommunityLocations": AdminCommunityLocations,
     "AdminSupabaseSync": AdminSupabaseSync,
     "ApplyAsShop": ApplyAsShop,
+    "Blog": Blog,
     "BlogPost": BlogPost,
     "BlogSlug": BlogSlug,
     "BrooklynStoopSalesWeekend": BrooklynStoopSalesWeekend,
@@ -124,7 +125,6 @@ export const PAGES = {
     "YardSaleDetails": YardSaleDetails,
     "YardSales": YardSales,
     "YardSalesNearMeWeekend": YardSalesNearMeWeekend,
-    "Blog": Blog,
 }
 
 export const pagesConfig = {
