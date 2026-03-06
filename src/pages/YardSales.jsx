@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Map, List, Loader2, MapPin, Calendar, Tag, Building2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import SEO from '../components/SEO';
+import SaleCard from '../components/sales/SaleCard';
 import SaleFilters from '../components/sales/SaleFilters';
 import SaleMap from '../components/sales/SaleMap';
 import MobileDiscovery from '../components/sales/MobileDiscovery';
