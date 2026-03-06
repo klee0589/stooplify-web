@@ -339,6 +339,7 @@ function LayoutContent({ children, currentPageName }) {
             ) : (
               <Link to={createPageUrl('Home')} className="flex md:hidden items-center">
                 <motion.img
+                  loading="lazy"
                   src={theme === 'dark' 
                     ? "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/9da695e20_Stooplify1-02.png"
                     : "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/ada49740a_Stooplify-01.png"
