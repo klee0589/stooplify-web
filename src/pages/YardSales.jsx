@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslation } from '../components/translations';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Map, List, Loader2, MapPin, Calendar, Tag, Building2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { VariableSizeGrid } from 'react-window';
 import SEO from '../components/SEO';
 import SaleCard from '../components/sales/SaleCard';
 import SaleFilters from '../components/sales/SaleFilters';
