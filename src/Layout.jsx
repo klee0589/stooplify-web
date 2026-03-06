@@ -191,11 +191,11 @@ function LayoutContent({ children, currentPageName }) {
   };
 
   const navLinks = [
-  { name: 'Find Sales', page: 'YardSales', icon: MapPin },
-  { name: 'List Sale', page: 'AddYardSale', icon: PlusCircle },
-  ...(userSales.length > 0 ? [{ name: 'My Sales', page: 'MyYardSales', icon: MapPin }] : []),
+  { name: 'Find Sales', page: 'yard-sales', icon: MapPin },
+  { name: 'List Sale', page: 'add-yard-sale', icon: PlusCircle },
+  ...(userSales.length > 0 ? [{ name: 'My Sales', page: 'my-yard-sales', icon: MapPin }] : []),
   { name: 'Calendar', page: 'Calendar', icon: Settings },
-  { name: 'Guides', page: 'Guides', icon: Settings },
+  { name: 'Guides', page: 'guides', icon: Settings },
   { name: 'Blog', page: 'Blog', icon: Settings }];
 
 
