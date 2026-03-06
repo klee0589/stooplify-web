@@ -320,7 +320,7 @@ function LayoutContent({ children, currentPageName }) {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         className={`fixed top-0 left-0 right-0 z-[1000] transition-all duration-300 ${
-        isScrolled ? 'bg-transparent/50 dark:bg-gray-900/50 backdrop-blur-md shadow-lg' : 'bg-transparent'}`
+        isScrolled ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent'}`
         }
         style={{ paddingTop: 'env(safe-area-inset-top)' }}
         role="banner"
@@ -342,23 +342,27 @@ function LayoutContent({ children, currentPageName }) {
               <Link to={createPageUrl('Home')} className="flex md:hidden items-center">
                 <motion.img
                   loading="lazy"
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/4ba37a53b_Stooplify1-02.png"
+                  src={theme === 'dark' 
+                    ? "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/9da695e20_Stooplify1-02.png"
+                    : "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/ada49740a_Stooplify-01.png"
+                  }
                   alt="Stooplify"
                   className="h-8 w-auto"
-                  style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}
                   whileHover={{ scale: 1.05 }} />
-                </Link>
-                )}
+              </Link>
+            )}
 
-                {/* Desktop: Logo (always visible) */}
-                <Link to={createPageUrl('Home')} className="hidden md:flex items-center">
-                <motion.img
-                  loading="lazy"
-                  src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/4ba37a53b_Stooplify1-02.png"
-                  alt="Stooplify"
-                  className="h-10 w-auto"
-                  style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}
-                  whileHover={{ scale: 1.05 }} />
+            {/* Desktop: Logo (always visible) */}
+            <Link to={createPageUrl('Home')} className="hidden md:flex items-center">
+              <motion.img
+                loading="lazy"
+                src={theme === 'dark' 
+                  ? "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/9da695e20_Stooplify1-02.png"
+                  : "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/ada49740a_Stooplify-01.png"
+                }
+                alt="Stooplify"
+                className="h-10 w-auto"
+                whileHover={{ scale: 1.05 }} />
             </Link>
 
             {/* Desktop Navigation */}
@@ -685,7 +689,10 @@ function LayoutContent({ children, currentPageName }) {
             <div className="col-span-1 md:col-span-2">
               <img
                 loading="lazy"
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/4ba37a53b_Stooplify1-02.png"
+                src={theme === 'dark' 
+                  ? "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/9da695e20_Stooplify1-02.png"
+                  : "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/ada49740a_Stooplify-01.png"
+                }
                 alt="Stooplify"
                 className="h-10 w-auto mb-4" />
 
