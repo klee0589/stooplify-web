@@ -235,29 +235,32 @@ export default function HeroSection() {
 
           {/* Right Content - Animated Illustration */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.3 }}
-            className="relative hidden lg:block"
+           initial={{ opacity: 0, x: 50 }}
+           animate={{ opacity: 1, x: 0 }}
+           transition={{ duration: 0.8, delay: 0.3 }}
+           className="relative hidden lg:block"
           >
-            <div className="relative w-full aspect-square max-w-lg mx-auto">
-              {/* Main Image Container */}
-              <motion.div
-                animate={{ y: [0, -10, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute inset-0"
-              >
-                <div className="w-full h-full bg-gradient-to-br from-[#FF6F61]/20 to-[#F5A623]/20 rounded-[3rem] overflow-hidden">
-                   <img
-                     src="https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=800&q=80"
-                     alt="Outdoor garage sale with tables full of items for sale"
-                     className="w-full h-full object-cover"
-                     width={800}
-                     height={800}
-                     loading="lazy"
-                   />
-                </div>
-              </motion.div>
+           <div className="relative w-full aspect-square max-w-lg mx-auto">
+             {/* Main Image Container */}
+             <motion.div
+               initial={{ y: 0 }}
+               whileInView={{ y: [0, -10, 0] }}
+               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+               viewport={{ once: false }}
+               className="absolute inset-0"
+             >
+               <div className="w-full h-full bg-gradient-to-br from-[#FF6F61]/20 to-[#F5A623]/20 rounded-[3rem] overflow-hidden">
+                  <img
+                    src="https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=500&q=60"
+                    alt="Outdoor garage sale with tables full of items for sale"
+                    className="w-full h-full object-cover"
+                    width={500}
+                    height={500}
+                    loading="lazy"
+                    decoding="async"
+                  />
+               </div>
+             </motion.div>
 
               {/* Floating Cards */}
               <motion.div
