@@ -33,6 +33,12 @@ function LayoutContent({ children, currentPageName }) {
   const avatarMenuRef = React.useRef(null);
   const navigate = useNavigate();
 
+  // Tab state preservation (scroll position and state per tab)
+  const [tabStates, setTabStates] = useState({});
+  const mainContentRef = React.useRef(null);
+  const ROOT_TABS = ['Home', 'YardSales', 'AddYardSale', 'Messages', 'Profile'];
+  const isRootTab = ROOT_TABS.includes(currentPageName);
+
   // Root screens that don't show back button
   const rootScreens = ['Home', 'YardSales', 'Messages', 'Profile'];
   const isRootScreen = rootScreens.includes(currentPageName);

@@ -82,8 +82,8 @@ import StoopSalesManhattan from './pages/StoopSalesManhattan';
 import StoopSalesNYCWeekend from './pages/StoopSalesNYCWeekend';
 import StoopSalesQueens from './pages/StoopSalesQueens';
 import YardSaleDetails from './pages/YardSaleDetails';
-import YardSales from './pages/YardSales';
 import YardSalesNearMeWeekend from './pages/YardSalesNearMeWeekend';
+import YardSales from './pages/YardSales';
 import __Layout from './Layout.jsx';
 
 
@@ -123,8 +123,8 @@ export const PAGES = {
     "StoopSalesNYCWeekend": StoopSalesNYCWeekend,
     "StoopSalesQueens": StoopSalesQueens,
     "YardSaleDetails": YardSaleDetails,
-    "YardSales": YardSales,
     "YardSalesNearMeWeekend": YardSalesNearMeWeekend,
+    "YardSales": YardSales,
 }
 
 export const pagesConfig = {
