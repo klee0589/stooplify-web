@@ -17,7 +17,7 @@ export default function CityLandingPage({ config }) {
   const { data: sales = [], isLoading } = useQuery({
     queryKey: ['cityLandingSales', city, state],
     queryFn: async () => {
-      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
+      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 500);
       const now = new Date();
       console.log(`Filtering for ${city}, ${state}. Total approved sales: ${allSales.length}`);
       if (allSales.length > 0) {
