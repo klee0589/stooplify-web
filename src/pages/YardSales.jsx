@@ -9,6 +9,7 @@ import SEO from '../components/SEO';
 import SaleCard from '../components/sales/SaleCard';
 import SaleFilters from '../components/sales/SaleFilters';
 import SaleMap from '../components/sales/SaleMap';
+import MobileDiscovery from '../components/sales/MobileDiscovery';
 import { startOfDay, endOfDay, startOfWeek, endOfWeek, addDays, isWithinInterval } from 'date-fns';
 import moment from 'moment';
 import PullToRefresh from '../components/PullToRefresh';
