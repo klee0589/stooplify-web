@@ -101,6 +101,18 @@ Return a JSON object with:
 
         console.log('AI response received:', response);
 
+        if (!response || !response.title || !response.slug || !response.content) {
+            console.error('LLM returned null or incomplete response:', response);
+            return Response.json({ success: false, error: 'LLM returned null or incomplete response' }, { status: 500 });
+        }
+
+        // Ensure slug is unique
+        let slug = response.slug;
+        if (existingSlugs.includes(slug)) {
+            slug = `${slug}-${Date.now()}`;
+            console.log('Slug conflict, using:', slug);
+        }
+
         // Generate a featured image for the blog post
         let featured_image_url = null;
         try {
