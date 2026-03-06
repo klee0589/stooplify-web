@@ -23,13 +23,32 @@ export default function CityLandingPage({ config }) {
       if (allSales.length > 0) {
         console.log('Sample sale:', { state: allSales[0].state, city: allSales[0].city, general_location: allSales[0].general_location });
       }
+      // Map cities to zip code ranges
+      const zipRanges = {
+        'Brooklyn': [[11200, 11260]],
+        'Manhattan': [[10001, 10282]],
+        'Queens': [[11300, 11440], [11500, 11700]],
+        'Bronx': [[10451, 10475]],
+        'Staten Island': [[10300, 10320]]
+      };
+
+      const cityZipRanges = zipRanges[city] || [];
+      
       const filtered = allSales.filter((sale) => {
         const cityMatch = sale.city?.toLowerCase().includes(city.toLowerCase());
         const generalLocationMatch = sale.general_location?.toLowerCase().includes(city.toLowerCase());
         const neighborhoodMatch = (neighborhoods || []).some((n) =>
           sale.general_location?.toLowerCase().includes(n.toLowerCase())
         );
-        const matchesLocation = cityMatch || generalLocationMatch || neighborhoodMatch;
+        
+        // Check if zip code matches the city
+        let zipMatch = false;
+        if (sale.zip_code) {
+          const zip = parseInt(sale.zip_code);
+          zipMatch = cityZipRanges.some(([min, max]) => zip >= min && zip <= max);
+        }
+        
+        const matchesLocation = cityMatch || generalLocationMatch || neighborhoodMatch || zipMatch;
         const saleEnd = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
         const isUpcoming = saleEnd >= now;
         return matchesLocation && isUpcoming;
