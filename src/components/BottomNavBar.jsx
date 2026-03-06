@@ -54,7 +54,12 @@ export default function BottomNavBar() {
     const active = isActive(path);
     if (active) {
       e.preventDefault();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const mainContent = document.getElementById('main-content');
+      if (mainContent) {
+        mainContent.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     }
   };
 
