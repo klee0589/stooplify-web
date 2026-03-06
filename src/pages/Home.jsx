@@ -64,7 +64,7 @@ export default function Home() {
     "description": "Discover amazing yard sales, garage sales, estate sales, and Brooklyn stoop sales near you. Find hidden treasures at unbeatable prices from local sellers in your neighborhood.",
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://stooplify.com/YardSales?search={search_term_string}",
+      "target": "https://stooplify.com/yard-sales?search={search_term_string}",
       "query-input": "required name=search_term_string"
     }
   };
@@ -201,7 +201,7 @@ export default function Home() {
 
           <div className="text-center mt-8">
             <Link
-              to="/YardSales"
+              to="/yard-sales"
               className="inline-flex items-center gap-2 px-6 py-3 bg-[#14B8FF] text-white rounded-xl font-semibold hover:bg-[#0da3e6] transition-colors shadow-md"
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
@@ -225,7 +225,7 @@ export default function Home() {
               Brooklyn stoop sales are a beloved New York City tradition — neighbors set up right outside their stoops to sell furniture, clothing, vintage finds, books, and more. Stooplify brings these local gems online so you never miss a deal in your neighborhood.
             </p>
             <p>
-              Browse upcoming stoop sales in Williamsburg, Park Slope, Bushwick, Crown Heights, Bed-Stuy, and beyond — or <a href="/AddYardSale" className="text-[#14B8FF] hover:underline">list your own stoop sale for free</a>.
+              Browse upcoming stoop sales in Williamsburg, Park Slope, Bushwick, Crown Heights, Bed-Stuy, and beyond — or <a href="/add-yard-sale" className="text-[#14B8FF] hover:underline">list your own stoop sale for free</a>.
             </p>
           </div>
         </div>
@@ -276,16 +276,16 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <motion.a
-                href="/YardSales"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-[#14B8FF] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
-                style={{ fontFamily: 'Poppins, sans-serif' }}
-              >
-                Browse Sales Now
-              </motion.a>
-              <motion.a
-                href="/AddYardSale"
+                 href="/yard-sales"
+                 whileHover={{ scale: 1.05 }}
+                 whileTap={{ scale: 0.95 }}
+                 className="px-8 py-4 bg-[#14B8FF] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
+                 style={{ fontFamily: 'Poppins, sans-serif' }}
+               >
+                 Browse Sales Now
+               </motion.a>
+               <motion.a
+                 href="/add-yard-sale"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 className="px-8 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
@@ -314,16 +314,16 @@ export default function Home() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <motion.a
-              href="/YardSales"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 bg-white text-[#2E3A59] rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all"
-              style={{ fontFamily: 'Poppins, sans-serif' }}
-            >
-              Browse Sales Now
-            </motion.a>
-            <motion.a
-              href="/AddYardSale"
+               href="/yard-sales"
+               whileHover={{ scale: 1.05 }}
+               whileTap={{ scale: 0.95 }}
+               className="px-8 py-4 bg-white text-[#2E3A59] rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all"
+               style={{ fontFamily: 'Poppins, sans-serif' }}
+             >
+               Browse Sales Now
+             </motion.a>
+             <motion.a
+               href="/add-yard-sale"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="px-8 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all"
