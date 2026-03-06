@@ -271,21 +271,21 @@ export default function BlogSlug() {
         )}
 
         {/* Content */}
-        <div className="text-gray-700 dark:text-gray-300">
+        <div className="text-gray-700 dark:text-gray-300" style={{ fontFamily: 'Inter, sans-serif' }}>
           <ReactMarkdown
             key={postLang}
             components={{
-              h1: ({ children }) => <h1 className="text-4xl font-bold text-gray-900 dark:text-white mt-20 mb-8 font-['Poppins']">{children}</h1>,
-              h2: ({ children }) => <h2 className="text-3xl font-bold text-gray-900 dark:text-white mt-20 mb-8 font-['Poppins']">{children}</h2>,
-              h3: ({ children }) => <h3 className="text-2xl font-bold text-gray-900 dark:text-white mt-16 mb-6 font-['Poppins']">{children}</h3>,
-              h4: ({ children }) => <h4 className="text-xl font-bold text-gray-900 dark:text-white mt-12 mb-4 font-['Poppins']">{children}</h4>,
-              p: ({ children }) => <p className="text-lg leading-relaxed mb-8 text-gray-700 dark:text-gray-300">{children}</p>,
+              h1: ({ children }) => <h1 className="text-4xl font-bold text-gray-900 dark:text-white mt-20 mb-8" style={{ fontFamily: 'Poppins, sans-serif' }}>{children}</h1>,
+              h2: ({ children }) => <h2 className="text-3xl font-bold text-gray-900 dark:text-white mt-20 mb-8" style={{ fontFamily: 'Poppins, sans-serif' }}>{children}</h2>,
+              h3: ({ children }) => <h3 className="text-2xl font-bold text-gray-900 dark:text-white mt-16 mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>{children}</h3>,
+              h4: ({ children }) => <h4 className="text-xl font-bold text-gray-900 dark:text-white mt-12 mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>{children}</h4>,
+              p: ({ children }) => <p className="text-lg leading-relaxed mb-8 text-gray-700 dark:text-gray-300" style={{ fontFamily: 'Inter, sans-serif' }}>{children}</p>,
               a: ({ href, children }) => <a href={href} className="text-[#14B8FF] font-medium hover:underline" target="_blank" rel="noopener noreferrer">{children}</a>,
               strong: ({ children }) => <strong className="font-semibold text-gray-900 dark:text-white">{children}</strong>,
-              ul: ({ children }) => <ul className="list-disc pl-8 my-10 space-y-3">{children}</ul>,
-              ol: ({ children }) => <ol className="list-decimal pl-8 my-10 space-y-3">{children}</ol>,
-              li: ({ children }) => <li className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">{children}</li>,
-              blockquote: ({ children }) => <blockquote className="border-l-4 border-[#14B8FF] bg-gray-50 dark:bg-gray-800 py-6 px-8 my-12 rounded-r-lg">{children}</blockquote>,
+              ul: ({ children }) => <ul className="list-disc pl-8 my-10 space-y-3" style={{ fontFamily: 'Inter, sans-serif' }}>{children}</ul>,
+              ol: ({ children }) => <ol className="list-decimal pl-8 my-10 space-y-3" style={{ fontFamily: 'Inter, sans-serif' }}>{children}</ol>,
+              li: ({ children }) => <li className="text-lg leading-relaxed text-gray-700 dark:text-gray-300" style={{ fontFamily: 'Inter, sans-serif' }}>{children}</li>,
+              blockquote: ({ children }) => <blockquote className="border-l-4 border-[#14B8FF] bg-gray-50 dark:bg-gray-800 py-6 px-8 my-12 rounded-r-lg" style={{ fontFamily: 'Inter, sans-serif' }}>{children}</blockquote>,
               code: ({ inline, children }) => (
                 inline
                   ? <code className="text-[#14B8FF] bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded font-mono text-sm">{children}</code>
