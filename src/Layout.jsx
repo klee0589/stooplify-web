@@ -642,13 +642,24 @@ function LayoutContent({ children, currentPageName }) {
         </AnimatePresence>
       </motion.header>
 
-      {/* Main Content */}
+      {/* Main Content with Page Transitions */}
       <main 
+        ref={mainContentRef}
         className="pt-16 md:pt-20 pb-0 md:pb-0" 
         style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}
         id="main-content"
       >
-        {children}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={location.pathname}
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+          >
+            {children}
+          </motion.div>
+        </AnimatePresence>
       </main>
 
       {/* Bottom Navigation - Mobile Only */}
