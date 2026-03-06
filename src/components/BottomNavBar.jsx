@@ -4,6 +4,7 @@ import { createPageUrl } from '../utils';
 import { Home, MapPin, PlusCircle, MessageCircle, User } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
+import { motion } from 'framer-motion';
 
 export default function BottomNavBar() {
   const location = useLocation();
