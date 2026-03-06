@@ -471,17 +471,6 @@ export default function AddYardSale() {
         keywords="list yard sale, post garage sale, create sale listing, advertise yard sale, free yard sale posting, sell items locally"
       />
       <div className="max-w-2xl mx-auto px-4">
-        {/* Back Button */}
-        <Link to={createPageUrl('Home')}>
-            <motion.button
-            whileHover={{ x: -5 }}
-            className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-[#FF6F61] transition-colors mb-6">
-
-              <ArrowLeft className="w-5 h-5" />
-              {t('back')}
-            </motion.button>
-          </Link>
-
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
