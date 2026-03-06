@@ -9,9 +9,29 @@ export default function BottomNavBar() {
   const location = useLocation();
   const [user, setUser] = useState(null);
 
-  // Scroll to top on every navigation
+  // Scroll to top on navigation, but preserve scroll for root tabs when returning
+  const ROOT_TABS = ['', 'Home', 'YardSales', 'Messages', 'Profile'];
+  const scrollPositions = React.useRef({});
+
   useEffect(() => {
-    window.scrollTo(0, 0);
+    return () => {
+      // Save scroll position when leaving current path
+      scrollPositions.current[location.pathname] = window.scrollY;
+    };
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const path = location.pathname.replace('/', '');
+    const isRootTab = ROOT_TABS.includes(path);
+    const saved = scrollPositions.current[location.pathname];
+
+    if (isRootTab && saved !== undefined) {
+      // Restore scroll for root tabs
+      requestAnimationFrame(() => window.scrollTo(0, saved));
+    } else if (!isRootTab) {
+      // Always start at top for detail/sub pages
+      window.scrollTo(0, 0);
+    }
   }, [location.pathname]);
 
   useEffect(() => {
