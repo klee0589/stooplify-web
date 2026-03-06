@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import posthog from 'posthog-js';
 import { createPageUrl } from './utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Home, MapPin, PlusCircle, User, Heart, Settings, Globe, Moon, Sun, LogOut, ChevronDown, MessageCircle, Instagram, ArrowLeft } from 'lucide-react';
@@ -12,14 +11,22 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import BottomNavBar from '../components/BottomNavBar';
 import SentryErrorBoundary, { setUserContext } from '../components/SentryErrorBoundary';
 
-// Initialize PostHog once
-if (typeof window !== 'undefined' && !posthog.__loaded) {
-  posthog.init('phc_O1v6eh3WZWysCmiW5sODyx8YScYNMEligZyMHZGEekb', {
-    api_host: 'https://us.i.posthog.com',
-    person_profiles: 'identified_only',
-    capture_pageview: false, // We'll capture manually for SPA
-  });
-}
+// Lazy initialize PostHog (only on user interaction or after 5s)
+let posthog = null;
+const initPostHog = () => {
+  if (typeof window !== 'undefined' && !posthog) {
+    import('posthog-js').then(({ default: ph }) => {
+      if (!ph.__loaded) {
+        ph.init('phc_O1v6eh3WZWysCmiW5sODyx8YScYNMEligZyMHZGEekb', {
+          api_host: 'https://us.i.posthog.com',
+          person_profiles: 'identified_only',
+          capture_pageview: false,
+        });
+      }
+      posthog = ph;
+    });
+  }
+};
 
 function LayoutContent({ children, currentPageName }) {
   const location = useLocation();
