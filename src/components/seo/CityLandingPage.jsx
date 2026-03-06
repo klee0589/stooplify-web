@@ -24,24 +24,18 @@ export default function CityLandingPage({ config }) {
         console.log('Sample sale:', { state: allSales[0].state, city: allSales[0].city, general_location: allSales[0].general_location });
       }
       const filtered = allSales.filter((sale) => {
-        const saleEnd = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
-        const isUpcoming = saleEnd >= now;
-        
-        // Match on city or neighborhoods
         const cityMatch = sale.city?.toLowerCase().includes(city.toLowerCase()) ||
           sale.general_location?.toLowerCase().includes(city.toLowerCase());
         const neighborhoodMatch = (neighborhoods || []).some((n) =>
-          sale.general_location?.toLowerCase().includes(n.toLowerCase())
+          sale.general_location?.toLowerCase().includes(n.toLowerCase()) ||
+          sale.city?.toLowerCase().includes(n.toLowerCase())
         );
-        
-        // If no specific city/neighborhood config, show all upcoming sales
-        const matchesLocation = city === '*' || cityMatch || neighborhoodMatch || !neighborhoods?.length;
-        
-        if (!isUpcoming) console.log(`Filtered out (past): "${sale.title}" date: ${sale.date}`);
-        
-        return matchesLocation && isUpcoming;
+        const matchesCity = cityMatch || neighborhoodMatch;
+        const saleEnd = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
+        const isUpcoming = saleEnd >= now;
+        return matchesCity && isUpcoming;
       });
-      console.log(`Matched sales for "${city}": ${filtered.length}`);
+      console.log(`Matched sales: ${filtered.length}`);
       return filtered;
     }
   });
