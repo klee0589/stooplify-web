@@ -44,6 +44,27 @@ function LayoutContent({ children, currentPageName }) {
   const isRootScreen = rootScreens.includes(currentPageName);
   const showBackButton = !isRootScreen;
 
+  // Save scroll position when leaving a tab
+  useEffect(() => {
+    if (isRootTab && mainContentRef.current) {
+      setTabStates((prev) => ({
+        ...prev,
+        [currentPageName]: {
+          scrollY: window.scrollY,
+          state: prev[currentPageName]?.state || {}
+        }
+      }));
+    }
+  }, [location.pathname, isRootTab, currentPageName]);
+
+  // Restore scroll position when returning to a tab
+  useEffect(() => {
+    if (isRootTab && tabStates[currentPageName]) {
+      const savedScrollY = tabStates[currentPageName].scrollY || 0;
+      window.scrollTo(0, savedScrollY);
+    }
+  }, [currentPageName, isRootTab, tabStates]);
+
   useEffect(() => {
     // Set favicon
     const setFavicon = () => {
