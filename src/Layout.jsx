@@ -345,6 +345,7 @@ function LayoutContent({ children, currentPageName }) {
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/4ba37a53b_Stooplify1-02.png"
                   alt="Stooplify"
                   className="h-8 w-auto"
+                  style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}
                   whileHover={{ scale: 1.05 }} />
                 </Link>
                 )}
@@ -356,6 +357,7 @@ function LayoutContent({ children, currentPageName }) {
                   src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/4ba37a53b_Stooplify1-02.png"
                   alt="Stooplify"
                   className="h-10 w-auto"
+                  style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.1))' }}
                   whileHover={{ scale: 1.05 }} />
             </Link>
 
