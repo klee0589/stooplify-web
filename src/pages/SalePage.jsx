@@ -357,9 +357,9 @@ export default function SalePage() {
                 <Navigation className="w-4 h-4" /> Get Directions
               </Button>
 
-              <Link to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}>
+              <Link to={createPageUrl('YardSales')}>
                 <Button variant="outline" className="w-full border-[#14B8FF] text-[#14B8FF] hover:bg-[#14B8FF]/5 font-semibold flex items-center justify-center gap-2 mt-2">
-                  View Full Listing <ArrowRight className="w-4 h-4" />
+                  Browse All Sales <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>
             </div>
