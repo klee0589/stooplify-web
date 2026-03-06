@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useTranslation } from '../components/translations';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -9,6 +9,7 @@ import HeroSection from '../components/home/HeroSection';
 import HowItWorks from '../components/home/HowItWorks';
 import FeaturedSales from '../components/home/FeaturedSales';
 import CTASection from '../components/home/CTASection';
+import { deferAnalyticsLoad } from '../components/AnalyticsLoader';
 
 const CITY_CARDS = [
   { label: 'Brooklyn', url: '/stoop-sales-brooklyn', emoji: '🏙️', sub: 'Stoop Sales' },
@@ -38,7 +39,19 @@ export default function Home() {
   const t = useTranslation(language);
 
   useEffect(() => {
-    base44.analytics.track({ eventName: 'home_page_viewed' });
+    // Defer analytics loading to avoid blocking main thread
+    deferAnalyticsLoad();
+    
+    // Track after paint if available
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(() => {
+        base44.analytics.track({ eventName: 'home_page_viewed' });
+      });
+    } else {
+      setTimeout(() => {
+        base44.analytics.track({ eventName: 'home_page_viewed' });
+      }, 0);
+    }
   }, []);
   
   // Featured sales - defer with suspense boundary
@@ -81,7 +94,9 @@ export default function Home() {
       />
       <HeroSection />
       <HowItWorks />
-      <FeaturedSales sales={sales} />
+      <Suspense fallback={<div className="h-96 bg-gray-100 dark:bg-gray-800 animate-pulse" />}>
+        <FeaturedSales sales={sales} />
+      </Suspense>
       <CTASection />
 
       {/* Browse by City Section */}
