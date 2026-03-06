@@ -54,14 +54,7 @@ export default function Home() {
     },
   });
 
-  // Fetch user count
-  const { data: userCount = 0 } = useQuery({
-    queryKey: ['userCount'],
-    queryFn: async () => {
-      const users = await base44.entities.User.list();
-      return users.length;
-    },
-  });
+  const userCount = 500; // Approximate community size
 
   const structuredData = {
     "@context": "https://schema.org",
