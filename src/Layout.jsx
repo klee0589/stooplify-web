@@ -74,41 +74,32 @@ function LayoutContent({ children, currentPageName }) {
 
   useEffect(() => {
     // Set favicon
-    const setFavicon = () => {
-      const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
-      link.type = 'image/png';
-      link.rel = 'icon';
-      link.href = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/26a5190cd_Stooplify-07.png';
-      document.head.appendChild(link);
-    };
-    setFavicon();
-
-    // Inject Google AdSense script
-    if (!document.querySelector('script[src*="adsbygoogle"]')) {
-      const adsScript = document.createElement('script');
-      adsScript.async = true;
-      adsScript.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9420381871665480';
-      adsScript.crossOrigin = 'anonymous';
-      document.head.appendChild(adsScript);
-    }
+    const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+    link.type = 'image/png';
+    link.rel = 'icon';
+    link.href = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/26a5190cd_Stooplify-07.png';
+    document.head.appendChild(link);
 
     const checkAuth = async () => {
-    try {
-      const isAuth = await base44.auth.isAuthenticated();
-      if (isAuth) {
-        const currentUser = await base44.auth.me();
-        setUser(currentUser);
-        setUserContext(currentUser);
-        // Identify user in PostHog
-        posthog.identify(currentUser.email, {
-          email: currentUser.email,
-          name: currentUser.full_name,
-          role: currentUser.role,
-        });
+      try {
+        const isAuth = await base44.auth.isAuthenticated();
+        if (isAuth) {
+          const currentUser = await base44.auth.me();
+          setUser(currentUser);
+          setUserContext(currentUser);
+          // Initialize PostHog when user is authenticated
+          initPostHog();
+          if (posthog) {
+            posthog.identify(currentUser.email, {
+              email: currentUser.email,
+              name: currentUser.full_name,
+              role: currentUser.role,
+            });
+          }
+        }
+      } catch (e) {
+        console.log('Not authenticated');
       }
-    } catch (e) {
-      console.log('Not authenticated');
-    }
     };
     checkAuth();
 
@@ -116,6 +107,13 @@ function LayoutContent({ children, currentPageName }) {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
     setLanguage(savedLang);
     document.documentElement.lang = savedLang;
+
+    // Lazy load PostHog after 5 seconds if not loaded
+    const timer = setTimeout(() => {
+      if (!posthog) initPostHog();
+    }, 5000);
+
+    return () => clearTimeout(timer);
   }, []);
 
   // Track page views on route change
