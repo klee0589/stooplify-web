@@ -84,6 +84,10 @@ import StoopSalesQueens from './pages/StoopSalesQueens';
 import YardSaleDetails from './pages/YardSaleDetails';
 import YardSales from './pages/YardSales';
 import YardSalesNearMeWeekend from './pages/YardSalesNearMeWeekend';
+import yardSales from './pages/yard-sales';
+import guides from './pages/guides';
+import addYardSale from './pages/add-yard-sale';
+import myYardSales from './pages/my-yard-sales';
 import __Layout from './Layout.jsx';
 
 
@@ -125,6 +129,10 @@ export const PAGES = {
     "YardSaleDetails": YardSaleDetails,
     "YardSales": YardSales,
     "YardSalesNearMeWeekend": YardSalesNearMeWeekend,
+    "yard-sales": yardSales,
+    "guides": guides,
+    "add-yard-sale": addYardSale,
+    "my-yard-sales": myYardSales,
 }
 
 export const pagesConfig = {
