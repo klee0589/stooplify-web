@@ -686,6 +686,7 @@ function LayoutContent({ children, currentPageName }) {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div className="col-span-1 md:col-span-2">
               <img
+                loading="lazy"
                 src={theme === 'dark' 
                   ? "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/9da695e20_Stooplify1-02.png"
                   : "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/ada49740a_Stooplify-01.png"
