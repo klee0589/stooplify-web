@@ -215,6 +215,8 @@ export default function YardSales() {
       eventName: isFavorited ? 'sale_unfavorited' : 'sale_favorited',
       properties: { sale_id: saleId }
     });
+    // Optimistic update
+    setFavorites(prev => isFavorited ? prev.filter(id => id !== saleId) : [...prev, saleId]);
     favoriteMutation.mutate(saleId);
   };
 
