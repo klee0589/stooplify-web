@@ -63,15 +63,17 @@ export default function VirtualSalesList({ sales, favorites, onToggleFavorite })
     );
   };
 
+  if (containerWidth === 0) return null;
+
   return (
-    <div ref={gridRef} style={{ width: '100%' }}>
+    <div ref={containerRef} style={{ width: '100%' }}>
       <VariableSizeGrid
         columnCount={columnCount}
         columnWidth={getColumnWidth}
         height={Math.ceil(sales.length / columnCount) * getRowHeight()}
         rowCount={Math.ceil(sales.length / columnCount)}
         rowHeight={getRowHeight}
-        width={gridRef.current?.offsetWidth || (typeof window !== 'undefined' ? window.innerWidth - 32 : 1024)}
+        width={containerWidth}
         itemData={{ sales, favorites, onToggleFavorite }}
       >
         {Cell}
