@@ -562,37 +562,21 @@ export default function YardSales() {
                 transition={{ duration: 0.3 }}
               >
                 {filteredSales.length === 0 ? (
-                  <div className="text-center py-20">
-                    <div className="w-20 h-20 bg-[#FF6F61]/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Map className="w-10 h-10 text-[#FF6F61]" />
-                    </div>
-                    <h3 className="text-xl font-semibold text-[#2E3A59] dark:text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                      {t('noSalesFound')}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-300 mb-4">{t('tryAdjustingFilters')}</p>
-                    <Button onClick={resetFilters} className="bg-[#FF6F61] hover:bg-[#e55a4d]">
-                      {t('resetFilters')}
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {filteredSales.map((sale, index) => (
-                      <motion.div
-                        key={sale.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                      >
-                        <SaleCard
-                          sale={sale}
-                          isFavorite={favorites.includes(sale.id)}
-                          onToggleFavorite={handleToggleFavorite}
-                          isPast={sale.isPast}
-                        />
-                      </motion.div>
-                    ))}
-                  </div>
-                )}
+                   <div className="text-center py-20">
+                     <div className="w-20 h-20 bg-[#FF6F61]/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                       <Map className="w-10 h-10 text-[#FF6F61]" />
+                     </div>
+                     <h3 className="text-xl font-semibold text-[#2E3A59] dark:text-white mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                       {t('noSalesFound')}
+                     </h3>
+                     <p className="text-gray-600 dark:text-gray-300 mb-4">{t('tryAdjustingFilters')}</p>
+                     <Button onClick={resetFilters} className="bg-[#FF6F61] hover:bg-[#e55a4d]">
+                       {t('resetFilters')}
+                     </Button>
+                   </div>
+                 ) : (
+                   <VirtualSalesList sales={filteredSales} favorites={favorites} onToggleFavorite={handleToggleFavorite} />
+                 )}
               </motion.div>
             ) : (
               <motion.div
