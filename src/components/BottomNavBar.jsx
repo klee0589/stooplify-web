@@ -8,7 +8,6 @@ import { useQuery } from '@tanstack/react-query';
 export default function BottomNavBar() {
   const location = useLocation();
   const [user, setUser] = useState(null);
-  const scrollPositions = useRef({});
 
   // Scroll to top on every navigation
   useEffect(() => {
