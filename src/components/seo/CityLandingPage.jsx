@@ -17,16 +17,16 @@ export default function CityLandingPage({ config }) {
   const { data: sales = [], isLoading } = useQuery({
     queryKey: ['cityLandingSales', city, state],
     queryFn: async () => {
-      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 20);
+      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
       const now = new Date();
       return allSales.filter((sale) => {
-        const matchesCity = sale.city?.toLowerCase().includes(city.toLowerCase()) ||
-        sale.state?.toLowerCase().includes(state.toLowerCase()) ||
-        sale.general_location?.toLowerCase().includes(city.toLowerCase()) ||
-        (neighborhoods || []).some((n) =>
-        sale.general_location?.toLowerCase().includes(n.toLowerCase()) ||
-        sale.city?.toLowerCase().includes(n.toLowerCase())
-        );
+        const matchesCity = (sale.state?.toLowerCase() === state.toLowerCase()) && 
+          (sale.city?.toLowerCase().includes(city.toLowerCase()) ||
+          sale.general_location?.toLowerCase().includes(city.toLowerCase()) ||
+          (neighborhoods || []).some((n) =>
+            sale.general_location?.toLowerCase().includes(n.toLowerCase()) ||
+            sale.city?.toLowerCase().includes(n.toLowerCase())
+          ));
         const saleEnd = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
         return matchesCity && saleEnd >= now;
       });
