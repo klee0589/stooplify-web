@@ -601,7 +601,7 @@ export default function YardSales() {
                 transition={{ duration: 0.3 }}
                 className="mb-20 md:mb-0"
               >
-                <div className="h-[600px] rounded-2xl overflow-hidden">
+                <div className="h-[calc(100vh-220px)] md:h-[600px] rounded-2xl overflow-hidden">
                   <SaleMap sales={filteredSales} onVisibleSalesChange={setVisibleMapSales} />
                 </div>
                 {visibleMapSales.length > 0 && (
