@@ -128,18 +128,18 @@ export default function CityLandingPage({ config }) {
               {sales.map((sale, i) =>
             <motion.div key={sale.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}>
                   <Link to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}
-              className="block bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:border-[#14B8FF] hover:shadow-lg transition-all group">
+              className="flex flex-col h-full bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-5 hover:border-[#14B8FF] hover:shadow-lg transition-all group">
                     <div className="flex justify-between items-start mb-2">
-                      <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-[#14B8FF] transition-colors">{sale.title}</h3>
-                      <ArrowRight className="w-4 h-4 text-[#14B8FF] opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 mt-0.5" />
+                      <h3 className="font-semibold text-gray-900 dark:text-white group-hover:text-[#14B8FF] transition-colors line-clamp-2">{sale.title}</h3>
+                      <ArrowRight className="w-4 h-4 text-[#14B8FF] opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 mt-0.5 ml-2" />
                     </div>
-                    <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400">
+                    <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mb-3 flex-wrap">
                       <span className="flex items-center gap-1"><Calendar className="w-3.5 h-3.5" />{format(parseISO(sale.date), 'MMM d')}</span>
                       {sale.start_time && <span className="flex items-center gap-1"><Clock className="w-3.5 h-3.5" />{sale.start_time}</span>}
                       <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" />{sale.general_location}</span>
                     </div>
                     {sale.categories && sale.categories.length > 0 &&
-                <div className="flex gap-1 mt-2">
+                <div className="flex gap-1 mt-auto">
                         {sale.categories.slice(0, 3).map((c) =>
                   <Badge key={c} className="bg-[#14B8FF]/10 text-[#14B8FF] text-xs">{c}</Badge>
                   )}
