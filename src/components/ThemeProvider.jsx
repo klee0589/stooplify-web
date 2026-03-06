@@ -42,7 +42,11 @@ export function ThemeProvider({ children }) {
 
 
   const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+    setTheme(prev => {
+      const next = prev === 'light' ? 'dark' : 'light';
+      localStorage.setItem('stooplify_theme', next);
+      return next;
+    });
   };
 
   return (
