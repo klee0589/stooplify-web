@@ -84,6 +84,11 @@ function LayoutContent({ children, currentPageName }) {
     document.documentElement.lang = savedLang;
   }, []);
 
+  // Track page views on route change
+  useEffect(() => {
+    posthog.capture('$pageview', { page: currentPageName });
+  }, [location.pathname]);
+
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
