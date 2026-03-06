@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 import { MapPin, Calendar, ArrowRight, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import { useTranslation } from '../translations';
+import { Badge } from '@/components/ui/badge';
 
 export default function FeaturedSales({ sales = [] }) {
   const [language, setLanguage] = useState('en');
