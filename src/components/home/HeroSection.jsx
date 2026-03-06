@@ -32,16 +32,23 @@ export default function HeroSection() {
   
   const t = useTranslation(language);
 
-  // Fetch real data
+  // Fetch real data - only on visible
   const { data: statsData } = useQuery({
     queryKey: ['heroStats'],
     queryFn: async () => {
-      const sales = await base44.entities.YardSale.filter({ status: 'approved' });
+      const sales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 500);
+      const now = new Date();
+      const liveSales = sales.filter(sale => {
+        const saleDate = new Date(sale.date);
+        saleDate.setHours(23, 59, 59);
+        return saleDate >= now;
+      });
       return {
-        activeSales: sales.length
+        activeSales: liveSales.length
       };
     },
-    initialData: { activeSales: 0 }
+    initialData: { activeSales: 0 },
+    staleTime: 60000 // Cache for 1 minute
   });
 
   const handleEmailSubmit = async (e) => {
