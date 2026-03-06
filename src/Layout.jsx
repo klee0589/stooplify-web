@@ -11,6 +11,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import BottomNavBar from '../components/BottomNavBar';
 import SentryErrorBoundary, { setUserContext } from '../components/SentryErrorBoundary';
 import { getPostHog } from '../components/utils/lazyIntegrations';
+import ChunkLoadMonitor from '../components/ChunkLoadMonitor';
 
 function LayoutContent({ children, currentPageName }) {
   const location = useLocation();
