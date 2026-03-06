@@ -93,12 +93,14 @@ export default function YardSales() {
     const checkAuth = async () => {
       try {
         const isAuth = await base44.auth.isAuthenticated();
-        if (isAuth) {
-          const currentUser = await base44.auth.me();
-          setUser(currentUser);
+        if (!isAuth) {
+          base44.auth.redirectToLogin(window.location.pathname);
+          return;
         }
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
       } catch (e) {
-        // User not authenticated, but that's okay - page is public
+        base44.auth.redirectToLogin(window.location.pathname);
       }
     };
     checkAuth();
