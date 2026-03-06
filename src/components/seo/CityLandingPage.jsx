@@ -49,8 +49,9 @@ export default function CityLandingPage({ config }) {
         }
         
         const matchesLocation = cityMatch || generalLocationMatch || neighborhoodMatch || zipMatch;
-        const saleEnd = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
-        const isUpcoming = saleEnd >= now;
+        const saleDate = new Date(sale.date);
+        saleDate.setHours(23, 59, 59); // End of day
+        const isUpcoming = saleDate >= now;
         return matchesLocation && isUpcoming;
       });
       console.log(`Matched sales: ${filtered.length}`);
