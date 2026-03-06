@@ -232,7 +232,7 @@ function LayoutContent({ children, currentPageName }) {
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
 
         :root {
-          --primary: #14B8FF;
+          --primary: #0099cc;
           --secondary: #1a2842;
           --accent: #F5A623;
           --bg-light: #FAFAFA;
@@ -240,7 +240,7 @@ function LayoutContent({ children, currentPageName }) {
         }
 
         .dark {
-          --primary: #14B8FF;
+          --primary: #66d9ff;
           --secondary: #0f1623;
           --accent: #F5A623;
           --bg-light: #0a0e1a;
@@ -295,14 +295,14 @@ function LayoutContent({ children, currentPageName }) {
         }
 
         .btn-primary {
-          background: var(--primary);
+          background: #0099cc;
           color: white;
           font-family: 'Poppins', sans-serif;
           font-weight: 500;
         }
 
         .btn-primary:hover {
-          background: #0da3e6;
+          background: #007aa3;
         }
 
         .btn-secondary {
