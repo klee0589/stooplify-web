@@ -12,7 +12,17 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import BottomNavBar from '../components/BottomNavBar';
 import SentryErrorBoundary, { setUserContext } from '../components/SentryErrorBoundary';
 
+// Initialize PostHog once
+if (typeof window !== 'undefined' && !posthog.__loaded) {
+  posthog.init('phc_O1v6eh3WZWysCmiW5sODyx8YScYNMEligZyMHZGEekb', {
+    api_host: 'https://us.i.posthog.com',
+    person_profiles: 'identified_only',
+    capture_pageview: false, // We'll capture manually for SPA
+  });
+}
+
 function LayoutContent({ children, currentPageName }) {
+  const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAvatarMenuOpen, setIsAvatarMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
