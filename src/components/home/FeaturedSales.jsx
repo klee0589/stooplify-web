@@ -67,73 +67,71 @@ export default function FeaturedSales({ sales = [] }) {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.1 }}
+              transition={{ delay: index * 0.05 }}
             >
               <Link to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}>
                 <motion.div
-                  whileHover={{ y: -8, boxShadow: '0 25px 50px rgba(0,0,0,0.12)' }}
-                  className="bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg transition-shadow duration-300 h-full"
+                  whileHover={{ y: -8 }}
+                  className="bg-white dark:bg-gray-800 rounded-3xl overflow-hidden shadow-lg transition-all duration-300 h-full flex flex-col"
                 >
                   {/* Image */}
-                  <div className="relative h-48 bg-gradient-to-br from-[#14B8FF]/20 to-[#F5A623]/20">
+                  <div className="relative h-48 bg-gradient-to-br from-[#14B8FF]/20 to-[#F5A623]/20 flex-shrink-0">
                     {sale.photos && sale.photos.length > 0 ? (
                        <img
-                         src={sale.photos[0]}
-                         alt={sale.title}
-                         className="w-full h-full object-cover"
-                         loading="lazy"
-                         width={600}
-                         height={400}
-                       />
+                          src={sale.photos[0]}
+                          alt={sale.title}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                          width={600}
+                          height={400}
+                        />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <MapPin className="w-12 h-12 text-[#14B8FF]/40" />
-                      </div>
+                       <div className="w-full h-full flex items-center justify-center">
+                         <MapPin className="w-12 h-12 text-[#14B8FF]/40" />
+                       </div>
                     )}
-                    {sale.category && (
-                      <span className="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-sm font-medium text-[#2E3A59] capitalize">
-                        {sale.category.replace('-', ' ')}
-                      </span>
+                    {sale.categories && sale.categories.length > 0 && (
+                      <div className="absolute top-3 left-3 flex gap-1">
+                        {sale.categories.slice(0, 2).map((cat) => (
+                          <Badge key={cat} className="bg-white/90 text-[#2E3A59] text-xs capitalize">
+                            {cat.replace('-', ' ')}
+                          </Badge>
+                        ))}
+                      </div>
                     )}
                   </div>
 
                   {/* Content */}
-                  <div className="p-6">
+                  <div className="p-6 flex flex-col flex-grow">
                     <h3 
-                      className="text-xl font-bold text-[#2E3A59] dark:text-white mb-2 line-clamp-1"
+                      className="text-lg font-bold text-[#2E3A59] dark:text-white mb-3 line-clamp-2"
                       style={{ fontFamily: 'Poppins, sans-serif' }}
                     >
                       {sale.title}
                     </h3>
-                    
-                    <div className="space-y-2 mb-4">
+
+                    <div className="space-y-2 mb-4 flex-grow">
                       <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-                        <Calendar className="w-4 h-4 text-[#14B8FF]" />
+                        <Calendar className="w-4 h-4 text-[#14B8FF] flex-shrink-0" />
                         <span className="text-sm">
-                          {sale.date ? format(new Date(sale.date), 'EEEE, MMM d') : 'Date TBD'}
+                          {sale.date ? format(new Date(sale.date), 'MMM d') : 'TBD'}
                         </span>
                       </div>
                       <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-                        <Clock className="w-4 h-4 text-[#F5A623]" />
+                        <Clock className="w-4 h-4 text-[#F5A623] flex-shrink-0" />
                         <span className="text-sm">
-                          {sale.start_time || '8:00 AM'} - {sale.end_time || '2:00 PM'}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
-                        <MapPin className="w-4 h-4 text-[#2E3A59]" />
-                        <span className="text-sm line-clamp-1">
-                          {sale.city}, {sale.state}
+                          {sale.start_time || '8am'} - {sale.end_time || '2pm'}
                         </span>
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-700">
-                      <span className="text-sm text-gray-500 dark:text-gray-400">
-                        {sale.views || 0} {t('views')}
+                    <div className="flex items-center justify-between pt-3 border-t border-gray-100 dark:border-gray-700 mt-auto">
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                        {sale.views || 0} views
                       </span>
-                      <span className="text-[#14B8FF] font-medium text-sm flex items-center gap-1">
-                        {t('viewDetails')}
-                        <ArrowRight className="w-4 h-4" />
+                      <span className="text-[#14B8FF] font-medium text-xs flex items-center gap-1">
+                        Details
+                        <ArrowRight className="w-3 h-3" />
                       </span>
                     </div>
                   </div>
@@ -145,4 +143,4 @@ export default function FeaturedSales({ sales = [] }) {
       </div>
     </section>
   );
-}
+  }
