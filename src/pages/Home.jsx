@@ -44,13 +44,29 @@ export default function Home() {
   const { data: sales = [] } = useQuery({
     queryKey: ['featuredSales'],
     queryFn: async () => {
-      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 6);
+      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
       // Filter to show only upcoming sales (not ended)
       const now = new Date();
       return allSales.filter(sale => {
-        const saleEndDateTime = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
-        return saleEndDateTime >= now;
-      });
+        const saleDate = new Date(sale.date);
+        saleDate.setHours(23, 59, 59); // End of day
+        return saleDate >= now;
+      }).slice(0, 6);
+    },
+  });
+  
+  // Get count of all live sales this weekend
+  const { data: allLiveSalesCount = 0 } = useQuery({
+    queryKey: ['allLiveSalesCount'],
+    queryFn: async () => {
+      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 500);
+      const now = new Date();
+      const count = allSales.filter(sale => {
+        const saleDate = new Date(sale.date);
+        saleDate.setHours(23, 59, 59);
+        return saleDate >= now;
+      }).length;
+      return count;
     },
   });
 
