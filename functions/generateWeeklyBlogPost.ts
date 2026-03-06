@@ -129,7 +129,7 @@ Return a JSON object with:
         // Create the blog post
         const blogPost = await base44.asServiceRole.entities.BlogPost.create({
             title: response.title,
-            slug: response.slug,
+            slug: slug,
             author_name: "Stooplify Team",
             author_email: "daniel@stooplify.com",
             excerpt: response.excerpt,
