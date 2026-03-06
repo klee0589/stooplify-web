@@ -278,11 +278,6 @@ export default function YardSales() {
       }
     }
     
-    // Distance filtering (if coordinates available)
-    if (filters.distance !== 'all' && sale.latitude && sale.longitude) {
-      return true;
-    }
-    
     // Payment filtering
     if (filters.payment !== 'all') {
       if (filters.payment === 'cash' && !sale.payment_cash) return false;
