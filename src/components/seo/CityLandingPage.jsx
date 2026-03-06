@@ -24,16 +24,15 @@ export default function CityLandingPage({ config }) {
         console.log('Sample sale:', { state: allSales[0].state, city: allSales[0].city, general_location: allSales[0].general_location });
       }
       const filtered = allSales.filter((sale) => {
-        const cityMatch = sale.city?.toLowerCase().includes(city.toLowerCase()) ||
-          sale.general_location?.toLowerCase().includes(city.toLowerCase());
+        const cityMatch = sale.city?.toLowerCase().includes(city.toLowerCase());
+        const generalLocationMatch = sale.general_location?.toLowerCase().includes(city.toLowerCase());
         const neighborhoodMatch = (neighborhoods || []).some((n) =>
-          sale.general_location?.toLowerCase().includes(n.toLowerCase()) ||
-          sale.city?.toLowerCase().includes(n.toLowerCase())
+          sale.general_location?.toLowerCase().includes(n.toLowerCase())
         );
-        const matchesCity = cityMatch || neighborhoodMatch;
+        const matchesLocation = cityMatch || generalLocationMatch || neighborhoodMatch;
         const saleEnd = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
         const isUpcoming = saleEnd >= now;
-        return matchesCity && isUpcoming;
+        return matchesLocation && isUpcoming;
       });
       console.log(`Matched sales: ${filtered.length}`);
       return filtered;
