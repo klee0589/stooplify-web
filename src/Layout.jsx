@@ -361,6 +361,8 @@ function LayoutContent({ children, currentPageName }) {
                 }
                 alt="Stooplify"
                 className="h-10 w-auto"
+                width={200}
+                height={80}
                 whileHover={{ scale: 1.05 }} />
             </Link>
 
