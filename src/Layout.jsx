@@ -683,10 +683,7 @@ function LayoutContent({ children, currentPageName }) {
             <div className="col-span-1 md:col-span-2">
               <img
                 loading="lazy"
-                src={theme === 'dark' 
-                  ? "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/9da695e20_Stooplify1-02.png"
-                  : "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/ada49740a_Stooplify-01.png"
-                }
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/4ba37a53b_Stooplify1-02.png"
                 alt="Stooplify"
                 className="h-10 w-auto mb-4" />
 
