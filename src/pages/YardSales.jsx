@@ -56,15 +56,16 @@ const CATEGORY_PAGES = [
 ];
 
 export default function YardSales() {
-  const [viewMode, setViewMode] = useState('map');
-  const [filters, setFilters] = useState({ categories: [], date: 'all', distance: 'all', payment: 'all', search: '' });
-  const [showEndedSales, setShowEndedSales] = useState(false);
-  const [favorites, setFavorites] = useState([]);
-  const [user, setUser] = useState(null);
-  const [language, setLanguage] = useState('en');
-  const [visibleMapSales, setVisibleMapSales] = useState([]);
-  const [userLocation, setUserLocation] = useState(null);
-  const [locationLoaded, setLocationLoaded] = useState(false);
+   const [viewMode, setViewMode] = useState('map');
+   const [filters, setFilters] = useState({ categories: [], date: 'all', distance: 'all', payment: 'all', search: '' });
+   const [showEndedSales, setShowEndedSales] = useState(false);
+   const [favorites, setFavorites] = useState([]);
+   const [user, setUser] = useState(null);
+   const [language, setLanguage] = useState('en');
+   const [visibleMapSales, setVisibleMapSales] = useState([]);
+   const [userLocation, setUserLocation] = useState(null);
+   const [locationLoaded, setLocationLoaded] = useState(false);
+   const gridRef = useRef(null);
   
   useEffect(() => {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
