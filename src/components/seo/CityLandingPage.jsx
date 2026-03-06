@@ -70,7 +70,7 @@ export default function CityLandingPage({ config }) {
               <Button onClick={() => navigate(createPageUrl('YardSales'))} className="bg-white text-[#1a2842] hover:bg-gray-100 font-semibold px-8 py-6 text-lg">
                 Browse All Sales
               </Button>
-              <Button onClick={() => navigate(createPageUrl('AddYardSale'))} variant="outline" className="bg-background text-slate-950 px-8 py-6 text-lg font-medium rounded-md inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border shadow-sm hover:text-accent-foreground h-9 border-white hover:bg-white/10">
+              <Button onClick={() => navigate(createPageUrl('AddYardSale'))} variant="outline" className="bg-slate-50 text-slate-950 px-8 py-6 text-lg font-medium rounded-md inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border shadow-sm hover:text-accent-foreground h-9 border-white hover:bg-white/10">
                 <PlusCircle className="w-5 h-5 mr-2" /> List Your Sale Free
               </Button>
             </div>
@@ -187,7 +187,7 @@ export default function CityLandingPage({ config }) {
             <Button onClick={() => navigate(createPageUrl('AddYardSale'))} className="bg-white text-slate-900 px-4 py-2 text-sm font-semibold rounded-md inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 hover:bg-gray-100">
               List Your Sale Free
             </Button>
-            <Button onClick={() => navigate(createPageUrl('YardSales'))} variant="outline" className="bg-background text-slate-900 px-4 py-2 text-sm font-medium rounded-md inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border shadow-sm hover:text-accent-foreground h-9 border-white hover:bg-white/10">
+            <Button onClick={() => navigate(createPageUrl('YardSales'))} variant="outline" className="bg-slate-50 text-slate-950 px-4 py-2 text-sm font-medium rounded-md inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border shadow-sm hover:text-accent-foreground h-9 border-white hover:bg-white/10">
               Browse Nearby Sales
             </Button>
           </div>
