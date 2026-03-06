@@ -80,7 +80,7 @@ function LayoutContent({ children, currentPageName }) {
     const link = document.querySelector("link[rel*='icon']") || document.createElement('link');
     link.type = 'image/png';
     link.rel = 'icon';
-    link.href = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/26a5190cd_Stooplify-07.png';
+    link.href = 'https://base44files.s3.us-east-1.amazonaws.com/stooplify/Stooplify-07-favicon.png';
     document.head.appendChild(link);
 
     const checkAuth = async () => {
