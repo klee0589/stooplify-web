@@ -20,34 +20,22 @@ export default function CityLandingPage({ config }) {
       const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
       const now = new Date();
       console.log(`Filtering for ${city}, ${state}. Total approved sales: ${allSales.length}`);
+      if (allSales.length > 0) {
+        console.log('Sample sale:', { state: allSales[0].state, city: allSales[0].city, general_location: allSales[0].general_location });
+      }
       const filtered = allSales.filter((sale) => {
-        const stateMatch = sale.state?.toLowerCase().trim() === state.toLowerCase().trim();
         const cityMatch = sale.city?.toLowerCase().includes(city.toLowerCase()) ||
           sale.general_location?.toLowerCase().includes(city.toLowerCase());
         const neighborhoodMatch = (neighborhoods || []).some((n) =>
           sale.general_location?.toLowerCase().includes(n.toLowerCase()) ||
           sale.city?.toLowerCase().includes(n.toLowerCase())
         );
-        const matchesCity = stateMatch && (cityMatch || neighborhoodMatch);
+        const matchesCity = cityMatch || neighborhoodMatch;
         const saleEnd = new Date(`${sale.date}T${sale.end_time || '23:59'}`);
         const isUpcoming = saleEnd >= now;
-        if (!matchesCity || !isUpcoming) {
-          console.log(`Filtered out: "${sale.title}"`, { 
-            saleState: sale.state, 
-            expectedState: state,
-            saleCity: sale.city, 
-            saleGeneralLocation: sale.general_location,
-            expectedCity: city,
-            saleDate: sale.date,
-            stateMatch, 
-            cityMatch,
-            neighborhoodMatch,
-            isUpcoming
-          });
-        }
         return matchesCity && isUpcoming;
       });
-      console.log(`Matched sales: ${filtered.length}`, filtered);
+      console.log(`Matched sales: ${filtered.length}`);
       return filtered;
     }
   });
