@@ -256,8 +256,8 @@ export default function HeroSection() {
 
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1, y: [0, 5, 0] }}
-                transition={{ delay: 1, duration: 3.5, repeat: Infinity, repeatType: "reverse" }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 1 }}
                 className="absolute -bottom-4 -left-4 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-xl"
               >
                 <div className="flex items-center gap-3">
