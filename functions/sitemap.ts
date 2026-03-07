@@ -80,9 +80,9 @@ Deno.serve(async (req) => {
   }).join('\n');
 
   const blogEntries = blogPosts.map(post => {
-    const lastmod = post.updated_date
-      ? new Date(post.updated_date).toISOString().split('T')[0]
-      : (post.publish_date ? new Date(post.publish_date).toISOString().split('T')[0] : today);
+    const lastmod = post.publish_date
+      ? new Date(post.publish_date).toISOString().split('T')[0]
+      : today;
     return `  <url>
     <loc>https://stooplify.com/blog/${post.slug}</loc>
     <lastmod>${lastmod}</lastmod>
