@@ -270,7 +270,7 @@ export default function Blog() {
                       </div>
                     </div>
                   </Link>
-                </motion.article>
+                  </motion.article>
                 </React.Fragment>
               ))}
             </div>
