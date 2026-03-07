@@ -111,10 +111,10 @@ function LayoutContent({ children, currentPageName }) {
     setLanguage(savedLang);
     document.documentElement.lang = savedLang;
 
-    // Lazy load PostHog after 5 seconds if not loaded
+    // Lazy load PostHog after 8 seconds to avoid blocking initial paint
     const timer = setTimeout(() => {
       if (!posthog) initPostHog();
-    }, 5000);
+    }, 8000);
 
     return () => clearTimeout(timer);
   }, []);
