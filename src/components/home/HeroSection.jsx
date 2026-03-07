@@ -81,33 +81,11 @@ export default function HeroSection() {
 
   return (
     <section className="relative min-h-[90vh] flex items-center overflow-hidden">
-      {/* Background with animated gradient */}
+      {/* Background gradient - no JS animations for performance */}
       <div className="absolute inset-0 bg-gradient-to-br from-[#FFF5F4] via-white to-[#F5F7FF] dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-        {/* Animated floating shapes */}
-        <motion.div
-          animate={{ 
-            y: [0, -20, 0],
-            rotate: [0, 5, 0]
-          }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-20 right-[10%] w-32 h-32 bg-[#FF6F61]/10 rounded-full blur-xl"
-        />
-        <motion.div
-          animate={{ 
-            y: [0, 20, 0],
-            rotate: [0, -5, 0]
-          }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-40 left-[5%] w-40 h-40 bg-[#F5A623]/10 rounded-full blur-xl"
-        />
-        <motion.div
-          animate={{ 
-            y: [0, 15, 0],
-            x: [0, 10, 0]
-          }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/2 right-[30%] w-24 h-24 bg-[#2E3A59]/5 rounded-full blur-xl"
-        />
+        <div className="absolute top-20 right-[10%] w-32 h-32 bg-[#FF6F61]/10 rounded-full blur-xl" />
+        <div className="absolute bottom-40 left-[5%] w-40 h-40 bg-[#F5A623]/10 rounded-full blur-xl" />
+        <div className="absolute top-1/2 right-[30%] w-24 h-24 bg-[#2E3A59]/5 rounded-full blur-xl" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
