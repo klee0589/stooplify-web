@@ -200,8 +200,21 @@ export default function Blog() {
           <>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {displayedPosts.map((post, index) => (
+                <React.Fragment key={post.id}>
+                {index === 5 && (
+                  <div className="md:col-span-2 lg:col-span-3 my-2">
+                    <ins
+                      className="adsbygoogle"
+                      style={{ display: 'block' }}
+                      data-ad-format="fluid"
+                      data-ad-layout-key="-5p+co-t-9j+pj"
+                      data-ad-client="ca-pub-9420381871665480"
+                      data-ad-slot="1031641212"
+                    />
+                    <script dangerouslySetInnerHTML={{ __html: '(adsbygoogle = window.adsbygoogle || []).push({});' }} />
+                  </div>
+                )}
                 <motion.article
-                  key={post.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
