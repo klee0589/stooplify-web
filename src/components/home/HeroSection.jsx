@@ -239,8 +239,8 @@ export default function HeroSection() {
               {/* Floating Cards */}
               <motion.div
                 initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1, y: [0, -5, 0] }}
-                transition={{ delay: 0.8, duration: 3, repeat: Infinity, repeatType: "reverse" }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.8 }}
                 className="absolute -top-4 -right-4 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-xl"
               >
                 <div className="flex items-center gap-3">
