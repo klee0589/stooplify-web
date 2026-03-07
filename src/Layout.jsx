@@ -225,11 +225,7 @@ function LayoutContent({ children, currentPageName }) {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
       <a href="#main-content" className="skip-to-content">Skip to main content</a>
-      {/* Preconnect to critical origins */}
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
 
         :root {
           --primary: #0099cc;
