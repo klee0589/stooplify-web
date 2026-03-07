@@ -157,9 +157,9 @@ export default function Blog() {
               {t.subtitle}
             </p>
 
-            {/* Search */}
-            <div className="max-w-md mx-auto mb-6">
-              <div className="relative">
+            {/* Search + Sort */}
+            <div className="max-w-xl mx-auto mb-6 flex gap-3">
+              <div className="flex-1">
                 <Input
                   type="text"
                   placeholder={t.searchPlaceholder}
@@ -171,6 +171,15 @@ export default function Blog() {
                   className="bg-white text-slate-950 pl-4 px-3 py-6 text-lg rounded-md flex h-9 w-full border border-input shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                 />
               </div>
+              <select
+                value={sortOrder}
+                onChange={(e) => { setSortOrder(e.target.value); goToPage(1); }}
+                className="bg-white text-slate-800 text-sm font-medium rounded-md border border-input shadow-sm px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#14B8FF] cursor-pointer"
+              >
+                <option value="newest">Newest</option>
+                <option value="oldest">Oldest</option>
+                <option value="az">A–Z</option>
+              </select>
             </div>
           </motion.div>
         </div>
