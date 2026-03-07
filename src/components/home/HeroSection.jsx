@@ -221,13 +221,7 @@ export default function HeroSection() {
           >
            <div className="relative w-full aspect-square max-w-lg mx-auto">
              {/* Main Image Container */}
-             <motion.div
-               initial={{ y: 0 }}
-               whileInView={{ y: [0, -10, 0] }}
-               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-               viewport={{ once: false }}
-               className="absolute inset-0"
-             >
+             <div className="absolute inset-0">
                <div className="w-full h-full bg-gradient-to-br from-[#FF6F61]/20 to-[#F5A623]/20 rounded-[3rem] overflow-hidden">
                   <img
                     src="https://images.unsplash.com/photo-1567401893414-76b7b1e5a7a5?w=500&h=500&q=60"
@@ -235,11 +229,12 @@ export default function HeroSection() {
                     className="w-full h-full object-cover"
                     width={500}
                     height={500}
-                    loading="lazy"
-                    decoding="async"
+                    loading="eager"
+                    fetchpriority="high"
+                    decoding="sync"
                   />
                </div>
-             </motion.div>
+             </div>
 
               {/* Floating Cards */}
               <motion.div
