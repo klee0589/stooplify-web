@@ -43,6 +43,7 @@ const blogTranslations = {
 export default function Blog() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  const [sortOrder, setSortOrder] = useState('newest');
   const [language, setLanguage] = useState(() => localStorage.getItem('stooplify_lang') || 'en');
 
   // Read page from URL query param
