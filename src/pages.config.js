@@ -85,15 +85,15 @@ import YardSaleDetails from './pages/YardSaleDetails';
 import YardSales from './pages/YardSales';
 import YardSalesNearMeWeekend from './pages/YardSalesNearMeWeekend';
 import addYardSale from './pages/add-yard-sale';
-import guides from './pages/guides';
-import myYardSales from './pages/my-yard-sales';
-import yardSales from './pages/yard-sales';
 import guidesAdvertiseYardSale from './pages/guides-advertise-yard-sale';
+import guidesBestTimeYardSale from './pages/guides-best-time-yard-sale';
 import guidesFindYardSales from './pages/guides-find-yard-sales';
 import guidesPermitRequirementsNyc from './pages/guides-permit-requirements-nyc';
 import guidesPricingYardSaleItems from './pages/guides-pricing-yard-sale-items';
-import guidesBestTimeYardSale from './pages/guides-best-time-yard-sale';
 import guidesSeniorsYardSales from './pages/guides-seniors-yard-sales';
+import guides from './pages/guides';
+import myYardSales from './pages/my-yard-sales';
+import yardSales from './pages/yard-sales';
 import __Layout from './Layout.jsx';
 
 
@@ -136,15 +136,15 @@ export const PAGES = {
     "YardSales": YardSales,
     "YardSalesNearMeWeekend": YardSalesNearMeWeekend,
     "add-yard-sale": addYardSale,
-    "guides": guides,
-    "my-yard-sales": myYardSales,
-    "yard-sales": yardSales,
     "guides-advertise-yard-sale": guidesAdvertiseYardSale,
+    "guides-best-time-yard-sale": guidesBestTimeYardSale,
     "guides-find-yard-sales": guidesFindYardSales,
     "guides-permit-requirements-nyc": guidesPermitRequirementsNyc,
     "guides-pricing-yard-sale-items": guidesPricingYardSaleItems,
-    "guides-best-time-yard-sale": guidesBestTimeYardSale,
     "guides-seniors-yard-sales": guidesSeniorsYardSales,
+    "guides": guides,
+    "my-yard-sales": myYardSales,
+    "yard-sales": yardSales,
 }
 
 export const pagesConfig = {
