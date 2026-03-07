@@ -61,15 +61,16 @@ export default function Blog() {
 
   const offset = (currentPage - 1) * POSTS_PER_PAGE;
 
+  const sortParam = sortOrder === 'newest' ? '-publish_date' : sortOrder === 'oldest' ? 'publish_date' : 'title';
+
   // Fetch current page of posts
   const { data: posts = [], isLoading } = useQuery({
-    queryKey: ['blogPosts', currentPage, searchTerm],
+    queryKey: ['blogPosts', currentPage, searchTerm, sortOrder],
     queryFn: async () => {
       if (searchTerm) {
-        // For search, fetch all and filter client-side
-        return await base44.entities.BlogPost.filter({ status: 'published' }, '-publish_date');
+        return await base44.entities.BlogPost.filter({ status: 'published' }, sortParam);
       }
-      return await base44.entities.BlogPost.filter({ status: 'published' }, '-publish_date', POSTS_PER_PAGE + 1, offset);
+      return await base44.entities.BlogPost.filter({ status: 'published' }, sortParam, POSTS_PER_PAGE + 1, offset);
     },
     keepPreviousData: true
   });
