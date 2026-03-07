@@ -263,8 +263,12 @@ export default function BlogPost() {
           className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300"
           style={{ fontFamily: 'Inter, sans-serif' }}
         >
-          <ReactMarkdown
-            components={{
+          {(() => {
+            const paragraphs = displayContent.split('\n\n');
+            const adAfter = 2; // Insert ad after the 2nd paragraph
+            const before = paragraphs.slice(0, adAfter).join('\n\n');
+            const after = paragraphs.slice(adAfter).join('\n\n');
+            const mdComponents = {
               h1: ({ children }) => <h1 className="text-4xl font-bold text-gray-900 dark:text-white mt-20 mb-8" style={{ fontFamily: 'Poppins, sans-serif' }}>{children}</h1>,
               h2: ({ children }) => <h2 className="text-3xl font-bold text-gray-900 dark:text-white mt-20 mb-8" style={{ fontFamily: 'Poppins, sans-serif' }}>{children}</h2>,
               h3: ({ children }) => <h3 className="text-2xl font-bold text-gray-900 dark:text-white mt-16 mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>{children}</h3>,
@@ -283,10 +287,26 @@ export default function BlogPost() {
               ),
               img: ({ src, alt }) => <img src={src} alt={alt} className="w-full h-auto rounded-lg my-12" />,
               hr: () => <hr className="my-16 border-gray-200 dark:border-gray-700" />,
-            }}
-          >
-            {displayContent}
-          </ReactMarkdown>
+            };
+            return (
+              <>
+                <ReactMarkdown components={mdComponents}>{before}</ReactMarkdown>
+                {/* In-article Ad */}
+                <div className="my-8 text-center not-prose">
+                  <ins
+                    className="adsbygoogle"
+                    style={{ display: 'block', textAlign: 'center' }}
+                    data-ad-layout="in-article"
+                    data-ad-format="fluid"
+                    data-ad-client="ca-pub-9420381871665480"
+                    data-ad-slot="8718559545"
+                  />
+                  <script dangerouslySetInnerHTML={{ __html: '(adsbygoogle = window.adsbygoogle || []).push({});' }} />
+                </div>
+                <ReactMarkdown components={mdComponents}>{after}</ReactMarkdown>
+              </>
+            );
+          })()}
         </motion.div>
 
         {/* Footer CTA */}
