@@ -38,10 +38,12 @@ Deno.serve(async (req) => {
           });
           console.log('Activated subscription for user:', userEmail);
         } else {
+          // Single listing purchase — grant them an extra listing slot by clearing rate limit
           await base44.asServiceRole.entities.User.update(user.id, {
             free_listings_used: 0,
+            last_listing_date: null,
           });
-          console.log('Reset listing count for user:', userEmail);
+          console.log('Granted single listing for user:', userEmail);
         }
       }
     }
