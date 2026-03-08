@@ -123,6 +123,7 @@ function LayoutContent({ children, currentPageName }) {
       }
     };
     checkAuth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
 
     // Load language preference
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
