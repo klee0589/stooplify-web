@@ -522,10 +522,14 @@ export default function AddYardSale() {
           <h1
             className="text-3xl font-bold text-[#2E3A59] dark:text-white mb-2"
             style={{ fontFamily: 'Poppins, sans-serif' }}>
-
             {isEditMode ? t('editYourYardSale') : t('addYourYardSale')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400">{isEditMode ? t('updateYourSaleDetails') : t('listYourSaleInJustSteps')}</p>
+          {!isEditMode && !user?.subscription_active && (
+            <div className="mt-3 inline-flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-200 rounded-full text-sm text-green-700 font-medium">
+              <span>✅</span> Your first listing is FREE — up to 3 photos, single day
+            </div>
+          )}
         </motion.div>
 
         {/* Progress Steps */}
