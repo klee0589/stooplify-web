@@ -95,7 +95,7 @@ Make posts varied - e.g. one for buyers, one for sellers, one seasonal/holiday-t
         const createdPosts = [];
 
         for (const postData of response.posts) {
-            if (!postData.title || !postData.slug) {
+            if (!postData || !postData.title || !postData.slug) {
                 console.warn('Skipping invalid post data:', postData);
                 continue;
             }
