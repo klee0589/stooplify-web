@@ -171,6 +171,11 @@ function LayoutContent({ children, currentPageName }) {
 
   const t = useTranslation(language);
 
+  // Don't render protected pages until auth is confirmed
+  if (!isAuthChecked && !PUBLIC_PAGES.includes(currentPageName)) {
+    return <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900" />;
+  }
+
   // Fetch user's yard sales count
   const { data: userSales = [] } = useQuery({
     queryKey: ['userYardSales', user?.email],
