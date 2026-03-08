@@ -102,6 +102,10 @@ Return a JSON object with:
 
         console.log('AI response received:', response);
 
+        if (!response || !response.title) {
+            throw new Error('LLM returned an empty or invalid response');
+        }
+
         // Generate a featured image for the blog post
         let featured_image_url = null;
         try {
