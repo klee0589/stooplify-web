@@ -108,9 +108,18 @@ function LayoutContent({ children, currentPageName }) {
               role: currentUser.role,
             });
           }
+        } else if (!PUBLIC_PAGES.includes(currentPageName)) {
+          base44.auth.redirectToLogin();
+          return;
         }
       } catch (e) {
         console.log('Not authenticated');
+        if (!PUBLIC_PAGES.includes(currentPageName)) {
+          base44.auth.redirectToLogin();
+          return;
+        }
+      } finally {
+        setIsAuthChecked(true);
       }
     };
     checkAuth();
