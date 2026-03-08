@@ -618,6 +618,17 @@ export default function Profile() {
                       onCheckedChange={(checked) => toggleNotificationSetting.mutate({ notify_reminders: checked })}
                     />
                   </div>
+
+                  <div className="flex items-center justify-between py-2 pl-4">
+                    <div>
+                      <p className="font-medium text-[#2E3A59] dark:text-white">Blog posts & tips</p>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">New yard sale tips, guides & articles</p>
+                    </div>
+                    <Switch
+                      checked={user.notify_blog ?? true}
+                      onCheckedChange={(checked) => toggleNotificationSetting.mutate({ notify_blog: checked })}
+                    />
+                  </div>
                 </div>
 
                 {/* Test Notifications Button - Only for admin */}
