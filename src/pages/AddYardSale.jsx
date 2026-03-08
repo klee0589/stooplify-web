@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { useTranslation } from '../components/translations';
 import SEO from '../components/SEO';
 import { DrawerSelect } from '@/components/ui/drawer-select';
+import UpgradePrompt from '../components/sales/UpgradePrompt';
 
 export default function AddYardSale() {
   const urlParams = new URLSearchParams(window.location.search);
