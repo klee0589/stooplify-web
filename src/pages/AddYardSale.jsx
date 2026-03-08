@@ -1057,11 +1057,11 @@ export default function AddYardSale() {
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-sm text-gray-600">
-                    {photos.length} / {user?.subscription_active ? '10' : '3'} {t('photos')}
+                    {photos.length} / {user?.subscription_active ? '15' : '3'} {t('photos')}
                   </p>
                   {!user?.subscription_active && photos.length >= 3 &&
                 <p className="text-xs text-[#FF6F61]">
-                      {t('upgradeForMorePhotos')}
+                      Upgrade to add up to 15 photos
                     </p>
                 }
                 </div>
