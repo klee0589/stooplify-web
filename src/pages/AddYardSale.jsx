@@ -59,6 +59,7 @@ export default function AddYardSale() {
   const [needsPayment, setNeedsPayment] = useState(false);
   const [isCheckingPayment, setIsCheckingPayment] = useState(false);
   const [isLoadingSale, setIsLoadingSale] = useState(isEditMode);
+  const [freeListingBlocked, setFreeListingBlocked] = useState(null); // null | 'active_sale' | 'rate_limit'
   const [aiDescription, setAiDescription] = useState(null);
   const [showAiPreview, setShowAiPreview] = useState(false);
   const [editableDescription, setEditableDescription] = useState('');
