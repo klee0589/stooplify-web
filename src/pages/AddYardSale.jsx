@@ -111,16 +111,28 @@ export default function AddYardSale() {
              const isAdmin = currentUser.role === 'admin';
              const hasSubscription = currentUser.subscription_active || false;
              const hasUsedFreeListing = (currentUser.free_listings_used || 0) >= 1;
-
-             // Admins don't need payment, payment needed if: they've used free listing AND don't have subscription
              const needsPay = !isAdmin && hasUsedFreeListing && !hasSubscription;
              setNeedsPayment(needsPay);
 
-             // If they have no subscription and have used their free listing, redirect to MyYardSales with explanation
-             if (needsPay) {
-               toast.error("You've used your free listing. Please upgrade to post more sales.", { duration: 6000 });
-               navigate(createPageUrl('MyYardSales') + '?upgrade=true');
-               return;
+             if (!needsPay && !isAdmin) {
+               // Check: 1 active sale at a time
+               const today = new Date().toISOString().split('T')[0];
+               const activeSales = await base44.entities.YardSale.filter({ created_by: currentUser.email });
+               const hasFutureSale = activeSales.some(s => s.status === 'approved' && s.date >= today);
+               if (hasFutureSale) {
+                 setFreeListingBlocked('active_sale');
+                 return;
+               }
+
+               // Rate limit: 1 listing per 7 days
+               if (currentUser.last_listing_date) {
+                 const lastDate = new Date(currentUser.last_listing_date);
+                 const daysSince = (Date.now() - lastDate.getTime()) / (1000 * 60 * 60 * 24);
+                 if (daysSince < 7) {
+                   setFreeListingBlocked('rate_limit');
+                   return;
+                 }
+               }
              }
            }
 
