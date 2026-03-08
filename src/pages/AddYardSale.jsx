@@ -235,17 +235,23 @@ export default function AddYardSale() {
         return { id: editSaleId };
       } else {
         // Create new sale
+        const isSubscribed = user?.subscription_active;
+        const listingType = isSubscribed ? 'paid' : 'free';
+        const photoLimit = isSubscribed ? 15 : 3;
         const sale = await base44.entities.YardSale.create({
           ...data,
           ...coordinates,
-          photos: photos,
+          photos: photos.slice(0, photoLimit),
           status: 'approved',
-          views: 0
+          views: 0,
+          listing_type: listingType,
+          is_featured: isSubscribed
         });
 
-        // Increment free_listings_used
+        // Track usage
         await base44.auth.updateMe({
-          free_listings_used: (user.free_listings_used || 0) + 1
+          free_listings_used: (user.free_listings_used || 0) + 1,
+          last_listing_date: new Date().toISOString()
         });
 
         return sale;
