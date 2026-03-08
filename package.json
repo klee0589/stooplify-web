@@ -81,7 +81,8 @@
     "@sentry/react": "^7.100.0",
     "qrcode.react": "^3.1.0",
     "posthog-js": "^1.240.6",
-    "normalize-range": "^0.1.2"
+    "normalize-range": "^0.1.2",
+    "autoprefixer": "^10.4.20"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
