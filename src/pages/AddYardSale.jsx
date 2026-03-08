@@ -329,9 +329,9 @@ export default function AddYardSale() {
     const file = e.target.files[0];
     if (!file) return;
 
-    const photoLimit = user?.subscription_active ? 10 : 3;
+    const photoLimit = user?.subscription_active ? 15 : 3;
     if (photos.length >= photoLimit) {
-      toast.error(user?.subscription_active ? 'Maximum 10 photos allowed' : 'Maximum 3 photos for free users. Upgrade to Premium for up to 10 photos.');
+      toast.error(user?.subscription_active ? 'Maximum 15 photos allowed' : 'Free listings allow up to 3 photos. Upgrade to add up to 15 photos.');
       return;
     }
 
