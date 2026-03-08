@@ -278,11 +278,11 @@ export default function AddYardSale() {
       properties: { count: files.length }
     });
 
-    const photoLimit = user?.subscription_active ? 10 : 3;
+    const photoLimit = user?.subscription_active ? 15 : 3;
     const remainingSlots = photoLimit - photos.length;
 
     if (remainingSlots <= 0) {
-      toast.error(user?.subscription_active ? 'Maximum 10 photos allowed' : 'Maximum 3 photos for free users. Upgrade to Premium for up to 10 photos.');
+      toast.error(user?.subscription_active ? 'Maximum 15 photos allowed' : 'Free listings allow up to 3 photos. Upgrade to add up to 15 photos.');
       return;
     }
 
