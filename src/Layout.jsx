@@ -36,7 +36,16 @@ function LayoutContent({ children, currentPageName }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAvatarMenuOpen, setIsAvatarMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
+  const [isAuthChecked, setIsAuthChecked] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  const PUBLIC_PAGES = [
+    'Blog', 'BlogPost', 'BlogSlug',
+    'Guides', 'GuidesAdvertise', 'GuidesFindSales', 'GuidesPermit', 'GuidesPricing', 'GuidesTimings', 'GuidesSeniors',
+    'guides', 'guides-advertise-yard-sale', 'guides-best-time-yard-sale', 'guides-find-yard-sales',
+    'guides-permit-requirements-nyc', 'guides-pricing-yard-sale-items', 'guides-seniors-yard-sales',
+    'Legal'
+  ];
   const [language, setLanguage] = useState('en');
   const { theme, toggleTheme } = useTheme();
   const queryClient = useQueryClient();
