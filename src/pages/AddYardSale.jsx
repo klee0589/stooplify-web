@@ -449,6 +449,28 @@ export default function AddYardSale() {
 
   }
 
+  // Free listing blocked screen
+  if (freeListingBlocked) {
+    return (
+      <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900 flex items-center justify-center p-4">
+        <div className="max-w-md w-full">
+          <UpgradePrompt
+            reason={freeListingBlocked}
+            onUpgrade={(type) => {
+              const priceId = type === 'subscription' ? 'price_1Sp0DuEBgBmaTVQE0iSg1m5n' : 'price_1Sp0DuEBgBmaTVQEKO1W2NrG';
+              handleCheckout(priceId, type);
+            }}
+          />
+          <p className="text-center mt-4 text-sm text-gray-500">
+            {freeListingBlocked === 'active_sale'
+              ? 'Your current free listing must expire before you can post another.'
+              : 'Free plan: 1 new listing every 7 days. Upgrade for unlimited.'}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-[#F9F9F9] flex items-center justify-center p-4">
