@@ -72,6 +72,7 @@ Return a JSON object with:
 
         const response = await base44.asServiceRole.integrations.Core.InvokeLLM({
             prompt: prompt,
+            model: "gemini_3_flash",
             add_context_from_internet: true,
             response_json_schema: {
                 type: "object",
