@@ -48,6 +48,8 @@ Requirements:
   * ${topicData.promptExtra}
 - End with a CTA paragraph encouraging readers to browse or post on Stooplify
 
+Also provide full Spanish translations of all text fields.
+
 Return a JSON object with these exact fields:
 - title: string (compelling SEO title, ~60 chars)
 - slug: string (URL-friendly, lowercase, hyphens, no special chars)
@@ -55,7 +57,11 @@ Return a JSON object with these exact fields:
 - content: string (full markdown content)
 - meta_description: string (150-160 chars, includes primary keyword)
 - meta_keywords: array of 5-8 keyword strings
-- reading_time_minutes: number`;
+- reading_time_minutes: number
+- title_es: string (Spanish title)
+- excerpt_es: string (Spanish excerpt, 140-155 chars)
+- content_es: string (full Spanish markdown content, natural fluent translation)
+- meta_description_es: string (Spanish meta description, 150-160 chars)`;
 
   const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
     prompt,
@@ -69,6 +75,10 @@ Return a JSON object with these exact fields:
         meta_description: { type: 'string' },
         meta_keywords: { type: 'array', items: { type: 'string' } },
         reading_time_minutes: { type: 'number' },
+        title_es: { type: 'string' },
+        excerpt_es: { type: 'string' },
+        content_es: { type: 'string' },
+        meta_description_es: { type: 'string' },
       },
       required: ['title', 'slug', 'excerpt', 'content', 'meta_description'],
     },
@@ -152,6 +162,10 @@ Deno.serve(async (req) => {
           publish_date: new Date().toISOString(),
           author_name: 'Stooplify Team',
           featured_image_url: featuredImageUrl,
+          title_es: postData.title_es || '',
+          excerpt_es: postData.excerpt_es || '',
+          content_es: postData.content_es || '',
+          meta_description_es: postData.meta_description_es || '',
         });
 
         console.log(`[generateDailyBlogPosts] Created post: "${postData.title}" (${slug})`);
