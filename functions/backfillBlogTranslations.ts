@@ -8,8 +8,8 @@ Deno.serve(async (req) => {
             return Response.json({ error: 'Forbidden' }, { status: 403 });
         }
 
-        const posts = await base44.asServiceRole.entities.BlogPost.list('-publish_date', 50);
-        const missing = posts.filter(p => !p.content_es || !p.title_es);
+        const posts = await base44.asServiceRole.entities.BlogPost.list('-publish_date', 100);
+        const missing = posts.filter(p => !p.content_es || !p.title_es).slice(0, 5); // Process 5 at a time to avoid timeout
 
         console.log(`Found ${missing.length} posts needing Spanish translation`);
 
