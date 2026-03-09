@@ -31,7 +31,8 @@ export default function Pricing() {
       period: 'forever',
       description: 'Perfect for your first yard sale',
       features: [
-        '1 free listing',
+        '1 active listing at a time',
+        'Listings live for 24 hours',
         'Basic listing features',
         'Map visibility',
         'Photo uploads (up to 5)',
@@ -44,37 +45,20 @@ export default function Pricing() {
       color: 'gray'
     },
     {
-      name: 'Pay Per Listing',
-      price: '$4',
-      period: 'per listing',
-      description: 'For occasional sellers',
-      features: [
-        'Unlimited photos',
-        'Featured in search',
-        'Priority visibility',
-        'Email notifications',
-        'Edit anytime'
-      ],
-      cta: 'List Your Sale',
-      ctaLink: 'AddYardSale',
-      popular: false,
-      icon: Zap,
-      color: 'orange'
-    },
-    {
-      name: 'Unlimited',
+      name: 'Pro',
       price: '$9',
       period: 'per month',
       description: 'Best for frequent sellers',
       features: [
-        'Unlimited listings',
+        'Unlimited listings per month',
+        'No listing time limits',
         'Premium placement',
         'Analytics dashboard',
         'Featured badge',
-        'Early access to features',
+        'Priority support',
         'Cancel anytime'
       ],
-      cta: 'Go Unlimited',
+      cta: 'Go Pro',
       ctaLink: 'AddYardSale',
       popular: true,
       icon: TrendingUp,
