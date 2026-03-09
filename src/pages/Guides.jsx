@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import BlogCTABanner from '../components/BlogCTABanner';
 import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
 import { 
@@ -385,6 +386,8 @@ export default function Guides() {
             </div>
           </motion.div>
         </section>
+
+        <BlogCTABanner />
 
         {/* FAQ Section */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mt-16 mb-12">

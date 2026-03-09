@@ -506,7 +506,7 @@ export default function AddYardSale() {
           <p className="text-gray-600 dark:text-gray-400">{isEditMode ? t('updateYourSaleDetails') : t('listYourSaleInJustSteps')}</p>
           {!isEditMode && !user?.subscription_active && (
             <div className="mt-3 inline-flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-200 rounded-full text-sm text-green-700 font-medium">
-              <span>✅</span> Your first listing is FREE — up to 3 photos, single day
+              <span>✅</span> Your first listing is FREE — up to 5 photos
             </div>
           )}
         </motion.div>
@@ -1040,11 +1040,11 @@ export default function AddYardSale() {
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-2">
                   <p className="text-sm text-gray-600">
-                    {photos.length} / {user?.subscription_active ? '15' : '3'} {t('photos')}
+                    {photos.length} / {user?.subscription_active ? '20' : '5'} {t('photos')}
                   </p>
-                  {!user?.subscription_active && photos.length >= 3 &&
+                  {!user?.subscription_active && photos.length >= 5 &&
                 <p className="text-xs text-[#FF6F61]">
-                      Upgrade to add up to 15 photos
+                      Upgrade to add up to 20 photos
                     </p>
                 }
                 </div>
