@@ -764,10 +764,24 @@ function LayoutContent({ children, currentPageName }) {
             </div>
             <div>
               <h4 className="font-semibold text-lg mb-4 text-gray-900 dark:text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>{t('quickLinks')}</h4>
-              <ul className="space-y-2 text-gray-600 dark:text-white/70">
-                <li><Link to={createPageUrl('YardSales')} className="hover:text-[#14B8FF] transition-colors">{t('findSales')}</Link></li>
-                <li><Link to={createPageUrl('AddYardSale')} className="hover:text-[#14B8FF] transition-colors">{t('listYourSale')}</Link></li>
-                <li><Link to={createPageUrl('Home')} className="hover:text-[#14B8FF] transition-colors">{t('howItWorks')}</Link></li>
+              <ul className="space-y-2 text-gray-600 dark:text-white/70 text-sm">
+                <li><Link to={createPageUrl('yard-sales')} className="hover:text-[#14B8FF] transition-colors">Find Sales Near Me</Link></li>
+                <li><Link to={createPageUrl('add-yard-sale')} className="hover:text-[#14B8FF] transition-colors">List Your Stoop Sale</Link></li>
+                <li><Link to={createPageUrl('Calendar')} className="hover:text-[#14B8FF] transition-colors">Sale Calendar</Link></li>
+                <li><Link to={createPageUrl('Pricing')} className="hover:text-[#14B8FF] transition-colors">Pricing</Link></li>
+                <li><Link to={createPageUrl('Blog')} className="hover:text-[#14B8FF] transition-colors">Blog</Link></li>
+                <li><Link to={createPageUrl('ApplyAsShop')} className="hover:text-[#14B8FF] transition-colors">Apply as a Shop</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="font-semibold text-lg mb-4 text-gray-900 dark:text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>Seller Guides</h4>
+              <ul className="space-y-2 text-gray-600 dark:text-white/70 text-sm">
+                <li><Link to={createPageUrl('guides-find-yard-sales')} className="hover:text-[#14B8FF] transition-colors">Finding Yard Sales</Link></li>
+                <li><Link to={createPageUrl('guides-advertise-yard-sale')} className="hover:text-[#14B8FF] transition-colors">How to Advertise a Sale</Link></li>
+                <li><Link to={createPageUrl('guides-pricing-yard-sale-items')} className="hover:text-[#14B8FF] transition-colors">How to Price Items</Link></li>
+                <li><Link to={createPageUrl('guides-permit-requirements-nyc')} className="hover:text-[#14B8FF] transition-colors">Permit Requirements</Link></li>
+                <li><Link to={createPageUrl('guides-best-time-yard-sale')} className="hover:text-[#14B8FF] transition-colors">Best Days & Times</Link></li>
+                <li><Link to={createPageUrl('guides-seniors-yard-sales')} className="hover:text-[#14B8FF] transition-colors">Guide for Seniors</Link></li>
               </ul>
             </div>
             <div>

@@ -17,6 +17,7 @@ Deno.serve(async (req) => {
     { url: 'https://stooplify.com/guides-best-time-yard-sale', priority: '0.6', changefreq: 'monthly' },
     { url: 'https://stooplify.com/Calendar', priority: '0.7', changefreq: 'daily' },
     { url: 'https://stooplify.com/Pricing', priority: '0.7', changefreq: 'monthly' },
+    { url: 'https://stooplify.com/ApplyAsShop', priority: '0.6', changefreq: 'monthly' },
     { url: 'https://stooplify.com/Legal', priority: '0.4', changefreq: 'monthly' },
     // City landing pages
     { url: 'https://stooplify.com/stoop-sales-brooklyn', priority: '0.9', changefreq: 'daily' },

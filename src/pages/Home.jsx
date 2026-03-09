@@ -171,6 +171,40 @@ export default function Home() {
         </div>
       </section>
       
+      {/* Guides Section */}
+      <section className="py-16 bg-white dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#2E3A59] dark:text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              Yard Sale Guides
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 text-lg">Everything you need to host or find an amazing sale</p>
+          </motion.div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {[
+              { label: 'Advertise Your Sale', url: '/guides-advertise-yard-sale', emoji: '📣' },
+              { label: 'Best Days & Times', url: '/guides-best-time-yard-sale', emoji: '📅' },
+              { label: 'Permit Requirements', url: '/guides-permit-requirements-nyc', emoji: '📋' },
+              { label: 'Pricing Your Items', url: '/guides-pricing-yard-sale-items', emoji: '💰' },
+              { label: 'Guide for Seniors', url: '/guides-seniors-yard-sales', emoji: '👴' },
+              { label: 'Finding Sales Near You', url: '/guides-find-yard-sales', emoji: '🗺️' },
+            ].map((guide, i) => (
+              <motion.div key={guide.url} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
+                <Link to={guide.url} className="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-800 rounded-2xl hover:bg-[#FF6F61]/10 hover:shadow-md transition-all text-center group border border-transparent hover:border-[#FF6F61]/30">
+                  <span className="text-3xl mb-2">{guide.emoji}</span>
+                  <span className="font-semibold text-[#2E3A59] dark:text-white text-sm group-hover:text-[#FF6F61] transition-colors text-center leading-snug" style={{ fontFamily: 'Poppins, sans-serif' }}>{guide.label}</span>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+          <div className="text-center mt-8">
+            <Link to="/guides" className="inline-flex items-center gap-2 px-6 py-3 bg-[#FF6F61] text-white rounded-xl font-semibold hover:bg-[#e85d50] transition-colors shadow-md" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              View All Guides →
+            </Link>
+          </div>
+        </div>
+      </section>
+
       {/* From the Founder */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 md:p-12 shadow-lg max-w-3xl mx-auto">
