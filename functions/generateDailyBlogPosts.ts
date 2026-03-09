@@ -127,6 +127,18 @@ Deno.serve(async (req) => {
           console.log(`[generateDailyBlogPosts] Slug collision, using: ${slug}`);
         }
 
+        // Generate a featured image
+        let featuredImageUrl = '';
+        try {
+          const imageResult = await base44.asServiceRole.integrations.Core.GenerateImage({
+            prompt: `A vibrant, realistic street photography photo of a neighborhood yard sale or stoop sale scene for a blog post titled "${postData.title}". Show colorful items laid out on tables or stoops, people browsing, sunny day, urban neighborhood feel. No text overlays.`,
+          });
+          featuredImageUrl = imageResult?.url || '';
+          console.log(`[generateDailyBlogPosts] Generated image for: "${postData.title}"`);
+        } catch (imgErr) {
+          console.error(`[generateDailyBlogPosts] Image generation failed:`, imgErr.message);
+        }
+
         const post = await base44.asServiceRole.entities.BlogPost.create({
           title: postData.title,
           slug,
@@ -139,6 +151,7 @@ Deno.serve(async (req) => {
           status: 'published',
           publish_date: new Date().toISOString(),
           author_name: 'Stooplify Team',
+          featured_image_url: featuredImageUrl,
         });
 
         console.log(`[generateDailyBlogPosts] Created post: "${postData.title}" (${slug})`);
