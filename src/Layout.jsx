@@ -58,6 +58,8 @@ function LayoutContent({ children, currentPageName }) {
     'BrooklynStoopSalesWeekend', 'StoopSalesNYCWeekend', 'StoopSalesBrooklyn', 'StoopSalesManhattan',
     'StoopSalesQueens', 'StoopSalesBronx', 'StoopSalesJerseyCity',
     'YardSalesNearMeWeekend', 'GarageSalesLosAngeles', 'GarageSalesSanFrancisco',
+    // Knowledge Hub
+    'what-is-a-stoop-sale', 'stoop-sale-vs-yard-sale', 'how-to-host-a-stoop-sale', 'best-time-for-yard-sales',
     // Legal
     'Legal',
   ];

@@ -627,7 +627,7 @@ export function GuideContent({ guide, image }) {
             return null;
           })}
 
-          <div className="mt-12 pt-8 border-t border-gray-200">
+          <div className="mt-12 pt-8 border-t border-gray-200 space-y-6">
             <Link to={createPageUrl(content.ctaLink)}>
               <motion.button
                 whileHover={{ scale: 1.02 }}
@@ -637,6 +637,19 @@ export function GuideContent({ guide, image }) {
                 {content.cta}
               </motion.button>
             </Link>
+
+            {/* Internal links to AddYardSale + city pages */}
+            <div className="p-5 bg-gray-50 rounded-xl border border-gray-200">
+              <p className="text-sm font-semibold text-[#2E3A59] mb-3">🔗 Explore More</p>
+              <div className="grid grid-cols-2 gap-2 text-sm">
+                <Link to={createPageUrl('add-yard-sale')} className="text-[#FF6F61] hover:underline">→ List Your Sale Free</Link>
+                <Link to={createPageUrl('guides-find-yard-sales')} className="text-[#14B8FF] hover:underline">→ Finding Yard Sales</Link>
+                <Link to="/stoop-sales-brooklyn" className="text-gray-600 hover:text-[#14B8FF]">→ Brooklyn Stoop Sales</Link>
+                <Link to="/stoop-sales-queens" className="text-gray-600 hover:text-[#14B8FF]">→ Queens Stoop Sales</Link>
+                <Link to="/stoop-sales-nyc-this-weekend" className="text-gray-600 hover:text-[#14B8FF]">→ NYC This Weekend</Link>
+                <Link to="/yard-sales" className="text-gray-600 hover:text-[#14B8FF]">→ All Upcoming Sales</Link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
