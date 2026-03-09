@@ -41,11 +41,25 @@ function LayoutContent({ children, currentPageName }) {
   const [isScrolled, setIsScrolled] = useState(false);
 
   const PUBLIC_PAGES = [
+    // Core browsing — no login required
+    'Home',
+    'YardSales', 'yard-sales',
+    'YardSaleDetails', 'SalePage',
+    'SellerPage',
+    'Pricing',
+    'Calendar',
+    // Blog
     'Blog', 'BlogPost', 'BlogSlug',
+    // Guides
     'Guides', 'GuidesAdvertise', 'GuidesFindSales', 'GuidesPermit', 'GuidesPricing', 'GuidesTimings', 'GuidesSeniors',
     'guides', 'guides-advertise-yard-sale', 'guides-best-time-yard-sale', 'guides-find-yard-sales',
     'guides-permit-requirements-nyc', 'guides-pricing-yard-sale-items', 'guides-seniors-yard-sales',
-    'Legal'
+    // SEO landing pages
+    'BrooklynStoopSalesWeekend', 'StoopSalesNYCWeekend', 'StoopSalesBrooklyn', 'StoopSalesManhattan',
+    'StoopSalesQueens', 'StoopSalesBronx', 'StoopSalesJerseyCity',
+    'YardSalesNearMeWeekend', 'GarageSalesLosAngeles', 'GarageSalesSanFrancisco',
+    // Legal
+    'Legal',
   ];
   const [language, setLanguage] = useState('en');
   const { theme, toggleTheme } = useTheme();
