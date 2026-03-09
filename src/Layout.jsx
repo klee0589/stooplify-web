@@ -196,11 +196,6 @@ function LayoutContent({ children, currentPageName }) {
     refetchInterval: 5000 // Refetch every 5 seconds as backup
   });
 
-  // Don't render protected pages until auth is confirmed
-  if (!isAuthChecked && !PUBLIC_PAGES.includes(currentPageName)) {
-    return <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900" />;
-  }
-
   // Real-time subscription for unread messages count
   useEffect(() => {
     if (!user?.email) return;
@@ -215,6 +210,11 @@ function LayoutContent({ children, currentPageName }) {
 
     return unsubscribe;
   }, [user?.email, queryClient]);
+
+  // Don't render protected pages until auth is confirmed
+  if (!isAuthChecked && !PUBLIC_PAGES.includes(currentPageName)) {
+    return <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900" />;
+  }
 
   const toggleLanguage = () => {
     const newLang = language === 'en' ? 'es' : 'en';
