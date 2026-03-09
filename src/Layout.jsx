@@ -356,9 +356,6 @@ function LayoutContent({ children, currentPageName }) {
         }
       `}</style>
 
-      {/* Launch Promo Banner */}
-      <LaunchPromoBanner />
-
       {/* Header */}
       <motion.header
         initial={{ y: -100 }}
