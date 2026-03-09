@@ -311,34 +311,8 @@ export default function BlogSlug() {
         </div>
 
 
-        {/* Related Guides */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="mt-16 p-6 bg-gray-50 dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700"
-        >
-          <h3 className="text-xl font-bold text-[#2E3A59] dark:text-white mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            📚 Related Guides
-          </h3>
-          <div className="grid sm:grid-cols-2 gap-3">
-            {[
-              { label: 'Where to Find Yard Sales Near You', url: '/guides-find-yard-sales' },
-              { label: 'How to Price Items for a Yard Sale', url: '/guides-pricing-yard-sale-items' },
-              { label: 'Do You Need a Permit? (NYC)', url: '/guides-permit-requirements-nyc' },
-              { label: 'Best Days & Times to Host a Yard Sale', url: '/guides-best-time-yard-sale' },
-            ].map((guide) => (
-              <a
-                key={guide.url}
-                href={guide.url}
-                className="flex items-center gap-2 px-4 py-3 bg-white dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 hover:border-[#14B8FF] hover:text-[#14B8FF] transition-all text-sm font-medium text-gray-700 dark:text-gray-300"
-              >
-                <span className="text-[#14B8FF]">→</span>
-                {guide.label}
-              </a>
-            ))}
-          </div>
-        </motion.div>
+        {/* Related Content: articles, cities, guides */}
+        <RelatedContent currentSlug={slug} />
 
         {/* Footer CTA */}
         <motion.div
