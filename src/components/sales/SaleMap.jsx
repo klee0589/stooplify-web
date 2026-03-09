@@ -10,6 +10,27 @@ import { base44 } from '@/api/base44Client';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 
+// Upcoming sale marker (green)
+const upcomingIcon = new L.DivIcon({
+  className: 'upcoming-marker',
+  html: `
+    <div style="
+      width: 40px; height: 40px;
+      background: #10B981;
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      border: 3px solid white;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+      display: flex; align-items: center; justify-content: center;
+    ">
+      <div style="transform: rotate(45deg); color: white; font-size: 16px;">📅</div>
+    </div>
+  `,
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+  popupAnchor: [0, -40],
+});
+
 // Custom marker icon for single sale
 const customIcon = new L.DivIcon({
   className: 'custom-marker',
@@ -235,7 +256,7 @@ export default function SaleMap({ sales, center, onVisibleSalesChange }) {
           if (cluster.length === 1) {
             const sale = cluster[0];
             return (
-              <Marker key={sale.id} position={[sale.latitude, sale.longitude]} icon={customIcon}>
+              <Marker key={sale.id} position={[sale.latitude, sale.longitude]} icon={sale.isUpcoming ? upcomingIcon : customIcon}>
                 <Popup>
                   <div className="p-4">
                     {sale.photos?.length > 0 && (

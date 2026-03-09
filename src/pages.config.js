@@ -85,6 +85,7 @@ import YardSaleDetails from './pages/YardSaleDetails';
 import YardSales from './pages/YardSales';
 import YardSalesNearMeWeekend from './pages/YardSalesNearMeWeekend';
 import addYardSale from './pages/add-yard-sale';
+import bestTimeForYardSales from './pages/best-time-for-yard-sales';
 import guidesAdvertiseYardSale from './pages/guides-advertise-yard-sale';
 import guidesBestTimeYardSale from './pages/guides-best-time-yard-sale';
 import guidesFindYardSales from './pages/guides-find-yard-sales';
@@ -92,12 +93,11 @@ import guidesPermitRequirementsNyc from './pages/guides-permit-requirements-nyc'
 import guidesPricingYardSaleItems from './pages/guides-pricing-yard-sale-items';
 import guidesSeniorsYardSales from './pages/guides-seniors-yard-sales';
 import guides from './pages/guides';
-import myYardSales from './pages/my-yard-sales';
-import yardSales from './pages/yard-sales';
-import whatIsAStoopSale from './pages/what-is-a-stoop-sale';
-import stoopSaleVsYardSale from './pages/stoop-sale-vs-yard-sale';
 import howToHostAStoopSale from './pages/how-to-host-a-stoop-sale';
-import bestTimeForYardSales from './pages/best-time-for-yard-sales';
+import myYardSales from './pages/my-yard-sales';
+import stoopSaleVsYardSale from './pages/stoop-sale-vs-yard-sale';
+import whatIsAStoopSale from './pages/what-is-a-stoop-sale';
+import yardSales from './pages/yard-sales';
 import __Layout from './Layout.jsx';
 
 
@@ -140,6 +140,7 @@ export const PAGES = {
     "YardSales": YardSales,
     "YardSalesNearMeWeekend": YardSalesNearMeWeekend,
     "add-yard-sale": addYardSale,
+    "best-time-for-yard-sales": bestTimeForYardSales,
     "guides-advertise-yard-sale": guidesAdvertiseYardSale,
     "guides-best-time-yard-sale": guidesBestTimeYardSale,
     "guides-find-yard-sales": guidesFindYardSales,
@@ -147,12 +148,11 @@ export const PAGES = {
     "guides-pricing-yard-sale-items": guidesPricingYardSaleItems,
     "guides-seniors-yard-sales": guidesSeniorsYardSales,
     "guides": guides,
-    "my-yard-sales": myYardSales,
-    "yard-sales": yardSales,
-    "what-is-a-stoop-sale": whatIsAStoopSale,
-    "stoop-sale-vs-yard-sale": stoopSaleVsYardSale,
     "how-to-host-a-stoop-sale": howToHostAStoopSale,
-    "best-time-for-yard-sales": bestTimeForYardSales,
+    "my-yard-sales": myYardSales,
+    "stoop-sale-vs-yard-sale": stoopSaleVsYardSale,
+    "what-is-a-stoop-sale": whatIsAStoopSale,
+    "yard-sales": yardSales,
 }
 
 export const pagesConfig = {

@@ -58,6 +58,7 @@ export default function YardSales() {
   const [viewMode, setViewMode] = useState('map');
   const [filters, setFilters] = useState({ categories: [], date: 'all', distance: 'all', payment: 'all', search: '' });
   const [showEndedSales, setShowEndedSales] = useState(false);
+  const [showUpcomingEvents, setShowUpcomingEvents] = useState(true);
   const [favorites, setFavorites] = useState([]);
   const [user, setUser] = useState(null);
   const [language, setLanguage] = useState('en');
@@ -124,10 +125,13 @@ export default function YardSales() {
     queryFn: async () => {
       const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
       const now = new Date();
+      const startOfTomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
       return allSales.map((sale) => {
         const endStr = sale.end_time || '23:59';
         const saleEnd = new Date(`${sale.date}T${endStr.includes(':') ? endStr : '23:59'}`);
-        return { ...sale, isPast: saleEnd < now };
+        const isPast = saleEnd < now;
+        const isUpcoming = !isPast && sale.date && new Date(sale.date) >= startOfTomorrow;
+        return { ...sale, isPast, isUpcoming };
       });
     },
   });
@@ -216,6 +220,10 @@ export default function YardSales() {
   const filteredSales = sales.filter(sale => {
     // Hide ended sales by default
     if (!showEndedSales && sale.isPast) {
+      return false;
+    }
+    // Hide upcoming (future date) sales when toggled off
+    if (!showUpcomingEvents && sale.isUpcoming) {
       return false;
     }
 
@@ -501,7 +509,19 @@ export default function YardSales() {
                 onChange={(e) => setShowEndedSales(e.target.checked)}
                 className="w-4 h-4 text-[#FF6F61] border-gray-300 rounded focus:ring-[#FF6F61]"
               />
-              <span className="text-sm text-gray-600 dark:text-gray-300">Show ended sales</span>
+              <span className="text-sm text-gray-600 dark:text-gray-300">Show ended</span>
+            </label>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={showUpcomingEvents}
+                onChange={(e) => setShowUpcomingEvents(e.target.checked)}
+                className="w-4 h-4 text-emerald-500 border-gray-300 rounded focus:ring-emerald-500"
+              />
+              <span className="text-sm text-gray-600 dark:text-gray-300 flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block flex-shrink-0"></span>
+                Show upcoming
+              </span>
             </label>
           </div>
           
