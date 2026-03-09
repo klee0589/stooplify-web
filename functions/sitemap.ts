@@ -4,26 +4,29 @@ Deno.serve(async (req) => {
   const base44 = createClientFromRequest(req);
 
   const staticPages = [
+    // Core
     { url: 'https://stooplify.com', priority: '1.0', changefreq: 'daily' },
     { url: 'https://stooplify.com/yard-sales', priority: '0.9', changefreq: 'hourly' },
     { url: 'https://stooplify.com/add-yard-sale', priority: '0.8', changefreq: 'weekly' },
-    { url: 'https://stooplify.com/Blog', priority: '0.8', changefreq: 'daily' },
-    { url: 'https://stooplify.com/guides', priority: '0.7', changefreq: 'weekly' },
-    { url: 'https://stooplify.com/guides-advertise-yard-sale', priority: '0.6', changefreq: 'monthly' },
-    { url: 'https://stooplify.com/guides-find-yard-sales', priority: '0.6', changefreq: 'monthly' },
-    { url: 'https://stooplify.com/guides-permit-requirements-nyc', priority: '0.6', changefreq: 'monthly' },
-    { url: 'https://stooplify.com/guides-pricing-yard-sale-items', priority: '0.6', changefreq: 'monthly' },
-    { url: 'https://stooplify.com/guides-seniors-yard-sales', priority: '0.6', changefreq: 'monthly' },
-    { url: 'https://stooplify.com/guides-best-time-yard-sale', priority: '0.6', changefreq: 'monthly' },
-    { url: 'https://stooplify.com/Calendar', priority: '0.7', changefreq: 'daily' },
+    { url: 'https://stooplify.com/Calendar', priority: '0.8', changefreq: 'daily' },
     { url: 'https://stooplify.com/Pricing', priority: '0.7', changefreq: 'monthly' },
     { url: 'https://stooplify.com/ApplyAsShop', priority: '0.6', changefreq: 'monthly' },
+    { url: 'https://stooplify.com/Legal', priority: '0.4', changefreq: 'monthly' },
+    // Blog
+    { url: 'https://stooplify.com/Blog', priority: '0.8', changefreq: 'daily' },
+    // Guides hub + subpages
+    { url: 'https://stooplify.com/guides', priority: '0.7', changefreq: 'weekly' },
+    { url: 'https://stooplify.com/guides-advertise-yard-sale', priority: '0.7', changefreq: 'monthly' },
+    { url: 'https://stooplify.com/guides-find-yard-sales', priority: '0.7', changefreq: 'monthly' },
+    { url: 'https://stooplify.com/guides-permit-requirements-nyc', priority: '0.6', changefreq: 'monthly' },
+    { url: 'https://stooplify.com/guides-pricing-yard-sale-items', priority: '0.7', changefreq: 'monthly' },
+    { url: 'https://stooplify.com/guides-seniors-yard-sales', priority: '0.6', changefreq: 'monthly' },
+    { url: 'https://stooplify.com/guides-best-time-yard-sale', priority: '0.7', changefreq: 'monthly' },
     // Knowledge Hub
     { url: 'https://stooplify.com/what-is-a-stoop-sale', priority: '0.8', changefreq: 'monthly' },
     { url: 'https://stooplify.com/stoop-sale-vs-yard-sale', priority: '0.8', changefreq: 'monthly' },
     { url: 'https://stooplify.com/how-to-host-a-stoop-sale', priority: '0.8', changefreq: 'monthly' },
     { url: 'https://stooplify.com/best-time-for-yard-sales', priority: '0.8', changefreq: 'monthly' },
-    { url: 'https://stooplify.com/Legal', priority: '0.4', changefreq: 'monthly' },
     // City landing pages
     { url: 'https://stooplify.com/stoop-sales-brooklyn', priority: '0.9', changefreq: 'daily' },
     { url: 'https://stooplify.com/stoop-sales-queens', priority: '0.8', changefreq: 'daily' },
