@@ -33,9 +33,8 @@ export default function Pricing() {
       features: [
         '1 active listing at a time',
         'Listings live for 24 hours',
-        'Basic listing features',
+        'Photo uploads (up to 3)',
         'Map visibility',
-        'Photo uploads (up to 5)',
         'Community access'
       ],
       cta: 'Get Started',
@@ -52,6 +51,7 @@ export default function Pricing() {
       features: [
         'Unlimited listings per month',
         'No listing time limits',
+        'Unlimited photo uploads',
         'Premium placement',
         'Analytics dashboard',
         'Featured badge',
