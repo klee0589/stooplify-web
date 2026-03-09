@@ -94,6 +94,10 @@ import guidesSeniorsYardSales from './pages/guides-seniors-yard-sales';
 import guides from './pages/guides';
 import myYardSales from './pages/my-yard-sales';
 import yardSales from './pages/yard-sales';
+import whatIsAStoopSale from './pages/what-is-a-stoop-sale';
+import stoopSaleVsYardSale from './pages/stoop-sale-vs-yard-sale';
+import howToHostAStoopSale from './pages/how-to-host-a-stoop-sale';
+import bestTimeForYardSales from './pages/best-time-for-yard-sales';
 import __Layout from './Layout.jsx';
 
 
@@ -145,6 +149,10 @@ export const PAGES = {
     "guides": guides,
     "my-yard-sales": myYardSales,
     "yard-sales": yardSales,
+    "what-is-a-stoop-sale": whatIsAStoopSale,
+    "stoop-sale-vs-yard-sale": stoopSaleVsYardSale,
+    "how-to-host-a-stoop-sale": howToHostAStoopSale,
+    "best-time-for-yard-sales": bestTimeForYardSales,
 }
 
 export const pagesConfig = {
