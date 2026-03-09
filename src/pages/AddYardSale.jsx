@@ -114,27 +114,6 @@ export default function AddYardSale() {
              const hasUsedFreeListing = (currentUser.free_listings_used || 0) >= 1;
              const needsPay = !isAdmin && hasUsedFreeListing && !hasSubscription;
              setNeedsPayment(needsPay);
-
-             if (!needsPay && !isAdmin) {
-               // Check: 1 active sale at a time
-               const today = new Date().toISOString().split('T')[0];
-               const activeSales = await base44.entities.YardSale.filter({ created_by: currentUser.email });
-               const hasFutureSale = activeSales.some(s => s.status === 'approved' && s.date >= today);
-               if (hasFutureSale) {
-                 setFreeListingBlocked('active_sale');
-                 return;
-               }
-
-               // Rate limit: 1 listing per 7 days
-               if (currentUser.last_listing_date) {
-                 const lastDate = new Date(currentUser.last_listing_date);
-                 const daysSince = (Date.now() - lastDate.getTime()) / (1000 * 60 * 60 * 24);
-                 if (daysSince < 7) {
-                   setFreeListingBlocked('rate_limit');
-                   return;
-                 }
-               }
-             }
            }
 
           // Load existing sale data if editing
@@ -238,7 +217,7 @@ export default function AddYardSale() {
         // Create new sale
         const isSubscribed = user?.subscription_active;
         const listingType = isSubscribed ? 'paid' : 'free';
-        const photoLimit = isSubscribed ? 15 : 3;
+        const photoLimit = isSubscribed ? 20 : 5;
         const sale = await base44.entities.YardSale.create({
           ...data,
           ...coordinates,
@@ -279,17 +258,17 @@ export default function AddYardSale() {
       properties: { count: files.length }
     });
 
-    const photoLimit = user?.subscription_active ? 15 : 3;
+    const photoLimit = user?.subscription_active ? 20 : 5;
     const remainingSlots = photoLimit - photos.length;
 
     if (remainingSlots <= 0) {
-      toast.error(user?.subscription_active ? 'Maximum 15 photos allowed' : 'Free listings allow up to 3 photos. Upgrade to add up to 15 photos.');
+      toast.error(user?.subscription_active ? 'Maximum 20 photos allowed' : 'Free listings allow up to 5 photos. Upgrade to add up to 20 photos.');
       return;
     }
 
     const filesToUpload = files.slice(0, remainingSlots);
     if (files.length > remainingSlots) {
-      toast.warning(`Only ${remainingSlots} photo${remainingSlots === 1 ? '' : 's'} remaining. ${user?.subscription_active ? '' : 'Upgrade for more.'}`);
+      toast.warning(`Only ${remainingSlots} photo slot${remainingSlots === 1 ? '' : 's'} remaining. ${user?.subscription_active ? '' : 'Upgrade for more.'}`);
     }
 
     setIsUploading(true);
@@ -330,9 +309,9 @@ export default function AddYardSale() {
     const file = e.target.files[0];
     if (!file) return;
 
-    const photoLimit = user?.subscription_active ? 15 : 3;
+    const photoLimit = user?.subscription_active ? 20 : 5;
     if (photos.length >= photoLimit) {
-      toast.error(user?.subscription_active ? 'Maximum 15 photos allowed' : 'Free listings allow up to 3 photos. Upgrade to add up to 15 photos.');
+      toast.error(user?.subscription_active ? 'Maximum 20 photos allowed' : 'Free listings allow up to 5 photos. Upgrade to add up to 20 photos.');
       return;
     }
 
