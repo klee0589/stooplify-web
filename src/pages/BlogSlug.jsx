@@ -293,6 +293,7 @@ export default function BlogSlug() {
         <div className="text-gray-700 dark:text-gray-300" style={{ fontFamily: 'Inter, sans-serif' }}>
           <ReactMarkdown
             key={postLang}
+            remarkPlugins={[remarkGfm]}
             components={{
               h1: ({ children }) => <h1 className="text-4xl font-bold text-gray-900 dark:text-white mt-20 mb-8" style={{ fontFamily: 'Poppins, sans-serif' }}>{children}</h1>,
               h2: ({ children }) => <h2 className="text-3xl font-bold text-gray-900 dark:text-white mt-20 mb-8" style={{ fontFamily: 'Poppins, sans-serif' }}>{children}</h2>,
