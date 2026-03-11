@@ -166,6 +166,7 @@ function LayoutContent({ children, currentPageName }) {
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
+      setShowScrollTop(window.scrollY > document.documentElement.scrollHeight / 2);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
