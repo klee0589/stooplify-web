@@ -311,12 +311,16 @@ export default function BlogSlug() {
               ),
               img: ({ src, alt }) => <img src={src} alt={alt} className="w-full h-auto rounded-lg my-12" />,
               hr: () => <hr className="my-16 border-gray-200 dark:border-gray-700" />,
-              table: ({ children }) => <div className="overflow-x-auto my-10"><table className="w-full border-collapse text-base">{children}</table></div>,
-              thead: ({ children }) => <thead className="bg-gray-100 dark:bg-gray-800">{children}</thead>,
-              tbody: ({ children }) => <tbody>{children}</tbody>,
-              tr: ({ children }) => <tr className="border-b border-gray-200 dark:border-gray-700">{children}</tr>,
-              th: ({ children }) => <th className="text-left px-4 py-3 font-semibold text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700">{children}</th>,
-              td: ({ children }) => <td className="px-4 py-3 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">{children}</td>,
+              table: ({ children }) => (
+                <TableContainer component={Paper} elevation={2} sx={{ my: 4, borderRadius: 2 }}>
+                  <Table sx={{ minWidth: 300 }} size="medium">{children}</Table>
+                </TableContainer>
+              ),
+              thead: ({ children }) => <TableHead sx={{ backgroundColor: '#f0f9ff' }}>{children}</TableHead>,
+              tbody: ({ children }) => <TableBody>{children}</TableBody>,
+              tr: ({ children }) => <TableRow sx={{ '&:last-child td': { border: 0 }, '&:hover': { backgroundColor: '#f8fafc' } }}>{children}</TableRow>,
+              th: ({ children }) => <TableCell sx={{ fontWeight: 700, color: '#1a2842', fontFamily: 'Poppins, sans-serif', fontSize: '0.95rem', borderBottom: '2px solid #14B8FF' }}>{children}</TableCell>,
+              td: ({ children }) => <TableCell sx={{ fontFamily: 'Inter, sans-serif', fontSize: '0.95rem', color: '#374151' }}>{children}</TableCell>,
             }}
           >
             {displayContent}
