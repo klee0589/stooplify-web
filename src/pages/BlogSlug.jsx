@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import SEO from '@/components/SEO';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
