@@ -304,6 +304,12 @@ export default function BlogSlug() {
               ),
               img: ({ src, alt }) => <img src={src} alt={alt} className="w-full h-auto rounded-lg my-12" />,
               hr: () => <hr className="my-16 border-gray-200 dark:border-gray-700" />,
+              table: ({ children }) => <div className="overflow-x-auto my-10"><table className="w-full border-collapse text-base">{children}</table></div>,
+              thead: ({ children }) => <thead className="bg-gray-100 dark:bg-gray-800">{children}</thead>,
+              tbody: ({ children }) => <tbody>{children}</tbody>,
+              tr: ({ children }) => <tr className="border-b border-gray-200 dark:border-gray-700">{children}</tr>,
+              th: ({ children }) => <th className="text-left px-4 py-3 font-semibold text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700">{children}</th>,
+              td: ({ children }) => <td className="px-4 py-3 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">{children}</td>,
             }}
           >
             {displayContent}
