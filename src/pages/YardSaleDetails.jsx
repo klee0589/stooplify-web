@@ -1058,7 +1058,11 @@ export default function YardSaleDetails() {
         {/* QR Code Section - Seller sees their QR code, buyer sees scan button */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
           {user && sale.created_by === user.email ? (
-            <QRCodeDisplay saleId={saleId} saleTitle={sale.title} />
+            <QRCodeDisplay
+              saleId={saleId}
+              saleTitle={sale.title}
+              saleAddress={[sale.address, sale.city, sale.state].filter(Boolean).join(', ')}
+            />
           ) : user && sale.created_by !== user.email ? (
             <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm">
               <h3 className="font-semibold text-[#2E3A59] dark:text-white mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
