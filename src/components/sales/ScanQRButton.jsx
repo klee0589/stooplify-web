@@ -33,20 +33,22 @@ export default function ScanQRButton({ saleId, sale, user }) {
   };
 
   const handleQRScanned = async (decodedText) => {
-    // Validate the QR code contains a matching sale ID
+    // Validate the QR payload contains a matching sale ID
     try {
-      const url = new URL(decodedText);
-      const scannedId = url.searchParams.get('id');
-      if (scannedId !== saleId) {
+      const parsed = JSON.parse(decodedText);
+      if (!parsed.sale_id || !parsed.token || !parsed.expires_at) {
+        throw new Error('Missing fields');
+      }
+      if (parsed.sale_id !== saleId) {
         setStatus('error');
-        setResult({ error: 'QR code not recognized. Please scan the QR code displayed by the seller.' });
-        toast.error('QR code not recognized. Scan the seller\'s QR code.');
+        setResult({ error: 'QR code does not match this sale. Please scan the seller\'s QR code.' });
+        toast.error('Wrong QR code. Scan the seller\'s check-in code.');
         return;
       }
     } catch {
       setStatus('error');
-      setResult({ error: 'QR code not recognized. Please scan the QR code displayed by the seller.' });
-      toast.error('QR code not recognized. Scan the seller\'s QR code.');
+      setResult({ error: 'QR code not recognized. Please scan the Stooplify check-in QR code displayed by the seller.' });
+      toast.error('QR code not recognized.');
       return;
     }
 
@@ -66,6 +68,7 @@ export default function ScanQRButton({ saleId, sale, user }) {
     try {
       const { data } = await base44.functions.invoke('processScan', {
         yard_sale_id: saleId,
+        qr_payload: decodedText,
         latitude,
         longitude
       });
