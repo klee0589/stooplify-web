@@ -298,12 +298,74 @@ function LayoutContent({ children, currentPageName }) {
         * {
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
+          /* Eliminate 300ms tap delay on all elements */
+          touch-action: manipulation;
+          /* Remove iOS tap highlight flash */
+          -webkit-tap-highlight-color: transparent;
+          box-sizing: border-box;
         }
 
         body {
           font-family: 'Inter', sans-serif;
           transition: background-color 0.3s ease, color 0.3s ease;
           overscroll-behavior: none;
+          /* Smooth iOS scroll */
+          -webkit-overflow-scrolling: touch;
+        }
+
+        /* ---- Touch feedback ---- */
+        button, a, [role="button"] {
+          touch-action: manipulation;
+          -webkit-tap-highlight-color: transparent;
+          /* Snappy transition for tap states */
+          transition: opacity 0.1s ease, transform 0.1s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+          will-change: transform;
+          /* Prevent double-tap zoom */
+          user-select: none;
+          -webkit-user-select: none;
+        }
+
+        button:active, a:active, [role="button"]:active {
+          opacity: 0.82;
+          transform: scale(0.97);
+        }
+
+        /* ---- Minimum 44x44 tap targets (mobile accessibility) ---- */
+        button:not(.no-min-tap), a:not(.no-min-tap), [role="button"]:not(.no-min-tap) {
+          min-height: 44px;
+        }
+
+        /* ---- Prevent text selection on interactive UI ---- */
+        nav, header, .bottom-nav {
+          -webkit-user-select: none;
+          user-select: none;
+        }
+
+        /* ---- Smooth scrolling areas ---- */
+        main, .overflow-y-auto, .overflow-auto {
+          -webkit-overflow-scrolling: touch;
+          overscroll-behavior: contain;
+        }
+
+        /* ---- Prevent iOS auto-zoom on input focus ---- */
+        input, textarea, select {
+          font-size: 16px !important;
+          touch-action: manipulation;
+        }
+
+        /* ---- GPU-accelerate fixed/sticky layers ---- */
+        header, nav, .fixed {
+          transform: translateZ(0);
+          -webkit-transform: translateZ(0);
+          backface-visibility: hidden;
+          -webkit-backface-visibility: hidden;
+        }
+
+        /* ---- iOS full-height fix ---- */
+        @supports (-webkit-touch-callout: none) {
+          .min-h-screen {
+            min-height: -webkit-fill-available;
+          }
         }
         
         /* Accessibility */
