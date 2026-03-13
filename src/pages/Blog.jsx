@@ -225,16 +225,23 @@ export default function Blog() {
                     to={`/blog/${post.slug}`}
                     className="group block h-full bg-white dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-[#14B8FF] hover:shadow-xl transition-all duration-300"
                   >
-                    {post.featured_image_url && (
-                      <div className="aspect-[16/9] overflow-hidden bg-gray-100 dark:bg-gray-700">
+                    <div className="aspect-[16/9] overflow-hidden bg-gradient-to-br from-[#e8f7ff] to-[#d0efff] dark:from-gray-700 dark:to-gray-800">
+                      {post.featured_image_url ? (
                         <img
                           src={post.featured_image_url}
                           alt={post.title}
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           loading="lazy"
                         />
-                      </div>
-                    )}
+                      ) : (
+                        <div className="w-full h-full flex flex-col items-center justify-center gap-2 opacity-60">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 text-[#14B8FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
+                          </svg>
+                          <span className="text-xs text-[#14B8FF] font-medium">Stooplify Blog</span>
+                        </div>
+                      )}
+                    </div>
 
                     <div className="p-5">
                       {post.tags && post.tags.length > 0 && (
