@@ -36,7 +36,7 @@ export default function HeroSection() {
   const { data: statsData } = useQuery({
     queryKey: ['heroStats'],
     queryFn: async () => {
-      const sales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
+      const sales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 500);
       const now = new Date();
       const liveSales = sales.filter(sale => {
         const saleDate = new Date(sale.date);
