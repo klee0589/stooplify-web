@@ -11,6 +11,8 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import BottomNavBar from '../components/BottomNavBar';
 import SentryErrorBoundary, { setUserContext } from '../components/SentryErrorBoundary';
 import LaunchPromoBanner from '../components/sales/LaunchPromoBanner';
+import MobileWebHeader from '../components/MobileWebHeader';
+import { useMobileWeb } from '../components/useMobileWeb';
 
 // Lazy initialize PostHog (only on user interaction or after 5s)
 let posthog = null;
