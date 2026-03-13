@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Building2, MapPin, Calendar, Tag, ChevronDown } from 'lucide-react';
 
@@ -42,56 +42,57 @@ const CATEGORY_PAGES = [
   { label: 'Toys', url: '/toy-yard-sales', emoji: '🧸' },
 ];
 
-const TABS = [
-  { key: 'city', label: 'City', icon: Building2, color: '#14B8FF', items: CITY_PAGES, pill: 'bg-[#14B8FF]/10 text-[#14B8FF] hover:bg-[#14B8FF] hover:text-white' },
-  { key: 'neighborhood', label: 'Neighborhood', icon: MapPin, color: '#FF6F61', items: NEIGHBORHOOD_PAGES, pill: 'bg-[#FF6F61]/10 text-[#FF6F61] hover:bg-[#FF6F61] hover:text-white' },
-  { key: 'date', label: 'Date', icon: Calendar, color: '#F5A623', items: DATE_PAGES, pill: 'bg-[#F5A623]/10 text-[#F5A623] hover:bg-[#F5A623] hover:text-white' },
-  { key: 'category', label: 'Category', icon: Tag, color: '#a855f7', items: CATEGORY_PAGES, pill: 'bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 hover:bg-purple-500 hover:text-white' },
+const DROPDOWNS = [
+  { key: 'city', label: 'City', icon: Building2, items: CITY_PAGES },
+  { key: 'neighborhood', label: 'Hood', icon: MapPin, items: NEIGHBORHOOD_PAGES },
+  { key: 'date', label: 'Date', icon: Calendar, items: DATE_PAGES },
+  { key: 'category', label: 'Category', icon: Tag, items: CATEGORY_PAGES },
 ];
 
-export default function MobileDiscovery() {
-  const [activeTab, setActiveTab] = useState('city');
+function DropdownItem({ config }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+  const Icon = config.icon;
 
-  const current = TABS.find(t => t.key === activeTab);
-  const Icon = current.icon;
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
 
   return (
-    <div className="md:hidden mb-6 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
-      {/* Tab bar */}
-      <div className="flex border-b border-gray-100 dark:border-gray-700">
-        {TABS.map(tab => {
-          const TabIcon = tab.icon;
-          const isActive = tab.key === activeTab;
-          return (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={`no-min-tap flex-1 flex items-center justify-center gap-1 py-2 text-[10px] font-medium transition-colors border-b-2 ${
-                isActive
-                  ? 'border-current'
-                  : 'border-transparent text-gray-400 dark:text-gray-500'
-              }`}
-              style={isActive ? { color: tab.color, borderColor: tab.color } : {}}
-            >
-              <TabIcon className="w-3 h-3" />
-              {tab.label}
-            </button>
-          );
-        })}
-      </div>
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="no-min-tap flex items-center gap-1 px-3 py-1.5 bg-gray-100 dark:bg-gray-700 rounded-full text-xs font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+      >
+        <Icon className="w-3 h-3" />
+        {config.label}
+        <ChevronDown className={`w-3 h-3 transition-transform ${open ? 'rotate-180' : ''}`} />
+      </button>
 
-      {/* Pills — single scrollable row */}
-      <div className="px-3 py-2 flex gap-2 overflow-x-auto scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-        {current.items.map(item => (
-          <Link
-            key={item.url}
-            to={item.url}
-            className={`no-min-tap shrink-0 text-xs px-2.5 py-1 rounded-full font-medium transition-colors ${current.pill}`}
-          >
-            {item.emoji ? `${item.emoji} ${item.label}` : item.label}
-          </Link>
-        ))}
-      </div>
+      {open && (
+        <div className="absolute top-full left-0 mt-1 z-50 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 py-1 min-w-[150px]">
+          {config.items.map(item => (
+            <Link
+              key={item.url}
+              to={item.url}
+              onClick={() => setOpen(false)}
+              className="no-min-tap block px-3 py-1.5 text-xs text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            >
+              {item.emoji ? `${item.emoji} ${item.label}` : item.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default function MobileDiscovery() {
+  return (
+    <div className="md:hidden mb-4 flex gap-2 flex-wrap">
+      {DROPDOWNS.map(d => <DropdownItem key={d.key} config={d} />)}
     </div>
   );
 }
