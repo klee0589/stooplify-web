@@ -86,7 +86,7 @@ export default function MobileDiscovery() {
           <Link
             key={item.url}
             to={item.url}
-            className={`text-xs px-3 py-1 rounded-full font-medium transition-colors ${current.pill}`}
+            className={`no-min-tap text-xs px-3 py-1 rounded-full font-medium transition-colors ${current.pill}`}
           >
             {item.emoji ? `${item.emoji} ${item.label}` : item.label}
           </Link>
