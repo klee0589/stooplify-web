@@ -15,44 +15,44 @@ import PullToRefresh from '../components/PullToRefresh';
 import { Link } from 'react-router-dom';
 
 const CITY_PAGES = [
-  { label: 'Brooklyn', url: '/stoop-sales-brooklyn', emoji: '🏙️' },
-  { label: 'Queens', url: '/stoop-sales-queens', emoji: '🌆' },
-  { label: 'Manhattan', url: '/stoop-sales-manhattan', emoji: '🗽' },
-  { label: 'Bronx', url: '/stoop-sales-bronx', emoji: '🏘️' },
-  { label: 'Jersey City', url: '/stoop-sales-jersey-city', emoji: '🌉' },
-  { label: 'Los Angeles', url: '/garage-sales-los-angeles', emoji: '☀️' },
-  { label: 'San Francisco', url: '/garage-sales-san-francisco', emoji: '🌁' },
-];
+{ label: 'Brooklyn', url: '/stoop-sales-brooklyn', emoji: '🏙️' },
+{ label: 'Queens', url: '/stoop-sales-queens', emoji: '🌆' },
+{ label: 'Manhattan', url: '/stoop-sales-manhattan', emoji: '🗽' },
+{ label: 'Bronx', url: '/stoop-sales-bronx', emoji: '🏘️' },
+{ label: 'Jersey City', url: '/stoop-sales-jersey-city', emoji: '🌉' },
+{ label: 'Los Angeles', url: '/garage-sales-los-angeles', emoji: '☀️' },
+{ label: 'San Francisco', url: '/garage-sales-san-francisco', emoji: '🌁' }];
+
 
 const NEIGHBORHOOD_PAGES = [
-  { label: 'Williamsburg', url: '/stoop-sales-williamsburg-brooklyn' },
-  { label: 'Park Slope', url: '/stoop-sales-park-slope-brooklyn' },
-  { label: 'Bushwick', url: '/stoop-sales-bushwick-brooklyn' },
-  { label: 'Bed-Stuy', url: '/stoop-sales-bed-stuy-brooklyn' },
-  { label: 'Crown Heights', url: '/stoop-sales-crown-heights-brooklyn' },
-  { label: 'Greenpoint', url: '/stoop-sales-greenpoint-brooklyn' },
-  { label: 'Astoria', url: '/stoop-sales-astoria-queens' },
-  { label: 'Upper West Side', url: '/stoop-sales-upper-west-side-manhattan' },
-  { label: 'Harlem', url: '/stoop-sales-harlem-manhattan' },
-];
+{ label: 'Williamsburg', url: '/stoop-sales-williamsburg-brooklyn' },
+{ label: 'Park Slope', url: '/stoop-sales-park-slope-brooklyn' },
+{ label: 'Bushwick', url: '/stoop-sales-bushwick-brooklyn' },
+{ label: 'Bed-Stuy', url: '/stoop-sales-bed-stuy-brooklyn' },
+{ label: 'Crown Heights', url: '/stoop-sales-crown-heights-brooklyn' },
+{ label: 'Greenpoint', url: '/stoop-sales-greenpoint-brooklyn' },
+{ label: 'Astoria', url: '/stoop-sales-astoria-queens' },
+{ label: 'Upper West Side', url: '/stoop-sales-upper-west-side-manhattan' },
+{ label: 'Harlem', url: '/stoop-sales-harlem-manhattan' }];
+
 
 const DATE_PAGES = [
-  { label: 'Today', url: '/yard-sales-near-me-today' },
-  { label: 'This Saturday', url: '/yard-sales-near-me-saturday' },
-  { label: 'This Sunday', url: '/yard-sales-near-me-sunday' },
-  { label: 'This Weekend', url: '/yard-sales-near-me-this-weekend' },
-  { label: 'NYC Today', url: '/stoop-sales-nyc-today' },
-  { label: 'NYC This Weekend', url: '/stoop-sales-nyc-this-weekend' },
-];
+{ label: 'Today', url: '/yard-sales-near-me-today' },
+{ label: 'This Saturday', url: '/yard-sales-near-me-saturday' },
+{ label: 'This Sunday', url: '/yard-sales-near-me-sunday' },
+{ label: 'This Weekend', url: '/yard-sales-near-me-this-weekend' },
+{ label: 'NYC Today', url: '/stoop-sales-nyc-today' },
+{ label: 'NYC This Weekend', url: '/stoop-sales-nyc-this-weekend' }];
+
 
 const CATEGORY_PAGES = [
-  { label: 'Furniture', url: '/furniture-yard-sales', emoji: '🛋️' },
-  { label: 'Vintage Clothing', url: '/vintage-clothing-stoop-sales', emoji: '👗' },
-  { label: 'Books', url: '/book-sales', emoji: '📚' },
-  { label: 'Electronics', url: '/electronics-yard-sales', emoji: '💻' },
-  { label: 'Antiques', url: '/antique-yard-sales', emoji: '🏺' },
-  { label: 'Toys', url: '/toy-yard-sales', emoji: '🧸' },
-];
+{ label: 'Furniture', url: '/furniture-yard-sales', emoji: '🛋️' },
+{ label: 'Vintage Clothing', url: '/vintage-clothing-stoop-sales', emoji: '👗' },
+{ label: 'Books', url: '/book-sales', emoji: '📚' },
+{ label: 'Electronics', url: '/electronics-yard-sales', emoji: '💻' },
+{ label: 'Antiques', url: '/antique-yard-sales', emoji: '🏺' },
+{ label: 'Toys', url: '/toy-yard-sales', emoji: '🧸' }];
+
 
 export default function YardSales() {
   const [viewMode, setViewMode] = useState('map');
@@ -65,19 +65,19 @@ export default function YardSales() {
   const [visibleMapSales, setVisibleMapSales] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
   const [locationLoaded, setLocationLoaded] = useState(false);
-  
+
   useEffect(() => {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
     setLanguage(savedLang);
-    
+
     const handleLanguageChange = (e) => {
       setLanguage(e.detail);
     };
-    
+
     window.addEventListener('languageChange', handleLanguageChange);
     return () => window.removeEventListener('languageChange', handleLanguageChange);
   }, []);
-  
+
   const t = useTranslation(language);
 
   const queryClient = useQueryClient();
@@ -133,7 +133,7 @@ export default function YardSales() {
         const isUpcoming = !isPast && sale.date && new Date(sale.date) >= startOfTomorrow;
         return { ...sale, isPast, isUpcoming };
       });
-    },
+    }
   });
 
   // Helper: distance in miles between two lat/lng points
@@ -151,12 +151,12 @@ export default function YardSales() {
       if (!user) return [];
       return await base44.entities.Favorite.filter({ user_email: user.email });
     },
-    enabled: !!user,
+    enabled: !!user
   });
 
   useEffect(() => {
     if (userFavorites.length > 0) {
-      setFavorites(userFavorites.map(f => f.yard_sale_id));
+      setFavorites(userFavorites.map((f) => f.yard_sale_id));
     }
   }, [userFavorites]);
 
@@ -166,10 +166,10 @@ export default function YardSales() {
       if (!user) return [];
       return await base44.entities.Attendance.filter({ user_email: user.email });
     },
-    enabled: !!user,
+    enabled: !!user
   });
 
-  const attendingSaleIds = new Set(userAttendances.map(a => a.yard_sale_id));
+  const attendingSaleIds = new Set(userAttendances.map((a) => a.yard_sale_id));
 
   const favoriteMutation = useMutation({
     mutationFn: async (saleId) => {
@@ -177,8 +177,8 @@ export default function YardSales() {
         base44.auth.redirectToLogin();
         return;
       }
-      
-      const existing = userFavorites.find(f => f.yard_sale_id === saleId);
+
+      const existing = userFavorites.find((f) => f.yard_sale_id === saleId);
       if (existing) {
         await base44.entities.Favorite.delete(existing.id);
       } else {
@@ -187,7 +187,7 @@ export default function YardSales() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['favorites'] });
-    },
+    }
   });
 
   const handleToggleFavorite = (saleId) => {
@@ -197,7 +197,7 @@ export default function YardSales() {
       properties: { sale_id: saleId }
     });
     // Optimistic update
-    setFavorites(prev => isFavorited ? prev.filter(id => id !== saleId) : [...prev, saleId]);
+    setFavorites((prev) => isFavorited ? prev.filter((id) => id !== saleId) : [...prev, saleId]);
     favoriteMutation.mutate(saleId);
   };
 
@@ -217,7 +217,7 @@ export default function YardSales() {
   };
 
   // Filter sales
-  const filteredSales = sales.filter(sale => {
+  const filteredSales = sales.filter((sale) => {
     // Hide ended sales by default
     if (!showEndedSales && sale.isPast) {
       return false;
@@ -231,7 +231,7 @@ export default function YardSales() {
     if (viewMode === 'list' && !isNearbyOrEngaged(sale)) {
       return false;
     }
-    
+
     // Search (title, description, and location fields)
     if (filters.search) {
       const searchLower = filters.search.toLowerCase();
@@ -242,25 +242,25 @@ export default function YardSales() {
       const cityMatch = sale.city?.toLowerCase().includes(searchLower);
       const stateMatch = sale.state?.toLowerCase().includes(searchLower);
       const zipCodeMatch = sale.zip_code?.toLowerCase().includes(searchLower);
-      
+
       if (!titleMatch && !descMatch && !generalLocationMatch && !addressMatch && !cityMatch && !stateMatch && !zipCodeMatch) {
         return false;
       }
     }
-    
+
     // Categories
     if (filters.categories.length > 0) {
       const saleCategories = sale.categories || (sale.category ? [sale.category] : []);
-      if (!filters.categories.some(cat => saleCategories.includes(cat))) {
+      if (!filters.categories.some((cat) => saleCategories.includes(cat))) {
         return false;
       }
     }
-    
+
     // Date filtering
     if (filters.date !== 'all' && sale.date) {
       const saleDate = new Date(sale.date);
       const today = new Date();
-      
+
       switch (filters.date) {
         case 'today':
           if (!isWithinInterval(saleDate, { start: startOfDay(today), end: endOfDay(today) })) {
@@ -287,14 +287,14 @@ export default function YardSales() {
           break;
       }
     }
-    
+
     // Payment filtering
     if (filters.payment !== 'all') {
       if (filters.payment === 'cash' && !sale.payment_cash) return false;
       if (filters.payment === 'card' && !sale.payment_card) return false;
       if (filters.payment === 'digital' && !sale.payment_digital) return false;
     }
-    
+
     return true;
   });
 
@@ -341,11 +341,11 @@ export default function YardSales() {
 
   const structuredData = {
     "@context": "https://schema.org",
-    "@graph": filteredSales.slice(0, 10).filter(sale => sale.date).map((sale) => {
+    "@graph": filteredSales.slice(0, 10).filter((sale) => sale.date).map((sale) => {
       const primaryImage = sale.photos?.[0] || "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/5937bd15f_s-2426613-s9fq3f3gayb673oi-t.jpg";
-      const eventStatus = sale.isPast
-        ? "https://schema.org/EventCompleted"
-        : "https://schema.org/EventScheduled";
+      const eventStatus = sale.isPast ?
+      "https://schema.org/EventCompleted" :
+      "https://schema.org/EventScheduled";
       const saleSlug = sale.id;
       const organizerName = sale.seller?.full_name || null;
 
@@ -367,9 +367,9 @@ export default function YardSales() {
             "addressCountry": "US"
           }
         },
-        "organizer": organizerName
-          ? { "@type": "Person", "name": organizerName }
-          : { "@type": "Organization", "name": "Stooplify", "url": "https://stooplify.com" },
+        "organizer": organizerName ?
+        { "@type": "Person", "name": organizerName } :
+        { "@type": "Organization", "name": "Stooplify", "url": "https://stooplify.com" },
         "performer": {
           "@type": "Organization",
           "name": "Local Yard Sale Hosts"
@@ -395,23 +395,23 @@ export default function YardSales() {
   return (
     <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
-      <SEO 
-        title={`${filteredSales.length} Brooklyn Stoop Sales & Yard Sales Near You | Stooplify`}
-        description={`Browse ${filteredSales.length} upcoming Brooklyn stoop sales, yard sales, garage sales, and estate sales in your area. Find furniture, clothing, antiques, electronics and more at unbeatable prices.`}
-        keywords="brooklyn stoop sale, stoop sales brooklyn, yard sales near me, garage sales today, estate sales, weekend yard sales, local sales, secondhand furniture, thrift shopping, neighborhood sales, NYC stoop sale"
-        structuredData={structuredData}
-      />
+      <SEO
+          title={`${filteredSales.length} Brooklyn Stoop Sales & Yard Sales Near You | Stooplify`}
+          description={`Browse ${filteredSales.length} upcoming Brooklyn stoop sales, yard sales, garage sales, and estate sales in your area. Find furniture, clothing, antiques, electronics and more at unbeatable prices.`}
+          keywords="brooklyn stoop sale, stoop sales brooklyn, yard sales near me, garage sales today, estate sales, weekend yard sales, local sales, secondhand furniture, thrift shopping, neighborhood sales, NYC stoop sale"
+          structuredData={structuredData} />
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-6"
-        >
-          <h1 
-            className="text-3xl md:text-4xl font-bold text-[#2E3A59] dark:text-white mb-2"
-            style={{ fontFamily: 'Poppins, sans-serif' }}
-          >
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-6">
+
+          <h1
+              className="text-3xl md:text-4xl font-bold text-[#2E3A59] dark:text-white mb-2"
+              style={{ fontFamily: 'Poppins, sans-serif' }}>
+
             {t('findYardSales')}
           </h1>
           <p className="text-gray-600 dark:text-gray-300">
@@ -430,11 +430,11 @@ export default function YardSales() {
               <h2 className="font-semibold text-[#2E3A59] dark:text-white text-sm">Browse by City</h2>
             </div>
             <div className="flex flex-wrap gap-2">
-              {CITY_PAGES.map(c => (
-                <Link key={c.url} to={c.url} className="text-xs px-2.5 py-1 bg-[#14B8FF]/10 text-[#14B8FF] rounded-full hover:bg-[#14B8FF] hover:text-white transition-colors font-medium">
+              {CITY_PAGES.map((c) =>
+                <Link key={c.url} to={c.url} className="bg-[#14B8FF]/10 text-[#14B8FF] text-xs font-medium rounded-full hover:bg-[#14B8FF] hover:text-white transition-colors">
                   {c.emoji} {c.label}
                 </Link>
-              ))}
+                )}
             </div>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
@@ -443,11 +443,11 @@ export default function YardSales() {
               <h2 className="font-semibold text-[#2E3A59] dark:text-white text-sm">Browse by Neighborhood</h2>
             </div>
             <div className="flex flex-wrap gap-2">
-              {NEIGHBORHOOD_PAGES.map(n => (
+              {NEIGHBORHOOD_PAGES.map((n) =>
                 <Link key={n.url} to={n.url} className="text-xs px-3 py-1.5 bg-[#FF6F61]/10 text-[#FF6F61] rounded-full hover:bg-[#FF6F61] hover:text-white transition-colors font-medium leading-none inline-flex items-center">
                   {n.label}
                 </Link>
-              ))}
+                )}
             </div>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
@@ -456,11 +456,11 @@ export default function YardSales() {
               <h2 className="font-semibold text-[#2E3A59] dark:text-white text-sm">Browse by Date</h2>
             </div>
             <div className="flex flex-wrap gap-2">
-              {DATE_PAGES.map(d => (
+              {DATE_PAGES.map((d) =>
                 <Link key={d.url} to={d.url} className="text-xs px-3 py-1.5 bg-[#F5A623]/10 text-[#F5A623] rounded-full hover:bg-[#F5A623] hover:text-white transition-colors font-medium leading-none inline-flex items-center">
                   {d.label}
                 </Link>
-              ))}
+                )}
             </div>
           </div>
           <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
@@ -469,55 +469,55 @@ export default function YardSales() {
               <h2 className="font-semibold text-[#2E3A59] dark:text-white text-sm">Browse by Category</h2>
             </div>
             <div className="flex flex-wrap gap-2">
-              {CATEGORY_PAGES.map(cat => (
+              {CATEGORY_PAGES.map((cat) =>
                 <Link key={cat.url} to={cat.url} className="text-xs px-3 py-1.5 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 rounded-full hover:bg-purple-500 hover:text-white transition-colors font-medium leading-none inline-flex items-center">
                   {cat.emoji} {cat.label}
                 </Link>
-              ))}
+                )}
             </div>
           </div>
         </div>
 
         {/* Filters */}
         <div className="mb-6">
-          <SaleFilters 
-            filters={filters} 
-            onFilterChange={setFilters} 
-            onReset={resetFilters}
-          />
+          <SaleFilters
+              filters={filters}
+              onFilterChange={setFilters}
+              onReset={resetFilters} />
+
         </div>
 
         {/* View Toggle & Results Count */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6"
-        >
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+
           <div className="flex items-center gap-4">
             <p className="text-gray-600 dark:text-gray-300">
               <span className="font-semibold text-[#2E3A59] dark:text-white">
                 {viewMode === 'map' && visibleMapSales.length > 0 ? visibleMapSales.length : filteredSales.length}
               </span> {t('salesFound')}
-              {viewMode === 'map' && visibleMapSales.length > 0 && visibleMapSales.length < filteredSales.length && (
+              {viewMode === 'map' && visibleMapSales.length > 0 && visibleMapSales.length < filteredSales.length &&
                 <span className="text-xs text-gray-400 ml-1">(in view)</span>
-              )}
+                }
             </p>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
-                type="checkbox"
-                checked={showEndedSales}
-                onChange={(e) => setShowEndedSales(e.target.checked)}
-                className="w-4 h-4 text-[#FF6F61] border-gray-300 rounded focus:ring-[#FF6F61]"
-              />
+                  type="checkbox"
+                  checked={showEndedSales}
+                  onChange={(e) => setShowEndedSales(e.target.checked)}
+                  className="w-4 h-4 text-[#FF6F61] border-gray-300 rounded focus:ring-[#FF6F61]" />
+
               <span className="text-sm text-gray-600 dark:text-gray-300">Show ended</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
-                type="checkbox"
-                checked={showUpcomingEvents}
-                onChange={(e) => setShowUpcomingEvents(e.target.checked)}
-                className="w-4 h-4 text-emerald-500 border-gray-300 rounded focus:ring-emerald-500"
-              />
+                  type="checkbox"
+                  checked={showUpcomingEvents}
+                  onChange={(e) => setShowUpcomingEvents(e.target.checked)}
+                  className="w-4 h-4 text-emerald-500 border-gray-300 rounded focus:ring-emerald-500" />
+
               <span className="text-sm text-gray-600 dark:text-gray-300 flex items-center gap-1.5">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block flex-shrink-0"></span>
                 Show upcoming
@@ -527,26 +527,26 @@ export default function YardSales() {
           
           <div className="flex items-center bg-white dark:bg-gray-800 rounded-xl p-1 shadow-sm">
             <motion.button
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setViewMode('list')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-                viewMode === 'list' 
-                  ? 'bg-[#FF6F61] text-white' 
-                  : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-              }`}
-            >
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setViewMode('list')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                viewMode === 'list' ?
+                'bg-[#FF6F61] text-white' :
+                'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}`
+                }>
+
               <List className="w-4 h-4" />
               <span className="hidden sm:inline text-sm font-medium">{t('listView')}</span>
             </motion.button>
             <motion.button
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setViewMode('map')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
-                viewMode === 'map' 
-                  ? 'bg-[#FF6F61] text-white' 
-                  : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-              }`}
-            >
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setViewMode('map')}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+                viewMode === 'map' ?
+                'bg-[#FF6F61] text-white' :
+                'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'}`
+                }>
+
               <Map className="w-4 h-4" />
               <span className="hidden sm:inline text-sm font-medium">{t('mapView')}</span>
             </motion.button>
@@ -554,11 +554,11 @@ export default function YardSales() {
         </motion.div>
 
         {/* Content */}
-        {isLoading ? (
+        {isLoading ?
           <div className="flex items-center justify-center py-20">
             <Loader2 className="w-8 h-8 text-[#FF6F61] animate-spin" />
-          </div>
-        ) : error ? (
+          </div> :
+          error ?
           <div className="text-center py-20">
             <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Map className="w-10 h-10 text-red-500" />
@@ -570,19 +570,19 @@ export default function YardSales() {
             <Button onClick={() => refetch()} className="bg-[#FF6F61] hover:bg-[#e55a4d]">
               Retry
             </Button>
-          </div>
-        ) : (
+          </div> :
+
           <AnimatePresence mode="wait">
-            {viewMode === 'list' ? (
-              <motion.div
-                key="list"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.3 }}
-              >
-                {filteredSales.length === 0 ? (
-                  <div className="text-center py-20">
+            {viewMode === 'list' ?
+            <motion.div
+              key="list"
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 20 }}
+              transition={{ duration: 0.3 }}>
+
+                {filteredSales.length === 0 ?
+              <div className="text-center py-20">
                     <div className="w-20 h-20 bg-[#FF6F61]/10 rounded-full flex items-center justify-center mx-auto mb-4">
                       <Map className="w-10 h-10 text-[#FF6F61]" />
                     </div>
@@ -593,69 +593,69 @@ export default function YardSales() {
                     <Button onClick={resetFilters} className="bg-[#FF6F61] hover:bg-[#e55a4d]">
                       {t('resetFilters')}
                     </Button>
-                  </div>
-                ) : (
-                  <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {filteredSales.map((sale, index) => (
-                      <motion.div
-                        key={sale.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                      >
+                  </div> :
+
+              <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    {filteredSales.map((sale, index) =>
+                <motion.div
+                  key={sale.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}>
+
                         <SaleCard
-                          sale={sale}
-                          isFavorite={favorites.includes(sale.id)}
-                          onToggleFavorite={handleToggleFavorite}
-                          isPast={sale.isPast}
-                        />
+                    sale={sale}
+                    isFavorite={favorites.includes(sale.id)}
+                    onToggleFavorite={handleToggleFavorite}
+                    isPast={sale.isPast} />
+
                       </motion.div>
-                    ))}
-                  </div>
                 )}
-              </motion.div>
-            ) : (
-              <motion.div
-                key="map"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.3 }}
-                className="mb-20 md:mb-0"
-              >
+                  </div>
+              }
+              </motion.div> :
+
+            <motion.div
+              key="map"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.3 }}
+              className="mb-20 md:mb-0">
+
                 <div className="h-[calc(100vh-220px)] md:h-[600px] rounded-2xl overflow-hidden">
                   <SaleMap sales={filteredSales} onVisibleSalesChange={setVisibleMapSales} />
                 </div>
-                {visibleMapSales.length > 0 && (
-                  <div className="mt-6 hidden md:block">
+                {visibleMapSales.length > 0 &&
+              <div className="mt-6 hidden md:block">
                     <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-4">
                       {visibleMapSales.length} sale{visibleMapSales.length !== 1 ? 's' : ''} in current map view
                     </p>
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                      {visibleMapSales.map((sale, index) => (
-                        <motion.div
-                          key={sale.id}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.05 }}
-                        >
+                      {visibleMapSales.map((sale, index) =>
+                  <motion.div
+                    key={sale.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}>
+
                           <SaleCard
-                            sale={sale}
-                            isFavorite={favorites.includes(sale.id)}
-                            onToggleFavorite={handleToggleFavorite}
-                            isPast={sale.isPast}
-                          />
+                      sale={sale}
+                      isFavorite={favorites.includes(sale.id)}
+                      onToggleFavorite={handleToggleFavorite}
+                      isPast={sale.isPast} />
+
                         </motion.div>
-                      ))}
+                  )}
                     </div>
                   </div>
-                )}
+              }
               </motion.div>
-            )}
+            }
           </AnimatePresence>
-        )}
+          }
       </div>
     </div>
-    </PullToRefresh>
-  );
+    </PullToRefresh>);
+
 }
