@@ -94,7 +94,7 @@ const createCommunityIcon = (emoji) => new L.DivIcon({
 
 // Cluster sales by proximity based on current zoom
 function clusterSales(sales, zoom) {
-  const clusterRadius = Math.max(0.003, 0.08 / Math.pow(2, zoom - 11));
+  const clusterRadius = Math.max(0.001, 0.02 / Math.pow(2, zoom - 11));
   const clusters = [];
   const assigned = new Set();
 
