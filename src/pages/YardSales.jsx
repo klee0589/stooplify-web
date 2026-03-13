@@ -431,7 +431,7 @@ export default function YardSales() {
             </div>
             <div className="flex flex-wrap gap-2">
               {CITY_PAGES.map((c) =>
-                <Link key={c.url} to={c.url} className="bg-[#14B8FF]/10 text-[#14B8FF] text-xs font-medium rounded-full hover:bg-[#14B8FF] hover:text-white transition-colors">
+                <Link key={c.url} to={c.url} className="text-xs px-3 py-1.5 bg-[#14B8FF]/10 text-[#14B8FF] rounded-full hover:bg-[#14B8FF] hover:text-white transition-colors font-medium leading-none inline-flex items-center">
                   {c.emoji} {c.label}
                 </Link>
                 )}
