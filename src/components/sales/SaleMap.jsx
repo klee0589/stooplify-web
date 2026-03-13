@@ -212,7 +212,7 @@ export default function SaleMap({ sales, center, onVisibleSalesChange }) {
       `}</style>
       <MapContainer
         center={defaultCenter}
-        zoom={userLocation ? 12 : 11}
+        zoom={userLocation ? 14 : 12}
         style={{ height: '100%', width: '100%' }}
         scrollWheelZoom={true}
       >
