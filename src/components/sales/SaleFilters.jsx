@@ -219,7 +219,7 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
                       <button
                         key={opt.value}
                         onClick={() => onFilterChange({ ...filters, date: opt.value })}
-                        className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                        className={`px-3.5 py-1.5 rounded-full text-sm border transition-colors ${
                           (filters.date || 'all') === opt.value
                             ? 'bg-[#14B8FF] text-white border-[#14B8FF]'
                             : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700'
@@ -241,7 +241,7 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
                       <button
                         key={opt.value}
                         onClick={() => onFilterChange({ ...filters, distance: opt.value })}
-                        className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                        className={`px-3.5 py-1.5 rounded-full text-sm border transition-colors ${
                           (filters.distance || 'all') === opt.value
                             ? 'bg-[#14B8FF] text-white border-[#14B8FF]'
                             : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700'
@@ -265,7 +265,7 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
                         <button
                           key={cat.value}
                           onClick={() => handleCategoryToggle(cat.value)}
-                          className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                          className={`px-3.5 py-1.5 rounded-full text-sm border transition-colors ${
                             selected
                               ? 'bg-[#14B8FF] text-white border-[#14B8FF]'
                               : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700'
@@ -288,7 +288,7 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
                       <button
                         key={opt.value}
                         onClick={() => onFilterChange({ ...filters, payment: opt.value })}
-                        className={`px-3 py-1.5 rounded-full text-sm border transition-colors ${
+                        className={`px-3.5 py-1.5 rounded-full text-sm border transition-colors ${
                           (filters.payment || 'all') === opt.value
                             ? 'bg-[#14B8FF] text-white border-[#14B8FF]'
                             : 'bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 border-gray-200 dark:border-gray-700'
