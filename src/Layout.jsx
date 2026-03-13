@@ -794,8 +794,8 @@ function LayoutContent({ children, currentPageName }) {
       {/* Main Content with Page Transitions */}
       <main 
         ref={mainContentRef}
-        className="pt-16 md:pt-20 pb-0 md:pb-0" 
-        style={{ paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}
+        className={isMobileWeb ? "pt-14" : "pt-16 md:pt-20 pb-0 md:pb-0"}
+        style={isMobileWeb ? {} : { paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}
         id="main-content"
       >
         <AnimatePresence mode="wait">
