@@ -100,51 +100,15 @@ export default function Home() {
       </Suspense>
       <CTASection />
 
-      {/* Browse by City Section */}
-      <section className="py-16 bg-white dark:bg-gray-900">
+      {/* Browse by Section */}
+      <section className="py-8 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-10"
-          >
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2E3A59] dark:text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              Browse Yard Sales by City
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 text-lg">
-              Find local sales in your neighborhood
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-4">
-            {CITY_CARDS.map((city, i) => (
-              <motion.div
-                key={city.url}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.07 }}
-              >
-                <Link
-                  to={city.url}
-                  className="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-800 rounded-2xl hover:bg-[#14B8FF]/10 dark:hover:bg-[#14B8FF]/20 hover:shadow-md transition-all text-center group border border-transparent hover:border-[#14B8FF]/30"
-                >
-                  <span className="text-3xl mb-2">{city.emoji}</span>
-                  <span className="font-semibold text-[#2E3A59] dark:text-white text-sm group-hover:text-[#14B8FF] transition-colors" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                    {city.label}
-                  </span>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{city.sub}</span>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-
-          <div className="text-center mt-8">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+            <span className="text-sm font-semibold text-gray-500 dark:text-gray-400 shrink-0">Browse by:</span>
+            <DiscoveryDropdowns />
             <Link
               to="/yard-sales"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-[#14B8FF] text-white rounded-xl font-semibold hover:bg-[#0da3e6] transition-colors shadow-md"
-              style={{ fontFamily: 'Poppins, sans-serif' }}
+              className="no-min-tap shrink-0 inline-flex items-center gap-1.5 px-4 py-2 bg-[#14B8FF] text-white rounded-full text-sm font-semibold hover:bg-[#0da3e6] transition-colors"
             >
               View All Sales →
             </Link>
