@@ -35,6 +35,7 @@ const initPostHog = () => {
 };
 
 function LayoutContent({ children, currentPageName }) {
+  const isMobileWeb = useMobileWeb();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAvatarMenuOpen, setIsAvatarMenuOpen] = useState(false);
