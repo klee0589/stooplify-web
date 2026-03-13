@@ -66,27 +66,27 @@ export default function MobileDiscovery() {
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`flex-1 flex flex-col items-center gap-1 py-3 text-[10px] font-medium transition-colors border-b-2 ${
+              className={`no-min-tap flex-1 flex items-center justify-center gap-1 py-2 text-[10px] font-medium transition-colors border-b-2 ${
                 isActive
-                  ? 'border-current text-gray-900 dark:text-white'
+                  ? 'border-current'
                   : 'border-transparent text-gray-400 dark:text-gray-500'
               }`}
               style={isActive ? { color: tab.color, borderColor: tab.color } : {}}
             >
-              <TabIcon className="w-4 h-4" />
+              <TabIcon className="w-3 h-3" />
               {tab.label}
             </button>
           );
         })}
       </div>
 
-      {/* Pills */}
-      <div className="p-3 flex flex-wrap gap-2">
+      {/* Pills — single scrollable row */}
+      <div className="px-3 py-2 flex gap-2 overflow-x-auto scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
         {current.items.map(item => (
           <Link
             key={item.url}
             to={item.url}
-            className={`no-min-tap text-xs px-3 py-1 rounded-full font-medium transition-colors ${current.pill}`}
+            className={`no-min-tap shrink-0 text-xs px-2.5 py-1 rounded-full font-medium transition-colors ${current.pill}`}
           >
             {item.emoji ? `${item.emoji} ${item.label}` : item.label}
           </Link>
