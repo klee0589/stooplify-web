@@ -827,8 +827,8 @@ function LayoutContent({ children, currentPageName }) {
         )}
       </AnimatePresence>
 
-      {/* Bottom Navigation - Mobile Only */}
-      <BottomNavBar />
+      {/* Bottom Navigation - Mobile Only (hidden in mobile browser) */}
+      {!isMobileWeb && <BottomNavBar />}
 
       {/* Footer */}
       <footer className="bg-white dark:bg-gray-950 text-gray-900 dark:text-white" role="contentinfo">
