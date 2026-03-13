@@ -271,6 +271,8 @@ function LayoutContent({ children, currentPageName }) {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
       <a href="#main-content" className="skip-to-content">Skip to main content</a>
+      {/* Mobile Web compact header — replaces bottom nav + heavy header on mobile browsers */}
+      {isMobileWeb && <MobileWebHeader currentPageName={currentPageName} />}
       {/* Load fonts non-blocking */}
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
