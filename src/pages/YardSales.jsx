@@ -470,7 +470,7 @@ export default function YardSales() {
             </div>
             <div className="flex flex-wrap gap-2">
               {CATEGORY_PAGES.map(cat => (
-                <Link key={cat.url} to={cat.url} className="text-xs px-2.5 py-1 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 rounded-full hover:bg-purple-500 hover:text-white transition-colors font-medium">
+                <Link key={cat.url} to={cat.url} className="text-xs px-3 py-1.5 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 rounded-full hover:bg-purple-500 hover:text-white transition-colors font-medium leading-none inline-flex items-center">
                   {cat.emoji} {cat.label}
                 </Link>
               ))}
