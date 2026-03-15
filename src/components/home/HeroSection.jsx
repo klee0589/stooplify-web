@@ -39,8 +39,8 @@ export default function HeroSection() {
       const sales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 500);
       const now = new Date();
       const liveSales = sales.filter(sale => {
-        const saleDate = new Date(sale.date);
-        saleDate.setHours(23, 59, 59);
+        // Parse as local time by appending T23:59:59 (avoids UTC-midnight off-by-one)
+        const saleDate = new Date(`${sale.date}T23:59:59`);
         return saleDate >= now;
       });
       return {
