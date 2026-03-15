@@ -128,6 +128,7 @@ function MapUpdater({ center }) {
 
 function MapBoundsWatcher({ onBoundsChange, onZoomChange }) {
   const map = useMapEvents({
+    dragstart: () => map.closePopup(),
     moveend: () => onBoundsChange(map.getBounds()),
     zoomend: () => {
       onBoundsChange(map.getBounds());
