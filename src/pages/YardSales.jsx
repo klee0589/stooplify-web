@@ -10,6 +10,7 @@ import SaleCard from '../components/sales/SaleCard';
 import SaleFilters from '../components/sales/SaleFilters';
 import SaleMap from '../components/sales/SaleMap';
 import MobileDiscovery from '../components/sales/MobileDiscovery';
+import DiscoveryDropdowns from '../components/sales/DiscoveryDropdowns';
 import { startOfDay, endOfDay, startOfWeek, endOfWeek, addDays, isWithinInterval } from 'date-fns';
 import PullToRefresh from '../components/PullToRefresh';
 import { Link } from 'react-router-dom';
