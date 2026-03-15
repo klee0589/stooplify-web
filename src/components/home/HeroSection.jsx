@@ -256,7 +256,9 @@ export default function HeroSection() {
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 dark:text-gray-400">{t('thisWeekend')}</p>
-                    <p className="font-semibold text-[#2E3A59] dark:text-white">24 {t('salesNearby')}</p>
+                    <p className="font-semibold text-[#2E3A59] dark:text-white">
+                      {statsLoading ? '...' : statsData.activeSales} {t('salesNearby')}
+                    </p>
                   </div>
                 </div>
               </motion.div>
