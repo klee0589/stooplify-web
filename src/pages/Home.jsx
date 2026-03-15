@@ -171,7 +171,7 @@ export default function Home() {
           <div className="flex flex-col md:flex-row gap-6 mb-6">
             <div className="w-32 h-32 rounded-full overflow-hidden mx-auto md:mx-0 shadow-lg bg-gradient-to-br from-[#FF6F61] to-[#F5A623]">
               <img
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/ff6f4011c_headshot.jpg"
+                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/9963ffb2e_generated_image.png"
                 alt="Daniel - Founder of Stooplify"
                 className="w-full h-full object-cover"
               />
