@@ -11,7 +11,6 @@ import SaleFilters from '../components/sales/SaleFilters';
 import SaleMap from '../components/sales/SaleMap';
 import MobileDiscovery from '../components/sales/MobileDiscovery';
 import DiscoveryDropdowns from '../components/sales/DiscoveryDropdowns';
-import AdSense from '../components/AdSense';
 import { startOfDay, endOfDay, startOfWeek, endOfWeek, addDays, isWithinInterval } from 'date-fns';
 import PullToRefresh from '../components/PullToRefresh';
 import { Link } from 'react-router-dom';
