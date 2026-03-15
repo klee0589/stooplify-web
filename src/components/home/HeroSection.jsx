@@ -171,7 +171,14 @@ export default function HeroSection() {
             >
               <div className="flex items-center gap-2">
                 <span className="text-xl">🏘️</span>
-                <span><strong>{statsData.activeSales}</strong> active sales</span>
+                <span>
+                  {statsLoading ? (
+                    <span className="inline-block w-6 h-4 bg-gray-200 dark:bg-gray-600 rounded animate-pulse align-middle" />
+                  ) : (
+                    <strong>{statsData.activeSales}</strong>
+                  )}
+                  {' '}active sales
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-xl">📍</span>
