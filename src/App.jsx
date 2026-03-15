@@ -61,6 +61,9 @@ const AuthenticatedApp = () => {
           }
         />
       ))}
+      <Route path="/find-stoop-sales-near-you" element={<LayoutWrapper currentPageName="find-stoop-sales-near-you"><FindStoopSalesNearYou /></LayoutWrapper>} />
+      <Route path="/how-to-price-items-stoop-sale" element={<LayoutWrapper currentPageName="how-to-price-items-stoop-sale"><HowToPriceItemsStoopSale /></LayoutWrapper>} />
+      <Route path="/where-to-post-yard-sale-online" element={<LayoutWrapper currentPageName="where-to-post-yard-sale-online"><WhereToPostYardSaleOnline /></LayoutWrapper>} />
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
