@@ -33,7 +33,7 @@ export default function HeroSection() {
   const t = useTranslation(language);
 
   // Fetch real data - defer until visible
-  const { data: statsData } = useQuery({
+  const { data: statsData, isLoading: statsLoading } = useQuery({
     queryKey: ['heroStats'],
     queryFn: async () => {
       const sales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 500);
