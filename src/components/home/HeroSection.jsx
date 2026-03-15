@@ -47,9 +47,7 @@ export default function HeroSection() {
         activeSales: liveSales.length
       };
     },
-    initialData: { activeSales: 0 },
-    staleTime: 120000, // Cache for 2 minutes
-    enabled: true // Start immediately but only return critical data
+    staleTime: 120000,
   });
 
   const handleEmailSubmit = async (e) => {
