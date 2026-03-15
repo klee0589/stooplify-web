@@ -5,6 +5,7 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
+import AdSense from '../components/AdSense';
 import HeroSection from '../components/home/HeroSection';
 import DiscoveryDropdowns from '../components/sales/DiscoveryDropdowns';
 import HowItWorks from '../components/home/HowItWorks';
