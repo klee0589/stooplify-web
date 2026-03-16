@@ -93,83 +93,63 @@ Deno.serve(async (req) => {
       return Response.json({ message: 'Already generated 3 posts today', count: todaysPosts.length });
     }
 
+    if (todaysPosts.length >= 1) {
+      console.log(`[generateDailyBlogPosts] Already generated a post today. Skipping.`);
+      return Response.json({ message: 'Already generated a post today', count: todaysPosts.length });
+    }
+
     const city = getCityForToday();
     const topics = TOPIC_TEMPLATES(city);
-    const remaining = 3 - todaysPosts.length;
-    const topicsToGenerate = topics.slice(0, remaining);
+    // Pick topic based on day to rotate through all 3 over 3 days
+    const topicIndex = Math.floor(new Date().getDate() % topics.length);
+    const topicData = topics[topicIndex];
 
-    console.log(`[generateDailyBlogPosts] Generating ${topicsToGenerate.length} post(s) for city: ${city.name}`);
+    console.log(`[generateDailyBlogPosts] Generating 1 post for city: ${city.name}, topic: ${topicData.topic}`);
 
-    const generated = [];
+    const postData = await generatePost(base44, topicData, city);
 
-    for (const topicData of topicsToGenerate) {
-      try {
-        console.log(`[generateDailyBlogPosts] Generating post for topic: ${topicData.topic}`);
-        const postData = await generatePost(base44, topicData, city);
-
-        if (!postData || !postData.slug) {
-          console.error('[generateDailyBlogPosts] LLM returned invalid data');
-          continue;
-        }
-
-        // Ensure slug is clean
-        let slug = postData.slug
-          .toLowerCase()
-          .replace(/[^a-z0-9-]/g, '-')
-          .replace(/-+/g, '-')
-          .replace(/^-|-$/g, '');
-
-        // Check for duplicate slug
-        const existing = await base44.asServiceRole.entities.BlogPost.filter({ slug });
-        if (existing.length > 0) {
-          const suffix = Date.now().toString(36).slice(-4);
-          slug = `${slug}-${suffix}`;
-          console.log(`[generateDailyBlogPosts] Slug collision, using: ${slug}`);
-        }
-
-        // Generate a featured image
-        let featuredImageUrl = '';
-        try {
-          const imageResult = await base44.asServiceRole.integrations.Core.GenerateImage({
-            prompt: `A vibrant, realistic street photography photo of a neighborhood yard sale or stoop sale scene for a blog post titled "${postData.title}". Show colorful items laid out on tables or stoops, people browsing, sunny day, urban neighborhood feel. No text overlays.`,
-          });
-          featuredImageUrl = imageResult?.url || '';
-          console.log(`[generateDailyBlogPosts] Generated image for: "${postData.title}"`);
-        } catch (imgErr) {
-          console.error(`[generateDailyBlogPosts] Image generation failed:`, imgErr.message);
-        }
-
-        const post = await base44.asServiceRole.entities.BlogPost.create({
-          title: postData.title,
-          slug,
-          excerpt: postData.excerpt || '',
-          content: postData.content || '',
-          meta_description: postData.meta_description || '',
-          meta_keywords: postData.meta_keywords || topicData.tags,
-          tags: topicData.tags,
-          reading_time_minutes: postData.reading_time_minutes || 5,
-          status: 'published',
-          publish_date: new Date().toISOString(),
-          author_name: 'Stooplify Team',
-          featured_image_url: featuredImageUrl,
-          title_es: postData.title_es || '',
-          excerpt_es: postData.excerpt_es || '',
-          content_es: postData.content_es || '',
-          meta_description_es: postData.meta_description_es || '',
-        });
-
-        console.log(`[generateDailyBlogPosts] Created post: "${postData.title}" (${slug})`);
-        generated.push({ title: postData.title, slug });
-      } catch (err) {
-        console.error(`[generateDailyBlogPosts] Failed to generate post for "${topicData.topic}":`, err.message);
-      }
+    if (!postData || !postData.slug) {
+      console.error('[generateDailyBlogPosts] LLM returned invalid data');
+      return Response.json({ error: 'LLM returned invalid data' }, { status: 500 });
     }
+
+    // Ensure slug is clean
+    let slug = postData.slug
+      .toLowerCase()
+      .replace(/[^a-z0-9-]/g, '-')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '');
+
+    // Check for duplicate slug
+    const existing = await base44.asServiceRole.entities.BlogPost.filter({ slug });
+    if (existing.length > 0) {
+      const suffix = Date.now().toString(36).slice(-4);
+      slug = `${slug}-${suffix}`;
+      console.log(`[generateDailyBlogPosts] Slug collision, using: ${slug}`);
+    }
+
+    const post = await base44.asServiceRole.entities.BlogPost.create({
+      title: postData.title,
+      slug,
+      excerpt: postData.excerpt || '',
+      content: postData.content || '',
+      meta_description: postData.meta_description || '',
+      meta_keywords: postData.meta_keywords || topicData.tags,
+      tags: topicData.tags,
+      reading_time_minutes: postData.reading_time_minutes || 5,
+      status: 'published',
+      publish_date: new Date().toISOString(),
+      author_name: 'Stooplify Team',
+      featured_image_url: '',
+    });
+
+    console.log(`[generateDailyBlogPosts] Created post: "${postData.title}" (${slug})`);
 
     return Response.json({
       success: true,
       city: city.name,
-      generated: generated.length,
-      posts: generated,
+      generated: 1,
+      posts: [{ title: postData.title, slug }],
     });
   } catch (error) {
     console.error('[generateDailyBlogPosts] Fatal error:', error.message);
