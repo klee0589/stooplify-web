@@ -88,10 +88,7 @@ Deno.serve(async (req) => {
     const allPosts = await base44.asServiceRole.entities.BlogPost.filter({ status: 'published' }, '-publish_date', 50);
     const todaysPosts = allPosts.filter(p => p.publish_date && p.publish_date.startsWith(today));
 
-    if (todaysPosts.length >= 3) {
-      console.log(`[generateDailyBlogPosts] Already generated ${todaysPosts.length} posts today. Skipping.`);
-      return Response.json({ message: 'Already generated 3 posts today', count: todaysPosts.length });
-    }
+    // Early exit check moved below
 
     if (todaysPosts.length >= 1) {
       console.log(`[generateDailyBlogPosts] Already generated a post today. Skipping.`);
