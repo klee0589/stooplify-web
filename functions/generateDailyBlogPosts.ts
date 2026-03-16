@@ -37,7 +37,7 @@ async function generatePost(base44, topicData, city) {
   const prompt = `Write a comprehensive, SEO-optimized blog post for Stooplify (a yard sale discovery platform) about: "${topicData.topic}".
 
 Requirements:
-- Length: 700–1000 words
+- Length: 700–900 words
 - Use markdown with ## H2 headers and ### H3 subheaders
 - Tone: helpful, friendly, local insider knowledge
 - Naturally mention Stooplify 2-3 times as the best tool to find/post yard sales
@@ -48,8 +48,6 @@ Requirements:
   * ${topicData.promptExtra}
 - End with a CTA paragraph encouraging readers to browse or post on Stooplify
 
-Also provide full Spanish translations of all text fields.
-
 Return a JSON object with these exact fields:
 - title: string (compelling SEO title, ~60 chars)
 - slug: string (URL-friendly, lowercase, hyphens, no special chars)
@@ -57,11 +55,7 @@ Return a JSON object with these exact fields:
 - content: string (full markdown content)
 - meta_description: string (150-160 chars, includes primary keyword)
 - meta_keywords: array of 5-8 keyword strings
-- reading_time_minutes: number
-- title_es: string (Spanish title)
-- excerpt_es: string (Spanish excerpt, 140-155 chars)
-- content_es: string (full Spanish markdown content, natural fluent translation)
-- meta_description_es: string (Spanish meta description, 150-160 chars)`;
+- reading_time_minutes: number`;
 
   const result = await base44.asServiceRole.integrations.Core.InvokeLLM({
     prompt,
@@ -75,10 +69,6 @@ Return a JSON object with these exact fields:
         meta_description: { type: 'string' },
         meta_keywords: { type: 'array', items: { type: 'string' } },
         reading_time_minutes: { type: 'number' },
-        title_es: { type: 'string' },
-        excerpt_es: { type: 'string' },
-        content_es: { type: 'string' },
-        meta_description_es: { type: 'string' },
       },
       required: ['title', 'slug', 'excerpt', 'content', 'meta_description'],
     },
