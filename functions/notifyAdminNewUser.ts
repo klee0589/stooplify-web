@@ -14,6 +14,15 @@ Deno.serve(async (req) => {
 
     console.log(`New user signed up: ${user.email}`);
 
+    // Check if this user was already notified (has any yard sale or has been around)
+    // We use a simple flag on the user object
+    if (user.admin_notified) {
+      return Response.json({ success: true, message: 'Already notified' });
+    }
+
+    // Mark as notified
+    await base44.auth.updateMe({ admin_notified: true });
+
     await base44.asServiceRole.integrations.Core.SendEmail({
       to: ADMIN_EMAIL,
       subject: `👤 New User Signed Up: ${user.full_name || user.email}`,
