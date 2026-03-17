@@ -5,11 +5,11 @@ const ADMIN_EMAIL = 'klee0589@gmail.com';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    const payload = await req.json();
-    const { event, data: user } = payload;
+    // Called directly from frontend on first login
+    const user = await base44.auth.me();
 
-    if (event.type !== 'create' || !user) {
-      return Response.json({ success: true, message: 'Skipped' });
+    if (!user) {
+      return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     console.log(`New user signed up: ${user.email}`);
