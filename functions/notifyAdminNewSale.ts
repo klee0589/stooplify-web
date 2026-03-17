@@ -1,6 +1,6 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.20';
 
-const ADMIN_EMAIL = 'daniel@stooplify.com';
+const ADMIN_EMAIL = 'klee0589@gmail.com';
 
 Deno.serve(async (req) => {
   try {
