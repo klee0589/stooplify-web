@@ -74,6 +74,11 @@ export default function Profile() {
           setUser(currentUser);
           setEditedName(currentUser.full_name || '');
           setEditedPhone(currentUser.phone || '');
+
+          // Notify admin on first login (only once)
+          if (!currentUser.admin_notified) {
+            base44.functions.invoke('notifyAdminNewUser', {}).catch(() => {});
+          }
         }
       } catch (e) {
         setIsAuthenticated(false);
