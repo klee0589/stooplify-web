@@ -53,8 +53,9 @@ export default function Home() {
       const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 50);
       const now = new Date();
       return allSales.filter(sale => {
-        const saleDate = new Date(sale.date);
-        saleDate.setHours(23, 59, 59);
+        if (!sale.date) return false;
+        const [y, m, d] = sale.date.split('-').map(Number);
+        const saleDate = new Date(y, m - 1, d);
         return saleDate >= now;
       }).slice(0, 6);
     },
