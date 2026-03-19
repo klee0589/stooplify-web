@@ -197,8 +197,9 @@ export default function Calendar() {
     return true; // 'all'
   });
 
-  // Get dates with events (respecting filter + location)
-  const datesWithEvents = visibleSales
+  // Get dates with events — use ALL sales for calendar dots (not map-filtered)
+  // so the calendar always shows which days have events regardless of map viewport
+  const datesWithEvents = allSales
     .filter(sale => {
       if (!sale.date) return false;
       // Apply event filter
