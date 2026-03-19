@@ -121,9 +121,8 @@ export default function Calendar() {
   });
 
   const { data: allSales = [] } = useQuery({
-    queryKey: ['calendarSales', user?.email],
+    queryKey: ['calendarSales'],
     queryFn: async () => {
-      if (!user) return [];
       const sales = await base44.entities.YardSale.filter({ status: 'approved' });
       const now = new Date();
       now.setHours(0, 0, 0, 0); // Start of today
@@ -134,7 +133,7 @@ export default function Calendar() {
         return saleDate && saleDate >= now;
       });
     },
-    enabled: !!user,
+    staleTime: 60000,
   });
 
   // Get user's own created sales
