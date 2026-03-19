@@ -27,17 +27,25 @@ export default function CTASection() {
   
   const t = useTranslation(language);
 
-  // Fetch real data
+  // Fetch real data — only count upcoming/live sales
   const { data: salesData } = useQuery({
     queryKey: ['ctaStats'],
     queryFn: async () => {
       const sales = await base44.entities.YardSale.filter({ status: 'approved' });
       const users = await base44.entities.User.list();
+      const now = new Date();
+      now.setHours(0, 0, 0, 0);
+      const upcomingSales = sales.filter(sale => {
+        if (!sale.date) return false;
+        const [y, m, d] = sale.date.split('-').map(Number);
+        return new Date(y, m - 1, d) >= now;
+      });
       return {
-        activeSales: sales.length,
+        activeSales: upcomingSales.length,
         totalUsers: users.length
       };
     },
+    staleTime: 60000,
     initialData: { activeSales: 0, totalUsers: 0 }
   });
 
