@@ -114,7 +114,7 @@ export default function FeaturedSales({ sales = [] }) {
                       <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
                         <Calendar className="w-4 h-4 text-[#14B8FF] flex-shrink-0" />
                         <span className="text-sm">
-                          {sale.date ? format(new Date(sale.date), 'MMM d') : 'TBD'}
+                          {sale.date ? (() => { const [y,m,d] = sale.date.split('-').map(Number); return format(new Date(y, m-1, d), 'MMM d'); })() : 'TBD'}
                         </span>
                       </div>
                       <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
