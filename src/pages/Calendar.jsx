@@ -406,7 +406,7 @@ export default function Calendar() {
               </MapContainer>
             </motion.div>
             <p className="text-xs text-gray-500 dark:text-gray-400 text-center -mt-2">
-              Pan/zoom the map to filter events by area
+              📍 The map shows event locations — calendar shows <strong>all</strong> upcoming events regardless of map view
             </p>
 
           <motion.div
