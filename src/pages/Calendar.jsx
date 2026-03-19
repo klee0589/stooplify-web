@@ -182,8 +182,8 @@ export default function Calendar() {
   // Sales visible in map area
   const visibleSales = allSales.filter(isInMapBounds);
 
-  // Get sales for selected date with filter (location-filtered)
-  const salesForSelectedDate = visibleSales.filter(sale => {
+  // Get sales for selected date — use allSales so map viewport doesn't hide events
+  const salesForSelectedDate = allSales.filter(sale => {
     if (!sale.date) return false;
     const saleDate = parseLocalDate(sale.date);
     if (!saleDate) return false;
