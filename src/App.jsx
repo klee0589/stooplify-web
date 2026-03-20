@@ -67,6 +67,21 @@ const AuthenticatedApp = () => {
       <Route path="/how-to-price-items-stoop-sale" element={<LayoutWrapper currentPageName="how-to-price-items-stoop-sale"><HowToPriceItemsStoopSale /></LayoutWrapper>} />
       <Route path="/where-to-post-yard-sale-online" element={<LayoutWrapper currentPageName="where-to-post-yard-sale-online"><WhereToPostYardSaleOnline /></LayoutWrapper>} />
       <Route path="/site-map" element={<LayoutWrapper currentPageName="site-map"><SiteMap /></LayoutWrapper>} />
+
+      {/* 301 redirects: old PascalCase guide URLs → SEO-friendly slugs */}
+      <Route path="/GuidesFindSales" element={<Navigate to="/guides-find-yard-sales" replace />} />
+      <Route path="/GuidesPricing" element={<Navigate to="/guides-pricing-yard-sale-items" replace />} />
+      <Route path="/GuidesTimings" element={<Navigate to="/guides-best-time-yard-sale" replace />} />
+      <Route path="/GuidesPermit" element={<Navigate to="/guides-permit-requirements-nyc" replace />} />
+      <Route path="/GuidesAdvertise" element={<Navigate to="/guides-advertise-yard-sale" replace />} />
+      <Route path="/GuidesSeniors" element={<Navigate to="/guides-seniors-yard-sales" replace />} />
+      {/* Old city page redirects */}
+      <Route path="/StoopSalesBrooklyn" element={<Navigate to="/stoop-sales-brooklyn" replace />} />
+      <Route path="/StoopSalesQueens" element={<Navigate to="/stoop-sales-queens" replace />} />
+      <Route path="/StoopSalesManhattan" element={<Navigate to="/stoop-sales-manhattan" replace />} />
+      <Route path="/StoopSalesBronx" element={<Navigate to="/stoop-sales-bronx" replace />} />
+      <Route path="/StoopSalesJerseyCity" element={<Navigate to="/stoop-sales-jersey-city" replace />} />
+
       <Route path="*" element={<PageNotFound />} />
     </Routes>
   );
