@@ -7,6 +7,7 @@ export default function SEO({
   image = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_6963ba60866b343e03d8de8e/f9ad791a3_logo_v1.png',
   url = typeof window !== 'undefined' ? `https://stooplify.com${window.location.pathname}${window.location.search}` : 'https://stooplify.com',
   type = 'website',
+  robots = 'index, follow',
   structuredData
 }) {
   useEffect(() => {
