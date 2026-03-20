@@ -40,7 +40,7 @@ export default function SEO({
     // Standard meta tags
     updateMeta('description', description);
     updateMeta('keywords', keywords);
-    updateMeta('robots', 'index, follow');
+    updateMeta('robots', robots);
     updateMeta('author', 'Stooplify');
     
     // Canonical URL

@@ -182,6 +182,8 @@ export default function ApplyAsShop() {
 
   return (
     <div className="min-h-screen bg-[#F9F9F9] py-8">
+      {/* noindex: application form, not for search indexing */}
+      <meta name="robots" content="noindex, follow" />
       <div className="max-w-4xl mx-auto px-4">
         <Link to={createPageUrl('Pricing')}>
           <motion.button
