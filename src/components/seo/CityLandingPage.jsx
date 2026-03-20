@@ -3,16 +3,45 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { MapPin, Calendar, Clock, ArrowRight, PlusCircle } from 'lucide-react';
+import { MapPin, Calendar, Clock, ArrowRight, PlusCircle, BookOpen } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import SEO from '@/components/SEO';
 import { format, parseISO } from 'date-fns';
 import { createPageUrl } from '@/utils';
 
+const boroughIntros = {
+  Brooklyn: {
+    how: "Brooklyn stoop sales are a cherished NYC tradition where neighbors set up right on their stoops or sidewalks to sell furniture, vintage clothing, books, toys, and more. Unlike indoor garage sales, stoop sales are part of the neighborhood street life — casual, friendly, and full of surprises.",
+    when: "Most Brooklyn stoop sales happen on Saturday and Sunday mornings between 8am and 2pm, especially from late spring through early fall. The busiest weekends are when the weather is warm and dry. Some sellers also list midweek sales.",
+    tips: "Arrive early for the best picks. Bring small bills and a payment app like Venmo or CashApp. Check Stooplify Friday night or Saturday morning to plan your route through Williamsburg, Park Slope, Bushwick, or Crown Heights.",
+  },
+  Queens: {
+    how: "Queens yard sales and stoop sales reflect the borough's diverse communities — you'll find everything from antiques and electronics to culturally unique items, clothing, and furniture. Sales happen in front yards, driveways, and on sidewalks across the borough.",
+    when: "Queens sales are most common on weekend mornings from April through October, typically starting at 8 or 9am. Jackson Heights, Astoria, and Flushing tend to have active sale seasons on Saturdays.",
+    tips: "Use Stooplify's map to spot clusters of sales in the same neighborhood. Bring a reusable bag and small change. Don't be afraid to make reasonable offers — most sellers are happy to negotiate.",
+  },
+  Manhattan: {
+    how: "Manhattan stoop sales are compact but treasure-packed. With limited outdoor space, sellers are creative — setting up on building stoops, in courtyards, or on the sidewalk outside their buildings. You'll often find high-quality items from apartment cleanouts.",
+    when: "Manhattan sales peak on weekend mornings, April through November. The Upper West Side, Harlem, and Washington Heights are especially active. Sales often run from 9am to 1pm.",
+    tips: "Follow neighborhood Facebook groups and Stooplify for last-minute listings. Bring a tote bag and MetroCard — the best finds often require a short subway hop between neighborhoods.",
+  },
+  Bronx: {
+    how: "The Bronx has a strong community tradition of outdoor sales, from sidewalk stoop sales to multi-family garage sales in driveways. Items range from furniture and electronics to clothing, collectibles, and household goods.",
+    when: "Bronx yard sales typically run on Saturday and Sunday mornings from April through September. Riverdale, Fordham, and Pelham Bay neighborhoods tend to be the most active.",
+    tips: "Check Stooplify on Friday evening to plan your Saturday route. Bring cash — many Bronx sellers prefer it. Arrive between 8 and 10am for the freshest selection.",
+  },
+  'Jersey City': {
+    how: "Jersey City has a growing yard sale and stoop sale scene, fueled by a mix of longtime residents and newer arrivals. Sales range from apartment cleanouts in the Heights to brownstone stoop sales in Downtown and the Village.",
+    when: "Jersey City sales peak on weekends from May through October. The Heights, Downtown, and Bergen-Lafayette neighborhoods see the most activity, typically from 9am to 2pm on Saturdays.",
+    tips: "Take the PATH train or bike — parking can be tricky. Stooplify lists sales in real-time so you can plan your route from Hoboken to Greenville. Bring cash and a bag.",
+  },
+};
+
 export default function CityLandingPage({ config }) {
   const navigate = useNavigate();
   const { city, state, title, metaTitle, metaDescription, keywords, h1, intro, neighborhoods, canonicalUrl } = config;
+  const boroughInfo = boroughIntros[city] || null;
 
   const { data: sales = [], isLoading } = useQuery({
     queryKey: ['cityLandingSales', city, state],
