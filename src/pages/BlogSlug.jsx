@@ -333,6 +333,32 @@ export default function BlogSlug() {
         {/* Related Content: articles, cities, guides */}
         <RelatedContent currentSlug={slug} />
 
+        {/* Internal linking: guides section */}
+        <div className="mt-16 p-8 bg-gray-50 dark:bg-gray-800 rounded-2xl">
+          <h3 className="text-xl font-bold text-[#2E3A59] dark:text-white mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            📚 Related Guides
+          </h3>
+          <div className="grid sm:grid-cols-2 gap-3">
+            {[
+              { label: 'How to Price Items for a Yard Sale', href: '/guides-pricing-yard-sale-items' },
+              { label: 'Best Days & Times to Host a Sale', href: '/guides-best-time-yard-sale' },
+              { label: 'How to Advertise Your Yard Sale', href: '/guides-advertise-yard-sale' },
+              { label: 'Where to Find Yard Sales Near You', href: '/guides-find-yard-sales' },
+              { label: 'Do You Need a Permit in NYC?', href: '/guides-permit-requirements-nyc' },
+              { label: 'Guide for Seniors: List a Sale Online', href: '/guides-seniors-yard-sales' },
+            ].map((g) => (
+              <a key={g.href} href={g.href} className="flex items-center gap-2 text-[#14B8FF] hover:underline text-sm font-medium">
+                <span>→</span> {g.label}
+              </a>
+            ))}
+          </div>
+          <div className="mt-6 flex flex-wrap gap-3">
+            <a href="/yard-sales" className="px-4 py-2 bg-[#14B8FF] text-white rounded-lg text-sm font-semibold hover:bg-[#0da3e6]">Browse Yard Sales</a>
+            <a href="/add-yard-sale" className="px-4 py-2 bg-[#FF6F61] text-white rounded-lg text-sm font-semibold hover:bg-[#e85d50]">List Your Sale Free</a>
+            <a href="/guides" className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm font-semibold hover:border-[#14B8FF] hover:text-[#14B8FF]">All Guides</a>
+          </div>
+        </div>
+
         {/* Footer CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
