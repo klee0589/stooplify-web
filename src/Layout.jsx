@@ -881,6 +881,7 @@ function LayoutContent({ children, currentPageName }) {
                 <li><Link to={createPageUrl('Legal') + '#disclaimer'} className="hover:text-[#14B8FF] transition-colors">Disclaimer</Link></li>
                 <li><Link to={createPageUrl('Legal') + '#safety'} className="hover:text-[#14B8FF] transition-colors">Safety</Link></li>
                 <li><a href="mailto:daniel@stooplify.com" className="hover:text-[#14B8FF] transition-colors">Contact</a></li>
+                <li><Link to="/site-map" className="hover:text-[#14B8FF] transition-colors">Site Map</Link></li>
               </ul>
               <div className="mt-6">
                 <h4 className="font-semibold text-lg mb-4 text-gray-900 dark:text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>Follow Us</h4>
