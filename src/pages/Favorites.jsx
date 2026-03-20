@@ -130,6 +130,7 @@ export default function Favorites() {
         title="My Favorite Yard Sales | Stooplify"
         description={`View and manage your ${sales.length} saved yard sales. Never miss a deal at your favorite local sales.`}
         keywords="saved yard sales, favorite sales, bookmarked sales"
+        robots="noindex, follow"
       />
       <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

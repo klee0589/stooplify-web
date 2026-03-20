@@ -231,6 +231,7 @@ export default function Calendar() {
         title="My Yard Sale Calendar - Track Favorites & Attending Sales | Stooplify"
         description={`Manage your ${favorites.length} favorite yard sales and ${upcomingAttendancesCount} sales you're attending. Never miss a local sale with your personalized calendar view.`}
         keywords="yard sale calendar, my saved sales, attending events, favorite sales, sale reminders, upcoming yard sales"
+        robots="noindex, follow"
         structuredData={structuredData}
       />
       

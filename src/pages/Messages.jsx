@@ -146,6 +146,7 @@ export default function Messages() {
         title="My Messages | Stooplify"
         description="Manage conversations with yard sale buyers and sellers. Communicate directly about items and sales."
         keywords="yard sale messages, buyer seller communication"
+        robots="noindex, follow"
       />
       <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
