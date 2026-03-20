@@ -183,6 +183,7 @@ export default function ApplyAsShop() {
 
   return (
     <div className="min-h-screen bg-[#F9F9F9] py-8">
+      <SEO title="Apply as a Featured Shop | Stooplify" description="Apply to list your thrift store, consignment shop, or antique store on Stooplify." robots="noindex, follow" />
       <div className="max-w-4xl mx-auto px-4">
         <Link to={createPageUrl('Pricing')}>
           <motion.button
