@@ -11,6 +11,7 @@ import FindStoopSalesNearYou from './pages/find-stoop-sales-near-you';
 import HowToPriceItemsStoopSale from './pages/how-to-price-items-stoop-sale';
 import WhereToPostYardSaleOnline from './pages/where-to-post-yard-sale-online';
 import SiteMap from './pages/SiteMap';
+import { Navigate } from 'react-router-dom';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
