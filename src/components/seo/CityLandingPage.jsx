@@ -202,6 +202,30 @@ export default function CityLandingPage({ config }) {
           </section>
         }
 
+        {/* Borough-specific SEO intro — rich crawlable content */}
+        {boroughInfo && (
+          <section className="mb-16 bg-gray-50 dark:bg-gray-800 rounded-2xl p-8">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              <BookOpen className="w-6 h-6 text-[#14B8FF]" />
+              About Stoop Sales in {city}
+            </h2>
+            <div className="grid md:grid-cols-3 gap-6 text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+              <div>
+                <h3 className="font-semibold text-gray-900 dark:text-white text-base mb-2">🏠 How They Work</h3>
+                <p>{boroughInfo.how}</p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 dark:text-white text-base mb-2">📅 When to Go</h3>
+                <p>{boroughInfo.when}</p>
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 dark:text-white text-base mb-2">💡 Tips for Finding Them</h3>
+                <p>{boroughInfo.tips}</p>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* SEO content block */}
         <section className="prose prose-lg max-w-none dark:prose-invert mb-16">
           <h2>About {title}</h2>
