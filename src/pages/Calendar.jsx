@@ -361,18 +361,20 @@ export default function Calendar() {
                 </div>
               )}
             </div>
-            <CalendarComponent
-              mode="single"
-              selected={selectedDate}
-              onSelect={(date) => setSelectedDate(date || new Date())}
-              modifiers={{
-                hasEvent: datesWithEvents
-              }}
-              modifiersClassNames={{
-                hasEvent: 'bg-[#14B8FF] text-white font-bold hover:bg-[#14B8FF] hover:text-white'
-              }}
-              className="rounded-xl border-0"
-            />
+            <div className="flex justify-center">
+              <CalendarComponent
+                mode="single"
+                selected={selectedDate}
+                onSelect={(date) => setSelectedDate(date || new Date())}
+                modifiers={{
+                  hasEvent: datesWithEvents
+                }}
+                modifiersClassNames={{
+                  hasEvent: 'bg-[#14B8FF] text-white font-bold hover:bg-[#14B8FF] hover:text-white'
+                }}
+                className="rounded-xl border-0 w-full"
+              />
+            </div>
             <div className="mt-4 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
               <div className="w-3 h-3 rounded-full bg-[#14B8FF]"></div>
               <span>Days with events</span>
