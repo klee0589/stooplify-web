@@ -450,6 +450,30 @@ export default function AddYardSale() {
     );
   }
 
+  const isEmailValid = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email || '');
+
+  if (isAuthenticated && user && !isEmailValid(user.email)) {
+    return (
+      <div className="min-h-screen bg-[#F9F9F9] flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white rounded-3xl p-8 shadow-xl max-w-md w-full text-center">
+          <div className="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <span className="text-3xl">⚠️</span>
+          </div>
+          <h2 className="text-2xl font-bold text-[#2E3A59] mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            Valid Email Required
+          </h2>
+          <p className="text-gray-600 mb-6">
+            You need a valid email address to list a yard sale. Please update your account email to continue.
+          </p>
+          <p className="text-sm text-gray-400">Current email: {user.email || 'None'}</p>
+        </motion.div>
+      </div>
+    );
+  }
+
   if (!isAuthenticated) {
     return (
       <div className="min-h-screen bg-[#F9F9F9] flex items-center justify-center p-4">
