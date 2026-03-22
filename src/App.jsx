@@ -11,6 +11,8 @@ import FindStoopSalesNearYou from './pages/find-stoop-sales-near-you';
 import HowToPriceItemsStoopSale from './pages/how-to-price-items-stoop-sale';
 import WhereToPostYardSaleOnline from './pages/where-to-post-yard-sale-online';
 import SiteMap from './pages/SiteMap';
+import FreeItems from './pages/FreeItems';
+import FreeStuffCity from './pages/FreeStuffCity';
 import { Navigate } from 'react-router-dom';
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -67,6 +69,11 @@ const AuthenticatedApp = () => {
       <Route path="/how-to-price-items-stoop-sale" element={<LayoutWrapper currentPageName="how-to-price-items-stoop-sale"><HowToPriceItemsStoopSale /></LayoutWrapper>} />
       <Route path="/where-to-post-yard-sale-online" element={<LayoutWrapper currentPageName="where-to-post-yard-sale-online"><WhereToPostYardSaleOnline /></LayoutWrapper>} />
       <Route path="/site-map" element={<LayoutWrapper currentPageName="site-map"><SiteMap /></LayoutWrapper>} />
+      <Route path="/free-items" element={<LayoutWrapper currentPageName="free-items"><FreeItems /></LayoutWrapper>} />
+      <Route path="/free-stuff-nyc" element={<LayoutWrapper currentPageName="free-stuff-nyc"><FreeStuffCity /></LayoutWrapper>} />
+      <Route path="/free-stuff-brooklyn" element={<LayoutWrapper currentPageName="free-stuff-brooklyn"><FreeStuffCity /></LayoutWrapper>} />
+      <Route path="/free-stuff-queens" element={<LayoutWrapper currentPageName="free-stuff-queens"><FreeStuffCity /></LayoutWrapper>} />
+      <Route path="/free-stuff-hoboken" element={<LayoutWrapper currentPageName="free-stuff-hoboken"><FreeStuffCity /></LayoutWrapper>} />
 
       {/* 301 redirects: old PascalCase guide URLs → SEO-friendly slugs */}
       <Route path="/GuidesFindSales" element={<Navigate to="/guides-find-yard-sales" replace />} />
