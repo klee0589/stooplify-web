@@ -94,6 +94,11 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
       >
         <div className="bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-sm border border-gray-100 dark:border-gray-700">
           <div className="space-y-3">
+            {/* Browse by SEO links */}
+            <div className="flex items-center gap-3 pb-3 border-b border-gray-100 dark:border-gray-700">
+              <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 shrink-0 uppercase tracking-wide">Browse by:</span>
+              <DiscoveryDropdowns />
+            </div>
             <Input
               placeholder={language === 'es' ? 'Buscar ventas...' : 'Search sales...'}
               value={filters.search || ''}
