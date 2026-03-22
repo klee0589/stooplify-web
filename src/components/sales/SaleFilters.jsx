@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useTranslation } from '../translations';
 import { DrawerSelect } from '@/components/ui/drawer-select';
+import DiscoveryDropdowns from './DiscoveryDropdowns';
 
 export default function SaleFilters({ filters, onFilterChange, onReset }) {
   const [language, setLanguage] = useState('en');
