@@ -99,6 +99,8 @@ export default function BottomNavBar() {
                 className={`flex flex-col items-center justify-center flex-1 h-16 transition-colors relative ${
                   item.highlight 
                     ? 'text-[#FF6F61]' 
+                    : item.freeHighlight
+                    ? active ? 'text-green-600' : 'text-green-500'
                     : active 
                     ? 'text-[#14B8FF]' 
                     : 'text-gray-500 dark:text-gray-400'
