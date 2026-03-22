@@ -383,34 +383,7 @@ export default function Calendar() {
 
           {/* Sales for Selected Date */}
           <div className="flex flex-col gap-4">
-            {/* Mini Map for area selection */}
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm"
-              style={{ height: '200px' }}
-            >
-              <MapContainer
-                center={[userLocation.lat, userLocation.lng]}
-                zoom={11}
-                style={{ height: '100%', width: '100%' }}
-                zoomControl={true}
-              >
-                <TileLayer
-                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  attribution='&copy; OpenStreetMap contributors'
-                />
-                <MapBoundsWatcher onBoundsChange={setMapBounds} />
-                {allSales.filter(s => s.latitude && s.longitude).map(sale => (
-                  <Marker key={sale.id} position={[sale.latitude, sale.longitude]}>
-                    <Popup>{sale.title}</Popup>
-                  </Marker>
-                ))}
-              </MapContainer>
-            </motion.div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 text-center -mt-2">
-              📍 The map shows event locations — calendar shows <strong>all</strong> upcoming events regardless of map view
-            </p>
+
 
           <motion.div
             initial={{ opacity: 0, x: 20 }}
