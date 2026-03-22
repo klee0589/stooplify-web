@@ -10,6 +10,7 @@ import DiscoveryDropdowns from '../components/sales/DiscoveryDropdowns';
 import HowItWorks from '../components/home/HowItWorks';
 import FeaturedSales from '../components/home/FeaturedSales';
 import CTASection from '../components/home/CTASection';
+import FreeNearYou from '../components/home/FreeNearYou';
 import { deferAnalyticsLoad } from '../components/AnalyticsLoader';
 
 
@@ -91,6 +92,7 @@ export default function Home() {
         <FeaturedSales sales={sales} />
       </Suspense>
       <CTASection />
+      <FreeNearYou />
 
       {/* Browse by Section */}
       <section className="py-8 bg-white dark:bg-gray-900">
