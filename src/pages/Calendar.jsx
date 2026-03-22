@@ -381,7 +381,39 @@ export default function Calendar() {
             </div>
           </motion.div>
 
-          {/* Sales for Selected Date */}
+          {/* Mini Map */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm overflow-hidden"
+            style={{ height: '300px' }}
+          >
+            <MapContainer
+              center={[userLocation.lat, userLocation.lng]}
+              zoom={12}
+              style={{ height: '100%', width: '100%' }}
+              scrollWheelZoom={false}
+            >
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+              />
+              <MapBoundsWatcher onBoundsChange={setMapBounds} />
+              {allSales.filter(s => s.latitude && s.longitude).map(sale => (
+                <Marker key={sale.id} position={[sale.latitude, sale.longitude]}>
+                  <Popup>
+                    <div className="text-sm">
+                      <p className="font-semibold">{sale.title}</p>
+                      <p className="text-gray-500">{sale.date}</p>
+                    </div>
+                  </Popup>
+                </Marker>
+              ))}
+            </MapContainer>
+          </motion.div>
+
+        {/* Sales for Selected Date */}
           <div className="flex flex-col gap-4">
 
 
