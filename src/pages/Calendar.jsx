@@ -361,7 +361,7 @@ export default function Calendar() {
                 </div>
               )}
             </div>
-            <div className="flex justify-center">
+            <div className="w-full">
               <CalendarComponent
                 mode="single"
                 selected={selectedDate}
