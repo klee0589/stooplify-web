@@ -734,8 +734,40 @@ export default function AddYardSale() {
                   </p>
                 </div>
 
+                {/* Free Item Tags */}
+                {listingMode === 'free' && (
+                  <div>
+                    <Label className="text-[#2E3A59] font-medium mb-2 block">Item Tags (optional)</Label>
+                    <div className="grid grid-cols-2 gap-2">
+                      {[
+                        { value: 'curbside', label: '🛋️ Curbside Pickup' },
+                        { value: 'moving', label: '📦 Moving – Must Go' },
+                        { value: 'fcfs', label: '⚡ First Come First Serve' },
+                        { value: 'bundle', label: '📦 Bundle of Items' },
+                      ].map(tag => {
+                        const selected = (formData.free_item_tags || []).includes(tag.value);
+                        return (
+                          <button
+                            key={tag.value}
+                            type="button"
+                            onClick={() => {
+                              const current = formData.free_item_tags || [];
+                              updateField('free_item_tags', selected ? current.filter(t => t !== tag.value) : [...current, tag.value]);
+                            }}
+                            className={`py-2.5 px-3 rounded-xl border-2 text-sm font-medium transition-all text-left ${
+                              selected ? 'border-green-500 bg-green-50 text-green-700' : 'border-gray-200 text-gray-600 hover:border-green-400'
+                            }`}
+                          >
+                            {tag.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
                 {/* Payment Methods */}
-                <div>
+                {listingMode === 'sale' && <div>
                   <Label className="text-[#2E3A59] font-medium mb-3 block">Payment Methods Accepted</Label>
                   <div className="space-y-3">
                     <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
