@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { createPageUrl } from '../utils';
-import { Home, MapPin, PlusCircle, MessageCircle, User } from 'lucide-react';
+import { Home, MapPin, PlusCircle, MessageCircle, User, Gift } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -67,7 +67,7 @@ export default function BottomNavBar() {
     { name: 'Home', path: 'Home', icon: Home },
     { name: 'Browse', path: 'YardSales', icon: MapPin },
     { name: 'Post', path: 'AddYardSale', icon: PlusCircle, highlight: true },
-    { name: 'Messages', path: 'Messages', icon: MessageCircle, badge: user && unreadCount > 0 ? unreadCount : null },
+    { name: 'FREE', path: 'free-items', icon: Gift, freeHighlight: true },
     { name: 'Profile', path: 'Profile', icon: User }
   ];
 
