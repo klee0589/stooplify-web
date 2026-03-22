@@ -37,6 +37,32 @@ Deno.serve(async (req) => {
     { url: 'https://stooplify.com/stoop-sales-nyc-this-weekend', priority: '0.9', changefreq: 'daily' },
     { url: 'https://stooplify.com/brooklyn-stoop-sales-this-weekend', priority: '0.9', changefreq: 'daily' },
     { url: 'https://stooplify.com/yard-sales-near-me-this-weekend', priority: '0.9', changefreq: 'daily' },
+    // Neighborhood landing pages
+    { url: 'https://stooplify.com/stoop-sales-williamsburg-brooklyn', priority: '0.8', changefreq: 'daily' },
+    { url: 'https://stooplify.com/stoop-sales-park-slope-brooklyn', priority: '0.8', changefreq: 'daily' },
+    { url: 'https://stooplify.com/stoop-sales-bushwick-brooklyn', priority: '0.8', changefreq: 'daily' },
+    { url: 'https://stooplify.com/stoop-sales-bed-stuy-brooklyn', priority: '0.8', changefreq: 'daily' },
+    { url: 'https://stooplify.com/stoop-sales-crown-heights-brooklyn', priority: '0.8', changefreq: 'daily' },
+    { url: 'https://stooplify.com/stoop-sales-greenpoint-brooklyn', priority: '0.8', changefreq: 'daily' },
+    { url: 'https://stooplify.com/stoop-sales-astoria-queens', priority: '0.8', changefreq: 'daily' },
+    { url: 'https://stooplify.com/stoop-sales-upper-west-side-manhattan', priority: '0.8', changefreq: 'daily' },
+    { url: 'https://stooplify.com/stoop-sales-harlem-manhattan', priority: '0.8', changefreq: 'daily' },
+    // Date-based landing pages
+    { url: 'https://stooplify.com/yard-sales-near-me-today', priority: '0.9', changefreq: 'daily' },
+    { url: 'https://stooplify.com/yard-sales-near-me-saturday', priority: '0.9', changefreq: 'daily' },
+    { url: 'https://stooplify.com/yard-sales-near-me-sunday', priority: '0.9', changefreq: 'daily' },
+    { url: 'https://stooplify.com/stoop-sales-nyc-today', priority: '0.9', changefreq: 'daily' },
+    // Category landing pages
+    { url: 'https://stooplify.com/furniture-yard-sales', priority: '0.7', changefreq: 'daily' },
+    { url: 'https://stooplify.com/vintage-clothing-stoop-sales', priority: '0.7', changefreq: 'daily' },
+    { url: 'https://stooplify.com/book-sales', priority: '0.7', changefreq: 'daily' },
+    { url: 'https://stooplify.com/electronics-yard-sales', priority: '0.7', changefreq: 'daily' },
+    { url: 'https://stooplify.com/antique-yard-sales', priority: '0.7', changefreq: 'daily' },
+    { url: 'https://stooplify.com/toy-yard-sales', priority: '0.7', changefreq: 'daily' },
+    // Static SEO article pages
+    { url: 'https://stooplify.com/find-stoop-sales-near-you', priority: '0.8', changefreq: 'monthly' },
+    { url: 'https://stooplify.com/how-to-price-items-stoop-sale', priority: '0.8', changefreq: 'monthly' },
+    { url: 'https://stooplify.com/where-to-post-yard-sale-online', priority: '0.8', changefreq: 'monthly' },
   ];
 
   let blogPosts = [];
