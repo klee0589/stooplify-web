@@ -578,15 +578,51 @@ export default function AddYardSale() {
             className="bg-white rounded-3xl p-6 md:p-8 shadow-lg">
 
               <h2
-              className="text-xl font-bold text-[#2E3A59] mb-6"
+              className="text-xl font-bold text-[#2E3A59] mb-4"
               style={{ fontFamily: 'Poppins, sans-serif' }}>
 
                 {t('saleDetails')}
               </h2>
 
+              {/* Listing Mode Toggle */}
+              {!isEditMode && (
+                <div className="mb-6">
+                  <Label className="text-[#2E3A59] font-medium mb-2 block">Listing Type</Label>
+                  <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => { setListingMode('sale'); updateField('is_free_item', false); }}
+                      className={`flex-1 py-3 px-4 rounded-xl border-2 font-semibold text-sm transition-all flex items-center justify-center gap-2 ${
+                        listingMode === 'sale'
+                          ? 'border-[#FF6F61] bg-[#FF6F61] text-white'
+                          : 'border-gray-200 text-gray-600 hover:border-[#FF6F61]'
+                      }`}
+                    >
+                      🏷️ Yard Sale
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => { setListingMode('free'); updateField('is_free_item', true); }}
+                      className={`flex-1 py-3 px-4 rounded-xl border-2 font-semibold text-sm transition-all flex items-center justify-center gap-2 ${
+                        listingMode === 'free'
+                          ? 'border-green-500 bg-green-500 text-white'
+                          : 'border-gray-200 text-gray-600 hover:border-green-500'
+                      }`}
+                    >
+                      🎁 Free Giveaway
+                    </button>
+                  </div>
+                  {listingMode === 'free' && (
+                    <p className="text-xs text-green-600 mt-2 bg-green-50 border border-green-200 rounded-lg p-2">
+                      ✅ <strong>Free listings are always free to post!</strong> Your item will be shown with a green FREE badge.
+                    </p>
+                  )}
+                </div>
+              )}
+
               <div className="space-y-5">
                 <div>
-                  <Label className="text-[#2E3A59] font-medium mb-2 block">{t('title')} *</Label>
+                  <Label className="text-[#2E3A59] font-medium mb-2 block">{listingMode === 'free' ? 'Item Title' : t('title')} *</Label>
                   <Input
                   placeholder={t('titlePlaceholder')}
                   value={formData.title}
