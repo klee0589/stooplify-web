@@ -423,12 +423,6 @@ export default function YardSales() {
         {/* Discovery Directory — Desktop: 4-col grid | Mobile: accordion tabs */}
         <MobileDiscovery />
 
-        {/* Desktop browse dropdowns */}
-        <div className="hidden md:flex items-center gap-3 mb-6 relative z-[100]">
-          <span className="text-sm font-semibold text-gray-500 dark:text-gray-400 shrink-0">Browse by:</span>
-          <DiscoveryDropdowns />
-        </div>
-
         {/* Filters */}
         <div className="mb-6">
           <SaleFilters
