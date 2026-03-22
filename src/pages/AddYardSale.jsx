@@ -72,6 +72,10 @@ export default function AddYardSale() {
   // Stripe price IDs (from your Stripe products)
   const SINGLE_LISTING_PRICE_ID = 'price_1Sp0DuEBgBmaTVQEKO1W2NrG'; // $4 one-time
   const SUBSCRIPTION_PRICE_ID = 'price_1Sp0DuEBgBmaTVQE0iSg1m5n'; // $9/month
+  const urlParamsInit = new URLSearchParams(window.location.search);
+  const initFreeType = urlParamsInit.get('type') === 'free';
+  const [listingMode, setListingMode] = useState(initFreeType ? 'free' : 'sale');
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -88,7 +92,9 @@ export default function AddYardSale() {
     payment_cash: true,
     payment_card: false,
     payment_digital: false,
-    cash_preferred: false
+    cash_preferred: false,
+    is_free_item: initFreeType,
+    free_item_tags: [],
   });
 
   useEffect(() => {
@@ -225,7 +231,9 @@ export default function AddYardSale() {
           status: 'approved',
           views: 0,
           listing_type: listingType,
-          is_featured: isSubscribed
+          is_featured: isSubscribed,
+          is_free_item: data.is_free_item || false,
+          free_item_tags: data.free_item_tags || [],
         });
 
         // Track usage
