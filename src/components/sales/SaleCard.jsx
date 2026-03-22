@@ -78,17 +78,17 @@ export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance,
         )}
         
         {/* Listing Type Badge */}
-        {sale.listing_type === 'featured' || sale.is_featured ? (
+        {sale.is_free_item ? (
+          <span className="absolute bottom-3 left-3 px-3 py-1 bg-green-500 text-white text-xs font-bold rounded-full shadow-md tracking-wide">
+            FREE
+          </span>
+        ) : sale.listing_type === 'featured' || sale.is_featured ? (
           <span className="absolute bottom-3 left-3 px-2 py-0.5 bg-[#F5A623] text-white text-xs font-bold rounded-full flex items-center gap-1">
             <Star className="w-3 h-3" /> Featured
           </span>
         ) : sale.listing_type === 'paid' ? (
           <span className="absolute bottom-3 left-3 px-2 py-0.5 bg-[#14B8FF] text-white text-xs font-bold rounded-full flex items-center gap-1">
             <Sparkles className="w-3 h-3" /> Paid
-          </span>
-        ) : !sale.listing_type || sale.listing_type === 'free' ? (
-          <span className="absolute bottom-3 left-3 px-2 py-0.5 bg-white/90 text-gray-600 text-xs font-medium rounded-full border border-gray-200">
-            Free Listing
           </span>
         ) : null}
 
