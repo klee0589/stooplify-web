@@ -13,6 +13,8 @@ import WhereToPostYardSaleOnline from './pages/where-to-post-yard-sale-online';
 import SiteMap from './pages/SiteMap';
 import FreeItems from './pages/FreeItems';
 import FreeStuffCity from './pages/FreeStuffCity';
+import GuidesPostFreeStuff from './pages/guides-post-free-stuff';
+import GuidesSellingVsGiving from './pages/guides-selling-vs-giving';
 import { Navigate } from 'react-router-dom';
 
 const { Pages, Layout, mainPage } = pagesConfig;
