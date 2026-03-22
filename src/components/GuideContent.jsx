@@ -236,6 +236,14 @@ export const guideContent = {
         {
           type: 'text',
           content: 'Photos on your Stooplify listing help buyers decide before they arrive, saving everyone time.'
+        },
+        {
+          type: 'heading',
+          content: 'When Items Aren\'t Selling: Go Free'
+        },
+        {
+          type: 'text',
+          content: 'If items aren\'t selling at your price, don\'t wait — mark them FREE to attract quick pickups. Free items on Stooplify get claimed fast, especially furniture, books, and baby gear. This is especially useful at the end of the day when you want to clear out. Post a Freebie listing and let neighbors grab what\'s left.'
         }
       ],
       cta: '👉 List your yard sale with photos',

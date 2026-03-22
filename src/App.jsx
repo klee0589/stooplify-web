@@ -74,6 +74,8 @@ const AuthenticatedApp = () => {
       <Route path="/free-stuff-brooklyn" element={<LayoutWrapper currentPageName="free-stuff-brooklyn"><FreeStuffCity /></LayoutWrapper>} />
       <Route path="/free-stuff-queens" element={<LayoutWrapper currentPageName="free-stuff-queens"><FreeStuffCity /></LayoutWrapper>} />
       <Route path="/free-stuff-hoboken" element={<LayoutWrapper currentPageName="free-stuff-hoboken"><FreeStuffCity /></LayoutWrapper>} />
+      <Route path="/guides-post-free-stuff" element={<LayoutWrapper currentPageName="guides-post-free-stuff"><GuidesPostFreeStuff /></LayoutWrapper>} />
+      <Route path="/guides-selling-vs-giving" element={<LayoutWrapper currentPageName="guides-selling-vs-giving"><GuidesSellingVsGiving /></LayoutWrapper>} />
 
       {/* 301 redirects: old PascalCase guide URLs → SEO-friendly slugs */}
       <Route path="/GuidesFindSales" element={<Navigate to="/guides-find-yard-sales" replace />} />
