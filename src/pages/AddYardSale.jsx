@@ -837,13 +837,13 @@ export default function AddYardSale() {
                       </div>
                   }
                   </div>
-                </div>
-              </div>
+                  </div>}
+                  </div>
 
-              <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              disabled={!isStep1Valid}
+                  <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  disabled={!isStep1Valid}
               onClick={() => {
                 setStep(2);
                 window.scrollTo({ top: 0, behavior: 'smooth' });
