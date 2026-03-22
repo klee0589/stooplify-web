@@ -424,7 +424,7 @@ export default function YardSales() {
         <MobileDiscovery />
 
         {/* Desktop browse dropdowns */}
-        <div className="hidden md:flex items-center gap-3 mb-6">
+        <div className="hidden md:flex items-center gap-3 mb-6 relative z-[100]">
           <span className="text-sm font-semibold text-gray-500 dark:text-gray-400 shrink-0">Browse by:</span>
           <DiscoveryDropdowns />
         </div>
