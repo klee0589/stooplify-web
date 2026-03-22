@@ -63,6 +63,12 @@ Deno.serve(async (req) => {
     { url: 'https://stooplify.com/find-stoop-sales-near-you', priority: '0.8', changefreq: 'monthly' },
     { url: 'https://stooplify.com/how-to-price-items-stoop-sale', priority: '0.8', changefreq: 'monthly' },
     { url: 'https://stooplify.com/where-to-post-yard-sale-online', priority: '0.8', changefreq: 'monthly' },
+    // Free items pages
+    { url: 'https://stooplify.com/free-items', priority: '0.9', changefreq: 'daily' },
+    { url: 'https://stooplify.com/free-stuff-nyc', priority: '0.9', changefreq: 'daily' },
+    { url: 'https://stooplify.com/free-stuff-brooklyn', priority: '0.8', changefreq: 'daily' },
+    { url: 'https://stooplify.com/free-stuff-queens', priority: '0.8', changefreq: 'daily' },
+    { url: 'https://stooplify.com/free-stuff-hoboken', priority: '0.7', changefreq: 'daily' },
   ];
 
   let blogPosts = [];
