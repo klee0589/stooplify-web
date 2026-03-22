@@ -100,6 +100,33 @@ export default function HowToHostAStoopSale() {
             ))}
           </div>
 
+          {/* What to do with unsold items */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-12 p-6 bg-green-50 dark:bg-green-900/20 rounded-2xl border-2 border-green-200 dark:border-green-800"
+          >
+            <h2 className="text-xl font-bold text-[#2E3A59] dark:text-white mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              ♻️ What to Do With Items That Don't Sell
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-4 text-sm leading-relaxed">
+              It's 2pm, your sale is winding down, and you still have a pile of stuff. Don't drag it back inside. Here's the move:
+            </p>
+            <ul className="space-y-3 text-sm text-gray-600 dark:text-gray-300 mb-5">
+              <li className="flex items-start gap-2"><span className="text-green-500 mt-0.5 flex-shrink-0">✓</span><span><strong>Convert to a Freebie listing</strong> on Stooplify — tap your listing and switch it to "Free Giveaway." Neighbors come running for free stuff.</span></li>
+              <li className="flex items-start gap-2"><span className="text-green-500 mt-0.5 flex-shrink-0">✓</span><span><strong>Set a pickup window</strong> — "Free, grab it before 5pm today" creates urgency and gets items gone same day.</span></li>
+              <li className="flex items-start gap-2"><span className="text-green-500 mt-0.5 flex-shrink-0">✓</span><span><strong>Mark as curbside pickup</strong> — leave items out front and let neighbors help themselves. No coordination needed.</span></li>
+              <li className="flex items-start gap-2"><span className="text-green-500 mt-0.5 flex-shrink-0">✓</span><span><strong>Bundle small items</strong> — a box of books, a bag of kids' clothes, or a set of dishes moves much faster than individual pieces.</span></li>
+            </ul>
+            <Link
+              to="/guides-post-free-stuff"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-green-500 text-white rounded-xl font-semibold text-sm hover:bg-green-600 transition-colors"
+            >
+              Guide: How to Post Free Stuff on Stooplify →
+            </Link>
+          </motion.div>
+
           {/* Guide cross-links */}
           <div className="mt-10 p-6 bg-blue-50 dark:bg-gray-800 rounded-2xl border border-blue-100 dark:border-gray-700">
             <h3 className="font-bold text-[#2E3A59] dark:text-white mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>📚 Related Guides</h3>
@@ -109,6 +136,8 @@ export default function HowToHostAStoopSale() {
                 { label: 'Do You Need a Permit? (NYC)', url: '/guides-permit-requirements-nyc' },
                 { label: 'How to Advertise a Yard Sale', url: '/guides-advertise-yard-sale' },
                 { label: 'Best Days & Times for a Yard Sale', url: '/guides-best-time-yard-sale' },
+                { label: 'How to Post Free Stuff', url: '/guides-post-free-stuff' },
+                { label: 'Selling vs. Giving Away Items', url: '/guides-selling-vs-giving' },
               ].map(link => (
                 <Link key={link.url} to={link.url} className="flex items-center gap-2 px-4 py-3 bg-white dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 hover:border-[#14B8FF] hover:text-[#14B8FF] transition-all text-sm font-medium text-gray-700 dark:text-gray-300">
                   <span className="text-[#14B8FF]">→</span>{link.label}
