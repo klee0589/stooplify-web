@@ -72,7 +72,7 @@ function DropdownItem({ config }) {
       </button>
 
       {open && (
-        <div className="absolute top-full left-0 mt-1.5 z-50 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 py-1 min-w-[160px]">
+        <div className="absolute top-full left-0 mt-1.5 z-[200] bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 py-1 min-w-[160px]">
           {config.items.map(item => (
             <Link
               key={item.url}
