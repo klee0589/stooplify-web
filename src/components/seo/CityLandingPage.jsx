@@ -319,5 +319,3 @@ export default function CityLandingPage({ config }) {
     </div>);
 
 }
-
-}
