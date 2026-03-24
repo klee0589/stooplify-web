@@ -8,7 +8,7 @@ Deno.serve(async (req) => {
     { url: 'https://stooplify.com', priority: '1.0', changefreq: 'daily' },
     { url: 'https://stooplify.com/yard-sales', priority: '0.9', changefreq: 'hourly' },
     { url: 'https://stooplify.com/add-yard-sale', priority: '0.8', changefreq: 'weekly' },
-    { url: 'https://stooplify.com/Legal', priority: '0.4', changefreq: 'monthly' },
+    { url: 'https://stooplify.com/legal', priority: '0.4', changefreq: 'monthly' },
     { url: 'https://stooplify.com/site-map', priority: '0.5', changefreq: 'weekly' },
     // Blog
     { url: 'https://stooplify.com/Blog', priority: '0.8', changefreq: 'daily' },
@@ -69,6 +69,12 @@ Deno.serve(async (req) => {
     { url: 'https://stooplify.com/free-stuff-brooklyn', priority: '0.8', changefreq: 'daily' },
     { url: 'https://stooplify.com/free-stuff-queens', priority: '0.8', changefreq: 'daily' },
     { url: 'https://stooplify.com/free-stuff-hoboken', priority: '0.7', changefreq: 'daily' },
+    // Freebie guides
+    { url: 'https://stooplify.com/guides-post-free-stuff', priority: '0.7', changefreq: 'monthly' },
+    { url: 'https://stooplify.com/guides-selling-vs-giving', priority: '0.6', changefreq: 'monthly' },
+    // Pricing & Calendar
+    { url: 'https://stooplify.com/Pricing', priority: '0.6', changefreq: 'monthly' },
+    { url: 'https://stooplify.com/Calendar', priority: '0.7', changefreq: 'daily' },
   ];
 
   let blogPosts = [];

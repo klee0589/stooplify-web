@@ -40,7 +40,7 @@ const boroughIntros = {
 
 export default function CityLandingPage({ config }) {
   const navigate = useNavigate();
-  const { city, state, title, metaTitle, metaDescription, keywords, h1, intro, neighborhoods, canonicalUrl } = config;
+  const { city, state, title, metaTitle, metaDescription, keywords, h1, intro, neighborhoods, canonicalUrl, relatedCities, relatedGuides } = config;
   const boroughInfo = boroughIntros[city] || null;
 
   const { data: sales = [], isLoading } = useQuery({
@@ -88,17 +88,27 @@ export default function CityLandingPage({ config }) {
     }
   });
 
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    "name": metaTitle,
-    "description": metaDescription,
-    "url": canonicalUrl,
-    "about": {
-      "@type": "Thing",
-      "name": `Stoop Sales in ${city}`
+  const structuredData = [
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": metaTitle,
+      "description": metaDescription,
+      "url": canonicalUrl,
+      "about": {
+        "@type": "Thing",
+        "name": `Stoop Sales in ${city}`
+      }
+    },
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://stooplify.com" },
+        { "@type": "ListItem", "position": 2, "name": `Stoop Sales in ${city}`, "item": canonicalUrl }
+      ]
     }
-  };
+  ];
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
@@ -256,6 +266,40 @@ export default function CityLandingPage({ config }) {
           </ul>
         </section>
 
+        {/* Related Cities */}
+        {relatedCities && relatedCities.length > 0 && (
+          <section className="mb-16">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              Explore Stoop Sales in Nearby Areas
+            </h2>
+            <div className="flex flex-wrap gap-3">
+              {relatedCities.map((c) => (
+                <Link key={c.url} to={c.url} className="px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-[#14B8FF] hover:text-[#14B8FF] transition-all flex items-center gap-1.5">
+                  <MapPin className="w-3.5 h-3.5" />{c.label}
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Seller Guides */}
+        {relatedGuides && relatedGuides.length > 0 && (
+          <section className="mb-16">
+            <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              Guides for {city} Sellers &amp; Shoppers
+            </h2>
+            <div className="grid sm:grid-cols-2 gap-3">
+              {relatedGuides.map((g) => (
+                <Link key={g.url} to={g.url} className="flex items-center gap-3 px-4 py-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl hover:border-[#14B8FF] hover:text-[#14B8FF] transition-all group">
+                  <BookOpen className="w-4 h-4 text-[#14B8FF] flex-shrink-0" />
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-[#14B8FF]">{g.label}</span>
+                  <ArrowRight className="w-3.5 h-3.5 ml-auto opacity-0 group-hover:opacity-100 text-[#14B8FF] transition-opacity" />
+                </Link>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* CTA */}
         <div className="bg-gradient-to-r from-[#14B8FF] to-[#0da3e6] rounded-2xl p-8 text-white text-center">
           <h3 className="text-2xl font-bold mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
@@ -263,15 +307,17 @@ export default function CityLandingPage({ config }) {
           </h3>
           <p className="text-white/90 mb-6">List your sale for free and reach thousands of local buyers</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button onClick={() => navigate(createPageUrl('AddYardSale'))} className="bg-white text-slate-900 px-4 py-2 text-sm font-semibold rounded-md inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 shadow h-9 hover:bg-gray-100">
+            <button onClick={() => navigate(createPageUrl('AddYardSale'))} className="px-8 py-3 bg-white text-[#1a2842] rounded-xl font-semibold hover:bg-gray-100 transition-colors">
               List Your Sale Free
-            </Button>
-            <Button onClick={() => navigate(createPageUrl('YardSales'))} variant="outline" className="bg-slate-50 text-slate-950 px-4 py-2 text-sm font-medium rounded-md inline-flex items-center justify-center gap-2 whitespace-nowrap transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 border shadow-sm hover:text-accent-foreground h-9 border-white hover:bg-white/10">
+            </button>
+            <button onClick={() => navigate(createPageUrl('YardSales'))} className="px-8 py-3 border-2 border-white text-white rounded-xl font-medium hover:bg-white/10 transition-colors">
               Browse Nearby Sales
-            </Button>
+            </button>
           </div>
         </div>
       </div>
     </div>);
+
+}
 
 }
