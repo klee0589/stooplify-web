@@ -114,21 +114,49 @@ function LayoutContent({ children, currentPageName }) {
     document.head.appendChild(link);
 
     const checkAuth = async () => {
-      try {
-        const isAuth = await base44.auth.isAuthenticated();
-        if (isAuth) {
-          const currentUser = await base44.auth.me();
-          setUser(currentUser);
-          setUserContext(currentUser);
-          // Initialize PostHog when user is authenticated
-          initPostHog();
-          if (posthog) {
-            posthog.identify(currentUser.email, {
+    try {
+    const isAuth = await base44.auth.isAuthenticated();
+    if (isAuth) {
+      const currentUser = await base44.auth.me();
+      setUser(currentUser);
+      setUserContext(currentUser);
+      // Initialize PostHog when user is authenticated
+      initPostHog();
+      if (posthog) {
+        posthog.identify(currentUser.email, {
+          email: currentUser.email,
+          name: currentUser.full_name,
+          role: currentUser.role,
+        });
+      }
+      // Detect new sign-ups (created within the last 5 minutes)
+      if (currentUser.created_date) {
+        const createdAt = new Date(currentUser.created_date);
+        const minutesAgo = (Date.now() - createdAt.getTime()) / 1000 / 60;
+        if (minutesAgo < 5) {
+          base44.analytics.track({
+            eventName: 'user_signed_up',
+            properties: {
               email: currentUser.email,
-              name: currentUser.full_name,
-              role: currentUser.role,
+              role: currentUser.role || 'user',
+            }
+          });
+          if (posthog) {
+            posthog.capture('user_signed_up', {
+              email: currentUser.email,
+              role: currentUser.role || 'user',
             });
           }
+        } else {
+          base44.analytics.track({
+            eventName: 'user_logged_in',
+            properties: {
+              email: currentUser.email,
+              role: currentUser.role || 'user',
+            }
+          });
+        }
+      }
         } else if (!PUBLIC_PAGES.includes(currentPageName)) {
           base44.auth.redirectToLogin();
           return;
