@@ -86,58 +86,65 @@ export default function Home() {
         keywords="brooklyn stoop sale, stoop sales brooklyn, yard sales near me, garage sales, estate sales, local sales, secondhand shopping, thrift sales, neighborhood sales, treasure hunting, bargain shopping, NYC yard sales, NYC stoop sale"
         structuredData={structuredData}
       />
-      <HeroSection />
-      <HowItWorks />
-      <Suspense fallback={<div className="h-96 bg-gray-100 dark:bg-gray-800 animate-pulse" />}>
-        <FeaturedSales sales={sales} />
-      </Suspense>
-      <CTASection />
-      <FreeNearYou />
 
-      {/* Browse by Section */}
-      <section className="py-8 bg-white dark:bg-gray-900">
+      {/* HERO */}
+      <HeroSection />
+
+      {/* FIND SALES — Map CTA front and center */}
+      <section className="py-14 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-            <span className="text-sm font-semibold text-gray-500 dark:text-gray-400 shrink-0">Browse by:</span>
+          <div className="text-center mb-8">
+            <span className="inline-block bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-sm font-semibold px-4 py-1.5 rounded-full mb-3">🌱 Spring Sales Are Live</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#2E3A59] dark:text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>What's Happening Near You</h2>
+            <p className="text-gray-500 dark:text-gray-400 text-lg max-w-xl mx-auto">Browse the live map and plan your weekend route before you leave home.</p>
+          </div>
+
+          {/* Browse shortcuts */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4 justify-center mb-8">
+            <span className="text-sm font-semibold text-gray-500 dark:text-gray-400 shrink-0">Filter by:</span>
             <DiscoveryDropdowns />
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/yard-sales"
-              className="no-min-tap shrink-0 inline-flex items-center gap-1.5 px-4 py-2 bg-[#14B8FF] text-white rounded-full text-sm font-semibold hover:bg-[#0da3e6] transition-colors"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#14B8FF] text-white rounded-2xl font-semibold text-lg shadow-lg hover:bg-[#0da3e6] transition-colors"
+              style={{ fontFamily: 'Poppins, sans-serif' }}
             >
-              View All Sales →
+              🗺️ Browse the Live Map
+            </Link>
+            <Link
+              to="/free-items"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-green-500 text-white rounded-2xl font-semibold text-lg shadow-lg hover:bg-green-600 transition-colors"
+              style={{ fontFamily: 'Poppins, sans-serif' }}
+            >
+              🎁 Free Items Near Me
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Brooklyn Stoop Sales SEO Section */}
-      <section className="bg-gray-50 dark:bg-gray-900 py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-[#2E3A59] dark:text-white mb-6 text-center" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            Brooklyn Stoop Sales & NYC Yard Sales
-          </h2>
-          <div className="prose prose-lg max-w-none text-gray-600 dark:text-gray-300 space-y-4 text-center">
-            <p>
-              Looking for a <strong>Brooklyn stoop sale</strong> this weekend? Stooplify is the easiest way to find stoop sales, yard sales, and garage sales across Brooklyn, Queens, the Bronx, Manhattan, and all of NYC.
-            </p>
-            <p>
-              Brooklyn stoop sales are a beloved New York City tradition — neighbors set up right outside their stoops to sell furniture, clothing, vintage finds, books, and more. Stooplify brings these local gems online so you never miss a deal in your neighborhood.
-            </p>
-            <p>
-              Browse upcoming stoop sales in Williamsburg, Park Slope, Bushwick, Crown Heights, Bed-Stuy, and beyond — or <a href="/add-yard-sale" className="text-[#14B8FF] hover:underline">list your own stoop sale for free</a>.
-            </p>
-          </div>
-        </div>
-      </section>
-      
-      {/* Guides Section */}
+      {/* FREE ITEMS */}
+      <FreeNearYou />
+
+      {/* FEATURED SALES */}
+      <Suspense fallback={<div className="h-96 bg-gray-100 dark:bg-gray-800 animate-pulse" />}>
+        <FeaturedSales sales={sales} />
+      </Suspense>
+
+      {/* HOW IT WORKS */}
+      <HowItWorks />
+
+      {/* SPRING SELLING CTA */}
+      <CTASection />
+
+      {/* GUIDES */}
       <section className="py-16 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2E3A59] dark:text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              Yard Sale Guides
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 text-lg">Everything you need to host or find an amazing sale</p>
+            <span className="inline-block bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 text-sm font-semibold px-4 py-1.5 rounded-full mb-3">📚 Spring Seller Tips</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#2E3A59] dark:text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>Yard Sale Guides</h2>
+            <p className="text-gray-600 dark:text-gray-300 text-lg">Everything you need to host or find an amazing sale this spring</p>
           </motion.div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {[
@@ -164,86 +171,40 @@ export default function Home() {
         </div>
       </section>
 
-      {/* From the Founder */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="bg-white dark:bg-gray-800 rounded-3xl p-8 md:p-12 shadow-lg max-w-3xl mx-auto">
-          <h3 className="text-2xl font-bold text-[#2E3A59] dark:text-white mb-6 flex items-center justify-center gap-2">
-            <span>👋</span> {t('fromTheFounder')}
-          </h3>
-          
-          <div className="flex flex-col md:flex-row gap-6 mb-6">
-            <div className="w-32 h-32 rounded-full overflow-hidden mx-auto md:mx-0 shadow-lg bg-gradient-to-br from-[#FF6F61] to-[#F5A623]">
-              <img
-                src="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/3d1022327_generated_image.png"
-                alt="Daniel - Founder of Stooplify"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            <div className="flex-1 space-y-4 text-gray-700 dark:text-gray-300 leading-relaxed">
-              <p>{t('founderIntro')}</p>
-              <p>{t('founderBackground')}</p>
-              <p>{t('founderVision')}</p>
-              <p>{t('founderMission')}</p>
-              <p>{t('founderContact')}</p>
-              
-              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                <a 
-                  href="mailto:daniel@stooplify.com"
-                  className="inline-flex items-center gap-2 text-[#FF6F61] hover:underline font-semibold"
-                >
-                  📩 daniel@stooplify.com
-                </a>
-              </div>
-            </div>
-          </div>
-          
-          {/* CTA After Bio */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700 text-center"
-          >
-            <p className="text-gray-700 dark:text-gray-300 mb-6 text-lg">
-              Ready to discover your neighborhood's hidden treasures?
+      {/* SEO text block */}
+      <section className="bg-gray-50 dark:bg-gray-900 py-16">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-[#2E3A59] dark:text-white mb-6 text-center" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            Brooklyn Stoop Sales &amp; NYC Yard Sales
+          </h2>
+          <div className="prose prose-lg max-w-none text-gray-600 dark:text-gray-300 space-y-4 text-center">
+            <p>
+              Looking for a <strong>Brooklyn stoop sale</strong> this weekend? Stooplify is the easiest way to find stoop sales, yard sales, and garage sales across Brooklyn, Queens, the Bronx, Manhattan, and all of NYC.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <motion.a
-                 href="/yard-sales"
-                 whileHover={{ scale: 1.05 }}
-                 whileTap={{ scale: 0.95 }}
-                 className="px-8 py-4 bg-[#14B8FF] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
-                 style={{ fontFamily: 'Poppins, sans-serif' }}
-               >
-                 Browse Sales Now
-               </motion.a>
-               <motion.a
-                 href="/add-yard-sale"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all"
-                style={{ fontFamily: 'Poppins, sans-serif' }}
-              >
-                List Your Sale Free
-              </motion.a>
-            </div>
-          </motion.div>
+            <p>
+              Spring is peak season — neighbors across the city are clearing out and setting up on their stoops every weekend. Browse live listings in Williamsburg, Park Slope, Bushwick, Crown Heights, Bed-Stuy, and beyond.
+            </p>
+            <p>
+              Or <a href="/add-yard-sale" className="text-[#14B8FF] hover:underline">list your own stoop sale for free</a> and reach buyers already searching in your neighborhood.
+            </p>
+          </div>
         </div>
-      </div>
-      
+      </section>
+
       {/* Final CTA */}
       <motion.section 
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        className="bg-gradient-to-br from-[#14B8FF] to-[#2E3A59] py-20"
+        className="bg-gradient-to-br from-green-500 to-[#14B8FF] py-20"
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            Ready to Start Finding Deals?
+          <span className="text-4xl mb-4 block">🌸</span>
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            Spring Sales Are Happening Now
           </h2>
           <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
-            Join thousands of treasure hunters discovering amazing finds at yard sales near you
+            Thousands of neighbors are clearing out this season. Don't miss the best deals in your neighborhood.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <motion.a
@@ -253,7 +214,7 @@ export default function Home() {
                className="px-8 py-4 bg-white text-[#2E3A59] rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all"
                style={{ fontFamily: 'Poppins, sans-serif' }}
              >
-               Browse Sales Now
+               Find Sales Near Me 🗺️
              </motion.a>
              <motion.a
                href="/add-yard-sale"
@@ -262,7 +223,7 @@ export default function Home() {
               className="px-8 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all"
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
-              List Your Sale Free
+              Post Your Sale Free 🌱
             </motion.a>
           </div>
         </div>
