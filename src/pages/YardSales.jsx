@@ -126,11 +126,32 @@ export default function YardSales() {
     queryFn: async () => {
       const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
       const now = new Date();
+      const todayStr = now.toISOString().split('T')[0];
       const startOfTomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
       return allSales.map((sale) => {
-        const endStr = sale.end_time || '23:59';
-        const saleEnd = new Date(`${sale.date}T${endStr.includes(':') ? endStr : '23:59'}`);
-        const isPast = saleEnd < now;
+        let isPast = false;
+        if (sale.date) {
+          if (sale.date < todayStr) {
+            isPast = true;
+          } else if (sale.date === todayStr && sale.end_time) {
+            // Parse end time properly for today's sales
+            const parseTime = (t) => {
+              const m = t.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+              if (!m) return null;
+              let h = parseInt(m[1]);
+              const min = m[2];
+              const period = m[3]?.toUpperCase();
+              if (period === 'PM' && h !== 12) h += 12;
+              if (period === 'AM' && h === 12) h = 0;
+              return `${String(h).padStart(2,'0')}:${min}`;
+            };
+            const t24 = parseTime(sale.end_time);
+            if (t24) {
+              const saleEnd = new Date(`${sale.date}T${t24}:00`);
+              isPast = saleEnd < now;
+            }
+          }
+        }
         const isUpcoming = !isPast && sale.date && new Date(sale.date) >= startOfTomorrow;
         return { ...sale, isPast, isUpcoming };
       });
