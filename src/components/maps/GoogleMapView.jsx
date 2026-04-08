@@ -2,6 +2,10 @@ import React, { useEffect, useRef } from 'react';
 import { useGoogleMaps } from '../../hooks/useGoogleMaps';
 import { Loader2 } from 'lucide-react';
 
+const LIGHT_STYLES = [{"featureType":"landscape.man_made","elementType":"geometry","stylers":[{"color":"#f7f1df"}]},{"featureType":"landscape.natural","elementType":"geometry","stylers":[{"color":"#d0e3b4"}]},{"featureType":"landscape.natural.terrain","elementType":"geometry","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"poi.business","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"poi.medical","elementType":"geometry","stylers":[{"color":"#fbd3da"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#bde6ab"}]},{"featureType":"road","elementType":"geometry.stroke","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#ffe15f"}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#efd151"}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"road.local","elementType":"geometry.fill","stylers":[{"color":"black"}]},{"featureType":"transit.station.airport","elementType":"geometry.fill","stylers":[{"color":"#cfb2db"}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#a2daf2"}]}];
+
+const DARK_STYLES = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#193341"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#2c5a71"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#29768a"},{"lightness":-37}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#3e606f"},{"weight":2},{"gamma":0.84}]},{"elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"weight":0.6},{"color":"#1a3541"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#2c5a71"}]}];
+
 /**
  * Google Maps display component with a marker (exact) or circle (approximate).
  * Props:
@@ -12,6 +16,7 @@ import { Loader2 } from 'lucide-react';
  *   className       — container class
  */
 export default function GoogleMapView({ lat, lng, exact = false, title = '', zoom, className = 'h-64 rounded-xl overflow-hidden' }) {
+  const isDark = typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const { isLoaded, error } = useGoogleMaps();
@@ -31,9 +36,7 @@ export default function GoogleMapView({ lat, lng, exact = false, title = '', zoo
         mapTypeControl: false,
         streetViewControl: false,
         fullscreenControl: true,
-        styles: [
-          { featureType: 'poi', elementType: 'labels', stylers: [{ visibility: 'off' }] },
-        ],
+        styles: isDark ? DARK_STYLES : LIGHT_STYLES,
       });
     } else {
       mapInstanceRef.current.setCenter(center);
