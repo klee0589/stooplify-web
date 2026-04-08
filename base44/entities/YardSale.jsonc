@@ -1,0 +1,249 @@
+{
+  "name": "YardSale",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Title of the yard sale"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of items available"
+    },
+    "date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of the yard sale"
+    },
+    "start_time": {
+      "type": "string",
+      "description": "Start time of the sale"
+    },
+    "end_time": {
+      "type": "string",
+      "description": "End time of the sale"
+    },
+    "general_location": {
+      "type": "string",
+      "description": "Approximate location"
+    },
+    "address": {
+      "type": "string",
+      "description": "Full street address"
+    },
+    "city": {
+      "type": "string",
+      "description": "City"
+    },
+    "state": {
+      "type": "string",
+      "description": "State"
+    },
+    "zip_code": {
+      "type": "string",
+      "description": "ZIP code"
+    },
+    "latitude": {
+      "type": "number",
+      "description": "Approximate latitude coordinate"
+    },
+    "longitude": {
+      "type": "number",
+      "description": "Approximate longitude coordinate"
+    },
+    "exact_latitude": {
+      "type": "number",
+      "description": "Exact latitude"
+    },
+    "exact_longitude": {
+      "type": "number",
+      "description": "Exact longitude"
+    },
+    "categories": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "general",
+          "furniture",
+          "clothing",
+          "electronics",
+          "toys",
+          "antiques",
+          "books",
+          "sports",
+          "multi-family"
+        ]
+      },
+      "description": "Categories of items"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "general",
+        "furniture",
+        "clothing",
+        "electronics",
+        "toys",
+        "antiques",
+        "books",
+        "sports",
+        "multi-family"
+      ],
+      "description": "Primary category (deprecated, use categories array)"
+    },
+    "photos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of photo URLs"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "Approval status"
+    },
+    "views": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of views"
+    },
+    "address_unlock_hours": {
+      "type": "number",
+      "default": 0,
+      "description": "Not used - address unlocks on day of event"
+    },
+    "report_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of reports received"
+    },
+    "auto_flagged": {
+      "type": "boolean",
+      "default": false,
+      "description": "Auto-flagged as suspicious"
+    },
+    "flag_reason": {
+      "type": "string",
+      "description": "Reason for auto-flagging"
+    },
+    "publish_delay_until": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when listing can go live"
+    },
+    "supabase_id": {
+      "type": "string",
+      "description": "ID of the listing in Supabase"
+    },
+    "payment_cash": {
+      "type": "boolean",
+      "default": true,
+      "description": "Accepts cash payments"
+    },
+    "payment_card": {
+      "type": "boolean",
+      "default": false,
+      "description": "Accepts credit/debit cards"
+    },
+    "payment_digital": {
+      "type": "boolean",
+      "default": false,
+      "description": "Accepts digital payments"
+    },
+    "cash_preferred": {
+      "type": "boolean",
+      "default": false,
+      "description": "Prefers cash"
+    },
+    "listing_type": {
+      "type": "string",
+      "enum": [
+        "free",
+        "paid",
+        "featured"
+      ],
+      "default": "free",
+      "description": "Type of listing \u2014 free tier, single paid, or featured/subscription"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the listing is featured on the homepage"
+    },
+    "is_free_item": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is a free giveaway listing (not a sale)"
+    },
+    "free_item_tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "curbside",
+          "moving",
+          "fcfs",
+          "bundle"
+        ]
+      },
+      "description": "Special tags for free item listings"
+    },
+    "quantity_note": {
+      "type": "string",
+      "description": "Single item or bundle description for free items"
+    }
+  },
+  "required": [
+    "title",
+    "date",
+    "general_location",
+    "city",
+    "state"
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "data.status": "approved"
+        }
+      ]
+    },
+    "update": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "delete": {
+      "$or": [
+        {
+          "created_by": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    }
+  }
+}
