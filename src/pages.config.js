@@ -49,7 +49,7 @@
  */
 import AddYardSale from './pages/AddYardSale';
 import AdminCommunityLocations from './pages/AdminCommunityLocations';
-import AdminSupabaseSync from './pages/AdminSupabaseSync';
+
 import ApplyAsShop from './pages/ApplyAsShop';
 import Blog from './pages/Blog';
 import BlogPost from './pages/BlogPost';
@@ -104,7 +104,7 @@ import __Layout from './Layout.jsx';
 export const PAGES = {
     "AddYardSale": AddYardSale,
     "AdminCommunityLocations": AdminCommunityLocations,
-    "AdminSupabaseSync": AdminSupabaseSync,
+
     "ApplyAsShop": ApplyAsShop,
     "Blog": Blog,
     "BlogPost": BlogPost,
