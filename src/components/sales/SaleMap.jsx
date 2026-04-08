@@ -1,122 +1,175 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { createPortal } from 'react-dom';
+import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from 'react-leaflet';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
-import { LocateFixed, Loader2 } from 'lucide-react';
+import { MapPin, Calendar, Clock, ArrowRight, LocateFixed } from 'lucide-react';
 import { format } from 'date-fns';
 import { base44 } from '@/api/base44Client';
-import { useGoogleMaps } from '../../hooks/useGoogleMaps';
-import { useTheme } from '../ThemeProvider';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
 
-const LIGHT_STYLES = [{"featureType":"landscape.man_made","elementType":"geometry","stylers":[{"color":"#f7f1df"}]},{"featureType":"landscape.natural","elementType":"geometry","stylers":[{"color":"#d0e3b4"}]},{"featureType":"landscape.natural.terrain","elementType":"geometry","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"poi.business","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"poi.medical","elementType":"geometry","stylers":[{"color":"#fbd3da"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#bde6ab"}]},{"featureType":"road","elementType":"geometry.stroke","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#ffe15f"}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#efd151"}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"road.local","elementType":"geometry.fill","stylers":[{"color":"black"}]},{"featureType":"transit.station.airport","elementType":"geometry.fill","stylers":[{"color":"#cfb2db"}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#a2daf2"}]}];
-const DARK_STYLES = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#193341"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#2c5a71"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#29768a"},{"lightness":-37}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#3e606f"},{"weight":2},{"gamma":0.84}]},{"elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"weight":0.6},{"color":"#1a3541"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#2c5a71"}]}];
+// Upcoming sale marker (green)
+const upcomingIcon = new L.DivIcon({
+  className: 'upcoming-marker',
+  html: `
+    <div style="
+      width: 40px; height: 40px;
+      background: #10B981;
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      border: 3px solid white;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+      display: flex; align-items: center; justify-content: center;
+    ">
+      <div style="transform: rotate(45deg); color: white; font-size: 16px;">📅</div>
+    </div>
+  `,
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+  popupAnchor: [0, -40],
+});
 
+// Custom marker icon for single sale
+const customIcon = new L.DivIcon({
+  className: 'custom-marker',
+  html: `
+    <div style="
+      width: 40px; height: 40px;
+      background: #14B8FF;
+      border-radius: 50% 50% 50% 0;
+      transform: rotate(-45deg);
+      border: 3px solid white;
+      box-shadow: 0 4px 15px rgba(20, 184, 255, 0.4);
+      display: flex; align-items: center; justify-content: center;
+    ">
+      <div style="transform: rotate(45deg); color: white; font-size: 16px;">🏷️</div>
+    </div>
+  `,
+  iconSize: [40, 40],
+  iconAnchor: [20, 40],
+  popupAnchor: [0, -40],
+});
+
+const createClusterIcon = (count) => new L.DivIcon({
+  className: 'cluster-marker',
+  html: `
+    <div style="
+      width: 50px; height: 50px;
+      background: #FF6F61;
+      border-radius: 50%;
+      border: 3px solid white;
+      box-shadow: 0 4px 15px rgba(255, 111, 97, 0.4);
+      display: flex; align-items: center; justify-content: center;
+      font-weight: bold; color: white; font-size: 18px;
+    ">
+      ${count}
+    </div>
+  `,
+  iconSize: [50, 50],
+  iconAnchor: [25, 25],
+  popupAnchor: [0, -25],
+});
+
+const createCommunityIcon = (emoji) => new L.DivIcon({
+  className: 'community-marker',
+  html: `
+    <div style="
+      width: 45px; height: 45px;
+      background: #2E3A59;
+      border-radius: 50%;
+      border: 3px solid gold;
+      box-shadow: 0 4px 15px rgba(46, 58, 89, 0.5);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    ">
+      ${emoji}
+    </div>
+  `,
+  iconSize: [45, 45],
+  iconAnchor: [22, 45],
+  popupAnchor: [0, -45],
+});
+
+// Cluster sales by proximity based on current zoom
 function clusterSales(sales, zoom) {
   const clusterRadius = Math.max(0.001, 0.02 / Math.pow(2, zoom - 11));
   const clusters = [];
   const assigned = new Set();
+
   sales.forEach((sale, i) => {
     if (assigned.has(i)) return;
     const cluster = [sale];
     assigned.add(i);
+
     sales.forEach((other, j) => {
       if (assigned.has(j)) return;
-      if (Math.abs(sale.latitude - other.latitude) < clusterRadius &&
-          Math.abs(sale.longitude - other.longitude) < clusterRadius) {
+      const latDiff = Math.abs(sale.latitude - other.latitude);
+      const lonDiff = Math.abs(sale.longitude - other.longitude);
+      if (latDiff < clusterRadius && lonDiff < clusterRadius) {
         cluster.push(other);
         assigned.add(j);
       }
     });
     clusters.push(cluster);
   });
+
   return clusters;
 }
 
-function makeSaleMarkerSvg(color) {
-  return `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="44" viewBox="0 0 36 44">
-      <path d="M18 0C8.06 0 0 8.06 0 18c0 13.5 18 26 18 26S36 31.5 36 18C36 8.06 27.94 0 18 0z" fill="${color}" />
-      <circle cx="18" cy="18" r="9" fill="white" fill-opacity="0.9"/>
-    </svg>
-  `)}`;
+function MapUpdater({ center }) {
+  const map = useMap();
+  useEffect(() => {
+    if (center) map.setView(center, map.getZoom());
+  }, [center, map]);
+  return null;
 }
 
-function SalePopup({ sale, container }) {
-  if (!container) return null;
-  return createPortal(
-    <div style={{ fontFamily: 'Inter, sans-serif', minWidth: 220, maxWidth: 280 }}>
-      {sale.photos?.length > 0 && (
-        <div style={{ width: '100%', height: 100, overflow: 'hidden', borderRadius: '8px 8px 0 0', marginBottom: 8 }}>
-          <img src={sale.photos[0]} alt={sale.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-        </div>
-      )}
-      <div style={{ padding: '8px 12px 12px' }}>
-        <p style={{ fontWeight: 700, color: '#2E3A59', marginBottom: 6, fontSize: 14 }}>{sale.title}</p>
-        <p style={{ fontSize: 12, color: '#666', marginBottom: 2 }}>
-          📅 {sale.date ? format(new Date(sale.date), 'EEE, MMM d') : 'Date TBD'}
-        </p>
-        <p style={{ fontSize: 12, color: '#666', marginBottom: 10 }}>
-          🕐 {sale.start_time || '8 AM'} – {sale.end_time || '2 PM'}
-        </p>
-        <a
-          href={`${createPageUrl('YardSaleDetails')}?id=${sale.id}`}
-          style={{ display: 'block', textAlign: 'center', padding: '8px', background: '#14B8FF', color: 'white', borderRadius: 8, fontSize: 13, fontWeight: 600, textDecoration: 'none' }}
-        >
-          View Details →
-        </a>
-      </div>
-    </div>,
-    container
-  );
+function MapBoundsWatcher({ onBoundsChange, onZoomChange }) {
+  const map = useMapEvents({
+    dragstart: () => map.closePopup(),
+    moveend: () => onBoundsChange(map.getBounds()),
+    zoomend: () => {
+      onBoundsChange(map.getBounds());
+      onZoomChange(map.getZoom());
+    },
+  });
+  useEffect(() => {
+    onBoundsChange(map.getBounds());
+    onZoomChange(map.getZoom());
+  }, []);
+  return null;
 }
 
-function ClusterPopup({ cluster, container }) {
-  if (!container) return null;
-  return createPortal(
-    <div style={{ fontFamily: 'Inter, sans-serif', padding: '12px', minWidth: 220, maxWidth: 280 }}>
-      <p style={{ fontWeight: 700, color: '#2E3A59', marginBottom: 10, fontSize: 14 }}>{cluster.length} Sales nearby</p>
-      <div style={{ maxHeight: 200, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: 6 }}>
-        {cluster.map(sale => (
-          <a
-            key={sale.id}
-            href={`${createPageUrl('YardSaleDetails')}?id=${sale.id}`}
-            style={{ display: 'block', padding: '6px 8px', background: '#f5f5f5', borderRadius: 8, textDecoration: 'none' }}
-          >
-            <p style={{ fontWeight: 600, color: '#2E3A59', fontSize: 12, marginBottom: 2 }}>{sale.title}</p>
-            <p style={{ fontSize: 11, color: '#888' }}>📅 {sale.date ? format(new Date(sale.date), 'MMM d') : 'Date TBD'}</p>
-          </a>
-        ))}
-      </div>
-    </div>,
-    container
+function RecenterButton({ userLocation }) {
+  const map = useMap();
+  if (!userLocation) return null;
+
+  return (
+    <button
+      onClick={() => map.flyTo(userLocation, 14, { animate: true, duration: 0.8 })}
+      className="absolute bottom-6 right-4 z-[1000] bg-white dark:bg-gray-800 shadow-lg rounded-full p-3 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+      title="Re-center on my location"
+      style={{ touchAction: 'none' }}
+    >
+      <LocateFixed className="w-5 h-5 text-[#14B8FF]" />
+    </button>
   );
 }
 
 export default function SaleMap({ sales, center, onVisibleSalesChange }) {
-  const { theme } = useTheme();
-  const isDark = theme === 'dark';
-  const mapRef = useRef(null);
-  const mapInstanceRef = useRef(null);
-  const markersRef = useRef([]);
-  const infoWindowRef = useRef(null);
+  const [mapReady, setMapReady] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
-  const [zoom, setZoom] = useState(12);
-  const [popupState, setPopupState] = useState(null);
-  const { isLoaded, error } = useGoogleMaps();
+  const [mapBounds, setMapBounds] = useState(null);
+  const [zoom, setZoom] = useState(11);
+  const defaultCenter = center || userLocation || [40.7128, -74.0060];
 
   const { data: communityLocations = [] } = useQuery({
     queryKey: ['communityLocations'],
     queryFn: () => base44.entities.CommunityLocation.filter({ is_active: true }),
   });
 
-  // React to theme toggle from profile dropdown
-  useEffect(() => {
-    if (mapInstanceRef.current) {
-      mapInstanceRef.current.setOptions({ styles: isDark ? DARK_STYLES : LIGHT_STYLES });
-    }
-  }, [isDark]);
-
-  // Get user location
   useEffect(() => {
     if (navigator.geolocation && !center) {
       navigator.geolocation.getCurrentPosition(
@@ -124,179 +177,170 @@ export default function SaleMap({ sales, center, onVisibleSalesChange }) {
         () => {}
       );
     }
+    setMapReady(true);
   }, []);
 
-  // Initialize map
+  const visibleSales = mapBounds
+    ? sales.filter(s => s.latitude && s.longitude && mapBounds.contains([s.latitude, s.longitude]))
+    : sales;
+
   useEffect(() => {
-    if (!isLoaded || !mapRef.current) return;
-    if (mapInstanceRef.current) return;
+    if (onVisibleSalesChange) onVisibleSalesChange(visibleSales);
+  }, [visibleSales.length, mapBounds]);
 
-    const defaultCenter = center
-      ? { lat: center[0], lng: center[1] }
-      : userLocation
-        ? { lat: userLocation[0], lng: userLocation[1] }
-        : { lat: 40.7128, lng: -74.006 };
+  const salesWithCoords = visibleSales.filter(s => s.latitude && s.longitude);
+  const clusters = clusterSales(salesWithCoords, zoom);
 
-    const map = new window.google.maps.Map(mapRef.current, {
-      center: defaultCenter,
-      zoom: userLocation ? 14 : 12,
-      styles: isDark ? DARK_STYLES : LIGHT_STYLES,
-      gestureHandling: 'cooperative',
-      mapTypeControl: false,
-      streetViewControl: false,
-      fullscreenControl: false,
-    });
-
-    infoWindowRef.current = new window.google.maps.InfoWindow();
-
-    map.addListener('zoom_changed', () => setZoom(map.getZoom()));
-    map.addListener('idle', () => {
-      if (onVisibleSalesChange) {
-        const bounds = map.getBounds();
-        if (bounds) {
-          const visible = sales.filter(s => s.latitude && s.longitude &&
-            bounds.contains({ lat: s.latitude, lng: s.longitude }));
-          onVisibleSalesChange(visible);
-        }
-      }
-    });
-
-    mapInstanceRef.current = map;
-  }, [isLoaded]);
-
-  // Update center when prop changes
-  useEffect(() => {
-    if (!mapInstanceRef.current || !center) return;
-    mapInstanceRef.current.setCenter({ lat: center[0], lng: center[1] });
-  }, [center]);
-
-  // Re-render markers when sales/zoom/communityLocations change
-  useEffect(() => {
-    if (!mapInstanceRef.current || !isLoaded) return;
-    const map = mapInstanceRef.current;
-
-    markersRef.current.forEach(m => m.setMap(null));
-    markersRef.current = [];
-    infoWindowRef.current.close();
-    setPopupState(null);
-
-    const salesWithCoords = sales.filter(s => s.latitude && s.longitude);
-    const clusters = clusterSales(salesWithCoords, zoom);
-
-    clusters.forEach((cluster) => {
-      const avgLat = cluster.reduce((s, c) => s + c.latitude, 0) / cluster.length;
-      const avgLon = cluster.reduce((s, c) => s + c.longitude, 0) / cluster.length;
-
-      let markerIcon;
-      if (cluster.length === 1) {
-        const today = new Date().toDateString();
-        const saleDate = cluster[0].date ? new Date(cluster[0].date).toDateString() : null;
-        const isUpcoming = saleDate && saleDate !== today;
-        markerIcon = {
-          url: makeSaleMarkerSvg(isUpcoming ? '#10B981' : '#14B8FF'),
-          scaledSize: new window.google.maps.Size(36, 44),
-          anchor: new window.google.maps.Point(18, 44),
-        };
-      } else {
-        markerIcon = {
-          url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
-              <circle cx="24" cy="24" r="24" fill="#FF6F61"/>
-              <text x="24" y="30" text-anchor="middle" font-size="20" font-weight="bold" fill="white" font-family="sans-serif">${cluster.length}</text>
-            </svg>
-          `)}`,
-          scaledSize: new window.google.maps.Size(48, 48),
-          anchor: new window.google.maps.Point(24, 24),
-        };
-      }
-
-      const marker = new window.google.maps.Marker({
-        position: { lat: avgLat, lng: avgLon },
-        map,
-        icon: markerIcon,
-      });
-
-      marker.addListener('click', () => {
-        if (cluster.length > 1) {
-          const currentZoom = map.getZoom();
-          map.setZoom(Math.min(currentZoom + 3, 18));
-          map.setCenter({ lat: avgLat, lng: avgLon });
-          const container = document.createElement('div');
-          infoWindowRef.current.setContent(container);
-          infoWindowRef.current.open(map, marker);
-          setPopupState({ type: 'cluster', data: cluster, container });
-        } else {
-          const container = document.createElement('div');
-          infoWindowRef.current.setContent(container);
-          infoWindowRef.current.open(map, marker);
-          setPopupState({ type: 'sale', data: cluster[0], container });
-        }
-      });
-
-      markersRef.current.push(marker);
-    });
-
-    // Community markers
-    communityLocations.forEach(loc => {
-      const marker = new window.google.maps.Marker({
-        position: { lat: loc.latitude, lng: loc.longitude },
-        map,
-        icon: {
-          url: `data:image/svg+xml;charset=UTF-8,${encodeURIComponent(`
-            <svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44">
-              <circle cx="22" cy="22" r="21" fill="#2E3A59" stroke="gold" stroke-width="3"/>
-              <text x="22" y="29" text-anchor="middle" font-size="20" font-family="sans-serif">${loc.icon || '📍'}</text>
-            </svg>
-          `)}`,
-          scaledSize: new window.google.maps.Size(44, 44),
-          anchor: new window.google.maps.Point(22, 22),
-        },
-        title: loc.name,
-      });
-      markersRef.current.push(marker);
-    });
-  }, [isLoaded, sales, zoom, communityLocations]);
-
-  if (error) {
+  if (!mapReady) {
     return (
-      <div className="w-full h-full bg-gray-100 dark:bg-gray-800 rounded-2xl flex items-center justify-center text-gray-500">
-        Map unavailable
-      </div>
-    );
-  }
-
-  if (!isLoaded) {
-    return (
-      <div className="w-full h-full bg-gray-100 dark:bg-gray-800 rounded-2xl flex items-center justify-center">
-        <div className="flex flex-col items-center gap-2">
-          <Loader2 className="w-8 h-8 text-[#14B8FF] animate-spin" />
-          <span className="text-gray-500 text-sm">Loading map...</span>
+      <div className="w-full h-full bg-gray-100 rounded-2xl flex items-center justify-center">
+        <div className="animate-pulse flex flex-col items-center gap-2">
+          <MapPin className="w-8 h-8 text-[#14B8FF]" />
+          <span className="text-gray-500">Loading map...</span>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="w-full h-full rounded-2xl overflow-hidden shadow-lg relative">
-      <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
+    <div className="w-full h-full rounded-2xl overflow-hidden shadow-lg relative z-0">
+      <style>{`
+        .leaflet-tile-pane { filter: saturate(0.5) brightness(1.1) sepia(0.25) hue-rotate(-10deg); }
+        .leaflet-popup-content-wrapper { border-radius: 16px; padding: 0; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        .leaflet-popup-content { margin: 0; min-width: 250px; }
+        .leaflet-popup-tip { background: white; }
+        .custom-marker { background: transparent; border: none; }
+      `}</style>
+      <MapContainer
+        center={defaultCenter}
+        zoom={userLocation ? 14 : 12}
+        style={{ height: '100%', width: '100%' }}
+        scrollWheelZoom={true}
+      >
+        <MapUpdater center={center} />
+        <MapBoundsWatcher onBoundsChange={setMapBounds} onZoomChange={setZoom} />
+        <RecenterButton userLocation={userLocation} />
 
-      {userLocation && (
-        <button
-          onClick={() => {
-            if (mapInstanceRef.current) {
-              mapInstanceRef.current.setCenter({ lat: userLocation[0], lng: userLocation[1] });
-              mapInstanceRef.current.setZoom(14);
-            }
-          }}
-          className="absolute bottom-6 right-4 z-10 bg-white dark:bg-gray-800 shadow-lg rounded-full p-3 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-          title="Re-center on my location"
-        >
-          <LocateFixed className="w-5 h-5 text-[#14B8FF]" />
-        </button>
-      )}
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          maxZoom={19}
+        />
 
-      {popupState?.type === 'sale' && <SalePopup sale={popupState.data} container={popupState.container} />}
-      {popupState?.type === 'cluster' && <ClusterPopup cluster={popupState.data} container={popupState.container} />}
+        {/* Community Locations */}
+        {communityLocations.map((loc) => (
+          <Marker
+            key={`community-${loc.id}`}
+            position={[loc.latitude, loc.longitude]}
+            icon={createCommunityIcon(loc.icon)}
+          >
+            <Popup>
+              <div className="p-4">
+                <h3 className="font-bold text-[#2E3A59] mb-2 text-lg" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                  {loc.name}
+                </h3>
+                <p className="text-sm text-gray-600 mb-2">{loc.description}</p>
+                <p className="text-xs text-gray-500">{loc.address}, {loc.city}</p>
+                <div className="mt-2 inline-block text-xs bg-gray-100 px-2 py-1 rounded">
+                  {loc.category.replace(/_/g, ' ')}
+                </div>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+
+        {/* Sale clusters / single pins */}
+        {clusters.map((cluster, idx) => {
+          const avgLat = cluster.reduce((s, c) => s + c.latitude, 0) / cluster.length;
+          const avgLon = cluster.reduce((s, c) => s + c.longitude, 0) / cluster.length;
+
+          if (cluster.length === 1) {
+            const sale = cluster[0];
+            return (
+              <Marker key={sale.id} position={[sale.latitude, sale.longitude]} icon={sale.isUpcoming ? upcomingIcon : customIcon}>
+                <Popup>
+                  <div className="p-4">
+                    {sale.photos?.length > 0 && (
+                      <div className="w-full h-28 rounded-xl overflow-hidden mb-3">
+                        <img src={sale.photos[0]} alt={sale.title} className="w-full h-full object-cover" />
+                      </div>
+                    )}
+                    <h3 className="font-bold text-[#2E3A59] mb-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
+                      {sale.title}
+                    </h3>
+                    <div className="space-y-1 text-sm text-gray-600 mb-3">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="w-3.5 h-3.5 text-[#14B8FF]" />
+                        <span>{sale.date ? format(new Date(sale.date), 'EEE, MMM d') : 'Date TBD'}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-3.5 h-3.5 text-[#F5A623]" />
+                        <span>{sale.start_time || '8 AM'} - {sale.end_time || '2 PM'}</span>
+                      </div>
+                    </div>
+                    <Link
+                      to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}
+                      className="flex items-center justify-center gap-1 w-full py-2 bg-[#14B8FF] text-white rounded-xl text-sm font-medium hover:bg-[#0da3e6] transition-colors"
+                    >
+                      View Details <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
+                  </div>
+                </Popup>
+              </Marker>
+            );
+          }
+
+          // Cluster marker — clicking zooms in
+          return (
+            <ClusterMarker
+              key={`cluster-${idx}`}
+              position={[avgLat, avgLon]}
+              cluster={cluster}
+              icon={createClusterIcon(cluster.length)}
+            />
+          );
+        })}
+      </MapContainer>
     </div>
+  );
+}
+
+function ClusterMarker({ position, cluster, icon }) {
+  const map = useMap();
+
+  const handleClick = useCallback(() => {
+    const currentZoom = map.getZoom();
+    map.flyTo(position, Math.min(currentZoom + 3, 18), { animate: true, duration: 0.6 });
+  }, [map, position]);
+
+  return (
+    <Marker
+      position={position}
+      icon={icon}
+      eventHandlers={{ click: handleClick }}
+    >
+      <Popup>
+        <div className="p-4 max-w-sm">
+          <h3 className="font-bold text-[#2E3A59] mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            {cluster.length} Sales nearby — tap to zoom in
+          </h3>
+          <div className="space-y-3 max-h-64 overflow-y-auto">
+            {cluster.map((sale) => (
+              <Link
+                key={sale.id}
+                to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}
+                className="block p-2 bg-gray-50 rounded-lg hover:bg-blue-50 transition-colors"
+              >
+                <p className="font-medium text-[#2E3A59] text-sm mb-1">{sale.title}</p>
+                <p className="text-xs text-gray-600 flex items-center gap-1">
+                  <Calendar className="w-3 h-3" />
+                  {sale.date ? format(new Date(sale.date), 'MMM d') : 'Date TBD'}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </Popup>
+    </Marker>
   );
 }
