@@ -58,7 +58,7 @@ const CATEGORY_PAGES = [
 export default function YardSales() {
   const [viewMode, setViewMode] = useState('map');
   const [filters, setFilters] = useState({ categories: [], date: 'all', distance: 'all', payment: 'all', search: '' });
-  const [showEndedSales, setShowEndedSales] = useState(false);
+  const showEndedSales = false;
   const [showUpcomingEvents, setShowUpcomingEvents] = useState(true);
   const [favorites, setFavorites] = useState([]);
   const [user, setUser] = useState(null);
@@ -468,15 +468,7 @@ export default function YardSales() {
                 <span className="text-xs text-gray-400 ml-1">(in view)</span>
                 }
             </p>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                  type="checkbox"
-                  checked={showEndedSales}
-                  onChange={(e) => setShowEndedSales(e.target.checked)}
-                  className="w-4 h-4 text-[#FF6F61] border-gray-300 rounded focus:ring-[#FF6F61]" />
 
-              <span className="text-sm text-gray-600 dark:text-gray-300">Show ended</span>
-            </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                   type="checkbox"
