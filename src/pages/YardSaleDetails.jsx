@@ -9,8 +9,7 @@ import {
   ChevronLeft, ChevronRight, X, ArrowLeft, Tag, UserCheck, Flag, Trash2, Edit,
   DollarSign, CreditCard, Smartphone, Package, Sofa, Shirt, Zap, Baby, Crown, BookOpen, Dumbbell, Users, MessageCircle
 } from 'lucide-react';
-import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
+import GoogleMapView from '../components/maps/GoogleMapView';
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { format } from 'date-fns';
@@ -791,33 +790,13 @@ export default function YardSaleDetails() {
                     </span>
                   )}
                 </div>
-                <div className="h-64 rounded-xl overflow-hidden">
-                  <MapContainer
-                    center={[
-                      isExactLocationVisible() ? (sale.exact_latitude || sale.latitude) : sale.latitude,
-                      isExactLocationVisible() ? (sale.exact_longitude || sale.longitude) : sale.longitude
-                    ]}
-                    zoom={isExactLocationVisible() ? 16 : 14}
-                    style={{ height: '100%', width: '100%' }}
-                    scrollWheelZoom={false}
-                  >
-                    <TileLayer
-                      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                    />
-                    {isExactLocationVisible() ? (
-                      <Marker position={[sale.exact_latitude || sale.latitude, sale.exact_longitude || sale.longitude]}>
-                        <Popup>{sale.title}</Popup>
-                      </Marker>
-                    ) : (
-                      <Circle
-                        center={[sale.latitude, sale.longitude]}
-                        radius={500}
-                        pathOptions={{ color: '#FF6F61', fillColor: '#FF6F61', fillOpacity: 0.2 }}
-                      />
-                    )}
-                  </MapContainer>
-                </div>
+                <GoogleMapView
+                  lat={isExactLocationVisible() ? (sale.exact_latitude || sale.latitude) : sale.latitude}
+                  lng={isExactLocationVisible() ? (sale.exact_longitude || sale.longitude) : sale.longitude}
+                  exact={isExactLocationVisible()}
+                  title={sale.title}
+                  className="h-64 rounded-xl overflow-hidden"
+                />
                 {!isExactLocationVisible() && (
                   <p className="text-xs text-gray-500 mt-2 text-center">
                     {t('exactLocationNote')}

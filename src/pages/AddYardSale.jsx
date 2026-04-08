@@ -17,6 +17,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "sonner";
 import { useTranslation } from '../components/translations';
 import SEO from '../components/SEO';
+import AddressAutocomplete from '../components/maps/AddressAutocomplete';
 import { DrawerSelect } from '@/components/ui/drawer-select';
 import UpgradePrompt from '../components/sales/UpgradePrompt';
 
@@ -894,33 +895,17 @@ export default function AddYardSale() {
                     {t('exactStreetAddressPrivate')} *
                     <span className="text-xs text-green-600 font-normal">🔒 {t('protected')}</span>
                   </Label>
-                  <div className="relative">
-                    <Input
-                    placeholder={t('exactAddressPlaceholder')}
+                  <AddressAutocomplete
                     value={formData.address}
-                    onChange={(e) => updateField('address', e.target.value)}
-                    className={`rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
-                    addressValidation.status === 'valid' ? 'border-green-500 dark:border-green-500' :
-                    addressValidation.status === 'invalid' ? 'border-red-500 dark:border-red-500' : ''}`
-                    } />
-
-                    {isValidatingAddress &&
-                  <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 animate-spin" />
-                  }
-                  </div>
-                  {addressValidation.message &&
-                <motion.p
-                  initial={{ opacity: 0, y: -5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`text-xs mt-1 ${
-                  addressValidation.status === 'valid' ? 'text-green-600' :
-                  addressValidation.status === 'invalid' ? 'text-red-600' :
-                  'text-gray-500'}`
-                  }>
-
-                      {addressValidation.message}
-                    </motion.p>
-                }
+                    onChange={(val) => updateField('address', val)}
+                    onSelect={(result) => {
+                      updateField('address', result.address);
+                      if (result.city) updateField('city', result.city);
+                      if (result.state) updateField('state', result.state);
+                      if (result.zip_code) updateField('zip_code', result.zip_code);
+                    }}
+                    placeholder={t('exactAddressPlaceholder')}
+                  />
                   <p className="text-xs text-gray-500 mt-1">
                     {t('exactAddressUnlocksHint')}
                   </p>
