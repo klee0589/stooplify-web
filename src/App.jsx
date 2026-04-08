@@ -15,6 +15,7 @@ import FreeItems from './pages/FreeItems';
 import FreeStuffCity from './pages/FreeStuffCity';
 import GuidesPostFreeStuff from './pages/guides-post-free-stuff';
 import GuidesSellingVsGiving from './pages/guides-selling-vs-giving';
+import AdminAnalytics from './pages/AdminAnalytics';
 import { Navigate } from 'react-router-dom';
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -78,6 +79,7 @@ const AuthenticatedApp = () => {
       <Route path="/free-stuff-hoboken" element={<LayoutWrapper currentPageName="free-stuff-hoboken"><FreeStuffCity /></LayoutWrapper>} />
       <Route path="/guides-post-free-stuff" element={<LayoutWrapper currentPageName="guides-post-free-stuff"><GuidesPostFreeStuff /></LayoutWrapper>} />
       <Route path="/guides-selling-vs-giving" element={<LayoutWrapper currentPageName="guides-selling-vs-giving"><GuidesSellingVsGiving /></LayoutWrapper>} />
+      <Route path="/admin-analytics" element={<LayoutWrapper currentPageName="admin-analytics"><AdminAnalytics /></LayoutWrapper>} />
 
       {/* 301 redirects: old PascalCase guide URLs → SEO-friendly slugs */}
       <Route path="/GuidesFindSales" element={<Navigate to="/guides-find-yard-sales" replace />} />
