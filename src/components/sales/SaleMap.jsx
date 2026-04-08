@@ -1,12 +1,12 @@
-import React, { useEffect, useRef, useState, useCallback } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { createPortal } from 'react-dom';
-import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
-import { MapPin, Calendar, Clock, ArrowRight, LocateFixed, Loader2 } from 'lucide-react';
+import { LocateFixed, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { base44 } from '@/api/base44Client';
 import { useGoogleMaps } from '../../hooks/useGoogleMaps';
+import { useTheme } from '../ThemeProvider';
 
 const LIGHT_STYLES = [{"featureType":"landscape.man_made","elementType":"geometry","stylers":[{"color":"#f7f1df"}]},{"featureType":"landscape.natural","elementType":"geometry","stylers":[{"color":"#d0e3b4"}]},{"featureType":"landscape.natural.terrain","elementType":"geometry","stylers":[{"visibility":"off"}]},{"featureType":"poi","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"poi.business","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"poi.medical","elementType":"geometry","stylers":[{"color":"#fbd3da"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#bde6ab"}]},{"featureType":"road","elementType":"geometry.stroke","stylers":[{"visibility":"off"}]},{"featureType":"road","elementType":"labels","stylers":[{"visibility":"off"}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#ffe15f"}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#efd151"}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"road.local","elementType":"geometry.fill","stylers":[{"color":"black"}]},{"featureType":"transit.station.airport","elementType":"geometry.fill","stylers":[{"color":"#cfb2db"}]},{"featureType":"water","elementType":"geometry","stylers":[{"color":"#a2daf2"}]}];
 const DARK_STYLES = [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#193341"}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#2c5a71"}]},{"featureType":"road","elementType":"geometry","stylers":[{"color":"#29768a"},{"lightness":-37}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#406d80"}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#3e606f"},{"weight":2},{"gamma":0.84}]},{"elementType":"labels.text.fill","stylers":[{"color":"#ffffff"}]},{"featureType":"administrative","elementType":"geometry","stylers":[{"weight":0.6},{"color":"#1a3541"}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#2c5a71"}]}];
@@ -41,7 +41,6 @@ function makeSaleMarkerSvg(color) {
   `)}`;
 }
 
-// Popup card rendered into a portal div
 function SalePopup({ sale, container }) {
   if (!container) return null;
   return createPortal(
@@ -94,20 +93,28 @@ function ClusterPopup({ cluster, container }) {
 }
 
 export default function SaleMap({ sales, center, onVisibleSalesChange }) {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
   const mapRef = useRef(null);
   const mapInstanceRef = useRef(null);
   const markersRef = useRef([]);
   const infoWindowRef = useRef(null);
-  const [popupState, setPopupState] = useState(null); // { type, data, container }
   const [userLocation, setUserLocation] = useState(null);
   const [zoom, setZoom] = useState(12);
+  const [popupState, setPopupState] = useState(null);
   const { isLoaded, error } = useGoogleMaps();
-  const isDark = typeof document !== 'undefined' && document.documentElement.classList.contains('dark');
 
   const { data: communityLocations = [] } = useQuery({
     queryKey: ['communityLocations'],
     queryFn: () => base44.entities.CommunityLocation.filter({ is_active: true }),
   });
+
+  // React to theme toggle from profile dropdown
+  useEffect(() => {
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.setOptions({ styles: isDark ? DARK_STYLES : LIGHT_STYLES });
+    }
+  }, [isDark]);
 
   // Get user location
   useEffect(() => {
@@ -168,7 +175,6 @@ export default function SaleMap({ sales, center, onVisibleSalesChange }) {
     if (!mapInstanceRef.current || !isLoaded) return;
     const map = mapInstanceRef.current;
 
-    // Clear old markers
     markersRef.current.forEach(m => m.setMap(null));
     markersRef.current = [];
     infoWindowRef.current.close();
@@ -213,10 +219,8 @@ export default function SaleMap({ sales, center, onVisibleSalesChange }) {
       marker.addListener('click', () => {
         if (cluster.length > 1) {
           const currentZoom = map.getZoom();
-          map.flyTo && map.flyTo({ lat: avgLat, lng: avgLon }, Math.min(currentZoom + 3, 18));
           map.setZoom(Math.min(currentZoom + 3, 18));
           map.setCenter({ lat: avgLat, lng: avgLon });
-          // Show cluster popup
           const container = document.createElement('div');
           infoWindowRef.current.setContent(container);
           infoWindowRef.current.open(map, marker);
@@ -234,10 +238,6 @@ export default function SaleMap({ sales, center, onVisibleSalesChange }) {
 
     // Community markers
     communityLocations.forEach(loc => {
-      const container = document.createElement('div');
-      container.style.cssText = 'width:40px;height:40px;background:#2E3A59;border-radius:50%;border:3px solid gold;display:flex;align-items:center;justify-content:center;font-size:20px;box-shadow:0 4px 15px rgba(46,58,89,0.5)';
-      container.textContent = loc.icon || '📍';
-
       const marker = new window.google.maps.Marker({
         position: { lat: loc.latitude, lng: loc.longitude },
         map,
@@ -253,7 +253,6 @@ export default function SaleMap({ sales, center, onVisibleSalesChange }) {
         },
         title: loc.name,
       });
-
       markersRef.current.push(marker);
     });
   }, [isLoaded, sales, zoom, communityLocations]);
@@ -281,7 +280,6 @@ export default function SaleMap({ sales, center, onVisibleSalesChange }) {
     <div className="w-full h-full rounded-2xl overflow-hidden shadow-lg relative">
       <div ref={mapRef} style={{ width: '100%', height: '100%' }} />
 
-      {/* Recenter button */}
       {userLocation && (
         <button
           onClick={() => {
@@ -297,7 +295,6 @@ export default function SaleMap({ sales, center, onVisibleSalesChange }) {
         </button>
       )}
 
-      {/* Portaled popups */}
       {popupState?.type === 'sale' && <SalePopup sale={popupState.data} container={popupState.container} />}
       {popupState?.type === 'cluster' && <ClusterPopup cluster={popupState.data} container={popupState.container} />}
     </div>
