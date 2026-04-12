@@ -5,10 +5,10 @@ import { toast } from "sonner";
 import html2canvas from 'html2canvas';
 
 export default function ShareModal({ sale, isOpen, onClose }) {
-  if (!sale) return null;
-
   const flyerRef = useRef(null);
   const [isGeneratingFlyer, setIsGeneratingFlyer] = useState(false);
+
+  if (!sale) return null;
 
   const shareUrl = window.location.href;
   const shareText = `Check out this yard sale: ${sale.title}`;

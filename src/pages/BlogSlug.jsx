@@ -282,6 +282,17 @@ export default function BlogSlug() {
           </motion.div>
         )}
 
+        {/* In-content CTA — top */}
+        <div className="my-8 p-5 bg-gradient-to-r from-[#14B8FF]/10 to-[#FF6F61]/10 border border-[#14B8FF]/20 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 not-prose">
+          <div>
+            <p className="font-semibold text-[#2E3A59] dark:text-white mb-0.5">Looking for stoop sales near you this weekend?</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300">Browse Brooklyn, Queens & Manhattan sales on the live map — free to use.</p>
+          </div>
+          <a href="/yard-sales" className="shrink-0 px-5 py-2.5 bg-[#FF6F61] text-white rounded-xl font-semibold text-sm hover:bg-[#e85d50] transition-colors whitespace-nowrap">
+            Browse Stooplify →
+          </a>
+        </div>
+
         {/* No Spanish version notice */}
         {isSpanish && !hasSpanish && (
           <div className="mb-8 px-4 py-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-700 rounded-lg text-sm text-yellow-700 dark:text-yellow-400">
@@ -329,6 +340,18 @@ export default function BlogSlug() {
           </ReactMarkdown>
         </div>
 
+
+        {/* In-content CTA — bottom */}
+        <div className="my-10 p-6 bg-[#2E3A59] rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div>
+            <p className="font-bold text-white mb-1" style={{ fontFamily: 'Poppins, sans-serif' }}>Ready to find a stoop sale near you?</p>
+            <p className="text-sm text-white/80">Hundreds of local sales listed every weekend in Brooklyn, Queens & beyond.</p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2 shrink-0">
+            <a href="/yard-sales" className="px-5 py-2.5 bg-[#FF6F61] text-white rounded-xl font-semibold text-sm hover:bg-[#e85d50] transition-colors text-center whitespace-nowrap">Browse Sales →</a>
+            <a href="/add-yard-sale" className="px-5 py-2.5 bg-white/10 text-white border border-white/20 rounded-xl font-semibold text-sm hover:bg-white/20 transition-colors text-center whitespace-nowrap">List Yours Free</a>
+          </div>
+        </div>
 
         {/* Related Content: articles, cities, guides */}
         <RelatedContent currentSlug={slug} />

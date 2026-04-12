@@ -2,6 +2,7 @@
  * Intercepts and prevents unauthorized API calls
  * Prevents 401 errors on page load for non-authenticated users
  */
+import { base44 } from '@/api/base44Client';
 
 export const setupAuthInterceptor = async () => {
   if (typeof window === 'undefined') return;

@@ -58,7 +58,7 @@ function FallbackComponent({ error, resetError }) {
               Go Home
             </button>
           </div>
-          {process.env.NODE_ENV === 'development' && (
+          {import.meta.env.DEV && (
             <details className="mt-6 text-left">
               <summary className="cursor-pointer text-sm text-gray-600 hover:text-gray-900">
                 Error Details

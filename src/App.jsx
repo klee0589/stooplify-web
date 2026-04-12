@@ -16,6 +16,8 @@ import FreeStuffCity from './pages/FreeStuffCity';
 import GuidesPostFreeStuff from './pages/guides-post-free-stuff';
 import GuidesSellingVsGiving from './pages/guides-selling-vs-giving';
 import AdminAnalytics from './pages/AdminAnalytics';
+import StoopSalesParkSlope from './pages/StoopSalesParkSlope';
+import StoopSalesWilliamsburg from './pages/StoopSalesWilliamsburg';
 import { Navigate } from 'react-router-dom';
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -80,6 +82,8 @@ const AuthenticatedApp = () => {
       <Route path="/guides-post-free-stuff" element={<LayoutWrapper currentPageName="guides-post-free-stuff"><GuidesPostFreeStuff /></LayoutWrapper>} />
       <Route path="/guides-selling-vs-giving" element={<LayoutWrapper currentPageName="guides-selling-vs-giving"><GuidesSellingVsGiving /></LayoutWrapper>} />
       <Route path="/admin-analytics" element={<LayoutWrapper currentPageName="admin-analytics"><AdminAnalytics /></LayoutWrapper>} />
+      <Route path="/stoop-sales-park-slope" element={<LayoutWrapper currentPageName="stoop-sales-park-slope"><StoopSalesParkSlope /></LayoutWrapper>} />
+      <Route path="/stoop-sales-williamsburg" element={<LayoutWrapper currentPageName="stoop-sales-williamsburg"><StoopSalesWilliamsburg /></LayoutWrapper>} />
 
       {/* 301 redirects: old PascalCase guide URLs → SEO-friendly slugs */}
       <Route path="/GuidesFindSales" element={<Navigate to="/guides-find-yard-sales" replace />} />
