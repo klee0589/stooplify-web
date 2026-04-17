@@ -122,16 +122,14 @@ export default function YardSaleDetails() {
           }
           
           // Fetch seller info via backend function
-          if (sales[0].created_by) {
+          const sellerEmail = sales[0].created_by;
+          const sellerUserId = sales[0].created_by_id;
+          if (sellerEmail || sellerUserId) {
             try {
-              console.log('🔍 Fetching seller info for:', sales[0].created_by);
-              const { data } = await base44.functions.invoke('getSellerInfo', { email: sales[0].created_by });
-              console.log('📦 Seller info response:', data);
+              const payload = sellerEmail ? { email: sellerEmail } : { id: sellerUserId };
+              const { data } = await base44.functions.invoke('getSellerInfo', payload);
               if (data?.seller) {
-                console.log('✅ Setting seller:', data.seller);
                 setSeller(data.seller);
-              } else {
-                console.warn('⚠️ No seller data in response');
               }
             } catch (err) {
               console.error('❌ Failed to fetch seller info:', err);

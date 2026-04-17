@@ -1,31 +1,27 @@
-import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    
-    // This function returns only public seller info, but still requires the caller to be authenticated
-    const caller = await base44.auth.me();
-    if (!caller) {
-      return Response.json({ error: 'Authentication required' }, { status: 401 });
+    const { email, id } = await req.json();
+
+    if (!email && !id) {
+      return Response.json({ error: 'email or id required' }, { status: 400 });
     }
-    
-    const { email } = await req.json();
-    
-    if (!email) {
-      return Response.json({ error: 'Email required' }, { status: 400 });
+
+    let sellers = [];
+    if (email) {
+      sellers = await base44.asServiceRole.entities.User.filter({ email });
+    } else if (id) {
+      sellers = await base44.asServiceRole.entities.User.filter({ id });
     }
-    
-    // Use service role to fetch user data
-    const sellers = await base44.asServiceRole.entities.User.filter({ email });
-    
+
     if (sellers.length === 0) {
       return Response.json({ seller: null });
     }
-    
-    // Return only safe public data
+
     const seller = sellers[0];
-    return Response.json({ 
+    return Response.json({
       seller: {
         email: seller.email,
         full_name: seller.full_name,
