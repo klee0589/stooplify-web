@@ -1242,6 +1242,6 @@ export default function YardSaleDetails() {
           isOpen={isShareModalOpen}
           onClose={() => setIsShareModalOpen(false)}
         />
-      </div>
-    );
-  }
+    </div>
+  );
+}
