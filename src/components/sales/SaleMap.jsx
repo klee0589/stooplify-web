@@ -205,7 +205,7 @@ export default function SaleMap({ sales, center, onVisibleSalesChange }) {
   return (
     <div className="w-full h-full rounded-2xl overflow-hidden shadow-lg relative z-0">
       <style>{`
-        .leaflet-tile-pane { filter: saturate(0.5) brightness(1.1) sepia(0.25) hue-rotate(-10deg); }
+        .leaflet-tile-pane { filter: none; }
         .leaflet-popup-content-wrapper { border-radius: 16px; padding: 0; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
         .leaflet-popup-content { margin: 0; min-width: 250px; }
         .leaflet-popup-tip { background: white; }
@@ -222,9 +222,9 @@ export default function SaleMap({ sales, center, onVisibleSalesChange }) {
         <RecenterButton userLocation={userLocation} />
 
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          maxZoom={19}
+          attribution='&copy; <a href="https://maps.google.com">Google Maps</a>'
+          url="https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
+          maxZoom={20}
         />
 
         {/* Community Locations */}
