@@ -889,7 +889,7 @@ export default function YardSaleDetails() {
                       </span>
                     </div>
                     <div>
-                      <h4 className="text-lg font-semibold text-[#2E3A59] dark:text-white">
+                      <h4 className="text-lg font-semibold text-[#2E3A59] dark:text-white capitalize">
                         {seller?.full_name || (sale.created_by ? sale.created_by.split('@')[0] : 'Local Host')}
                       </h4>
                       <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
