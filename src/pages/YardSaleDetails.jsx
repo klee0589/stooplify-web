@@ -877,7 +877,7 @@ export default function YardSaleDetails() {
             )}
 
             {/* Seller Info & Message */}
-            {sale.created_by && (
+            {(sale.created_by || sale.created_by_id) && (
               <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm border-2 border-[#14B8FF]">
                 <h3 className="font-semibold text-[#2E3A59] dark:text-white mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
                   Hosted By
@@ -887,20 +887,17 @@ export default function YardSaleDetails() {
                   <div className="flex items-center gap-4">
                     <div className="w-16 h-16 bg-gradient-to-br from-[#FF6F61] to-[#F5A623] rounded-full flex items-center justify-center">
                       <span className="text-2xl font-bold text-white">
-                        {(seller?.full_name || seller?.email || sale.created_by)?.[0]?.toUpperCase()}
+                        {(seller?.full_name || seller?.email || sale.created_by || 'H')[0]?.toUpperCase()}
                       </span>
                     </div>
                     <div>
                       <h4 className="text-lg font-semibold text-[#2E3A59] dark:text-white">
-                        {seller?.full_name || sale.created_by?.split('@')[0] || 'Host'}
+                        {seller?.full_name || (sale.created_by ? sale.created_by.split('@')[0] : 'Local Host')}
                       </h4>
                       <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                        {sellerSalesCount > 0 ? `${sellerSalesCount} ${sellerSalesCount === 1 ? 'sale' : 'sales'} hosted` : 'New to Stooplify'}
+                        {sellerSalesCount > 0 ? `${sellerSalesCount} ${sellerSalesCount === 1 ? 'sale' : 'sales'} hosted` : 'Stooplify seller'}
                         {sellerAverageRating && ` • ⭐ ${sellerAverageRating.toFixed(1)} rating`}
                       </p>
-                      {seller?.email && (
-                        <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">{seller.email}</p>
-                      )}
                     </div>
                   </div>
                 </div>
@@ -1101,7 +1098,7 @@ export default function YardSaleDetails() {
         )}
 
         {/* Message Section */}
-        {sale.created_by && user && sale.created_by !== user.email && (
+        {(sale.created_by || sale.created_by_id) && user && sale.created_by !== user.email && (
           <div id="message-section" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 mt-12">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
