@@ -188,6 +188,21 @@ export default function Home() {
               Or <a href="/add-yard-sale" className="text-[#14B8FF] hover:underline">list your own stoop sale for free</a> and reach buyers already searching in your neighborhood.
             </p>
           </div>
+          {/* Internal NYC borough links */}
+          <div className="mt-10 flex flex-wrap gap-3 justify-center">
+            {[
+              { label: '🏙️ Garage Sales NYC', url: '/garage-sales-nyc' },
+              { label: '🌇 Stoop Sales NYC', url: '/stoop-sales-nyc' },
+              { label: '🏘️ Brooklyn Garage Sales', url: '/garage-sales-brooklyn' },
+              { label: '🗽 Manhattan Garage Sales', url: '/garage-sales-manhattan' },
+              { label: '🌆 Queens Garage Sales', url: '/garage-sales-queens' },
+              { label: '🏗️ Bronx Garage Sales', url: '/garage-sales-bronx' },
+            ].map(link => (
+              <Link key={link.url} to={link.url} className="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-[#14B8FF] hover:text-[#14B8FF] transition-all shadow-sm">
+                {link.label}
+              </Link>
+            ))}
+          </div>
         </div>
       </section>
 

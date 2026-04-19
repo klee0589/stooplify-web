@@ -18,6 +18,12 @@ import GuidesSellingVsGiving from './pages/guides-selling-vs-giving';
 import AdminAnalytics from './pages/AdminAnalytics';
 import StoopSalesParkSlope from './pages/StoopSalesParkSlope';
 import StoopSalesWilliamsburg from './pages/StoopSalesWilliamsburg';
+import GarageSalesNYC from './pages/garage-sales-nyc';
+import StoopSalesNYC from './pages/stoop-sales-nyc';
+import GarageSalesBrooklyn from './pages/garage-sales-brooklyn';
+import GarageSalesManhattan from './pages/garage-sales-manhattan';
+import GarageSalesQueens from './pages/garage-sales-queens';
+import GarageSalesBronx from './pages/garage-sales-bronx';
 import { Navigate } from 'react-router-dom';
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -84,6 +90,12 @@ const AuthenticatedApp = () => {
       <Route path="/admin-analytics" element={<LayoutWrapper currentPageName="admin-analytics"><AdminAnalytics /></LayoutWrapper>} />
       <Route path="/stoop-sales-park-slope" element={<LayoutWrapper currentPageName="stoop-sales-park-slope"><StoopSalesParkSlope /></LayoutWrapper>} />
       <Route path="/stoop-sales-williamsburg" element={<LayoutWrapper currentPageName="stoop-sales-williamsburg"><StoopSalesWilliamsburg /></LayoutWrapper>} />
+      <Route path="/garage-sales-nyc" element={<LayoutWrapper currentPageName="garage-sales-nyc"><GarageSalesNYC /></LayoutWrapper>} />
+      <Route path="/stoop-sales-nyc" element={<LayoutWrapper currentPageName="stoop-sales-nyc"><StoopSalesNYC /></LayoutWrapper>} />
+      <Route path="/garage-sales-brooklyn" element={<LayoutWrapper currentPageName="garage-sales-brooklyn"><GarageSalesBrooklyn /></LayoutWrapper>} />
+      <Route path="/garage-sales-manhattan" element={<LayoutWrapper currentPageName="garage-sales-manhattan"><GarageSalesManhattan /></LayoutWrapper>} />
+      <Route path="/garage-sales-queens" element={<LayoutWrapper currentPageName="garage-sales-queens"><GarageSalesQueens /></LayoutWrapper>} />
+      <Route path="/garage-sales-bronx" element={<LayoutWrapper currentPageName="garage-sales-bronx"><GarageSalesBronx /></LayoutWrapper>} />
 
       {/* 301 redirects: old PascalCase guide URLs → SEO-friendly slugs */}
       <Route path="/GuidesFindSales" element={<Navigate to="/guides-find-yard-sales" replace />} />

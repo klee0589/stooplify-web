@@ -183,7 +183,11 @@ export default function AddYardSale() {
       });
 
       if (!geoResult?.data?.success) {
-        toast.error('Could not locate address. Please check the address and try again.');
+        if (geoResult?.data?.outside_nyc) {
+          toast.error('Stooplify is currently live in New York City only. We\'re expanding soon!');
+        } else {
+          toast.error('Could not locate address. Please check the address and try again.');
+        }
         throw new Error('Could not locate address');
       }
 
@@ -415,6 +419,8 @@ export default function AddYardSale() {
       const result = await base44.functions.invoke('geocodeAddress', { address, city, state, zip_code });
       if (result?.data?.success) {
         setAddressValidation({ status: 'valid', message: `✓ Address found: ${result.data.display_name}` });
+      } else if (result?.data?.outside_nyc) {
+        setAddressValidation({ status: 'outside_nyc', message: '🗽 Stooplify is currently live in New York City only. We\'re expanding soon!' });
       } else {
         setAddressValidation({ status: 'invalid', message: '⚠️ Address not found - try entering the street address and city' });
       }
@@ -914,6 +920,7 @@ export default function AddYardSale() {
                   animate={{ opacity: 1, y: 0 }}
                   className={`text-xs mt-1 ${
                   addressValidation.status === 'valid' ? 'text-green-600' :
+                  addressValidation.status === 'outside_nyc' ? 'text-orange-600 font-medium' :
                   addressValidation.status === 'invalid' ? 'text-red-600' :
                   'text-gray-500'}`
                   }>
@@ -1020,9 +1027,11 @@ export default function AddYardSale() {
                 <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                disabled={!isStep2Valid || isValidatingAddress}
+                disabled={!isStep2Valid || isValidatingAddress || addressValidation.status === 'outside_nyc'}
                 onClick={async () => {
                   await validateAddress(formData);
+                  // Block if outside NYC
+                  if (addressValidation.status === 'outside_nyc') return;
                   setStep(3);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
