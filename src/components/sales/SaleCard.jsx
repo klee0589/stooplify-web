@@ -31,6 +31,7 @@ export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance,
       className={`bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-md transition-all duration-300 ${isPast ? 'opacity-50' : ''}`}
     >
       {/* Image */}
+      <Link to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}>
       <div className="relative h-40 bg-gradient-to-br from-[#FF6F61]/10 to-[#F5A623]/10">
         {(() => {
           const fallbackImages = [
@@ -107,6 +108,7 @@ export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance,
           />
         </motion.button>
       </div>
+      </Link>
 
       {/* Content */}
       <Link to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}>
