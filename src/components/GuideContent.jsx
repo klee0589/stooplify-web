@@ -1,10 +1,11 @@
 // Individual guide page content components with translations
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
 import { Home, ChevronRight } from 'lucide-react';
 import { useTranslation } from './translations';
+import { base44 } from '@/api/base44Client';
+import WeekendAlertSignup from './WeekendAlertSignup';
 
 export function useGuideLanguage() {
   const [language, setLanguage] = useState('en');
@@ -29,12 +30,12 @@ export function GuideBreadcrumbs({ language, currentPage }) {
   
   return (
     <nav className="flex items-center gap-2 text-sm text-gray-600 mb-6">
-      <Link to={createPageUrl('Home')} className="hover:text-[#FF6F61] flex items-center gap-1">
+      <Link to="/" className="hover:text-[#FF6F61] flex items-center gap-1">
         <Home className="w-4 h-4" />
         {t('home')}
       </Link>
       <ChevronRight className="w-4 h-4" />
-      <Link to={createPageUrl('Guides')} className="hover:text-[#FF6F61]">
+      <Link to="/guides" className="hover:text-[#FF6F61]">
         {language === 'en' ? 'Guides' : 'Guías'}
       </Link>
       <ChevronRight className="w-4 h-4" />
@@ -111,7 +112,7 @@ export const guideContent = {
         }
       ],
       cta: '👉 List your yard sale on Stooplify',
-      ctaLink: 'AddYardSale'
+      ctaUrl: '/add-yard-sale'
     },
     timing: {
       breadcrumb: 'Best Times',
@@ -159,7 +160,7 @@ export const guideContent = {
         }
       ],
       cta: '👉 Schedule your yard sale on Stooplify',
-      ctaLink: 'AddYardSale'
+      ctaUrl: '/add-yard-sale'
     },
     permit: {
       breadcrumb: 'NYC Permits',
@@ -207,7 +208,7 @@ export const guideContent = {
         }
       ],
       cta: '👉 View yard sales happening this weekend',
-      ctaLink: 'YardSales'
+      ctaUrl: '/yard-sales'
     },
     pricing: {
       breadcrumb: 'Pricing Tips',
@@ -247,7 +248,7 @@ export const guideContent = {
         }
       ],
       cta: '👉 List your yard sale with photos',
-      ctaLink: 'AddYardSale'
+      ctaUrl: '/add-yard-sale'
     },
     seniors: {
       breadcrumb: 'For Seniors',
@@ -287,7 +288,7 @@ export const guideContent = {
         }
       ],
       cta: '👉 Create a simple yard sale listing',
-      ctaLink: 'AddYardSale'
+      ctaUrl: '/add-yard-sale'
     },
     find: {
       breadcrumb: 'Find Sales',
@@ -319,7 +320,7 @@ export const guideContent = {
         }
       ],
       cta: '👉 Browse yard sales near you',
-      ctaLink: 'YardSales'
+      ctaUrl: '/yard-sales'
     }
   },
   es: {
@@ -389,7 +390,7 @@ export const guideContent = {
         }
       ],
       cta: '👉 Lista tu venta de garaje en Stooplify',
-      ctaLink: 'AddYardSale'
+      ctaUrl: '/add-yard-sale'
     },
     timing: {
       breadcrumb: 'Mejores Horarios',
@@ -437,7 +438,7 @@ export const guideContent = {
         }
       ],
       cta: '👉 Programa tu venta de garaje en Stooplify',
-      ctaLink: 'AddYardSale'
+      ctaUrl: '/add-yard-sale'
     },
     permit: {
       breadcrumb: 'Permisos NYC',
@@ -485,7 +486,7 @@ export const guideContent = {
         }
       ],
       cta: '👉 Ver ventas de garaje este fin de semana',
-      ctaLink: 'YardSales'
+      ctaUrl: '/yard-sales'
     },
     pricing: {
       breadcrumb: 'Consejos de Precios',
@@ -517,7 +518,7 @@ export const guideContent = {
         }
       ],
       cta: '👉 Lista tu venta de garaje con fotos',
-      ctaLink: 'AddYardSale'
+      ctaUrl: '/add-yard-sale'
     },
     seniors: {
       breadcrumb: 'Para Adultos Mayores',
@@ -557,7 +558,7 @@ export const guideContent = {
         }
       ],
       cta: '👉 Crea un listado simple de venta de garaje',
-      ctaLink: 'AddYardSale'
+      ctaUrl: '/add-yard-sale'
     },
     find: {
       breadcrumb: 'Buscar Ventas',
@@ -589,7 +590,7 @@ export const guideContent = {
         }
       ],
       cta: '👉 Navega ventas de garaje cerca de ti',
-      ctaLink: 'YardSales'
+      ctaUrl: '/yard-sales'
     }
   }
 };
@@ -636,26 +637,46 @@ export function GuideContent({ guide, image }) {
           })}
 
           <div className="mt-12 pt-8 border-t border-gray-200 space-y-6">
-            <Link to={createPageUrl(content.ctaLink)}>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full md:w-auto px-8 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg"
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link
+                to={content.ctaUrl}
+                onClick={() => base44.analytics.track({ eventName: 'guide_cta_clicked', properties: { guide, cta: 'primary' } })}
               >
-                {content.cta}
-              </motion.button>
-            </Link>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="px-8 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg whitespace-nowrap"
+                >
+                  {content.cta}
+                </motion.button>
+              </Link>
+              <Link
+                to="/yard-sales"
+                onClick={() => base44.analytics.track({ eventName: 'guide_cta_clicked', properties: { guide, cta: 'browse_sales' } })}
+              >
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="px-8 py-4 bg-[#14B8FF] text-white rounded-xl font-semibold shadow-lg whitespace-nowrap"
+                >
+                  🗺️ Browse This Weekend's Sales
+                </motion.button>
+              </Link>
+            </div>
 
-            {/* Internal links to AddYardSale + city pages */}
+            {/* Weekend alert signup */}
+            <WeekendAlertSignup variant="banner" />
+
+            {/* Internal links */}
             <div className="p-5 bg-gray-50 rounded-xl border border-gray-200">
-              <p className="text-sm font-semibold text-[#2E3A59] mb-3">🔗 Explore More</p>
+              <p className="text-sm font-semibold text-[#2E3A59] mb-3">🔗 Related Guides & Pages</p>
               <div className="grid grid-cols-2 gap-2 text-sm">
-                <Link to={createPageUrl('add-yard-sale')} className="text-[#FF6F61] hover:underline">→ List Your Sale Free</Link>
-                <Link to={createPageUrl('guides-find-yard-sales')} className="text-[#14B8FF] hover:underline">→ Finding Yard Sales</Link>
+                <Link to="/add-yard-sale" className="text-[#FF6F61] hover:underline">→ List Your Sale Free</Link>
+                <Link to="/guides-find-yard-sales" className="text-[#14B8FF] hover:underline">→ Finding Yard Sales</Link>
+                <Link to="/guides-advertise-yard-sale" className="text-gray-600 hover:text-[#14B8FF]">→ How to Advertise</Link>
+                <Link to="/guides-pricing-yard-sale-items" className="text-gray-600 hover:text-[#14B8FF]">→ Pricing Your Items</Link>
                 <Link to="/stoop-sales-brooklyn" className="text-gray-600 hover:text-[#14B8FF]">→ Brooklyn Stoop Sales</Link>
-                <Link to="/stoop-sales-queens" className="text-gray-600 hover:text-[#14B8FF]">→ Queens Stoop Sales</Link>
-                <Link to="/stoop-sales-nyc-this-weekend" className="text-gray-600 hover:text-[#14B8FF]">→ NYC This Weekend</Link>
-                <Link to="/yard-sales" className="text-gray-600 hover:text-[#14B8FF]">→ All Upcoming Sales</Link>
+                <Link to="/garage-sales-nyc" className="text-gray-600 hover:text-[#14B8FF]">→ NYC Garage Sales</Link>
               </div>
             </div>
           </div>

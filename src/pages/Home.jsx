@@ -11,6 +11,7 @@ import HowItWorks from '../components/home/HowItWorks';
 import FeaturedSales from '../components/home/FeaturedSales';
 import CTASection from '../components/home/CTASection';
 import FreeNearYou from '../components/home/FreeNearYou';
+import WeekendAlertSignup from '../components/WeekendAlertSignup';
 import { deferAnalyticsLoad } from '../components/AnalyticsLoader';
 
 
@@ -108,6 +109,7 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               to="/yard-sales"
+              onClick={() => base44.analytics.track({ eventName: 'homepage_cta_clicked', properties: { cta: 'browse_map' } })}
               className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#14B8FF] text-white rounded-2xl font-semibold text-lg shadow-lg hover:bg-[#0da3e6] transition-colors"
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
@@ -115,6 +117,7 @@ export default function Home() {
             </Link>
             <Link
               to="/free-items"
+              onClick={() => base44.analytics.track({ eventName: 'homepage_cta_clicked', properties: { cta: 'free_items' } })}
               className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-green-500 text-white rounded-2xl font-semibold text-lg shadow-lg hover:bg-green-600 transition-colors"
               style={{ fontFamily: 'Poppins, sans-serif' }}
             >
@@ -131,6 +134,13 @@ export default function Home() {
       <Suspense fallback={<div className="h-96 bg-gray-100 dark:bg-gray-800 animate-pulse" />}>
         <FeaturedSales sales={sales} />
       </Suspense>
+
+      {/* WEEKEND ALERTS */}
+      <section className="py-12 bg-gray-50 dark:bg-gray-800/50">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+          <WeekendAlertSignup variant="banner" />
+        </div>
+      </section>
 
       {/* HOW IT WORKS */}
       <HowItWorks />

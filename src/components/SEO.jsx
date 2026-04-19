@@ -1,84 +1,113 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+
+const DEFAULT_IMAGE = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/283ee8687_logo_v2.png';
 
 export default function SEO({ 
-  title = 'Stooplify - Find Local Yard Sales & Garage Sales Near You',
-  description = 'Discover amazing yard sales, garage sales, and estate sales in your neighborhood. Buy and sell locally with Stooplify - the digital marketplace for local treasures.',
-  keywords = 'yard sale, garage sale, estate sale, local sales, secondhand, thrift, buy local, sell items, neighborhood sales',
-  image = 'https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/user_6963ba60866b343e03d8de8e/f9ad791a3_logo_v1.png',
-  url = typeof window !== 'undefined' ? `https://stooplify.com${window.location.pathname}${window.location.search}` : 'https://stooplify.com',
+  title = 'Find Yard Sales & Stoop Sales Near You | Stooplify',
+  description = 'Discover yard sales, stoop sales, and garage sales near you in NYC and beyond. List your own sale for free.',
+  keywords = 'yard sale, stoop sale, garage sale, nyc, brooklyn',
+  image = DEFAULT_IMAGE,
+  url,
   type = 'website',
   robots = 'index, follow',
-  structuredData
+  canonical,
+  structuredData,
+  breadcrumbs,
+  noindex = false,
 }) {
+  const scriptRefs = useRef([]);
+
   useEffect(() => {
-    // Update title
+    const finalUrl = canonical || url || (typeof window !== 'undefined' ? `https://stooplify.com${window.location.pathname}` : 'https://stooplify.com');
+    const finalRobots = noindex ? 'noindex, nofollow' : robots;
+
+    // Title
     document.title = title;
-    
-    // Update or create meta tags
-    const updateMeta = (name, content, isProperty = false) => {
-      const attribute = isProperty ? 'property' : 'name';
-      let element = document.querySelector(`meta[${attribute}="${name}"]`);
-      if (!element) {
-        element = document.createElement('meta');
-        element.setAttribute(attribute, name);
-        document.head.appendChild(element);
+
+    // Helper to set/create meta tag
+    const setMeta = (attr, value, content) => {
+      let el = document.querySelector(`meta[${attr}="${value}"]`);
+      if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute(attr, value);
+        document.head.appendChild(el);
       }
-      element.setAttribute('content', content);
+      el.setAttribute('content', content);
     };
-    
-    // Update link tags
-    const updateLink = (rel, href) => {
-      let element = document.querySelector(`link[rel="${rel}"]`);
-      if (!element) {
-        element = document.createElement('link');
-        element.setAttribute('rel', rel);
-        document.head.appendChild(element);
+
+    // Helper to set/create link tag
+    const setLink = (rel, href) => {
+      let el = document.querySelector(`link[rel="${rel}"]`);
+      if (!el) {
+        el = document.createElement('link');
+        el.setAttribute('rel', rel);
+        document.head.appendChild(el);
       }
-      element.setAttribute('href', href);
+      el.setAttribute('href', href);
     };
-    
-    // Standard meta tags
-    updateMeta('description', description);
-    updateMeta('keywords', keywords);
-    updateMeta('robots', robots);
-    updateMeta('author', 'Stooplify');
-    
-    // Canonical URL
-    updateLink('canonical', url);
-    
-    // Open Graph tags
-    updateMeta('og:title', title, true);
-    updateMeta('og:description', description, true);
-    updateMeta('og:image', image, true);
-    updateMeta('og:type', type, true);
-    if (url) updateMeta('og:url', url, true);
-    
-    // Twitter Card tags
-    updateMeta('twitter:card', 'summary_large_image');
-    updateMeta('twitter:title', title);
-    updateMeta('twitter:description', description);
-    updateMeta('twitter:image', image);
-    updateMeta('twitter:site', '@stooplify');
-    updateMeta('twitter:creator', '@stooplify');
-    
-    // Structured Data
+
+    // Standard
+    setMeta('name', 'description', description);
+    if (keywords) setMeta('name', 'keywords', keywords);
+    setMeta('name', 'robots', finalRobots);
+    setMeta('name', 'author', 'Stooplify');
+
+    // Canonical
+    setLink('canonical', finalUrl);
+
+    // Open Graph
+    setMeta('property', 'og:title', title);
+    setMeta('property', 'og:description', description);
+    setMeta('property', 'og:image', image || DEFAULT_IMAGE);
+    setMeta('property', 'og:type', type);
+    setMeta('property', 'og:url', finalUrl);
+    setMeta('property', 'og:site_name', 'Stooplify');
+
+    // Twitter
+    setMeta('name', 'twitter:card', 'summary_large_image');
+    setMeta('name', 'twitter:title', title);
+    setMeta('name', 'twitter:description', description);
+    setMeta('name', 'twitter:image', image || DEFAULT_IMAGE);
+    setMeta('name', 'twitter:site', '@stooplify');
+    setMeta('name', 'twitter:creator', '@stooplify');
+
+    // Clean up previously injected structured data scripts
+    scriptRefs.current.forEach(s => s.remove());
+    scriptRefs.current = [];
+
+    const addScript = (data) => {
+      const script = document.createElement('script');
+      script.type = 'application/ld+json';
+      script.textContent = JSON.stringify(data);
+      document.head.appendChild(script);
+      scriptRefs.current.push(script);
+    };
+
+    // Structured data (array or single object)
     if (structuredData) {
-      let script = document.getElementById('structured-data');
-      if (!script) {
-        script = document.createElement('script');
-        script.id = 'structured-data';
-        script.type = 'application/ld+json';
-        document.head.appendChild(script);
-      }
-      script.textContent = JSON.stringify(structuredData);
+      const items = Array.isArray(structuredData) ? structuredData : [structuredData];
+      items.forEach(addScript);
     }
-    
+
+    // Breadcrumbs schema
+    if (breadcrumbs && breadcrumbs.length > 0) {
+      addScript({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": breadcrumbs.map((crumb, i) => ({
+          "@type": "ListItem",
+          "position": i + 1,
+          "name": crumb.name,
+          "item": crumb.url,
+        }))
+      });
+    }
+
     return () => {
-      // Cleanup structured data on unmount
-      const script = document.getElementById('structured-data');
-      if (script) script.remove();
+      scriptRefs.current.forEach(s => s.remove());
+      scriptRefs.current = [];
     };
-  }, [title, description, keywords, image, url, type, structuredData]);
-  
+  }, [title, description, keywords, image, url, canonical, type, robots, noindex, structuredData, breadcrumbs]);
+
   return null;
 }

@@ -110,6 +110,19 @@ const AuthenticatedApp = () => {
       <Route path="/StoopSalesManhattan" element={<Navigate to="/stoop-sales-manhattan" replace />} />
       <Route path="/StoopSalesBronx" element={<Navigate to="/stoop-sales-bronx" replace />} />
       <Route path="/StoopSalesJerseyCity" element={<Navigate to="/stoop-sales-jersey-city" replace />} />
+      {/* Canonical PascalCase core page redirects */}
+      <Route path="/Home" element={<Navigate to="/" replace />} />
+      <Route path="/YardSales" element={<Navigate to="/yard-sales" replace />} />
+      <Route path="/Guides" element={<Navigate to="/guides" replace />} />
+      <Route path="/Blog" element={<Navigate to="/blog" replace />} />
+      <Route path="/Calendar" element={<Navigate to="/calendar" replace />} />
+      <Route path="/Pricing" element={<Navigate to="/pricing" replace />} />
+      <Route path="/Favorites" element={<Navigate to="/favorites" replace />} />
+      <Route path="/Profile" element={<Navigate to="/profile" replace />} />
+      <Route path="/Messages" element={<Navigate to="/messages" replace />} />
+      <Route path="/FreeItems" element={<Navigate to="/free-items" replace />} />
+      <Route path="/GarageSalesSanFrancisco" element={<Navigate to="/garage-sales-san-francisco" replace />} />
+      <Route path="/GarageSalesLosAngeles" element={<Navigate to="/garage-sales-los-angeles" replace />} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>

@@ -2,10 +2,184 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="https://base44.com/logo_v2.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="manifest" href="/manifest.json" />
-    <title>Base44 APP</title>
+
+    <!-- Favicon — Stooplify branded -->
+    <link rel="icon" type="image/png" href="https://base44files.s3.us-east-1.amazonaws.com/stooplify/Stooplify-07-favicon.png" />
+    <link rel="apple-touch-icon" href="https://base44files.s3.us-east-1.amazonaws.com/stooplify/Stooplify-07-favicon.png" />
+
+    <!-- Default fallback metadata (overridden at runtime by SEO component) -->
+    <title>Brooklyn Stoop Sales, Yard Sales &amp; Garage Sales Near You | Stooplify</title>
+    <meta name="description" content="Find Brooklyn stoop sales, NYC yard sales, and garage sales happening near you this weekend. Browse live listings, save favorites, and list your own sale for free." />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Stooplify" />
+    <link rel="canonical" href="https://stooplify.com/" />
+
+    <!-- Open Graph -->
+    <meta property="og:site_name" content="Stooplify" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Brooklyn Stoop Sales, Yard Sales &amp; Garage Sales Near You | Stooplify" />
+    <meta property="og:description" content="Find Brooklyn stoop sales, NYC yard sales, and garage sales happening near you this weekend. Browse live listings, save favorites, and list your own sale for free." />
+    <meta property="og:image" content="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/283ee8687_logo_v2.png" />
+    <meta property="og:url" content="https://stooplify.com/" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@stooplify" />
+    <meta name="twitter:creator" content="@stooplify" />
+    <meta name="twitter:title" content="Brooklyn Stoop Sales, Yard Sales &amp; Garage Sales Near You | Stooplify" />
+    <meta name="twitter:description" content="Find Brooklyn stoop sales, NYC yard sales, and garage sales happening near you this weekend." />
+    <meta name="twitter:image" content="https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/283ee8687_logo_v2.png" />
+
+    <!-- Preboot: apply correct title/description/canonical BEFORE React hydration -->
+    <script>
+      (function() {
+        var ROUTE_META = {
+          '/': {
+            title: 'Brooklyn Stoop Sales, Yard Sales & Garage Sales This Weekend | Stooplify',
+            description: 'Find Brooklyn stoop sales, NYC yard sales, and garage sales happening near you this weekend. Browse live listings, save favorites, and list your own sale for free.',
+            robots: 'index, follow'
+          },
+          '/yard-sales': {
+            title: 'Yard Sales & Stoop Sales Near Me This Weekend | Stooplify',
+            description: 'Browse upcoming yard sales, stoop sales, and garage sales near you on an interactive map. Filter by category, date, and distance.',
+            robots: 'index, follow'
+          },
+          '/add-yard-sale': {
+            title: 'List Your Yard Sale or Stoop Sale for Free | Stooplify',
+            description: 'List your yard sale, stoop sale, or garage sale in minutes. Reach thousands of local buyers in NYC. First listing is always free.',
+            robots: 'index, follow'
+          },
+          '/guides': {
+            title: 'Yard Sale Guides: Permits, Pricing, Advertising & Timing | Stooplify',
+            description: 'Complete guides for hosting and finding yard sales in NYC. Learn about permits, pricing, best days to sell, how to advertise, and more.',
+            robots: 'index, follow'
+          },
+          '/guides-advertise-yard-sale': {
+            title: 'How to Advertise a Yard Sale in NYC — Free & Easy Methods | Stooplify',
+            description: 'The best free ways to advertise your yard sale or stoop sale in NYC. Reach local buyers in Brooklyn, Queens, and Manhattan.',
+            robots: 'index, follow'
+          },
+          '/guides-best-time-yard-sale': {
+            title: 'Best Days & Times to Host a Yard Sale in NYC | Stooplify',
+            description: 'When is the best time to have a yard sale in New York City? Learn the optimal days, times, and seasons to maximize foot traffic and sales.',
+            robots: 'index, follow'
+          },
+          '/guides-find-yard-sales': {
+            title: 'How to Find Yard Sales Near You This Weekend | Stooplify',
+            description: 'The easiest ways to find yard sales, stoop sales, and garage sales near you in NYC this weekend.',
+            robots: 'index, follow'
+          },
+          '/guides-permit-requirements-nyc': {
+            title: 'Do You Need a Permit for a Yard Sale in NYC? | Stooplify',
+            description: 'Find out if you need a permit for a yard sale in New York City. Simple rules for Brooklyn, Queens, Manhattan, and the Bronx.',
+            robots: 'index, follow'
+          },
+          '/guides-pricing-yard-sale-items': {
+            title: 'How to Price Items for a Yard Sale — What Actually Sells | Stooplify',
+            description: 'Learn how to price your yard sale and stoop sale items so they actually sell.',
+            robots: 'index, follow'
+          },
+          '/guides-seniors-yard-sales': {
+            title: 'How Seniors Can Post a Yard Sale Online (Step-by-Step) | Stooplify',
+            description: 'A simple step-by-step guide for seniors on how to post a yard sale or estate sale online.',
+            robots: 'index, follow'
+          },
+          '/what-is-a-stoop-sale': {
+            title: "What Is a Stoop Sale? NYC's Sidewalk Yard Sale Tradition | Stooplify",
+            description: "A stoop sale is NYC's version of a yard sale — held on front stoops and sidewalks. Learn where to find them this weekend.",
+            robots: 'index, follow'
+          },
+          '/stoop-sale-vs-yard-sale': {
+            title: "Stoop Sale vs. Yard Sale vs. Garage Sale: What's the Difference? | Stooplify",
+            description: "What's the difference between a stoop sale, yard sale, and garage sale? Key differences explained.",
+            robots: 'index, follow'
+          },
+          '/how-to-host-a-stoop-sale': {
+            title: 'How to Host a Stoop Sale in NYC — Complete Guide | Stooplify',
+            description: 'Everything you need to know to host a successful stoop sale in New York City.',
+            robots: 'index, follow'
+          },
+          '/stoop-sales-brooklyn': {
+            title: 'Brooklyn Stoop Sales This Weekend — Browse Live Listings | Stooplify',
+            description: 'Find Brooklyn stoop sales and yard sales happening this weekend. Browse live listings in Park Slope, Williamsburg, Bushwick, Crown Heights, and more.',
+            robots: 'index, follow'
+          },
+          '/stoop-sales-queens': {
+            title: 'Queens Stoop Sales & Yard Sales This Weekend | Stooplify',
+            description: 'Discover stoop sales and yard sales in Queens this weekend.',
+            robots: 'index, follow'
+          },
+          '/stoop-sales-manhattan': {
+            title: 'Manhattan Stoop Sales & Yard Sales This Weekend | Stooplify',
+            description: 'Browse Manhattan stoop sales and yard sales happening this weekend.',
+            robots: 'index, follow'
+          },
+          '/stoop-sales-bronx': {
+            title: 'Bronx Stoop Sales & Yard Sales This Weekend | Stooplify',
+            description: 'Find yard sales and stoop sales in the Bronx this weekend.',
+            robots: 'index, follow'
+          },
+          '/garage-sales-nyc': {
+            title: 'NYC Garage Sales This Weekend — All Five Boroughs | Stooplify',
+            description: 'Find garage sales, yard sales, and stoop sales across all five NYC boroughs this weekend.',
+            robots: 'index, follow'
+          },
+          '/garage-sales-brooklyn': {
+            title: 'Brooklyn Garage Sales This Weekend — Browse Live Listings | Stooplify',
+            description: 'Browse garage sales and yard sales in Brooklyn this weekend.',
+            robots: 'index, follow'
+          },
+          '/garage-sales-san-francisco': {
+            title: 'San Francisco Garage Sales & Yard Sales This Weekend | Stooplify',
+            description: 'Find garage sales and yard sales in San Francisco this weekend across all neighborhoods.',
+            robots: 'index, follow'
+          },
+          '/free-items': {
+            title: 'Free Stuff Near Me — Free Items from Local Yard Sales | Stooplify',
+            description: 'Browse free items from neighbors near you. Find furniture, clothing, and household goods being given away for free.',
+            robots: 'index, follow'
+          },
+          '/blog': {
+            title: 'Yard Sale Tips, Guides & NYC Selling News | Stooplify Blog',
+            description: 'Tips, guides, and stories about yard sales, stoop sales, and garage sales in NYC and beyond.',
+            robots: 'index, follow'
+          },
+          '/profile': { title: 'My Profile | Stooplify', description: 'Manage your account, listings, and alerts.', robots: 'noindex, follow' },
+          '/favorites': { title: 'My Favorites | Stooplify', description: 'Your saved yard sales.', robots: 'noindex, follow' },
+          '/messages': { title: 'Messages | Stooplify', description: 'Your messages.', robots: 'noindex, follow' },
+          '/admin-analytics': { title: 'Admin Analytics | Stooplify', description: '', robots: 'noindex, nofollow' },
+        };
+
+        var path = window.location.pathname.replace(/\/$/, '') || '/';
+        var meta = ROUTE_META[path];
+
+        if (meta) {
+          document.title = meta.title;
+          // Update og/twitter title
+          var ogt = document.querySelector('meta[property="og:title"]');
+          var twt = document.querySelector('meta[name="twitter:title"]');
+          if (ogt) ogt.setAttribute('content', meta.title);
+          if (twt) twt.setAttribute('content', meta.title);
+
+          if (meta.description) {
+            var desc = document.querySelector('meta[name="description"]');
+            var ogd = document.querySelector('meta[property="og:description"]');
+            var twd = document.querySelector('meta[name="twitter:description"]');
+            if (desc) desc.setAttribute('content', meta.description);
+            if (ogd) ogd.setAttribute('content', meta.description);
+            if (twd) twd.setAttribute('content', meta.description);
+          }
+
+          var robots = document.querySelector('meta[name="robots"]');
+          if (robots && meta.robots) robots.setAttribute('content', meta.robots);
+
+          var canonical = document.querySelector('link[rel="canonical"]');
+          if (canonical) canonical.setAttribute('href', 'https://stooplify.com' + path);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

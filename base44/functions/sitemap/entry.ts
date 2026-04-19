@@ -11,7 +11,7 @@ Deno.serve(async (req) => {
     { url: 'https://stooplify.com/legal', priority: '0.4', changefreq: 'monthly' },
     { url: 'https://stooplify.com/site-map', priority: '0.5', changefreq: 'weekly' },
     // Blog
-    { url: 'https://stooplify.com/Blog', priority: '0.8', changefreq: 'daily' },
+    { url: 'https://stooplify.com/blog', priority: '0.8', changefreq: 'daily' },
     // Guides hub + subpages
     { url: 'https://stooplify.com/guides', priority: '0.7', changefreq: 'weekly' },
     { url: 'https://stooplify.com/guides-advertise-yard-sale', priority: '0.7', changefreq: 'monthly' },
@@ -73,8 +73,15 @@ Deno.serve(async (req) => {
     { url: 'https://stooplify.com/guides-post-free-stuff', priority: '0.7', changefreq: 'monthly' },
     { url: 'https://stooplify.com/guides-selling-vs-giving', priority: '0.6', changefreq: 'monthly' },
     // Pricing & Calendar
-    { url: 'https://stooplify.com/Pricing', priority: '0.6', changefreq: 'monthly' },
-    { url: 'https://stooplify.com/Calendar', priority: '0.7', changefreq: 'daily' },
+    { url: 'https://stooplify.com/pricing', priority: '0.6', changefreq: 'monthly' },
+    { url: 'https://stooplify.com/calendar', priority: '0.7', changefreq: 'daily' },
+    // NYC garage sales
+    { url: 'https://stooplify.com/garage-sales-nyc', priority: '0.9', changefreq: 'daily' },
+    { url: 'https://stooplify.com/garage-sales-brooklyn', priority: '0.9', changefreq: 'daily' },
+    { url: 'https://stooplify.com/garage-sales-manhattan', priority: '0.8', changefreq: 'daily' },
+    { url: 'https://stooplify.com/garage-sales-queens', priority: '0.8', changefreq: 'daily' },
+    { url: 'https://stooplify.com/garage-sales-bronx', priority: '0.8', changefreq: 'daily' },
+    { url: 'https://stooplify.com/stoop-sales-nyc', priority: '0.9', changefreq: 'daily' },
   ];
 
   let blogPosts = [];

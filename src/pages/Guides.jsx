@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import BlogCTABanner from '../components/BlogCTABanner';
+import WeekendAlertSignup from '../components/WeekendAlertSignup';
 import { createPageUrl } from '../utils';
 import { motion } from 'framer-motion';
 import { 
@@ -25,7 +26,7 @@ const sellerGuides = [
     description: 'Free and easy ways to reach local buyers and get more foot traffic',
     icon: FileText,
     color: 'bg-blue-100 text-blue-600',
-    page: 'GuidesAdvertise'
+    url: '/guides-advertise-yard-sale'
   },
   {
     id: 'timing',
@@ -33,7 +34,7 @@ const sellerGuides = [
     description: 'When to host for maximum turnout and sales',
     icon: Calendar,
     color: 'bg-purple-100 text-purple-600',
-    page: 'GuidesTimings'
+    url: '/guides-best-time-yard-sale'
   },
   {
     id: 'permit',
@@ -41,7 +42,7 @@ const sellerGuides = [
     description: 'Simple rules about yard sale permits in NYC',
     icon: Shield,
     color: 'bg-green-100 text-green-600',
-    page: 'GuidesPermit'
+    url: '/guides-permit-requirements-nyc'
   },
   {
     id: 'pricing',
@@ -49,7 +50,7 @@ const sellerGuides = [
     description: 'Simple pricing rules to help your items sell',
     icon: DollarSign,
     color: 'bg-yellow-100 text-yellow-600',
-    page: 'GuidesPricing'
+    url: '/guides-pricing-yard-sale-items'
   },
   {
     id: 'seniors',
@@ -57,7 +58,7 @@ const sellerGuides = [
     description: 'Easy steps to list your sale without tech stress',
     icon: Users,
     color: 'bg-pink-100 text-pink-600',
-    page: 'GuidesSeniors'
+    url: '/guides-seniors-yard-sales'
   },
 ];
 
@@ -68,7 +69,7 @@ const buyerGuides = [
     description: 'How to discover the best local sales this weekend',
     icon: MapPin,
     color: 'bg-orange-100 text-orange-600',
-    page: 'GuidesFindSales'
+    url: '/guides-find-yard-sales'
   },
 ];
 
@@ -202,7 +203,7 @@ const getFaqData = (t) => [
 
 function GuideCard({ guide, t }) {
   return (
-    <Link to={createPageUrl(guide.page)}>
+    <Link to={guide.url}>
       <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-md hover:shadow-xl transition-all duration-300 group h-full">
         <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl ${guide.color} mb-4`}>
           <guide.icon className="w-6 h-6" />
@@ -295,9 +296,15 @@ export default function Guides() {
   return (
     <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
       <SEO 
-        title="Yard Sale Guides & FAQ | How to Host, Find & Use Stooplify"
-        description="Complete guides for yard sale buyers and sellers. Learn how to list a sale, print a flyer, share with QR codes, find local garage sales near you, and earn credits on Stooplify."
-        keywords="yard sale guide, how to host a yard sale, garage sale tips, how to find yard sales near me, yard sale QR code, print yard sale flyer, yard sale FAQ, how to list a garage sale, stooplify guide, sell items locally, buy at yard sales"
+        title="Yard Sale Guides: Permits, Pricing, Advertising & Timing | Stooplify"
+        description="Complete guides for hosting and finding yard sales in NYC. Learn about permits, pricing, best days to sell, how to advertise, and tips for buyers and seniors."
+        keywords="yard sale guides, how to host a yard sale, garage sale tips nyc, yard sale permit nyc, yard sale pricing guide, advertise stoop sale, find yard sales near me"
+        url="https://stooplify.com/guides"
+        canonical="https://stooplify.com/guides"
+        breadcrumbs={[
+          { name: 'Home', url: 'https://stooplify.com' },
+          { name: 'Guides', url: 'https://stooplify.com/guides' }
+        ]}
         structuredData={structuredData}
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -386,6 +393,10 @@ export default function Guides() {
             </div>
           </motion.div>
         </section>
+
+        <div className="mt-10 mb-4">
+          <WeekendAlertSignup variant="banner" />
+        </div>
 
         <BlogCTABanner />
 

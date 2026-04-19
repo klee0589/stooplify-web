@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { format, parseISO } from 'date-fns';
 import AlertSettings from '../components/profile/AlertSettings';
 import SEO from '../components/SEO';
+import ReferralModule from '../components/ReferralModule';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -520,6 +521,16 @@ export default function Profile() {
           className="mb-6"
         >
           <AlertSettings userEmail={user.email} />
+        </motion.div>
+
+        {/* Referral Module */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.27 }}
+          className="mb-6"
+        >
+          <ReferralModule user={user} />
         </motion.div>
 
         {/* Notifications Settings */}

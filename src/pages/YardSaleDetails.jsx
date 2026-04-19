@@ -459,7 +459,7 @@ export default function YardSaleDetails() {
 
   const handleShare = () => {
     base44.analytics.track({
-      eventName: 'share_clicked',
+      eventName: 'sale_shared',
       properties: { sale_id: saleId }
     });
     setIsShareModalOpen(true);
@@ -916,6 +916,7 @@ export default function YardSaleDetails() {
                         base44.auth.redirectToLogin();
                         return;
                       }
+                      base44.analytics.track({ eventName: 'seller_contacted', properties: { sale_id: saleId } });
                       const msgSection = document.getElementById('message-section');
                       if (msgSection) {
                         msgSection.scrollIntoView({ behavior: 'smooth' });

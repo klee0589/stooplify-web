@@ -10,6 +10,7 @@ import SaleCard from '../components/sales/SaleCard';
 import SaleMap from '../components/sales/SaleMap';
 import PullToRefresh from '../components/PullToRefresh';
 import SEO from '../components/SEO';
+import RoutePlanner from '../components/RoutePlanner';
 
 export default function Favorites() {
   const [user, setUser] = useState(null);
@@ -237,6 +238,7 @@ export default function Favorites() {
             exit={{ opacity: 0, x: 20 }}
             transition={{ duration: 0.3 }}
           >
+            <RoutePlanner sales={sales} />
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {sales.map((sale, index) => (
                 <motion.div

@@ -390,11 +390,12 @@ export default function AddYardSale() {
 
   const handleSubmit = () => {
     base44.analytics.track({
-      eventName: isEditMode ? 'sale_updated' : 'sale_created',
+      eventName: isEditMode ? 'sale_updated' : 'listing_published',
       properties: {
         category: formData.category,
         has_photos: photos.length > 0,
-        photo_count: photos.length
+        photo_count: photos.length,
+        listing_type: formData.is_free_item ? 'free' : 'sale'
       }
     });
     createMutation.mutate(formData);
@@ -851,10 +852,11 @@ export default function AddYardSale() {
                   whileTap={{ scale: 0.98 }}
                   disabled={!isStep1Valid}
               onClick={() => {
-                setStep(2);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className="w-full mt-6 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                 base44.analytics.track({ eventName: 'listing_started', properties: { listing_type: listingMode } });
+                 setStep(2);
+                 window.scrollTo({ top: 0, behavior: 'smooth' });
+               }}
+               className="w-full mt-6 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ fontFamily: 'Poppins, sans-serif' }}>
 
                 {t('continue')}
