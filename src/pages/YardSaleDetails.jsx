@@ -244,7 +244,7 @@ export default function YardSaleDetails() {
       }
 
       base44.analytics.track({
-        eventName: isFavorite ? 'sale_unfavorited' : 'sale_favorited',
+        eventName: isFavorite ? 'sale_unfavorited' : 'favorite_added',
         properties: { sale_id: saleId }
       });
       
