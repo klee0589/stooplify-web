@@ -1,0 +1,49 @@
+{
+  "name": "EmailSubscriber",
+  "type": "object",
+  "properties": {
+    "email": {
+      "type": "string",
+      "format": "email",
+      "description": "Subscriber email address"
+    },
+    "city": {
+      "type": "string",
+      "description": "Preferred city for notifications"
+    },
+    "notify_new_sales": {
+      "type": "boolean",
+      "default": true,
+      "description": "Receive notifications for new sales"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional note about this subscriber's preferences",
+      "maxLength": 1000
+    }
+  },
+  "required": [
+    "email"
+  ],
+  "rls": {
+    "create": {},
+    "read": {
+      "$or": [
+        {
+          "data.email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "data.email": "{{user.email}}"
+    },
+    "delete": {
+      "data.email": "{{user.email}}"
+    }
+  }
+}

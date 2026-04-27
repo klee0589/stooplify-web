@@ -1,0 +1,63 @@
+{
+  "name": "AlertPreference",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user"
+    },
+    "alert_type": {
+      "type": "string",
+      "enum": [
+        "distance",
+        "category"
+      ],
+      "description": "Type of alert"
+    },
+    "value": {
+      "type": "string",
+      "description": "Distance in miles (e.g., '5', '10') or category value"
+    },
+    "latitude": {
+      "type": "number",
+      "description": "Latitude of the user for distance alerts"
+    },
+    "longitude": {
+      "type": "number",
+      "description": "Longitude of the user for distance alerts"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this alert is active"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional note about this alert preference",
+      "maxLength": 1000
+    }
+  },
+  "required": [
+    "user_email",
+    "alert_type",
+    "value"
+  ],
+  "rls": {
+    "create": {
+      "data.user_email": "{{user.email}}",
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "data.user_email": "{{user.email}}",
+      "created_by": "{{user.email}}"
+    },
+    "update": {
+      "data.user_email": "{{user.email}}",
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
+      "data.user_email": "{{user.email}}",
+      "created_by": "{{user.email}}"
+    }
+  }
+}

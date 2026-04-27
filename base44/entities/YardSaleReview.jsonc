@@ -1,0 +1,57 @@
+{
+  "name": "YardSaleReview",
+  "type": "object",
+  "properties": {
+    "yard_sale_id": {
+      "type": "string",
+      "description": "ID of the yard sale being reviewed"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the reviewer"
+    },
+    "rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Rating from 1-5 stars"
+    },
+    "comment": {
+      "type": "string",
+      "description": "Review comment"
+    },
+    "attended": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether the user actually attended the sale"
+    },
+    "helpful_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of users who found this review helpful"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional extended description or summary of the review experience",
+      "maxLength": 1000
+    }
+  },
+  "required": [
+    "yard_sale_id",
+    "user_email",
+    "rating",
+    "attended"
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {},
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}

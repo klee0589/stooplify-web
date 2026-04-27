@@ -24,6 +24,8 @@ import GarageSalesBrooklyn from './pages/garage-sales-brooklyn';
 import GarageSalesManhattan from './pages/garage-sales-manhattan';
 import GarageSalesQueens from './pages/garage-sales-queens';
 import GarageSalesBronx from './pages/garage-sales-bronx';
+import About from './pages/About';
+import Contact from './pages/Contact';
 import { Navigate } from 'react-router-dom';
 
 const { Pages, Layout, mainPage } = pagesConfig;
@@ -96,6 +98,8 @@ const AuthenticatedApp = () => {
       <Route path="/garage-sales-manhattan" element={<LayoutWrapper currentPageName="garage-sales-manhattan"><GarageSalesManhattan /></LayoutWrapper>} />
       <Route path="/garage-sales-queens" element={<LayoutWrapper currentPageName="garage-sales-queens"><GarageSalesQueens /></LayoutWrapper>} />
       <Route path="/garage-sales-bronx" element={<LayoutWrapper currentPageName="garage-sales-bronx"><GarageSalesBronx /></LayoutWrapper>} />
+      <Route path="/about" element={<LayoutWrapper currentPageName="about"><About /></LayoutWrapper>} />
+      <Route path="/contact" element={<LayoutWrapper currentPageName="contact"><Contact /></LayoutWrapper>} />
 
       {/* 301 redirects: old PascalCase guide URLs → SEO-friendly slugs */}
       <Route path="/GuidesFindSales" element={<Navigate to="/guides-find-yard-sales" replace />} />

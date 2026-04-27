@@ -1,0 +1,81 @@
+{
+  "name": "VerifiedScan",
+  "type": "object",
+  "properties": {
+    "yard_sale_id": {
+      "type": "string",
+      "description": "ID of the yard sale that was scanned"
+    },
+    "scanner_user_email": {
+      "type": "string",
+      "description": "Email of the buyer who scanned the QR code"
+    },
+    "seller_user_email": {
+      "type": "string",
+      "description": "Email of the seller who hosted the yard sale"
+    },
+    "scan_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp when the scan occurred"
+    },
+    "latitude": {
+      "type": "number",
+      "description": "Latitude of the buyer at time of scan (geo-validation)"
+    },
+    "longitude": {
+      "type": "number",
+      "description": "Longitude of the buyer at time of scan (geo-validation)"
+    },
+    "is_geo_valid": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the scan was geo-validated (buyer was near the sale)"
+    },
+    "credits_awarded": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of credits awarded to the buyer for this scan"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional note about this scan event",
+      "maxLength": 1000
+    }
+  },
+  "required": [
+    "yard_sale_id",
+    "scanner_user_email",
+    "seller_user_email"
+  ],
+  "rls": {
+    "create": {
+      "data.scanner_user_email": "{{user.email}}"
+    },
+    "read": {
+      "$or": [
+        {
+          "data.scanner_user_email": "{{user.email}}"
+        },
+        {
+          "data.seller_user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

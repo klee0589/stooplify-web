@@ -1,0 +1,37 @@
+{
+  "name": "Favorite",
+  "type": "object",
+  "properties": {
+    "yard_sale_id": {
+      "type": "string",
+      "description": "ID of the favorited yard sale"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user who favorited"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional note about why this sale was favorited",
+      "maxLength": 1000
+    }
+  },
+  "required": [
+    "yard_sale_id",
+    "user_email"
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}"
+    },
+    "read": {
+      "created_by": "{{user.email}}"
+    },
+    "update": {
+      "created_by": "{{user.email}}"
+    },
+    "delete": {
+      "created_by": "{{user.email}}"
+    }
+  }
+}

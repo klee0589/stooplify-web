@@ -1,0 +1,51 @@
+{
+  "name": "ShopReview",
+  "type": "object",
+  "properties": {
+    "shop_id": {
+      "type": "string",
+      "description": "ID of the shop being reviewed"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the reviewer"
+    },
+    "rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Rating from 1-5 stars"
+    },
+    "comment": {
+      "type": "string",
+      "description": "Review comment"
+    },
+    "helpful_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of users who found this review helpful"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional extended description of the shop review experience",
+      "maxLength": 1000
+    }
+  },
+  "required": [
+    "shop_id",
+    "user_email",
+    "rating"
+  ],
+  "rls": {
+    "create": {
+      "data.user_email": "{{user.email}}"
+    },
+    "read": {},
+    "update": {
+      "data.user_email": "{{user.email}}"
+    },
+    "delete": {
+      "data.user_email": "{{user.email}}"
+    }
+  }
+}

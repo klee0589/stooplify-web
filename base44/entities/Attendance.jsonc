@@ -1,0 +1,50 @@
+{
+  "name": "Attendance",
+  "type": "object",
+  "properties": {
+    "yard_sale_id": {
+      "type": "string",
+      "description": "ID of the yard sale"
+    },
+    "user_email": {
+      "type": "string",
+      "description": "Email of the attending user"
+    },
+    "notify_reminder": {
+      "type": "boolean",
+      "default": true,
+      "description": "Send reminder notification before sale"
+    },
+    "attended": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the user actually attended the sale"
+    },
+    "description": {
+      "type": "string",
+      "description": "Optional note about attendance plans or experience",
+      "maxLength": 1000
+    }
+  },
+  "required": [
+    "yard_sale_id",
+    "user_email"
+  ],
+  "rls": {
+    "create": {
+      "created_by": "{{user.email}}",
+      "data.user_email": "{{user.email}}"
+    },
+    "read": {
+      "data.user_email": "{{user.email}}"
+    },
+    "update": {
+      "created_by": "{{user.email}}",
+      "data.user_email": "{{user.email}}"
+    },
+    "delete": {
+      "created_by": "{{user.email}}",
+      "data.user_email": "{{user.email}}"
+    }
+  }
+}
