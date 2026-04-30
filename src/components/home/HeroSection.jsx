@@ -32,6 +32,8 @@ export default function HeroSection() {
   
   const t = useTranslation(language);
 
+  const [photoIndex, setPhotoIndex] = useState(0);
+
   // Fetch real data - defer until visible
   const { data: statsData, isLoading: statsLoading } = useQuery({
     queryKey: ['heroStats'],
@@ -39,16 +41,43 @@ export default function HeroSection() {
       const sales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 500);
       const now = new Date();
       const liveSales = sales.filter(sale => {
-        // Parse as local time by appending T23:59:59 (avoids UTC-midnight off-by-one)
         const saleDate = new Date(`${sale.date}T23:59:59`);
         return saleDate >= now;
       });
-      return {
-        activeSales: liveSales.length
-      };
+      return { activeSales: liveSales.length };
     },
     staleTime: 120000,
   });
+
+  // Fetch real photos from past/recent approved sales
+  const { data: heroPhotos = [] } = useQuery({
+    queryKey: ['heroPhotos'],
+    queryFn: async () => {
+      const sales = await base44.entities.YardSale.filter({ status: 'approved' }, '-created_date', 50);
+      const photos = sales
+        .flatMap(s => s.photos || [])
+        .filter(Boolean);
+      // Shuffle
+      for (let i = photos.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [photos[i], photos[j]] = [photos[j], photos[i]];
+      }
+      return photos.slice(0, 10);
+    },
+    staleTime: 300000,
+  });
+
+  const FALLBACK = 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=600&q=70&fit=crop';
+  const photos = heroPhotos.length > 0 ? heroPhotos : [FALLBACK];
+
+  // Auto-rotate every 4 seconds when there are real photos
+  useEffect(() => {
+    if (photos.length <= 1) return;
+    const interval = setInterval(() => {
+      setPhotoIndex(i => (i + 1) % photos.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [photos.length]);
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
@@ -196,17 +225,33 @@ export default function HeroSection() {
           >
            <div className="relative w-full aspect-square max-w-lg mx-auto">
              <div className="absolute inset-0">
-               <div className="w-full h-full bg-gradient-to-br from-green-100/50 to-orange-100/50 rounded-[3rem] overflow-hidden shadow-2xl">
-                  <img
-                    src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=600&q=70&fit=crop"
-                    alt="Spring outdoor stoop sale with colorful items"
-                    className="w-full h-full object-cover"
-                    width={500}
-                    height={500}
-                    loading="eager"
-                    fetchpriority="high"
-                    decoding="sync"
-                  />
+               <div className="w-full h-full bg-gradient-to-br from-green-100/50 to-orange-100/50 rounded-[3rem] overflow-hidden shadow-2xl relative">
+                 {photos.map((src, i) => (
+                   <motion.img
+                     key={src + i}
+                     src={src}
+                     alt="Stoop sale photo"
+                     className="absolute inset-0 w-full h-full object-cover"
+                     initial={{ opacity: 0 }}
+                     animate={{ opacity: i === photoIndex ? 1 : 0 }}
+                     transition={{ duration: 0.8 }}
+                     width={500}
+                     height={500}
+                     loading={i === 0 ? 'eager' : 'lazy'}
+                   />
+                 ))}
+                 {/* Dot indicators */}
+                 {photos.length > 1 && (
+                   <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                     {photos.map((_, i) => (
+                       <button
+                         key={i}
+                         onClick={() => setPhotoIndex(i)}
+                         className={`w-1.5 h-1.5 rounded-full transition-all ${i === photoIndex ? 'bg-white w-4' : 'bg-white/50'}`}
+                       />
+                     ))}
+                   </div>
+                 )}
                </div>
              </div>
 
