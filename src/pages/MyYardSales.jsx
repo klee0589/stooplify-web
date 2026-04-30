@@ -195,11 +195,10 @@ export default function MyYardSales() {
             </p>
           </div>
           <div className="flex items-center gap-4">
-            <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 cursor-pointer">
-              <Switch
-                checked={showFinishedSales}
-                onCheckedChange={setShowFinishedSales}
-              />
+            <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 cursor-pointer" onClick={() => setShowFinishedSales(v => !v)}>
+              <div className={`relative w-10 h-6 rounded-full transition-colors duration-200 ${showFinishedSales ? 'bg-[#FF6F61]' : 'bg-gray-300 dark:bg-gray-600'}`}>
+                <div className={`absolute top-1 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 ${showFinishedSales ? 'translate-x-5' : 'translate-x-1'}`} />
+              </div>
               <span>Show finished</span>
             </label>
             <Link to={createPageUrl('AddYardSale')}>
