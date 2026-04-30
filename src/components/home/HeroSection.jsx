@@ -209,10 +209,10 @@ export default function HeroSection() {
                 <span className="text-xl">🎁</span>
                 <span>Free items available</span>
               </div>
-              <div className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-xl px-4 py-2 shadow-sm border border-gray-100 dark:border-gray-700 hidden">
-                <span className="text-xl">✅</span>
-                <span>Always free to browse</span>
-              </div>
+              
+
+
+              
             </motion.div>
           </motion.div>
 
