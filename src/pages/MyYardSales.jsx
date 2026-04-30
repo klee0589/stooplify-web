@@ -323,18 +323,20 @@ function SaleCard({ sale, onDelete, canDelete, status, t }) {
       className="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow"
     >
       {/* Image */}
-      <div className="aspect-[16/9] bg-gradient-to-br from-[#FF6F61]/10 to-[#F5A623]/10 relative">
-        {sale.photos?.[0] ? (
-          <img src={sale.photos[0]} alt={sale.title} className="w-full h-full object-cover" />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center">
-            <MapPin className="w-12 h-12 text-[#FF6F61]/30" />
-          </div>
-        )}
-        <span className={`absolute top-3 right-3 px-3 py-1 ${statusColors[status]} text-white text-xs font-semibold rounded-full`}>
-          {statusLabels[status]}
-        </span>
-      </div>
+      <Link to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}>
+        <div className="aspect-[16/9] bg-gradient-to-br from-[#FF6F61]/10 to-[#F5A623]/10 relative">
+          {sale.photos?.[0] ? (
+            <img src={sale.photos[0]} alt={sale.title} className="w-full h-full object-cover" />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <MapPin className="w-12 h-12 text-[#FF6F61]/30" />
+            </div>
+          )}
+          <span className={`absolute top-3 right-3 px-3 py-1 ${statusColors[status]} text-white text-xs font-semibold rounded-full`}>
+            {statusLabels[status]}
+          </span>
+        </div>
+      </Link>
 
       {/* Content */}
       <div className="p-5">
