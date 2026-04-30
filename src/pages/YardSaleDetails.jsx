@@ -192,6 +192,16 @@ export default function YardSaleDetails() {
     enabled: !!seller?.email,
   });
 
+  const { data: attendanceCount = 0 } = useQuery({
+    queryKey: ['attendanceCount', saleId],
+    queryFn: async () => {
+      if (!saleId || !user || sale?.created_by !== user?.email) return 0;
+      const all = await base44.entities.Attendance.filter({ yard_sale_id: saleId });
+      return all.length;
+    },
+    enabled: !!saleId && !!user && !!sale && sale?.created_by === user?.email,
+  });
+
   const { data: sellerSalesCount = 0 } = useQuery({
     queryKey: ['sellerSalesCount', seller?.email],
     queryFn: async () => {
@@ -880,6 +890,15 @@ export default function YardSaleDetails() {
 
             {/* Seller Actions (Edit/Delete) */}
             {user && sale.created_by === user.email && (
+              <div className="space-y-3">
+              {attendanceCount > 0 && (
+                <div className="flex items-center gap-2 px-4 py-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-xl">
+                  <Users className="w-5 h-5 text-green-600" />
+                  <span className="font-semibold text-green-700 dark:text-green-400">
+                    {attendanceCount} {attendanceCount === 1 ? 'person is' : 'people are'} attending your sale!
+                  </span>
+                </div>
+              )}
               <div className="flex gap-3">
                 <Link to={createPageUrl('AddYardSale') + `?edit=${saleId}`} className="flex-1">
                   <motion.button
@@ -902,6 +921,7 @@ export default function YardSaleDetails() {
                   <Trash2 className="w-4 h-4" />
                   {t('deleteSale')}
                 </motion.button>
+              </div>
               </div>
             )}
 
