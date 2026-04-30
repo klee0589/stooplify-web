@@ -554,7 +554,7 @@ export default function YardSaleDetails() {
   };
 
   return (
-    <div className="min-h-screen bg-[#F9F9F9]">
+    <div className="min-h-screen bg-[#F9F9F9] overflow-x-hidden">
       <SEO 
         title={`${sale.title} - Yard Sale | Stooplify`}
         description={sale.description || `${sale.title} happening on ${format(new Date(sale.date), 'MMMM d, yyyy')} in ${sale.city}, ${sale.state}. Find details and get directions.`}
@@ -577,12 +577,13 @@ export default function YardSaleDetails() {
         </Link>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
-        <div className="grid lg:grid-cols-2 gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 w-full">
+        <div className="grid lg:grid-cols-2 gap-8 w-full min-w-0">
           {/* Image Gallery */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
+            className="min-w-0 w-full"
           >
             <div className="relative rounded-3xl overflow-hidden bg-white shadow-lg">
               {photos.length > 0 ? (
@@ -665,7 +666,7 @@ export default function YardSaleDetails() {
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            className="space-y-6"
+            className="space-y-6 min-w-0 w-full"
           >
             {/* Trust Badges & Categories */}
             <div className="space-y-3">
