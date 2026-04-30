@@ -267,19 +267,28 @@ export default function YardSaleDetails() {
     mutationFn: async () => {
       if (!user) {
         base44.auth.redirectToLogin();
+        throw new Error('not_authenticated');
+      }
+
+      // If removing attendance, skip geo check
+      if (isAttending) {
+        const existing = attendances[0];
+        if (existing) {
+          await base44.entities.Attendance.delete(existing.id);
+        }
+        base44.analytics.track({ eventName: 'attendance_removed', properties: { sale_id: saleId } });
         return;
       }
 
-      // If marking as attending (not removing), verify user is within 1 mile of the event
-      if (!isAttending) {
-        const saleLat = sale?.exact_latitude || sale?.latitude;
-        const saleLon = sale?.exact_longitude || sale?.longitude;
+      // Marking as attending — try geo check but don't block if geo unavailable
+      const saleLat = sale?.exact_latitude || sale?.latitude;
+      const saleLon = sale?.exact_longitude || sale?.longitude;
 
-        if (saleLat && saleLon) {
+      if (saleLat && saleLon) {
+        try {
           const position = await new Promise((resolve, reject) =>
             navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 8000 })
           );
-
           const userLat = position.coords.latitude;
           const userLon = position.coords.longitude;
           const R = 3958.8;
@@ -290,38 +299,34 @@ export default function YardSaleDetails() {
           const distance = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 
           if (distance > 1) {
-            toast.error(`You must be within 1 mile of the event to mark attending. You are ${distance.toFixed(1)} miles away.`);
-            return;
+            throw new Error(`too_far:${distance.toFixed(1)}`);
           }
+        } catch (geoErr) {
+          // Re-throw distance errors; silently allow if geo is simply unavailable
+          if (geoErr.message?.startsWith('too_far:')) throw geoErr;
+          console.log('Geolocation unavailable, skipping distance check');
         }
       }
 
-      base44.analytics.track({
-        eventName: isAttending ? 'attendance_removed' : 'attendance_marked',
-        properties: { sale_id: saleId }
+      await base44.entities.Attendance.create({ 
+        yard_sale_id: saleId, 
+        user_email: user.email,
+        notify_reminder: true
       });
-      
-      if (isAttending) {
-        const existing = attendances[0];
-        if (existing) {
-          await base44.entities.Attendance.delete(existing.id);
-        }
-      } else {
-        await base44.entities.Attendance.create({ 
-          yard_sale_id: saleId, 
-          user_email: user.email,
-          notify_reminder: true
-        });
-      }
+      base44.analytics.track({ eventName: 'attendance_marked', properties: { sale_id: saleId } });
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['attendance'] });
       toast.success(isAttending ? 'No longer attending' : '🎉 Attending! Exact address unlocked.');
     },
     onError: (error) => {
-      if (error?.code === 1) {
-        toast.error('Please enable location access to mark attendance.');
+      if (error?.message === 'not_authenticated') return;
+      if (error?.message?.startsWith('too_far:')) {
+        const dist = error.message.split(':')[1];
+        toast.error(`You must be within 1 mile of the event to mark attending. You are ${dist} miles away.`);
+        return;
       }
+      toast.error('Something went wrong. Please try again.');
     },
   });
 
