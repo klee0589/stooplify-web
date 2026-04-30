@@ -19,6 +19,7 @@ import { useTranslation } from '../components/translations';
 import SEO from '../components/SEO';
 import { DrawerSelect } from '@/components/ui/drawer-select';
 import UpgradePrompt from '../components/sales/UpgradePrompt';
+import WeatherForecast from '../components/sales/WeatherForecast';
 
 export default function AddYardSale() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -671,6 +672,7 @@ export default function AddYardSale() {
                   className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]" />
 
                   <p className="text-xs text-gray-500 mt-1">Or pick a custom date above</p>
+                  <WeatherForecast selectedDate={formData.date} city={formData.city || 'New York City'} />
                 </div>
                 
                 <div className="grid grid-cols-2 gap-4">
