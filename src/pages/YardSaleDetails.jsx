@@ -280,34 +280,6 @@ export default function YardSaleDetails() {
         return;
       }
 
-      // Marking as attending — try geo check but don't block if geo unavailable
-      const saleLat = sale?.exact_latitude || sale?.latitude;
-      const saleLon = sale?.exact_longitude || sale?.longitude;
-
-      if (saleLat && saleLon) {
-        try {
-          const position = await new Promise((resolve, reject) =>
-            navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 8000 })
-          );
-          const userLat = position.coords.latitude;
-          const userLon = position.coords.longitude;
-          const R = 3958.8;
-          const dLat = (saleLat - userLat) * Math.PI / 180;
-          const dLon = (saleLon - userLon) * Math.PI / 180;
-          const a = Math.sin(dLat/2) ** 2 +
-            Math.cos(userLat * Math.PI / 180) * Math.cos(saleLat * Math.PI / 180) * Math.sin(dLon/2) ** 2;
-          const distance = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-          if (distance > 1) {
-            throw new Error(`too_far:${distance.toFixed(1)}`);
-          }
-        } catch (geoErr) {
-          // Re-throw distance errors; silently allow if geo is simply unavailable
-          if (geoErr.message?.startsWith('too_far:')) throw geoErr;
-          console.log('Geolocation unavailable, skipping distance check');
-        }
-      }
-
       await base44.entities.Attendance.create({ 
         yard_sale_id: saleId, 
         user_email: user.email,
@@ -321,11 +293,6 @@ export default function YardSaleDetails() {
     },
     onError: (error) => {
       if (error?.message === 'not_authenticated') return;
-      if (error?.message?.startsWith('too_far:')) {
-        const dist = error.message.split(':')[1];
-        toast.error(`You must be within 1 mile of the event to mark attending. You are ${dist} miles away.`);
-        return;
-      }
       toast.error('Something went wrong. Please try again.');
     },
   });
@@ -358,35 +325,6 @@ export default function YardSaleDetails() {
       const saleDateTime = new Date(`${sale.date}T${sale.start_time || '08:00'}`);
       const saleEndTime = new Date(`${sale.date}T${sale.end_time || '14:00'}`);
       const now = new Date();
-      
-      // If sale is currently happening, verify location
-      if (now >= saleDateTime && now <= saleEndTime) {
-        try {
-          const position = await new Promise((resolve, reject) => {
-            navigator.geolocation.getCurrentPosition(resolve, reject);
-          });
-          
-          const userLat = position.coords.latitude;
-          const userLon = position.coords.longitude;
-          const saleLat = sale.exact_latitude || sale.latitude;
-          const saleLon = sale.exact_longitude || sale.longitude;
-          
-          // Calculate distance (rough approximation in miles)
-          const distance = Math.sqrt(
-            Math.pow((userLat - saleLat) * 69, 2) + 
-            Math.pow((userLon - saleLon) * 69, 2)
-          );
-          
-          // Must be within 1 mile
-          if (distance > 1) {
-            toast.error('You must be at the sale location to leave a review');
-            return;
-          }
-        } catch (error) {
-          toast.error('Please enable location access to verify attendance');
-          return;
-        }
-      }
       
       await base44.entities.YardSaleReview.create({
         yard_sale_id: saleId,
