@@ -14,7 +14,7 @@ export default function HeroSection() {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [language, setLanguage] = useState('en');
-  
+
   useEffect(() => {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
     setLanguage(savedLang);
@@ -29,7 +29,7 @@ export default function HeroSection() {
       window.removeEventListener('languageChange', handleLanguageChange);
     };
   }, []);
-  
+
   const t = useTranslation(language);
 
   const [photoIndex, setPhotoIndex] = useState(0);
@@ -40,13 +40,13 @@ export default function HeroSection() {
     queryFn: async () => {
       const sales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 500);
       const now = new Date();
-      const liveSales = sales.filter(sale => {
+      const liveSales = sales.filter((sale) => {
         const saleDate = new Date(`${sale.date}T23:59:59`);
         return saleDate >= now;
       });
       return { activeSales: liveSales.length };
     },
-    staleTime: 120000,
+    staleTime: 120000
   });
 
   // Fetch real photos from past/recent approved sales
@@ -54,9 +54,9 @@ export default function HeroSection() {
     queryKey: ['heroPhotos'],
     queryFn: async () => {
       const sales = await base44.entities.YardSale.filter({ status: 'approved' }, '-created_date', 50);
-      const photos = sales
-        .flatMap(s => s.photos || [])
-        .filter(Boolean);
+      const photos = sales.
+      flatMap((s) => s.photos || []).
+      filter(Boolean);
       // Shuffle
       for (let i = photos.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -64,7 +64,7 @@ export default function HeroSection() {
       }
       return photos.slice(0, 10);
     },
-    staleTime: 300000,
+    staleTime: 300000
   });
 
   const FALLBACK = 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=600&q=70&fit=crop';
@@ -74,7 +74,7 @@ export default function HeroSection() {
   useEffect(() => {
     if (photos.length <= 1) return;
     const interval = setInterval(() => {
-      setPhotoIndex(i => (i + 1) % photos.length);
+      setPhotoIndex((i) => (i + 1) % photos.length);
     }, 4000);
     return () => clearInterval(interval);
   }, [photos.length]);
@@ -82,11 +82,11 @@ export default function HeroSection() {
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
     if (!email) return;
-    
+
     base44.analytics.track({
       eventName: 'email_subscription_started'
     });
-    
+
     setIsSubmitting(true);
     try {
       await base44.entities.EmailSubscriber.create({ email, notify_new_sales: true });
@@ -122,15 +122,15 @@ export default function HeroSection() {
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.7 }}
-            className="text-center lg:text-left"
-          >
+            className="text-center lg:text-left">
+            
             {/* Spring Badge */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 px-4 py-2 rounded-full shadow-sm mb-6"
-            >
+              className="inline-flex items-center gap-2 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 px-4 py-2 rounded-full shadow-sm mb-6">
+              
               <span className="text-lg">🌸</span>
               <span className="text-xs sm:text-sm font-semibold text-green-700 dark:text-green-300">
                 Spring sales season is here
@@ -142,8 +142,8 @@ export default function HeroSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#2E3A59] dark:text-white leading-tight mb-4"
-              style={{ fontFamily: 'Poppins, sans-serif' }}
-            >
+              style={{ fontFamily: 'Poppins, sans-serif' }}>
+              
               Find Stoop Sales <span className="text-[#14B8FF]">In Your Neighborhood</span>
             </motion.h1>
 
@@ -151,8 +151,8 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-base sm:text-lg text-gray-600 dark:text-gray-300 mb-6 max-w-lg mx-auto lg:mx-0"
-            >
+              className="text-base sm:text-lg text-gray-600 dark:text-gray-300 mb-6 max-w-lg mx-auto lg:mx-0">
+              
               Spring cleaning is happening right now. Browse live stoop sales, yard sales, and free giveaways near you — updated every day.
             </motion.p>
 
@@ -161,15 +161,15 @@ export default function HeroSection() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="flex flex-col sm:flex-row gap-3 mb-8 justify-center lg:justify-start"
-            >
+              className="flex flex-col sm:flex-row gap-3 mb-8 justify-center lg:justify-start">
+              
               <Link to={createPageUrl('yard-sales')} className="w-full sm:w-auto">
                 <motion.button
                   whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(20, 184, 255, 0.35)' }}
                   whileTap={{ scale: 0.95 }}
                   className="w-full sm:w-auto px-8 py-4 bg-[#14B8FF] text-white rounded-2xl font-semibold flex items-center justify-center gap-2 shadow-lg shadow-[#14B8FF]/25 text-lg"
-                  style={{ fontFamily: 'Poppins, sans-serif' }}
-                >
+                  style={{ fontFamily: 'Poppins, sans-serif' }}>
+                  
                   <MapPin className="w-5 h-5" />
                   Find Sales Near Me
                 </motion.button>
@@ -179,8 +179,8 @@ export default function HeroSection() {
                   whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(255, 111, 97, 0.3)' }}
                   whileTap={{ scale: 0.95 }}
                   className="w-full sm:w-auto px-8 py-4 border-2 border-[#FF6F61] text-[#FF6F61] bg-white dark:bg-transparent dark:text-[#FF6F61] rounded-2xl font-semibold flex items-center justify-center gap-2"
-                  style={{ fontFamily: 'Poppins, sans-serif' }}
-                >
+                  style={{ fontFamily: 'Poppins, sans-serif' }}>
+                  
                   <Plus className="w-5 h-5" />
                   Post Your Sale Free
                 </motion.button>
@@ -192,16 +192,16 @@ export default function HeroSection() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.6 }}
-              className="flex flex-wrap items-center justify-center lg:justify-start gap-6 text-sm text-gray-600 dark:text-gray-400"
-            >
+              className="flex flex-wrap items-center justify-center lg:justify-start gap-6 text-sm text-gray-600 dark:text-gray-400">
+              
               <div className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-xl px-4 py-2 shadow-sm border border-gray-100 dark:border-gray-700">
                 <span className="text-xl">📍</span>
                 <span>
-                  {statsLoading ? (
-                    <span className="inline-block w-6 h-4 bg-gray-200 dark:bg-gray-600 rounded animate-pulse align-middle" />
-                  ) : (
-                    <strong className="text-[#14B8FF]">{statsData?.activeSales ?? 0}</strong>
-                  )}
+                  {statsLoading ?
+                  <span className="inline-block w-6 h-4 bg-gray-200 dark:bg-gray-600 rounded animate-pulse align-middle" /> :
+
+                  <strong className="text-[#14B8FF]">{statsData?.activeSales ?? 0}</strong>
+                  }
                   {' '}active sales
                 </span>
               </div>
@@ -209,7 +209,7 @@ export default function HeroSection() {
                 <span className="text-xl">🎁</span>
                 <span>Free items available</span>
               </div>
-              <div className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-xl px-4 py-2 shadow-sm border border-gray-100 dark:border-gray-700">
+              <div className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-xl px-4 py-2 shadow-sm border border-gray-100 dark:border-gray-700 hidden">
                 <span className="text-xl">✅</span>
                 <span>Always free to browse</span>
               </div>
@@ -218,40 +218,40 @@ export default function HeroSection() {
 
           {/* Right Content - Spring image */}
           <motion.div
-           initial={{ opacity: 0, x: 50 }}
-           animate={{ opacity: 1, x: 0 }}
-           transition={{ duration: 0.7, delay: 0.3 }}
-           className="relative hidden lg:block"
-          >
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="relative hidden lg:block">
+            
            <div className="relative w-full aspect-square max-w-lg mx-auto">
              <div className="absolute inset-0">
                <div className="w-full h-full bg-gradient-to-br from-green-100/50 to-orange-100/50 rounded-[3rem] overflow-hidden shadow-2xl relative">
-                 {photos.map((src, i) => (
-                   <motion.img
-                     key={src + i}
-                     src={src}
-                     alt="Stoop sale photo"
-                     className="absolute inset-0 w-full h-full object-cover"
-                     initial={{ opacity: 0 }}
-                     animate={{ opacity: i === photoIndex ? 1 : 0 }}
-                     transition={{ duration: 0.8 }}
-                     width={500}
-                     height={500}
-                     loading={i === 0 ? 'eager' : 'lazy'}
-                   />
-                 ))}
+                 {photos.map((src, i) =>
+                  <motion.img
+                    key={src + i}
+                    src={src}
+                    alt="Stoop sale photo"
+                    className="absolute inset-0 w-full h-full object-cover"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: i === photoIndex ? 1 : 0 }}
+                    transition={{ duration: 0.8 }}
+                    width={500}
+                    height={500}
+                    loading={i === 0 ? 'eager' : 'lazy'} />
+
+                  )}
                  {/* Dot indicators */}
-                 {photos.length > 1 && (
-                   <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-                     {photos.map((_, i) => (
-                       <button
-                         key={i}
-                         onClick={() => setPhotoIndex(i)}
-                         className={`w-1.5 h-1.5 rounded-full transition-all ${i === photoIndex ? 'bg-white w-4' : 'bg-white/50'}`}
-                       />
-                     ))}
+                 {photos.length > 1 &&
+                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+                     {photos.map((_, i) =>
+                    <button
+                      key={i}
+                      onClick={() => setPhotoIndex(i)}
+                      className={`w-1.5 h-1.5 rounded-full transition-all ${i === photoIndex ? 'bg-white w-4' : 'bg-white/50'}`} />
+
+                    )}
                    </div>
-                 )}
+                  }
                </div>
              </div>
 
@@ -260,8 +260,8 @@ export default function HeroSection() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.9 }}
-                className="absolute -top-4 -right-4 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-xl border border-green-100"
-              >
+                className="absolute -top-4 -right-4 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-xl border border-green-100">
+                
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center">
                     <span className="text-2xl">🌸</span>
@@ -277,8 +277,8 @@ export default function HeroSection() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 1.1 }}
-                className="absolute -bottom-4 -left-4 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-xl border border-orange-100"
-              >
+                className="absolute -bottom-4 -left-4 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-xl border border-orange-100">
+                
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-[#FF6F61]/10 rounded-xl flex items-center justify-center">
                     <Sparkles className="w-6 h-6 text-[#FF6F61]" />
@@ -293,6 +293,6 @@ export default function HeroSection() {
           </motion.div>
         </div>
       </div>
-    </section>
-  );
+    </section>);
+
 }
