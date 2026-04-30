@@ -49,20 +49,51 @@ export default function Home() {
     }
   }, []);
   
-  // Featured sales - defer with suspense boundary
+  // Featured sales — scored by quality signals: photos, views, seller history
   const { data: sales = [] } = useQuery({
     queryKey: ['featuredSales'],
     queryFn: async () => {
-      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 50);
+      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
       const now = new Date();
-      return allSales.filter(sale => {
+
+      const upcomingSales = allSales.filter(sale => {
         if (!sale.date) return false;
         const [y, m, d] = sale.date.split('-').map(Number);
-        const saleDate = new Date(y, m - 1, d);
-        return saleDate >= now;
-      }).slice(0, 6);
+        return new Date(y, m - 1, d) >= now;
+      });
+
+      // Count posts per seller for history signal
+      const sellerPostCount = {};
+      allSales.forEach(s => {
+        if (s.created_by) sellerPostCount[s.created_by] = (sellerPostCount[s.created_by] || 0) + 1;
+      });
+
+      // Score each sale
+      const scored = upcomingSales.map(sale => {
+        const photoCount = (sale.photos || []).length;
+        const views = sale.views || 0;
+        const postHistory = sellerPostCount[sale.created_by] || 1;
+
+        // Points:
+        // Photos: 0=0, 1=5, 2=12, 3+=20
+        const photoScore = photoCount === 0 ? 0 : photoCount === 1 ? 5 : photoCount === 2 ? 12 : 20;
+        // Views: up to 30pts (1pt per 2 views, capped)
+        const viewScore = Math.min(views / 2, 30);
+        // Seller history: repeat seller bonus (up to 15pts)
+        const historyScore = Math.min((postHistory - 1) * 5, 15);
+
+        const total = photoScore + viewScore + historyScore;
+        return { ...sale, _score: total };
+      });
+
+      // Only show sales that meet a minimum quality bar (at least 1 photo + some engagement)
+      const qualified = scored.filter(s => (s.photos || []).length >= 1 && s._score >= 5);
+
+      // Sort by score desc, take top 6
+      qualified.sort((a, b) => b._score - a._score);
+      return qualified.slice(0, 6);
     },
-    staleTime: 180000 // Cache for 3 minutes
+    staleTime: 180000
   });
 
   const userCount = 500; // Approximate community size
