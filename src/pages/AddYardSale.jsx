@@ -635,7 +635,7 @@ export default function AddYardSale() {
                   placeholder={t('titlePlaceholder')}
                   value={formData.title}
                   onChange={(e) => updateField('title', e.target.value)}
-                  className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+                  className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
 
                 </div>
 
@@ -669,7 +669,7 @@ export default function AddYardSale() {
                   type="date"
                   value={formData.date}
                   onChange={(e) => updateField('date', e.target.value)}
-                  className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]" />
+                  className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]" />
 
                   <p className="text-xs text-gray-500 mt-1">Or pick a custom date above</p>
                   <WeatherForecast selectedDate={formData.date} city={formData.city || 'New York City'} />
@@ -716,7 +716,7 @@ export default function AddYardSale() {
                     type="time"
                     value={formData.start_time}
                     onChange={(e) => updateField('start_time', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]" />
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]" />
 
                   </div>
                   <div>
@@ -725,7 +725,7 @@ export default function AddYardSale() {
                     type="time"
                     value={formData.end_time}
                     onChange={(e) => updateField('end_time', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]" />
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]" />
 
                   </div>
                 </div>
@@ -854,11 +854,11 @@ export default function AddYardSale() {
                   whileTap={{ scale: 0.98 }}
                   disabled={!isStep1Valid}
               onClick={() => {
-                 base44.analytics.track({ eventName: 'listing_started', properties: { listing_type: listingMode } });
-                 setStep(2);
-                 window.scrollTo({ top: 0, behavior: 'smooth' });
-               }}
-               className="w-full mt-6 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+              base44.analytics.track({ eventName: 'listing_started', properties: { listing_type: listingMode } });
+              setStep(2);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              className="w-full mt-6 py-3 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
               style={{ fontFamily: 'Poppins, sans-serif' }}>
 
                 {t('continue')}
@@ -892,7 +892,7 @@ export default function AddYardSale() {
                   placeholder={t('generalLocationPlaceholder')}
                   value={formData.general_location}
                   onChange={(e) => updateField('general_location', e.target.value)}
-                  className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+                  className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
 
                   <p className="text-xs text-gray-500 mt-1">
                     {t('approximateLocationPrivacy')}
@@ -944,7 +944,7 @@ export default function AddYardSale() {
                     placeholder={t('cityPlaceholder')}
                     value={formData.city}
                     onChange={(e) => updateField('city', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
 
                   </div>
                   <div>
@@ -1024,7 +1024,7 @@ export default function AddYardSale() {
                 <Button
                 variant="outline"
                 onClick={() => setStep(1)}
-                className="flex-1 py-6 rounded-xl">
+                className="flex-1 py-3 rounded-xl">
 
                   {t('back')}
                 </Button>
@@ -1039,7 +1039,7 @@ export default function AddYardSale() {
                   setStep(3);
                   window.scrollTo({ top: 0, behavior: 'smooth' });
                 }}
-                className="flex-1 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="flex-1 py-3 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 style={{ fontFamily: 'Poppins, sans-serif' }}>
                   {isValidatingAddress ? <><Loader2 className="w-4 h-4 animate-spin" /> Checking...</> : t('continue')}
                 </motion.button>
@@ -1121,7 +1121,7 @@ export default function AddYardSale() {
                 <Button
                 variant="outline"
                 onClick={() => setStep(2)}
-                className="flex-1 py-6 rounded-xl"
+                className="flex-1 py-3 rounded-xl"
                 disabled={isCheckingPayment}>
 
                   {t('back')}
@@ -1292,7 +1292,7 @@ export default function AddYardSale() {
                 <Button
                 variant="outline"
                 onClick={() => setStep(2)}
-                className="flex-1 py-6 rounded-xl">
+                className="flex-1 py-3 rounded-xl">
 
                   {t('back')}
                 </Button>
@@ -1301,7 +1301,7 @@ export default function AddYardSale() {
                 whileTap={{ scale: 0.98 }}
                 disabled={createMutation.isPending}
                 onClick={handleSubmit}
-                className="flex-1 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 flex items-center justify-center gap-2"
+                className="flex-1 py-3 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg disabled:opacity-50 flex items-center justify-center gap-2"
                 style={{ fontFamily: 'Poppins, sans-serif' }}>
 
                   {createMutation.isPending ?

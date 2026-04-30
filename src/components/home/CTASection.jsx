@@ -100,7 +100,7 @@ export default function CTASection() {
                 <motion.button
                   whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(20, 184, 255, 0.4)' }}
                   whileTap={{ scale: 0.95 }}
-                  className="w-full sm:w-auto px-8 py-4 bg-[#14B8FF] text-white rounded-2xl font-semibold flex items-center justify-center gap-2 shadow-lg"
+                  className="w-full sm:w-auto px-6 py-3 bg-[#14B8FF] text-white rounded-2xl font-semibold flex items-center justify-center gap-2 shadow-lg"
                   style={{ fontFamily: 'Poppins, sans-serif' }}
                 >
                   <Plus className="w-5 h-5" />
@@ -111,7 +111,7 @@ export default function CTASection() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="w-full sm:w-auto px-8 py-4 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-2xl font-semibold flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-6 py-3 bg-white/10 backdrop-blur-sm text-white border border-white/20 rounded-2xl font-semibold flex items-center justify-center gap-2"
                   style={{ fontFamily: 'Poppins, sans-serif' }}
                 >
                   {t('browseSalesBtn')}
@@ -135,7 +135,7 @@ export default function CTASection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center border border-white/10"
+                className="bg-white/10 backdrop-blur-sm rounded-2xl p-4 text-center border border-white/10"
               >
                 <div className="w-12 h-12 bg-[#14B8FF]/20 rounded-xl flex items-center justify-center mx-auto mb-4">
                   <stat.icon className="w-6 h-6 text-[#14B8FF]" />

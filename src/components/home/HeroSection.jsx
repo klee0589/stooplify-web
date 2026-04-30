@@ -167,7 +167,7 @@ export default function HeroSection() {
                 <motion.button
                   whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(20, 184, 255, 0.35)' }}
                   whileTap={{ scale: 0.95 }}
-                  className="w-full sm:w-auto px-8 py-4 bg-[#14B8FF] text-white rounded-2xl font-semibold flex items-center justify-center gap-2 shadow-lg shadow-[#14B8FF]/25 text-lg"
+                  className="w-full sm:w-auto px-6 py-3 bg-[#14B8FF] text-white rounded-2xl font-semibold flex items-center justify-center gap-2 shadow-lg shadow-[#14B8FF]/25 text-base"
                   style={{ fontFamily: 'Poppins, sans-serif' }}>
                   
                   <MapPin className="w-5 h-5" />
@@ -178,7 +178,7 @@ export default function HeroSection() {
                 <motion.button
                   whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(255, 111, 97, 0.3)' }}
                   whileTap={{ scale: 0.95 }}
-                  className="w-full sm:w-auto px-8 py-4 border-2 border-[#FF6F61] text-[#FF6F61] bg-white dark:bg-transparent dark:text-[#FF6F61] rounded-2xl font-semibold flex items-center justify-center gap-2"
+                  className="w-full sm:w-auto px-6 py-3 border-2 border-[#FF6F61] text-[#FF6F61] bg-white dark:bg-transparent dark:text-[#FF6F61] rounded-2xl font-semibold flex items-center justify-center gap-2"
                   style={{ fontFamily: 'Poppins, sans-serif' }}>
                   
                   <Plus className="w-5 h-5" />

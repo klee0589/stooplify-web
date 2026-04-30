@@ -877,7 +877,7 @@ export default function YardSaleDetails() {
                         msgSection.scrollIntoView({ behavior: 'smooth' });
                       }
                     }}
-                    className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#14B8FF] text-white rounded-xl font-semibold hover:bg-[#0da3e6] transition-colors shadow-md mt-4"
+                    className="w-full flex items-center justify-center gap-2 px-5 py-2.5 bg-[#14B8FF] text-white rounded-xl font-semibold hover:bg-[#0da3e6] transition-colors shadow-md mt-4"
                   >
                     <MessageCircle className="w-5 h-5" />
                     Message Host via Stooplify
@@ -932,7 +932,7 @@ export default function YardSaleDetails() {
                 whileHover={{ scale: 1.02, boxShadow: '0 10px 30px rgba(46, 58, 89, 0.3)' }}
                 whileTap={{ scale: 0.98 }}
                 onClick={() => attendanceMutation.mutate()}
-                className={`flex-1 min-w-[200px] flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-semibold shadow-lg transition-all ${
+                className={`flex-1 min-w-[200px] flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold shadow-lg transition-all ${
                   isAttending
                     ? 'bg-green-500 text-white hover:bg-green-600'
                     : 'bg-[#2E3A59] text-white hover:bg-[#1a2238]'
@@ -947,7 +947,7 @@ export default function YardSaleDetails() {
                 whileHover={{ scale: 1.02, boxShadow: '0 10px 30px rgba(255, 111, 97, 0.3)' }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleGetDirections}
-                className="flex-1 min-w-[200px] flex items-center justify-center gap-2 px-6 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg"
+                className="flex-1 min-w-[200px] flex items-center justify-center gap-2 px-5 py-3 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg"
                 style={{ fontFamily: 'Poppins, sans-serif' }}
               >
                 <Navigation className="w-5 h-5" />
@@ -968,7 +968,7 @@ export default function YardSaleDetails() {
                       msgSection.scrollIntoView({ behavior: 'smooth' });
                     }
                   }}
-                  className="flex-1 min-w-[200px] flex items-center justify-center gap-2 px-6 py-4 bg-[#14B8FF] text-white rounded-xl font-semibold shadow-lg"
+                  className="flex-1 min-w-[200px] flex items-center justify-center gap-2 px-5 py-3 bg-[#14B8FF] text-white rounded-xl font-semibold shadow-lg"
                   style={{ fontFamily: 'Poppins, sans-serif' }}
                 >
                   <MessageCircle className="w-5 h-5" />

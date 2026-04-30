@@ -685,7 +685,7 @@ function LayoutContent({ children, currentPageName }) {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => base44.auth.redirectToLogin()}
-                  className="px-4 py-2 text-[#2E3A59] dark:text-white font-medium hover:text-[#14B8FF] transition-colors">
+                  className="px-3 py-1.5 text-[#2E3A59] dark:text-white font-medium hover:text-[#14B8FF] transition-colors">
 
                     {t('signIn')}
                   </motion.button>
@@ -693,7 +693,7 @@ function LayoutContent({ children, currentPageName }) {
                   whileHover={{ scale: 1.05, boxShadow: '0 10px 30px rgba(20, 184, 255, 0.3)' }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => base44.auth.redirectToLogin()}
-                  className="px-6 py-2.5 bg-[#14B8FF] text-white rounded-full font-medium shadow-lg">
+                  className="px-4 py-2 bg-[#14B8FF] text-white rounded-full font-medium shadow-lg">
 
                     {t('getStarted')}
                   </motion.button>
