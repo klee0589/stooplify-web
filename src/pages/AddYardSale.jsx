@@ -436,6 +436,31 @@ export default function AddYardSale() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const generateAiDescription = async () => {
+    if (photos.length === 0) {
+      toast.error('Upload some photos first!');
+      return;
+    }
+    const dateStr = formData.date ? new Date(formData.date + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) : '';
+    const timeStr = formData.start_time && formData.end_time ? `${formData.start_time} - ${formData.end_time}` : '';
+    const context = [dateStr && `Sale date: ${dateStr}`, timeStr && `Hours: ${timeStr}`].filter(Boolean).join('. ');
+
+    const toastId = toast.loading('Generating description from photos...');
+    try {
+      const generatedDescription = await base44.integrations.Core.InvokeLLM({
+        prompt: `Based on these yard sale photos, write a brief, appealing description (2-3 sentences) of what's being sold. Focus on visible items and make it inviting to buyers.${context ? ` Context: ${context}` : ''}`,
+        file_urls: photos
+      });
+      toast.dismiss(toastId);
+      setAiDescription(generatedDescription);
+      setEditableDescription(generatedDescription);
+      toast.success('AI generated a description!');
+    } catch (error) {
+      toast.dismiss(toastId);
+      toast.error(`AI Error: ${error.message || 'Could not generate description'}`);
+    }
+  };
+
   const validateAddress = async (currentFormData = formData) => {
     const { address, city, state, zip_code } = currentFormData;
 
@@ -1243,7 +1268,7 @@ export default function AddYardSale() {
                 </p>
               </div>
 
-              {/* AI Description Preview - Always Visible */}
+              {/* AI Description Preview */}
               <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1255,13 +1280,23 @@ export default function AddYardSale() {
                   </div>
                   <div className="flex-1">
                     <h4 className="font-semibold text-[#2E3A59] mb-2">{t('aiGeneratedDescription')}</h4>
-                    <Textarea
-                    value={editableDescription}
-                    onChange={(e) => setEditableDescription(e.target.value)}
-                    placeholder="Upload photos above and AI will generate a description..."
-                    className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 min-h-[100px] bg-white text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                    disabled={!aiDescription} />
-
+                    {aiDescription ? (
+                      <Textarea
+                        value={editableDescription}
+                        onChange={(e) => setEditableDescription(e.target.value)}
+                        className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 min-h-[100px] bg-white text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                      />
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={generateAiDescription}
+                        disabled={isUploading || photos.length === 0}
+                        className="w-full py-3 px-4 rounded-xl border-2 border-dashed border-blue-300 text-blue-600 font-medium text-sm hover:bg-blue-100 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                      >
+                        <Loader2 className={`w-4 h-4 ${isUploading ? 'animate-spin' : 'hidden'}`} />
+                        ✨ {photos.length === 0 ? 'Upload photos to generate description' : 'Generate AI Description'}
+                      </button>
+                    )}
                   </div>
                 </div>
                 {aiDescription &&
@@ -1272,7 +1307,6 @@ export default function AddYardSale() {
                     toast.success('Description added!');
                   }}
                   className="flex-1 bg-blue-500 hover:bg-blue-600">
-
                       {t('useThisDescription')}
                     </Button>
                     <Button
@@ -1280,10 +1314,8 @@ export default function AddYardSale() {
                   onClick={() => {
                     setEditableDescription('');
                     setAiDescription(null);
-                    toast('Description cleared');
                   }}
                   className="flex-1">
-
                       Clear
                     </Button>
                   </div>
