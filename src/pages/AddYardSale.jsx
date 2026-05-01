@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import React, { useState, useEffect, useRef } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
@@ -69,6 +69,10 @@ export default function AddYardSale() {
   const [isValidatingAddress, setIsValidatingAddress] = useState(false);
 
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const dateInputRef = useRef(null);
+
+  const DRAFT_KEY = 'stooplify_listing_draft';
 
   // Stripe price IDs (from your Stripe products)
   const SINGLE_LISTING_PRICE_ID = 'price_1Sp0DuEBgBmaTVQEKO1W2NrG'; // $4 one-time
@@ -103,7 +107,30 @@ export default function AddYardSale() {
     base44.analytics.track({
       eventName: isEditMode ? 'edit_sale_page_viewed' : 'add_sale_page_viewed'
     });
+
+    // Restore draft on mount (new listings only)
+    if (!isEditMode) {
+      try {
+        const saved = localStorage.getItem(DRAFT_KEY);
+        if (saved) {
+          const { formData: savedForm, photos: savedPhotos, step: savedStep, listingMode: savedMode } = JSON.parse(saved);
+          if (savedForm) setFormData(prev => ({ ...prev, ...savedForm }));
+          if (savedPhotos) setPhotos(savedPhotos);
+          if (savedStep) setStep(savedStep);
+          if (savedMode) setListingMode(savedMode);
+        }
+      } catch (e) {}
+    }
   }, []);
+
+  // Persist draft to localStorage on every change (new listings only)
+  useEffect(() => {
+    if (!isEditMode) {
+      try {
+        localStorage.setItem(DRAFT_KEY, JSON.stringify({ formData, photos, step, listingMode }));
+      } catch (e) {}
+    }
+  }, [formData, photos, step, listingMode, isEditMode]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -252,6 +279,9 @@ export default function AddYardSale() {
     },
     onSuccess: (data) => {
       toast.success(isEditMode ? 'Your yard sale has been updated!' : 'Your yard sale is now live!');
+      // Clear draft and refresh header "My Listings"
+      localStorage.removeItem(DRAFT_KEY);
+      queryClient.invalidateQueries({ queryKey: ['userYardSales'] });
       window.scrollTo({ top: 0, behavior: 'smooth' });
       setTimeout(() => {
         navigate(createPageUrl('YardSaleDetails') + `?id=${data.id}`);
@@ -665,12 +695,14 @@ export default function AddYardSale() {
 
                   })}
                   </div>
-                  <Input
-                  type="date"
-                  value={formData.date}
-                  onChange={(e) => updateField('date', e.target.value)}
-                  className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]" />
-
+                  <div className="relative cursor-pointer" onClick={() => dateInputRef.current?.showPicker?.() || dateInputRef.current?.focus()}>
+                    <Input
+                    ref={dateInputRef}
+                    type="date"
+                    value={formData.date}
+                    onChange={(e) => updateField('date', e.target.value)}
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark] cursor-pointer w-full" />
+                  </div>
                   <p className="text-xs text-gray-500 mt-1">Or pick a custom date above</p>
                   <WeatherForecast selectedDate={formData.date} city={formData.city || 'New York City'} />
                 </div>
