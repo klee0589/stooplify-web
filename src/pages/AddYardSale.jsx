@@ -203,11 +203,14 @@ export default function AddYardSale() {
 
     // Check for payment success/cancel
     const paymentStatus = urlParams.get('payment');
+    const returnStep = urlParams.get('step');
     if (paymentStatus === 'success') {
-      toast.success('Payment successful! You can now list your sale.');
+      toast.success('Payment successful! You can now add more photos.');
       setNeedsPayment(false);
+      if (returnStep === '3') setStep(3);
     } else if (paymentStatus === 'cancelled') {
       toast.error('Payment cancelled. Please try again.');
+      if (returnStep === '3') setStep(3);
     }
   }, []);
 
@@ -401,7 +404,7 @@ export default function AddYardSale() {
     setPhotos((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleCheckout = async (priceId, listingType) => {
+  const handleCheckout = async (priceId, listingType, returnToPhotos = false) => {
     setIsCheckingPayment(true);
     base44.analytics.track({
       eventName: 'checkout_initiated',
@@ -415,7 +418,7 @@ export default function AddYardSale() {
         return;
       }
 
-      const response = await base44.functions.invoke('createCheckout', { priceId, listingType });
+      const response = await base44.functions.invoke('createCheckout', { priceId, listingType, returnToPhotos });
 
       const checkoutUrl = response?.data?.url;
       if (checkoutUrl) {
@@ -1172,15 +1175,23 @@ export default function AddYardSale() {
               {/* Photo Upload Area */}
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-sm text-gray-600">
-                    {photos.length} / {user?.subscription_active ? '20' : '5'} {t('photos')}
-                  </p>
-                  {!user?.subscription_active && photos.length >= 5 &&
-                <p className="text-xs text-[#FF6F61]">
-                      Upgrade to add up to 20 photos
-                    </p>
-                }
-                </div>
+                   <p className="text-sm text-gray-600">
+                     {photos.length} / {user?.subscription_active ? '20' : '5'} {t('photos')}
+                   </p>
+                 </div>
+                 {!user?.subscription_active && photos.length >= 5 && (
+                   <div className="mb-4 p-3 bg-gradient-to-r from-[#FF6F61]/10 to-[#F5A623]/10 border border-[#FF6F61]/30 rounded-xl flex items-center justify-between gap-3">
+                     <p className="text-sm text-gray-700 font-medium">📸 Unlock up to 20 photos</p>
+                     <button
+                       type="button"
+                       onClick={() => handleCheckout(SUBSCRIPTION_PRICE_ID, 'subscription', true)}
+                       disabled={isCheckingPayment}
+                       className="flex-shrink-0 px-3 py-1.5 bg-[#FF6F61] text-white text-xs font-semibold rounded-lg hover:bg-[#e55a4d] transition-colors disabled:opacity-50"
+                     >
+                       {isCheckingPayment ? 'Loading...' : 'Upgrade $9/mo'}
+                     </button>
+                   </div>
+                 )}
                 <div className="grid grid-cols-2 gap-3 mb-4">
                   <label className="block">
                     <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center cursor-pointer hover:border-[#FF6F61] transition-colors">

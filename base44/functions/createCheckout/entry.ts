@@ -18,8 +18,8 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { priceId, listingType } = await req.json();
-    console.log('🟢 Request parsed:', { priceId, listingType });
+    const { priceId, listingType, returnToPhotos } = await req.json();
+    console.log('🟢 Request parsed:', { priceId, listingType, returnToPhotos });
 
     if (!priceId || !listingType) {
       console.log('🔴 Missing params');
@@ -30,6 +30,10 @@ Deno.serve(async (req) => {
     const baseUrl = origin.startsWith('http') ? origin : `https://${origin}`;
     console.log('🟢 Origin:', baseUrl);
     
+    const successUrl = returnToPhotos
+      ? `${baseUrl}/add-yard-sale?payment=success&step=3`
+      : `${baseUrl}/Profile?payment=success`;
+
     console.log('🟢 Creating Stripe session...');
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -38,8 +42,8 @@ Deno.serve(async (req) => {
         quantity: 1,
       }],
       mode: listingType === 'subscription' ? 'subscription' : 'payment',
-      success_url: `${baseUrl}/Profile?payment=success`,
-      cancel_url: `${baseUrl}/AddYardSale?payment=cancelled`,
+      success_url: successUrl,
+      cancel_url: `${baseUrl}/add-yard-sale?payment=cancelled&step=3`,
       customer_email: user.email,
       metadata: {
         base44_app_id: Deno.env.get('BASE44_APP_ID'),
