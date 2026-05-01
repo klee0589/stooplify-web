@@ -183,30 +183,37 @@ export default function Home() {
       {/* GUIDES */}
       <section className="py-16 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
-            <span className="inline-block bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 text-sm font-semibold px-4 py-1.5 rounded-full mb-3">📚 NYC & NJ Seller Tips</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2E3A59] dark:text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>Yard Sale Guides</h2>
-            <p className="text-gray-600 dark:text-gray-300 text-lg">Everything you need to host or find an amazing sale in NYC and New Jersey</p>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
+            <span className="text-xs font-bold tracking-widest text-[#FF6F61] uppercase mb-2 block">// NYC & NJ Seller Tips</span>
+            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
+              <h2 className="text-4xl md:text-5xl font-extrabold text-[#2E3A59] dark:text-white uppercase tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>Yard Sale Guides</h2>
+              <p className="text-gray-500 dark:text-gray-400 max-w-xs text-sm">Everything you need to host or find an amazing sale in NYC and New Jersey</p>
+            </div>
           </motion.div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {[
-              { label: 'Advertise Your Sale', url: '/guides-advertise-yard-sale', emoji: '📣' },
-              { label: 'Best Days & Times', url: '/guides-best-time-yard-sale', emoji: '📅' },
-              { label: 'Permit Requirements', url: '/guides-permit-requirements-nyc', emoji: '📋' },
-              { label: 'Pricing Your Items', url: '/guides-pricing-yard-sale-items', emoji: '💰' },
-              { label: 'Guide for Seniors', url: '/guides-seniors-yard-sales', emoji: '👴' },
-              { label: 'Finding Sales Near You', url: '/guides-find-yard-sales', emoji: '🗺️' },
+              { label: 'Advertise Your Sale', url: '/guides-advertise-yard-sale', num: '01', tag: 'MARKETING' },
+              { label: 'Best Days & Times', url: '/guides-best-time-yard-sale', num: '02', tag: 'TIMING' },
+              { label: 'Permit Requirements', url: '/guides-permit-requirements-nyc', num: '03', tag: 'LEGAL · NYC' },
+              { label: 'Pricing Your Items', url: '/guides-pricing-yard-sale-items', num: '04', tag: 'STRATEGY' },
+              { label: 'Guide for Seniors', url: '/guides-seniors-yard-sales', num: '05', tag: 'ACCESSIBILITY' },
+              { label: 'Finding Sales Near You', url: '/guides-find-yard-sales', num: '06', tag: 'DISCOVERY' },
             ].map((guide, i) => (
               <motion.div key={guide.url} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
-                <Link to={guide.url} className="flex flex-col items-center justify-center p-4 bg-gray-50 dark:bg-gray-800 rounded-2xl hover:bg-[#FF6F61]/10 hover:shadow-md transition-all text-center group border border-transparent hover:border-[#FF6F61]/30">
-                  <span className="text-3xl mb-2">{guide.emoji}</span>
-                  <span className="font-semibold text-[#2E3A59] dark:text-white text-sm group-hover:text-[#FF6F61] transition-colors text-center leading-snug" style={{ fontFamily: 'Poppins, sans-serif' }}>{guide.label}</span>
+                <Link to={guide.url} className="relative group flex flex-col justify-between border-2 border-gray-200 dark:border-gray-700 hover:border-[#FF6F61] rounded-2xl p-6 min-h-[140px] bg-white dark:bg-gray-800 transition-all hover:shadow-lg overflow-hidden">
+                  <div className="flex items-start justify-between mb-3">
+                    <span className="text-xs font-bold tracking-widest text-gray-400 dark:text-gray-500 uppercase">{guide.num}</span>
+                    <span className="text-5xl font-black text-gray-100 dark:text-gray-700 select-none leading-none" style={{ fontFamily: 'Poppins, sans-serif' }}>{guide.num}</span>
+                  </div>
+                  <h3 className="text-base font-extrabold uppercase tracking-tight text-[#2E3A59] dark:text-white group-hover:text-[#FF6F61] transition-colors mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>{guide.label}</h3>
+                  <span className="text-xs font-bold px-2.5 py-1 border border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 rounded tracking-widest uppercase self-start">{guide.tag}</span>
+                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#FF6F61] scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-b-2xl" />
                 </Link>
               </motion.div>
             ))}
           </div>
-          <div className="text-center mt-8">
-            <Link to="/guides" className="inline-flex items-center gap-2 px-6 py-3 bg-[#FF6F61] text-white rounded-xl font-semibold hover:bg-[#e85d50] transition-colors shadow-md" style={{ fontFamily: 'Poppins, sans-serif' }}>
+          <div className="mt-8">
+            <Link to="/guides" className="inline-flex items-center gap-2 px-6 py-3 border-2 border-[#FF6F61] text-[#FF6F61] rounded-xl font-bold uppercase tracking-wide hover:bg-[#FF6F61] hover:text-white transition-all text-sm" style={{ fontFamily: 'Poppins, sans-serif' }}>
               View All Guides →
             </Link>
           </div>
