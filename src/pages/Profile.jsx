@@ -492,8 +492,8 @@ export default function Profile() {
               </div>
               <p className="text-white/90 text-sm">
                 {user.subscription_active 
-                   ? t('postUnlimitedYardSales') 
-                   : `${user.free_listings_used || 0} ${t('of')} 1 ${t('freeListingUsed')}`}
+                   ? `${t('postUnlimitedYardSales')} • Up to 20 photos per listing`
+                   : `${user.free_listings_used || 0} ${t('of')} 1 ${t('freeListingUsed')} • Up to 5 photos`}
               </p>
             </div>
             {user.subscription_active ? (
@@ -512,6 +512,7 @@ export default function Profile() {
             <ul className="space-y-1 text-sm text-white/90 mb-3">
               <li>• {t('postUnlimitedYardSales')}</li>
               <li>• {t('noPerListingFees')}</li>
+              <li>• Up to <strong>20 photos</strong> per listing (free: 5)</li>
               <li>• {t('prioritySupport')}</li>
             </ul>
             <Button 
