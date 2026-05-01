@@ -21,12 +21,12 @@ const Toggle = ({ checked, onCheckedChange, disabled }) => (
     aria-checked={checked}
     disabled={disabled}
     onClick={() => !disabled && onCheckedChange(!checked)}
-    className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${
+    className={`relative inline-flex items-center h-5 w-10 flex-shrink-0 cursor-pointer rounded-full transition-colors duration-200 focus:outline-none ${
       checked ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
     } ${disabled ? 'opacity-40 cursor-not-allowed' : ''}`}
   >
     <span
-      className={`pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow-md transform transition-transform duration-200 mt-0.5 ml-0.5 ${
+      className={`pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow transform transition-transform duration-200 ml-0.5 ${
         checked ? 'translate-x-5' : 'translate-x-0'
       }`}
     />
