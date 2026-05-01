@@ -13,8 +13,8 @@ export const translations = {
     getStarted: 'Get Started',
     
     // Hero
-    heroTitle: 'Discover Amazing Yard Sales Near You',
-    heroSubtitle: 'Find hidden treasures, great deals, and unique items at local yard sales in your neighborhood',
+    heroTitle: 'Discover Amazing Yard Sales in NYC & New Jersey',
+    heroSubtitle: 'Find hidden treasures, great deals, and unique items at stoop sales and yard sales across Brooklyn, Queens, Manhattan, the Bronx, and New Jersey',
     findSales: 'Find Sales',
     listYourSale: 'List Your Sale',
     
@@ -383,8 +383,8 @@ export const translations = {
     getStarted: 'Comenzar',
     
     // Hero
-    heroTitle: 'Descubre Increíbles Ventas de Garaje Cerca de Ti',
-    heroSubtitle: 'Encuentra tesoros ocultos, grandes ofertas y artículos únicos en ventas de garaje locales en tu vecindario',
+    heroTitle: 'Descubre Increíbles Ventas en NYC y Nueva Jersey',
+    heroSubtitle: 'Encuentra tesoros ocultos y grandes ofertas en ventas de garaje en Brooklyn, Queens, Manhattan, el Bronx y Nueva Jersey',
     findSales: 'Buscar Ventas',
     listYourSale: 'Publicar tu Venta',
     

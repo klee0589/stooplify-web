@@ -114,9 +114,9 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <SEO 
-        title="Stooplify - Find Brooklyn Stoop Sales, Yard Sales, Garage Sales & Estate Sales Near You"
-        description="Discover amazing deals at Brooklyn stoop sales, yard sales, garage sales, and estate sales in your neighborhood. Browse thousands of local sales, save favorites, and find hidden treasures at unbeatable prices."
-        keywords="brooklyn stoop sale, stoop sales brooklyn, yard sales near me, garage sales, estate sales, local sales, secondhand shopping, thrift sales, neighborhood sales, treasure hunting, bargain shopping, NYC yard sales, NYC stoop sale"
+        title="Stooplify - Find Stoop Sales & Yard Sales in NYC and New Jersey"
+        description="Discover stoop sales, yard sales, and garage sales across Brooklyn, Queens, Manhattan, the Bronx, and New Jersey. Browse live listings, find free items, and score unbeatable deals near you."
+        keywords="brooklyn stoop sale, stoop sales NYC, yard sales near me, Queens yard sales, Manhattan garage sales, Bronx yard sales, New Jersey yard sales, Jersey City stoop sale, Hoboken yard sale, NYC stoop sale, garage sales NJ"
         structuredData={structuredData}
       />
 
@@ -127,9 +127,9 @@ export default function Home() {
       <section className="py-14 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-8">
-            <span className="inline-block bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-sm font-semibold px-4 py-1.5 rounded-full mb-3">🌱 Spring Sales Are Live</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2E3A59] dark:text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>What's Happening Near You</h2>
-            <p className="text-gray-500 dark:text-gray-400 text-lg max-w-xl mx-auto">Browse the live map and plan your weekend route before you leave home.</p>
+            <span className="inline-block bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-sm font-semibold px-4 py-1.5 rounded-full mb-3">🗽 NYC & NJ Sales Are Live</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[#2E3A59] dark:text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>What's Happening in NYC & New Jersey</h2>
+            <p className="text-gray-500 dark:text-gray-400 text-lg max-w-xl mx-auto">Browse the live map across Brooklyn, Queens, Manhattan, the Bronx, and NJ — plan your weekend route before you leave home.</p>
           </div>
 
           {/* Browse shortcuts */}
@@ -184,9 +184,9 @@ export default function Home() {
       <section className="py-16 bg-white dark:bg-gray-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-center mb-10">
-            <span className="inline-block bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 text-sm font-semibold px-4 py-1.5 rounded-full mb-3">📚 Spring Seller Tips</span>
+            <span className="inline-block bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 text-sm font-semibold px-4 py-1.5 rounded-full mb-3">📚 NYC & NJ Seller Tips</span>
             <h2 className="text-3xl md:text-4xl font-bold text-[#2E3A59] dark:text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>Yard Sale Guides</h2>
-            <p className="text-gray-600 dark:text-gray-300 text-lg">Everything you need to host or find an amazing sale this spring</p>
+            <p className="text-gray-600 dark:text-gray-300 text-lg">Everything you need to host or find an amazing sale in NYC and New Jersey</p>
           </motion.div>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {[
@@ -217,14 +217,14 @@ export default function Home() {
       <section className="bg-gray-50 dark:bg-gray-900 py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-[#2E3A59] dark:text-white mb-6 text-center" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            Brooklyn Stoop Sales &amp; NYC Yard Sales
+            Stoop Sales &amp; Yard Sales Across NYC &amp; New Jersey
           </h2>
           <div className="prose prose-lg max-w-none text-gray-600 dark:text-gray-300 space-y-4 text-center">
             <p>
-              Looking for a <strong>Brooklyn stoop sale</strong> this weekend? Stooplify is the easiest way to find stoop sales, yard sales, and garage sales across Brooklyn, Queens, the Bronx, Manhattan, and all of NYC.
+              Stooplify is the easiest way to find <strong>stoop sales, yard sales, and garage sales</strong> across <strong>Brooklyn, Queens, Manhattan, the Bronx, Staten Island, Jersey City, Hoboken, and Newark</strong>.
             </p>
             <p>
-              Spring is peak season — neighbors across the city are clearing out and setting up on their stoops every weekend. Browse live listings in Williamsburg, Park Slope, Bushwick, Crown Heights, Bed-Stuy, and beyond.
+              Neighbors across NYC and New Jersey set up sales every weekend — browse live listings in Williamsburg, Park Slope, Bushwick, Crown Heights, Bed-Stuy, Astoria, the Upper West Side, and beyond.
             </p>
             <p>
               Or <a href="/add-yard-sale" className="text-[#14B8FF] hover:underline">list your own stoop sale for free</a> and reach buyers already searching in your neighborhood.
@@ -239,6 +239,7 @@ export default function Home() {
               { label: '🗽 Manhattan Garage Sales', url: '/garage-sales-manhattan' },
               { label: '🌆 Queens Garage Sales', url: '/garage-sales-queens' },
               { label: '🏗️ Bronx Garage Sales', url: '/garage-sales-bronx' },
+              { label: '🌉 Jersey City Sales', url: '/stoop-sales-jersey-city' },
             ].map(link => (
               <Link key={link.url} to={link.url} className="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-[#14B8FF] hover:text-[#14B8FF] transition-all shadow-sm">
                 {link.label}
@@ -259,12 +260,12 @@ export default function Home() {
         className="bg-gradient-to-br from-green-500 to-[#14B8FF] py-20"
       >
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="text-4xl mb-4 block">🌸</span>
+          <span className="text-4xl mb-4 block">🗽</span>
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            Spring Sales Are Happening Now
+            The Best Stoop Sales in NYC & New Jersey
           </h2>
           <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
-            Thousands of neighbors are clearing out this season. Don't miss the best deals in your neighborhood.
+            Brooklyn, Queens, Manhattan, the Bronx, Jersey City, Hoboken — find the best local sales near you, updated every day.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <motion.a

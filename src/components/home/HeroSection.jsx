@@ -131,9 +131,9 @@ export default function HeroSection() {
               transition={{ delay: 0.2 }}
               className="inline-flex items-center gap-2 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 px-4 py-2 rounded-full shadow-sm mb-6">
               
-              <span className="text-lg">🌸</span>
+              <span className="text-lg">🗽</span>
               <span className="text-xs sm:text-sm font-semibold text-green-700 dark:text-green-300">
-                Spring sales season is here
+                NYC & NJ's #1 stoop sale finder
               </span>
             </motion.div>
 
@@ -144,7 +144,7 @@ export default function HeroSection() {
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#2E3A59] dark:text-white leading-tight mb-4"
               style={{ fontFamily: 'Poppins, sans-serif' }}>
               
-              Find Stoop Sales <span className="text-[#14B8FF]">In Your Neighborhood</span>
+              Find Stoop Sales in <span className="text-[#14B8FF]">NYC & New Jersey</span>
             </motion.h1>
 
             <motion.p
@@ -153,7 +153,7 @@ export default function HeroSection() {
               transition={{ delay: 0.4 }}
               className="text-base sm:text-lg text-gray-600 dark:text-gray-300 mb-6 max-w-lg mx-auto lg:mx-0">
               
-              Spring cleaning is happening right now. Browse live stoop sales, yard sales, and free giveaways near you — updated every day.
+              Browse live stoop sales, yard sales, and free giveaways across Brooklyn, Queens, Manhattan, the Bronx, and New Jersey — updated every day.
             </motion.p>
 
             {/* CTA Buttons */}
@@ -267,8 +267,8 @@ export default function HeroSection() {
                     <span className="text-2xl">🌸</span>
                   </div>
                   <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Spring Season</p>
-                    <p className="font-semibold text-[#2E3A59] dark:text-white">Peak Sale Time</p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400">Brooklyn · Queens · Manhattan</p>
+                    <p className="font-semibold text-[#2E3A59] dark:text-white">& All of NJ</p>
                   </div>
                 </div>
               </motion.div>
