@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { Bell, CheckCircle, Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-const CITIES = ['Brooklyn', 'Queens', 'Manhattan', 'Bronx', 'Jersey City', 'Hoboken', 'San Francisco', 'Los Angeles', 'Other'];
+const CITIES = ['Brooklyn', 'Queens', 'Manhattan', 'Bronx', 'Staten Island', 'Jersey City', 'Hoboken', 'Newark'];
 
 export default function WeekendAlertSignup({ variant = 'banner', className = '' }) {
   const [email, setEmail] = useState('');
