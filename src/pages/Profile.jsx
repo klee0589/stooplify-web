@@ -13,25 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-// Custom toggle component to avoid shadcn Switch rendering issues
-const Toggle = ({ checked, onCheckedChange, disabled }) => (
-  <button
-    type="button"
-    role="switch"
-    aria-checked={checked}
-    disabled={disabled}
-    onClick={() => !disabled && onCheckedChange(!checked)}
-    className={`relative inline-flex items-center h-5 w-10 flex-shrink-0 cursor-pointer rounded-full transition-colors duration-200 focus:outline-none ${
-      checked ? 'bg-green-500' : 'bg-gray-300 dark:bg-gray-600'
-    } ${disabled ? 'opacity-40 cursor-not-allowed' : ''}`}
-  >
-    <span
-      className={`pointer-events-none inline-block h-4 w-4 rounded-full bg-white shadow transform transition-transform duration-200 ml-0.5 ${
-        checked ? 'translate-x-5' : 'translate-x-0'
-      }`}
-    />
-  </button>
-);
+import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { format, parseISO } from 'date-fns';
 import AlertSettings from '../components/profile/AlertSettings';
@@ -492,8 +474,8 @@ export default function Profile() {
               </div>
               <p className="text-white/90 text-sm">
                 {user.subscription_active 
-                   ? `${t('postUnlimitedYardSales')} • Up to 20 photos per listing`
-                   : `${user.free_listings_used || 0} ${t('of')} 1 ${t('freeListingUsed')} • Up to 5 photos`}
+                   ? t('postUnlimitedYardSales') 
+                   : `${user.free_listings_used || 0} ${t('of')} 1 ${t('freeListingUsed')}`}
               </p>
             </div>
             {user.subscription_active ? (
@@ -512,7 +494,6 @@ export default function Profile() {
             <ul className="space-y-1 text-sm text-white/90 mb-3">
               <li>• {t('postUnlimitedYardSales')}</li>
               <li>• {t('noPerListingFees')}</li>
-              <li>• Up to <strong>20 photos</strong> per listing (free: 5)</li>
               <li>• {t('prioritySupport')}</li>
             </ul>
             <Button 
@@ -573,7 +554,7 @@ export default function Profile() {
                 <p className="font-semibold text-[#2E3A59] dark:text-white">Enable Notifications</p>
                 <p className="text-sm text-gray-500 dark:text-gray-400">Master switch for all notifications</p>
               </div>
-              <Toggle
+              <Switch
                 checked={user.notification_enabled ?? true}
                 onCheckedChange={(checked) => toggleNotificationSetting.mutate({ notification_enabled: checked })}
               />
@@ -590,7 +571,7 @@ export default function Profile() {
                       <p className="font-medium text-[#2E3A59] dark:text-white">Email</p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">Receive notifications via email</p>
                     </div>
-                    <Toggle
+                    <Switch
                       checked={user.notification_email ?? true}
                       onCheckedChange={(checked) => toggleNotificationSetting.mutate({ notification_email: checked })}
                     />
@@ -603,7 +584,7 @@ export default function Profile() {
                         {user.phone ? 'Receive notifications via text' : 'Add phone number to enable'}
                       </p>
                     </div>
-                    <Toggle
+                    <Switch
                       checked={user.notification_sms ?? false}
                       onCheckedChange={(checked) => {
                         if (!user.phone) {
@@ -626,7 +607,7 @@ export default function Profile() {
                       <p className="font-medium text-[#2E3A59] dark:text-white">New sales</p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">New yard sales in your area</p>
                     </div>
-                    <Toggle
+                    <Switch
                       checked={user.notify_new_sales ?? true}
                       onCheckedChange={(checked) => toggleNotificationSetting.mutate({ notify_new_sales: checked })}
                     />
@@ -637,7 +618,7 @@ export default function Profile() {
                       <p className="font-medium text-[#2E3A59] dark:text-white">Favorites</p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">Updates to your favorited sales</p>
                     </div>
-                    <Toggle
+                    <Switch
                       checked={user.notify_favorites ?? true}
                       onCheckedChange={(checked) => toggleNotificationSetting.mutate({ notify_favorites: checked })}
                     />
@@ -648,7 +629,7 @@ export default function Profile() {
                       <p className="font-medium text-[#2E3A59] dark:text-white">Reminders</p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">Reminders before sales you're attending</p>
                     </div>
-                    <Toggle
+                    <Switch
                       checked={user.notify_reminders ?? true}
                       onCheckedChange={(checked) => toggleNotificationSetting.mutate({ notify_reminders: checked })}
                     />
@@ -659,7 +640,7 @@ export default function Profile() {
                       <p className="font-medium text-[#2E3A59] dark:text-white">Blog posts & tips</p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">New yard sale tips, guides & articles</p>
                     </div>
-                    <Toggle
+                    <Switch
                       checked={user.notify_blog ?? true}
                       onCheckedChange={(checked) => toggleNotificationSetting.mutate({ notify_blog: checked })}
                     />
@@ -789,7 +770,7 @@ export default function Profile() {
             </h3>
             <div className="flex items-center gap-3">
               <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 cursor-pointer">
-                <Toggle
+                <Switch
                   checked={showFinishedSales}
                   onCheckedChange={setShowFinishedSales}
                 />
