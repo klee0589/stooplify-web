@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
-import { MapPin, Calendar, Clock, Heart, ArrowRight, DollarSign, CreditCard, Smartphone, Package, Sofa, Shirt, Zap, Baby, Crown, BookOpen, Dumbbell, Users, Tag, Star, Sparkles } from 'lucide-react';
+import { MapPin, Calendar, Clock, Heart, ArrowRight, DollarSign, CreditCard, Smartphone, Package, Sofa, Shirt, Zap, Baby, Crown, BookOpen, Dumbbell, Users, Tag, Star, Sparkles, ShieldCheck } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 import TrustBadges from './TrustBadges';
 import { useTranslation } from '../translations';
@@ -92,6 +92,18 @@ export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance,
             <Sparkles className="w-3 h-3" /> Paid
           </span>
         ) : null}
+
+        {/* Verification Badge */}
+        {sale.verification_status === 'super_verified' && (
+          <span className="absolute top-3 right-10 px-2 py-0.5 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold rounded-full flex items-center gap-1 shadow-md">
+            <ShieldCheck className="w-3 h-3" /> Super Verified
+          </span>
+        )}
+        {sale.verification_status === 'verified' && (
+          <span className="absolute top-3 right-10 px-2 py-0.5 bg-gradient-to-r from-[#14B8FF] to-[#0da3e6] text-white text-xs font-bold rounded-full flex items-center gap-1 shadow-md">
+            <ShieldCheck className="w-3 h-3" /> Verified
+          </span>
+        )}
 
         {/* Favorite Button */}
         <motion.button

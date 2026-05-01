@@ -114,6 +114,21 @@
       "default": 0,
       "description": "Number of views"
     },
+    "verification_status": {
+      "type": "string",
+      "enum": [
+        "none",
+        "verified",
+        "super_verified"
+      ],
+      "default": "none",
+      "description": "Stooplify verification based on QR scans: verified=1+ scan, super_verified=3+ scans"
+    },
+    "scan_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of unique geo-valid QR scans at this sale"
+    },
     "address_unlock_hours": {
       "type": "number",
       "default": 0,

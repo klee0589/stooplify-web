@@ -117,6 +117,16 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Update YardSale verification status based on geo-valid scan count
+    if (isGeoValid) {
+      const newScanCount = (sale.scan_count || 0) + 1;
+      const newVerificationStatus = newScanCount >= 3 ? 'super_verified' : 'verified';
+      await base44.asServiceRole.entities.YardSale.update(yard_sale_id, {
+        scan_count: newScanCount,
+        verification_status: newVerificationStatus
+      });
+    }
+
     // Update seller stats
     const sellers = await base44.asServiceRole.entities.User.filter({ email: sale.created_by });
     if (sellers.length > 0) {

@@ -232,8 +232,16 @@ export default function YardSales() {
     return true;
   };
 
+  // Sort verified sales to the top
+  const verificationRank = { 'super_verified': 2, 'verified': 1, 'none': 0 };
+  const sortedSales = [...sales].sort((a, b) => {
+    const rankA = verificationRank[a.verification_status] ?? 0;
+    const rankB = verificationRank[b.verification_status] ?? 0;
+    return rankB - rankA;
+  });
+
   // Filter sales
-  const filteredSales = sales.filter((sale) => {
+  const filteredSales = sortedSales.filter((sale) => {
     // Hide ended sales by default
     if (!showEndedSales && sale.isPast) {
       return false;
