@@ -191,6 +191,19 @@ export default function Profile() {
     }
   };
 
+  const deleteSaleMutation = useMutation({
+    mutationFn: async (saleId) => {
+      await base44.entities.YardSale.delete(saleId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['mySales'] });
+      toast.success('Sale deleted successfully');
+    },
+    onError: () => {
+      toast.error('Failed to delete sale');
+    },
+  });
+
   const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const handleUpgradeNow = async () => {
@@ -947,16 +960,47 @@ export default function Profile() {
                   {saleStatus.label}
                 </span>
                 {!isFinished && (
-                  <Link to={createPageUrl('AddYardSale') + `?edit=${sale.id}`}>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="rounded-lg"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <Pencil className="w-3 h-3" />
-                    </Button>
-                  </Link>
+                  <>
+                    <Link to={createPageUrl('AddYardSale') + `?edit=${sale.id}`}>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="rounded-lg"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Pencil className="w-3 h-3" />
+                      </Button>
+                    </Link>
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="rounded-lg text-red-500 border-red-200 hover:bg-red-50 hover:text-red-600"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Trash2 className="w-3 h-3" />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Delete this sale?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            Are you sure you want to delete <strong>{sale.title}</strong>? This cannot be undone.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            onClick={() => deleteSaleMutation.mutate(sale.id)}
+                            className="bg-red-600 hover:bg-red-700 text-white"
+                          >
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </>
                 )}
                 </div>
                 </div>
