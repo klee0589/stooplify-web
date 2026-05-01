@@ -564,6 +564,28 @@ export default function YardSaleDetails() {
         type="event"
         structuredData={structuredData}
       />
+      {/* Host Edit Banner */}
+      {user && sale && user.email === sale.created_by && (
+        <div className="bg-[#2E3A59] text-white">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2 text-sm">
+              <Edit className="w-4 h-4 text-[#14B8FF] flex-shrink-0" />
+              <span className="font-medium">You're viewing your own listing</span>
+            </div>
+            <Link to={createPageUrl('AddYardSale') + `?edit=${saleId}`}>
+              <motion.button
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="flex items-center gap-2 px-4 py-1.5 bg-[#14B8FF] text-white rounded-full text-sm font-semibold hover:bg-[#0da3e6] transition-colors whitespace-nowrap"
+              >
+                <Edit className="w-3.5 h-3.5" />
+                Edit Listing
+              </motion.button>
+            </Link>
+          </div>
+        </div>
+      )}
+
       {/* Back Button */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <Link to={createPageUrl('YardSales')}>
