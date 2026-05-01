@@ -319,13 +319,17 @@ export default function AddYardSale() {
     const remainingSlots = photoLimit - photos.length;
 
     if (remainingSlots <= 0) {
-      toast.error(user?.subscription_active ? 'Maximum 20 photos allowed' : 'Free listings allow up to 5 photos. Upgrade to add up to 20 photos.');
+      if (user?.subscription_active) {
+        toast.error('Maximum 20 photos allowed.');
+      } else {
+        toast.error('Free plan allows up to 5 photos. Scroll up to upgrade for up to 20 photos.', { duration: 5000 });
+      }
       return;
     }
 
     const filesToUpload = files.slice(0, remainingSlots);
     if (files.length > remainingSlots) {
-      toast.warning(`Only ${remainingSlots} photo slot${remainingSlots === 1 ? '' : 's'} remaining. ${user?.subscription_active ? '' : 'Upgrade for more.'}`);
+      toast.warning(`Only ${remainingSlots} photo slot${remainingSlots === 1 ? '' : 's'} remaining — uploading the first ${remainingSlots}. Upgrade to add more.`);
     }
 
     setIsUploading(true);
@@ -368,7 +372,11 @@ export default function AddYardSale() {
 
     const photoLimit = user?.subscription_active ? 20 : 5;
     if (photos.length >= photoLimit) {
-      toast.error(user?.subscription_active ? 'Maximum 20 photos allowed' : 'Free listings allow up to 5 photos. Upgrade to add up to 20 photos.');
+      if (user?.subscription_active) {
+        toast.error('Maximum 20 photos allowed.');
+      } else {
+        toast.error('Free plan allows up to 5 photos. Scroll up to upgrade for up to 20 photos.', { duration: 5000 });
+      }
       return;
     }
 
@@ -1192,51 +1200,41 @@ export default function AddYardSale() {
                      </button>
                    </div>
                  )}
-                <div className="grid grid-cols-2 gap-3 mb-4">
-                  <label className="block">
-                    <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center cursor-pointer hover:border-[#FF6F61] transition-colors">
-                      {isUploading ?
-                    <Loader2 className="w-8 h-8 text-[#FF6F61] mx-auto animate-spin" /> :
+                {(() => {
+                  const photoLimit = user?.subscription_active ? 20 : 5;
+                  const atLimit = photos.length >= photoLimit;
+                  return (
+                    <div className="grid grid-cols-2 gap-3 mb-4">
+                      <label className={atLimit ? 'block opacity-40 cursor-not-allowed pointer-events-none' : 'block'}>
+                        <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center cursor-pointer hover:border-[#FF6F61] transition-colors">
+                          {isUploading ?
+                            <Loader2 className="w-8 h-8 text-[#FF6F61] mx-auto animate-spin" /> :
+                            <>
+                              <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                              <p className="text-gray-600 font-medium text-sm">{t('uploadPhotos')}</p>
+                              <p className="text-gray-400 text-xs mt-1">{t('fromGallery')}</p>
+                            </>
+                          }
+                        </div>
+                        <input type="file" accept="image/*" multiple onChange={handlePhotoUpload} className="hidden" disabled={isUploading || atLimit} />
+                      </label>
 
-                    <>
-                          <Upload className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                          <p className="text-gray-600 font-medium text-sm">{t('uploadPhotos')}</p>
-                          <p className="text-gray-400 text-xs mt-1">{t('fromGallery')}</p>
-                        </>
-                    }
+                      <label className={atLimit ? 'block opacity-40 cursor-not-allowed pointer-events-none' : 'block'}>
+                        <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center cursor-pointer hover:border-[#14B8FF] transition-colors">
+                          {isUploading ?
+                            <Loader2 className="w-8 h-8 text-[#14B8FF] mx-auto animate-spin" /> :
+                            <>
+                              <Camera className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                              <p className="text-gray-600 font-medium text-sm">{t('takePhoto')}</p>
+                              <p className="text-gray-400 text-xs mt-1">{t('useCamera')}</p>
+                            </>
+                          }
+                        </div>
+                        <input type="file" accept="image/*" capture="environment" onChange={handleCameraCapture} className="hidden" disabled={isUploading || atLimit} />
+                      </label>
                     </div>
-                    <input
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={handlePhotoUpload}
-                    className="hidden"
-                    disabled={isUploading} />
-
-                  </label>
-
-                  <label className="block">
-                    <div className="border-2 border-dashed border-gray-200 rounded-2xl p-6 text-center cursor-pointer hover:border-[#14B8FF] transition-colors">
-                      {isUploading ?
-                    <Loader2 className="w-8 h-8 text-[#14B8FF] mx-auto animate-spin" /> :
-
-                    <>
-                          <Camera className="w-8 h-8 text-gray-400 mx-auto mb-2" />
-                          <p className="text-gray-600 font-medium text-sm">{t('takePhoto')}</p>
-                          <p className="text-gray-400 text-xs mt-1">{t('useCamera')}</p>
-                        </>
-                    }
-                    </div>
-                    <input
-                    type="file"
-                    accept="image/*"
-                    capture="environment"
-                    onChange={handleCameraCapture}
-                    className="hidden"
-                    disabled={isUploading} />
-
-                  </label>
-                </div>
+                  );
+                })()}
                 <p className="text-xs text-gray-500 text-center">
                   📸 {t('aiWillGenerateDescription')}
                 </p>
