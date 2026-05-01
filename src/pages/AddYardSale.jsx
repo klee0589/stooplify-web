@@ -152,10 +152,21 @@ export default function AddYardSale() {
 
           // Load existing sale data if editing
           if (isEditMode && editSaleId) {
-            const sales = await base44.entities.YardSale.filter({ id: editSaleId });
-            if (sales.length > 0) {
-              const sale = sales[0];
-              setFormData({
+                        const sales = await base44.entities.YardSale.filter({ id: editSaleId });
+                        if (sales.length > 0) {
+                          const sale = sales[0];
+
+                          // Block editing past events
+                          if (sale.date && sale.end_time) {
+                            const saleEnd = new Date(`${sale.date}T${sale.end_time}`);
+                            if (new Date() > saleEnd) {
+                              toast.error('Past events cannot be edited.');
+                              navigate(createPageUrl('Profile'));
+                              return;
+                            }
+                          }
+
+                          setFormData({
                 title: sale.title || '',
                 description: sale.description || '',
                 date: sale.date || '',

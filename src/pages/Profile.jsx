@@ -907,58 +907,61 @@ export default function Profile() {
                         
                         const saleStatus = getSaleStatus();
                 
+                const isFinished = saleStatus.label === t('finished');
                 return (
-                  <motion.div
-                    key={sale.id}
-                    className="bg-gray-50 dark:bg-gray-700 rounded-xl overflow-hidden"
-                  >
-                    <div className="flex items-center justify-between p-4 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                      <Link to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`} className="flex items-center gap-3 flex-1">
-                        <div className="flex items-center gap-3">
-                          {sale.photos && sale.photos.length > 0 ? (
-                            <img 
-                              src={sale.photos[0]} 
-                              alt="" 
-                              className="w-12 h-12 rounded-lg object-cover"
-                            />
-                          ) : (
-                            <div className="w-12 h-12 bg-[#FF6F61]/10 rounded-lg flex items-center justify-center">
-                              <MapPin className="w-5 h-5 text-[#FF6F61]" />
-                            </div>
-                          )}
-                          <div>
-                            <p className="font-medium text-[#2E3A59] dark:text-white">{sale.title}</p>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                              {sale.date ? format(parseISO(sale.date + 'T12:00:00'), 'MMM d, yyyy') : 'Date TBD'}
-                            </p>
-                          </div>
-                        </div>
-                      </Link>
-                      <div className="flex items-center gap-2">
-                        <span className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${
-                          saleStatus.color === 'blue'
-                            ? 'bg-blue-100 text-blue-700'
-                            : saleStatus.color === 'green'
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-gray-100 text-gray-700'
-                        }`}>
-                          <Clock className="w-3 h-3" />
-                          {saleStatus.label}
-                        </span>
-                        <Link to={createPageUrl('AddYardSale') + `?edit=${sale.id}`}>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            className="rounded-lg"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <Pencil className="w-3 h-3" />
-                          </Button>
-                        </Link>
-                      </div>
+                <motion.div
+                key={sale.id}
+                className="bg-gray-50 dark:bg-gray-700 rounded-xl overflow-hidden"
+                >
+                <div className="flex items-center justify-between p-4 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                <Link to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`} className="flex items-center gap-3 flex-1">
+                <div className="flex items-center gap-3">
+                  {sale.photos && sale.photos.length > 0 ? (
+                    <img 
+                      src={sale.photos[0]} 
+                      alt="" 
+                      className="w-12 h-12 rounded-lg object-cover"
+                    />
+                  ) : (
+                    <div className="w-12 h-12 bg-[#FF6F61]/10 rounded-lg flex items-center justify-center">
+                      <MapPin className="w-5 h-5 text-[#FF6F61]" />
                     </div>
-                  </motion.div>
-                        );
+                  )}
+                  <div>
+                    <p className="font-medium text-[#2E3A59] dark:text-white">{sale.title}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {sale.date ? format(parseISO(sale.date + 'T12:00:00'), 'MMM d, yyyy') : 'Date TBD'}
+                    </p>
+                  </div>
+                </div>
+                </Link>
+                <div className="flex items-center gap-2">
+                <span className={`px-3 py-1 rounded-full text-xs font-medium flex items-center gap-1 ${
+                  saleStatus.color === 'blue'
+                    ? 'bg-blue-100 text-blue-700'
+                    : saleStatus.color === 'green'
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-gray-100 text-gray-700'
+                }`}>
+                  <Clock className="w-3 h-3" />
+                  {saleStatus.label}
+                </span>
+                {!isFinished && (
+                  <Link to={createPageUrl('AddYardSale') + `?edit=${sale.id}`}>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="rounded-lg"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Pencil className="w-3 h-3" />
+                    </Button>
+                  </Link>
+                )}
+                </div>
+                </div>
+                </motion.div>
+                );
                       })}
                     </div>
                   </>
