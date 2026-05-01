@@ -695,7 +695,7 @@ export default function AddYardSale() {
 
                   })}
                   </div>
-                  <div className="relative cursor-pointer" onClick={() => dateInputRef.current?.showPicker?.() || dateInputRef.current?.focus()}>
+                  <div className="relative cursor-pointer" onClick={() => { try { dateInputRef.current?.showPicker?.(); } catch(e) { dateInputRef.current?.focus(); } }}>
                     <Input
                     ref={dateInputRef}
                     type="date"
