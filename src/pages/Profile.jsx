@@ -13,7 +13,25 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+// Custom toggle component to avoid shadcn Switch rendering issues
+const Toggle = ({ checked, onCheckedChange, disabled }) => (
+  <button
+    type="button"
+    role="switch"
+    aria-checked={checked}
+    disabled={disabled}
+    onClick={() => !disabled && onCheckedChange(!checked)}
+    className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 focus:outline-none ${
+      checked ? 'bg-green-500' : 'bg-gray-200 dark:bg-gray-600'
+    } ${disabled ? 'opacity-40 cursor-not-allowed' : ''}`}
+  >
+    <span
+      className={`pointer-events-none inline-block h-5 w-5 rounded-full bg-white shadow transform transition-transform duration-200 ${
+        checked ? 'translate-x-5' : 'translate-x-0'
+      }`}
+    />
+  </button>
+);
 import { toast } from "sonner";
 import { format, parseISO } from 'date-fns';
 import AlertSettings from '../components/profile/AlertSettings';
@@ -554,7 +572,7 @@ export default function Profile() {
                 <p className="font-semibold text-[#2E3A59] dark:text-white">Enable Notifications</p>
                 <p className="text-sm text-gray-500 dark:text-gray-400">Master switch for all notifications</p>
               </div>
-              <Switch
+              <Toggle
                 checked={user.notification_enabled ?? true}
                 onCheckedChange={(checked) => toggleNotificationSetting.mutate({ notification_enabled: checked })}
               />
@@ -571,7 +589,7 @@ export default function Profile() {
                       <p className="font-medium text-[#2E3A59] dark:text-white">Email</p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">Receive notifications via email</p>
                     </div>
-                    <Switch
+                    <Toggle
                       checked={user.notification_email ?? true}
                       onCheckedChange={(checked) => toggleNotificationSetting.mutate({ notification_email: checked })}
                     />
@@ -584,7 +602,7 @@ export default function Profile() {
                         {user.phone ? 'Receive notifications via text' : 'Add phone number to enable'}
                       </p>
                     </div>
-                    <Switch
+                    <Toggle
                       checked={user.notification_sms ?? false}
                       onCheckedChange={(checked) => {
                         if (!user.phone) {
@@ -607,7 +625,7 @@ export default function Profile() {
                       <p className="font-medium text-[#2E3A59] dark:text-white">New sales</p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">New yard sales in your area</p>
                     </div>
-                    <Switch
+                    <Toggle
                       checked={user.notify_new_sales ?? true}
                       onCheckedChange={(checked) => toggleNotificationSetting.mutate({ notify_new_sales: checked })}
                     />
@@ -618,7 +636,7 @@ export default function Profile() {
                       <p className="font-medium text-[#2E3A59] dark:text-white">Favorites</p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">Updates to your favorited sales</p>
                     </div>
-                    <Switch
+                    <Toggle
                       checked={user.notify_favorites ?? true}
                       onCheckedChange={(checked) => toggleNotificationSetting.mutate({ notify_favorites: checked })}
                     />
@@ -629,7 +647,7 @@ export default function Profile() {
                       <p className="font-medium text-[#2E3A59] dark:text-white">Reminders</p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">Reminders before sales you're attending</p>
                     </div>
-                    <Switch
+                    <Toggle
                       checked={user.notify_reminders ?? true}
                       onCheckedChange={(checked) => toggleNotificationSetting.mutate({ notify_reminders: checked })}
                     />
@@ -640,7 +658,7 @@ export default function Profile() {
                       <p className="font-medium text-[#2E3A59] dark:text-white">Blog posts & tips</p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">New yard sale tips, guides & articles</p>
                     </div>
-                    <Switch
+                    <Toggle
                       checked={user.notify_blog ?? true}
                       onCheckedChange={(checked) => toggleNotificationSetting.mutate({ notify_blog: checked })}
                     />
@@ -770,7 +788,7 @@ export default function Profile() {
             </h3>
             <div className="flex items-center gap-3">
               <label className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300 cursor-pointer">
-                <Switch
+                <Toggle
                   checked={showFinishedSales}
                   onCheckedChange={setShowFinishedSales}
                 />
