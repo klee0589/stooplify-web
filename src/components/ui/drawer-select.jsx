@@ -19,7 +19,7 @@ export function DrawerSelect({
   if (!isMobile) {
     return (
       <Select value={value} onValueChange={onValueChange}>
-        <SelectTrigger className="bg-[hsl(var(--sidebar-border))] text-[hsl(var(--accent-foreground))] px-3 py-2 text-sm text-left rounded-xl flex h-6 w-full items-center justify-between whitespace-nowrap border border-input shadow-sm ring-offset-background data-[placeholder]:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1">
+        <SelectTrigger className="bg-white dark:bg-white text-gray-900 dark:text-gray-900 border-gray-200 dark:border-gray-300 px-3 py-2 text-sm text-left rounded-xl flex h-10 w-full items-center justify-between whitespace-nowrap border shadow-sm focus:outline-none focus:ring-1 focus:ring-[#FF6F61] disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1">
           <SelectValue placeholder={placeholder} />
         </SelectTrigger>
         <SelectContent>
@@ -37,7 +37,7 @@ export function DrawerSelect({
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
         <button
-          className={triggerClassName}
+          className={triggerClassName || "w-full flex items-center justify-between px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-300 bg-white dark:bg-white text-gray-900 dark:text-gray-900 text-sm shadow-sm focus:outline-none focus:ring-1 focus:ring-[#FF6F61]"}
           style={{ userSelect: 'none', WebkitTouchCallout: 'none' }}>
           
           <span className="text-left flex-1">
