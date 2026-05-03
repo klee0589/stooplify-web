@@ -978,9 +978,9 @@ export default function AddYardSale() {
                     placeholder={t('exactAddressPlaceholder')}
                     value={formData.address}
                     onChange={(e) => updateField('address', e.target.value)}
-                    className={`rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
-                    addressValidation.status === 'valid' ? 'border-green-500 dark:border-green-500' :
-                    addressValidation.status === 'invalid' ? 'border-red-500 dark:border-red-500' : ''}`
+                    className={`rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 text-gray-900 bg-white dark:bg-white dark:border-gray-300 dark:text-gray-900 ${
+                    addressValidation.status === 'valid' ? 'border-green-500' :
+                    addressValidation.status === 'invalid' ? 'border-red-500' : ''}`
                     } />
 
                     {isValidatingAddress &&
