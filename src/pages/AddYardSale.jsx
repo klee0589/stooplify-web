@@ -858,72 +858,62 @@ export default function AddYardSale() {
                 {listingMode === 'sale' && <div>
                   <Label className="text-[#2E3A59] font-medium mb-3 block">Payment Methods Accepted</Label>
                   <div className="space-y-3">
-                    <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
-                      <div className="flex items-center justify-center w-5 h-5 rounded border-2 transition-all" style={{
-                      borderColor: formData.payment_cash ? '#10b981' : '#d1d5db',
-                      backgroundColor: formData.payment_cash ? '#10b981' : 'transparent'
-                    }}>
-                        {formData.payment_cash && <Check className="w-3 h-3 text-white" />}
-                      </div>
-                      <Label
-                      htmlFor="payment_cash"
-                      className="flex items-center gap-2 cursor-pointer flex-1"
-                      onClick={() => updateField('payment_cash', !formData.payment_cash)}>
-
-                        <DollarSign className="w-4 h-4 text-green-600" />
-                        <span>Cash</span>
-                      </Label>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
-                      <div className="flex items-center justify-center w-5 h-5 rounded border-2 transition-all" style={{
-                      borderColor: formData.payment_card ? '#3b82f6' : '#d1d5db',
-                      backgroundColor: formData.payment_card ? '#3b82f6' : 'transparent'
-                    }}>
-                        {formData.payment_card && <Check className="w-3 h-3 text-white" />}
-                      </div>
-                      <Label
-                      htmlFor="payment_card"
-                      className="flex items-center gap-2 cursor-pointer flex-1"
-                      onClick={() => updateField('payment_card', !formData.payment_card)}>
-
-                        <CreditCard className="w-4 h-4 text-blue-600" />
-                        <span>Credit/Debit Cards</span>
-                      </Label>
-                    </div>
-                    <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl">
-                      <div className="flex items-center justify-center w-5 h-5 rounded border-2 transition-all" style={{
-                      borderColor: formData.payment_digital ? '#a855f7' : '#d1d5db',
-                      backgroundColor: formData.payment_digital ? '#a855f7' : 'transparent'
-                    }}>
-                        {formData.payment_digital && <Check className="w-3 h-3 text-white" />}
-                      </div>
-                      <Label
-                      htmlFor="payment_digital"
-                      className="flex items-center gap-2 cursor-pointer flex-1"
-                      onClick={() => updateField('payment_digital', !formData.payment_digital)}>
-
-                        <Smartphone className="w-4 h-4 text-purple-600" />
-                        <span>Digital (Venmo, PayPal, etc.)</span>
-                      </Label>
-                    </div>
-                    {formData.payment_cash && (formData.payment_card || formData.payment_digital) &&
-                  <div className="flex items-center gap-3 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-xl">
-                        <div className="flex items-center justify-center w-5 h-5 rounded border-2 transition-all" style={{
-                      borderColor: formData.cash_preferred ? '#f59e0b' : '#d1d5db',
-                      backgroundColor: formData.cash_preferred ? '#f59e0b' : 'transparent'
-                    }}>
+                    {[
+                      { key: 'payment_cash', label: 'Cash', Icon: DollarSign, color: 'text-green-600', activeColor: '#10b981' },
+                      { key: 'payment_card', label: 'Credit/Debit Cards', Icon: CreditCard, color: 'text-blue-600', activeColor: '#3b82f6' },
+                      { key: 'payment_digital', label: 'Digital (Venmo, PayPal, etc.)', Icon: Smartphone, color: 'text-purple-600', activeColor: '#a855f7' },
+                    ].map(({ key, label, Icon, color, activeColor }) => {
+                      const isChecked = formData[key];
+                      return (
+                        <button
+                          key={key}
+                          type="button"
+                          onClick={() => updateField(key, !isChecked)}
+                          className={`w-full flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left ${
+                            isChecked
+                              ? 'border-[#FF6F61] bg-[#FF6F61]/5'
+                              : 'border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-600 hover:border-gray-300'
+                          }`}
+                        >
+                          <div
+                            className="flex items-center justify-center w-5 h-5 rounded border-2 flex-shrink-0 transition-all"
+                            style={{
+                              borderColor: isChecked ? activeColor : '#d1d5db',
+                              backgroundColor: isChecked ? activeColor : 'transparent'
+                            }}
+                          >
+                            {isChecked && <Check className="w-3 h-3 text-white" />}
+                          </div>
+                          <Icon className={`w-4 h-4 flex-shrink-0 ${color}`} />
+                          <span className={`font-medium text-sm ${isChecked ? 'text-[#2E3A59]' : 'text-gray-600 dark:text-gray-300'}`}>{label}</span>
+                        </button>
+                      );
+                    })}
+                    {formData.payment_cash && (formData.payment_card || formData.payment_digital) && (
+                      <button
+                        type="button"
+                        onClick={() => updateField('cash_preferred', !formData.cash_preferred)}
+                        className={`w-full flex items-center gap-3 p-3 rounded-xl border-2 transition-all text-left ${
+                          formData.cash_preferred
+                            ? 'border-[#F5A623] bg-yellow-50 dark:bg-yellow-900/20'
+                            : 'border-yellow-200 bg-yellow-50/50 dark:bg-yellow-900/10 dark:border-yellow-800 hover:border-yellow-300'
+                        }`}
+                      >
+                        <div
+                          className="flex items-center justify-center w-5 h-5 rounded border-2 flex-shrink-0 transition-all"
+                          style={{
+                            borderColor: formData.cash_preferred ? '#f59e0b' : '#d1d5db',
+                            backgroundColor: formData.cash_preferred ? '#f59e0b' : 'transparent'
+                          }}
+                        >
                           {formData.cash_preferred && <Check className="w-3 h-3 text-white" />}
                         </div>
-                        <Label
-                      htmlFor="cash_preferred"
-                      className="cursor-pointer flex-1 text-sm"
-                      onClick={() => updateField('cash_preferred', !formData.cash_preferred)}>
-
-                          <span className="font-medium">Cash Preferred</span>
-                          <span className="text-gray-600 dark:text-gray-400 block">Other methods accepted but cash is easier</span>
-                        </Label>
-                      </div>
-                  }
+                        <div>
+                          <span className="font-medium text-sm text-[#2E3A59] dark:text-white block">Cash Preferred</span>
+                          <span className="text-xs text-gray-500 dark:text-gray-400">Other methods accepted but cash is easier</span>
+                        </div>
+                      </button>
+                    )}
                   </div>
                   </div>}
                   </div>
