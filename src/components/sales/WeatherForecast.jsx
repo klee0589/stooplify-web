@@ -126,7 +126,7 @@ export default function WeatherForecast({ selectedDate, city }) {
               return (
                 <button
                   key={day.date}
-                  onClick={() => setSelectedDay(day.date)} className="bg-white/50 mx-1 my-1 px-3 py-2 rounded-xl flex-shrink-0 flex flex-col items-center gap-1 border-2 transition-all min-w-[56px] border-transparent hover:bg-white/80 ring-2 ring-[#FF6F61] ring-offset-1">
+                  onClick={() => setSelectedDay(day.date)} className={`mx-1 my-1 px-3 py-2 rounded-xl flex-shrink-0 flex flex-col items-center gap-1 border-2 transition-all min-w-[56px] ${isSelected ? 'bg-white border-[#FF6F61] shadow-md' : 'bg-white/50 border-transparent hover:bg-white/80'} ${isSaleDate && !isSelected ? 'border-[#14B8FF]' : ''}`}>
 
 
 
