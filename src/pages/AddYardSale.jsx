@@ -712,7 +712,7 @@ export default function AddYardSale() {
                   placeholder={t('titlePlaceholder')}
                   value={formData.title}
                   onChange={(e) => updateField('title', e.target.value)}
-                  className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+                  className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900" />
 
                 </div>
 
@@ -748,7 +748,7 @@ export default function AddYardSale() {
                     type="date"
                     value={formData.date}
                     onChange={(e) => updateField('date', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark] cursor-pointer w-full" />
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900 cursor-pointer w-full" />
                   </div>
                   <p className="text-xs text-gray-500 mt-1">Or pick a custom date above</p>
                   <WeatherForecast selectedDate={formData.date} city={formData.city || 'New York City'} />
@@ -795,7 +795,7 @@ export default function AddYardSale() {
                     type="time"
                     value={formData.start_time}
                     onChange={(e) => updateField('start_time', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]" />
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900" />
 
                   </div>
                   <div>
@@ -804,7 +804,7 @@ export default function AddYardSale() {
                     type="time"
                     value={formData.end_time}
                     onChange={(e) => updateField('end_time', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:[color-scheme:dark]" />
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900" />
 
                   </div>
                 </div>
@@ -815,7 +815,7 @@ export default function AddYardSale() {
                   placeholder={t('descriptionPlaceholder')}
                   value={formData.description}
                   onChange={(e) => updateField('description', e.target.value)}
-                  className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] min-h-[120px] text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+                  className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] min-h-[120px] text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900" />
 
                   <p className="text-xs text-blue-600 mt-2 flex items-center gap-1">
                     💡 Tip: Leave blank and upload photos in Step 3 - our AI will generate a description for you!
@@ -971,7 +971,7 @@ export default function AddYardSale() {
                   placeholder={t('generalLocationPlaceholder')}
                   value={formData.general_location}
                   onChange={(e) => updateField('general_location', e.target.value)}
-                  className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+                  className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900" />
 
                   <p className="text-xs text-gray-500 mt-1">
                     {t('approximateLocationPrivacy')}
@@ -1023,7 +1023,7 @@ export default function AddYardSale() {
                     placeholder={t('cityPlaceholder')}
                     value={formData.city}
                     onChange={(e) => updateField('city', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900" />
 
                   </div>
                   <div>
