@@ -748,7 +748,7 @@ export default function AddYardSale() {
                     type="date"
                     value={formData.date}
                     onChange={(e) => updateField('date', e.target.value)}
-                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 dark:bg-white dark:border-gray-300 dark:text-gray-900 cursor-pointer w-full" />
+                    className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-3 text-gray-900 bg-white dark:bg-white dark:border-gray-300 dark:text-gray-900 cursor-pointer w-full" />
                   </div>
                   <p className="text-xs text-gray-500 mt-1">Or pick a custom date above</p>
                   <WeatherForecast selectedDate={formData.date} city={formData.city || 'New York City'} />
@@ -1036,7 +1036,7 @@ export default function AddYardSale() {
                   placeholder={t('zipCodePlaceholder')}
                   value={formData.zip_code}
                   onChange={(e) => updateField('zip_code', e.target.value)}
-                  className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 max-w-[200px] text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+                  className="rounded-xl border-gray-200 focus:border-[#FF6F61] focus:ring-[#FF6F61] py-6 max-w-[200px] text-gray-900 bg-white dark:bg-white dark:border-gray-300 dark:text-gray-900" />
 
                 </div>
               </div>
@@ -1246,7 +1246,7 @@ export default function AddYardSale() {
                       <Textarea
                         value={editableDescription}
                         onChange={(e) => setEditableDescription(e.target.value)}
-                        className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 min-h-[100px] bg-white text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        className="rounded-xl border-gray-200 focus:border-blue-500 focus:ring-blue-500 min-h-[100px] bg-white dark:bg-white dark:border-gray-300 text-gray-900 dark:text-gray-900"
                       />
                     ) : (
                       <button
