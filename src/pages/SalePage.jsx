@@ -106,10 +106,26 @@ export default function SalePage() {
   const canonicalUrl = `https://stooplify.com${buildSaleUrl(sale)}`;
   const saleTitle = sale.title || 'Yard Sale';
   const neighborhood = (sale.general_location || '').split(',')[0].trim();
-  const metaTitle = `${neighborhood ? `Stoop Sale in ${neighborhood}, ` : 'Yard Sale in '}${sale.city || sale.state} | Stooplify`;
+  const saleTypeLabel = sale.is_free_item ? 'Free Giveaway' : 'Stoop Sale';
+  const formattedDate = sale.date ? format(parseISO(sale.date + 'T12:00:00'), 'MMMM d, yyyy') : null;
+  const formattedDateShort = sale.date ? format(parseISO(sale.date + 'T12:00:00'), 'MMM d') : null;
+  const locationLabel = neighborhood || sale.city || sale.state;
+
+  // SEO-optimised title: "Stoop Sale in Williamsburg, Brooklyn — Sat May 10 | Stooplify"
+  const metaTitle = [
+    `${saleTypeLabel} in ${locationLabel}`,
+    formattedDateShort ? `— ${format(parseISO(sale.date + 'T12:00:00'), 'EEE MMM d')}` : null,
+    `| Stooplify`,
+  ].filter(Boolean).join(' ');
+
+  // SEO-optimised description: include "stoop sale", city, date, time, categories
+  const categoriesStr = (sale.categories || (sale.category ? [sale.category] : []))
+    .map(c => c.charAt(0).toUpperCase() + c.slice(1))
+    .join(', ');
+  const timeStr = sale.start_time && sale.end_time ? ` · ${sale.start_time}–${sale.end_time}` : '';
   const metaDescription = sale.description
     ? sale.description.slice(0, 155)
-    : `Yard sale on ${sale.date ? format(parseISO(sale.date), 'MMMM d, yyyy') : 'soon'} in ${sale.city}, ${sale.state}. Find details, photos, map & more on Stooplify.`;
+    : `${saleTypeLabel} in ${locationLabel}, ${sale.city}${formattedDate ? ` on ${formattedDate}` : ''}${timeStr}. ${categoriesStr ? `Items: ${categoriesStr}. ` : ''}Find the map, photos & full details on Stooplify.`;
 
   const parseTimeTo24h = (timeStr) => {
     if (!timeStr) return '09:00:00';
@@ -190,7 +206,7 @@ export default function SalePage() {
       <SEO
         title={metaTitle}
         description={metaDescription}
-        keywords={`yard sale ${sale.city}, stoop sale ${neighborhood}, garage sale ${sale.city} ${sale.state}, ${(sale.categories || []).join(', ')}`}
+        keywords={`stoop sale ${neighborhood}, stoop sale ${sale.city}, yard sale ${sale.city}, garage sale ${sale.city} ${sale.state}, ${saleTypeLabel.toLowerCase()} near me, ${(sale.categories || []).join(', ')}`}
         image={photos[0]}
         url={canonicalUrl}
         type="event"
