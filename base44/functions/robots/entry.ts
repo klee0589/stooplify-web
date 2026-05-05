@@ -2,18 +2,24 @@ Deno.serve(async () => {
   const robotsTxt = `User-agent: *
 Allow: /
 
-# Private / app pages — no SEO value
+# Private / no-SEO-value pages
+Disallow: /messages
 Disallow: /Messages
+Disallow: /favorites
 Disallow: /Favorites
-Disallow: /MyYardSales
 Disallow: /my-yard-sales
+Disallow: /MyYardSales
+Disallow: /profile
 Disallow: /Profile
 Disallow: /ChatSupport
 Disallow: /AdminCommunityLocations
-Disallow: /AdminSupabaseSync
+Disallow: /AdminAnalytics
+Disallow: /admin-analytics
 Disallow: /AddYardSale
-Disallow: /add-yard-sale
-Disallow: /YardSaleDetails
+
+# Query-string pages that shouldn't be indexed
+Disallow: /*?edit=
+Disallow: /*?payment=
 
 # Sitemap
 Sitemap: https://stooplify.com/api/functions/sitemap
