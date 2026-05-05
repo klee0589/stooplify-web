@@ -6,9 +6,9 @@ export default function GuideBestTimeYardSale() {
   return (
     <div className="min-h-screen bg-[#F9F9F9]">
       <SEO
-        title="Best Days & Times for Yard Sales in NYC | Garage Sale Timing Guide | Stooplify"
-        description="When should you host a yard sale in NYC? Learn the best days, times, and seasons for maximum turnout in Brooklyn, Queens, and Manhattan."
-        keywords="best time for yard sale, best day for garage sale, when to host stoop sale, yard sale timing NYC, best season for yard sale"
+        title="Best Time to Have a Yard Sale — Day, Hour & Season | Stooplify"
+        description="Saturday 8–11am in spring is the sweet spot — here's why. Best days, times, and months to maximize foot traffic at your yard sale or stoop sale."
+        keywords="best time to have a yard sale, best time for yard sale, best day for garage sale, when to host stoop sale, best time yard sale saturday"
         url="https://stooplify.com/guides-best-time-yard-sale"
         structuredData={{
           "@context": "https://schema.org",

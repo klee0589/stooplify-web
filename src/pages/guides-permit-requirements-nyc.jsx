@@ -6,9 +6,9 @@ export default function GuidePermitRequirementsNYC() {
   return (
     <div className="min-h-screen bg-[#F9F9F9]">
       <SEO
-        title="Do You Need a Permit for a Yard Sale in NYC? Here's the Answer | Stooplify"
-        description="NYC yard sale permit rules explained in plain English. Most stoop sales don't need one — here's exactly when you do and don't. Read before you list."
-        keywords="yard sale permit NYC, garage sale permit New York, stoop sale legal, NYC yard sale rules, do I need permit for yard sale"
+        title="Do You Need a Permit for a Yard Sale in NYC? (2026 Answer) | Stooplify"
+        description="No permit needed for most NYC yard sales — but there are rules. Quick answer for Brooklyn, Queens, Manhattan & the Bronx. Read before you sell."
+        keywords="do you need a permit for a yard sale, yard sale permit NYC, garage sale permit New York, do i need a garage sale permit, stoop sale permit nyc"
         url="https://stooplify.com/guides-permit-requirements-nyc"
         structuredData={{
           "@context": "https://schema.org",
