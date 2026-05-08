@@ -304,13 +304,18 @@
           '/messages': { title: 'Messages | Stooplify', description: 'Your messages.', robots: 'noindex, follow' },
           '/my-yard-sales': { title: 'My Yard Sales | Stooplify', description: 'Manage your listings.', robots: 'noindex, follow' },
           '/admin-analytics': { title: 'Admin Analytics | Stooplify', description: '', robots: 'noindex, nofollow' },
+          '/YardSaleDetails': { title: 'Yard Sale | Stooplify', description: '', robots: 'noindex, follow' },
         };
 
         var path = window.location.pathname.replace(/\/$/, '') || '/';
         var meta = ROUTE_META[path];
 
-        // Always set a self-referencing canonical based on actual path
-        var canonicalHref = 'https://stooplify.com' + (path === '/' ? '' : path) + (path === '/' ? '/' : '');
+        // For /sale/* dynamic pages, use the clean slug URL as canonical (strip any query params)
+        var isSalePage = path.startsWith('/sale/');
+        var isYardSaleDetails = path === '/YardSaleDetails';
+
+        // Always set a self-referencing canonical based on clean path only (no query params)
+        var canonicalHref = 'https://stooplify.com' + (path === '/' ? '/' : path);
         var existingCanonical = document.querySelector('link[rel="canonical"]');
         if (existingCanonical) {
           existingCanonical.setAttribute('href', canonicalHref);

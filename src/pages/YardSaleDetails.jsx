@@ -560,7 +560,8 @@ export default function YardSaleDetails() {
         description={sale.description || `${sale.title} happening on ${format(new Date(sale.date), 'MMMM d, yyyy')} in ${sale.city}, ${sale.state}. Find details and get directions.`}
         keywords={`${sale.title}, yard sale ${sale.city}, ${sale.category} sale, ${sale.city} ${sale.state} yard sale`}
         image={photos[0]}
-        url={window.location.href}
+        url={`https://stooplify.com/YardSaleDetails?id=${saleId}`}
+        canonical={`https://stooplify.com/YardSaleDetails?id=${saleId}`}
         type="event"
         structuredData={structuredData}
       />

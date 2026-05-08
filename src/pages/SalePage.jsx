@@ -209,6 +209,7 @@ export default function SalePage() {
         keywords={`stoop sale ${neighborhood}, stoop sale ${sale.city}, yard sale ${sale.city}, garage sale ${sale.city} ${sale.state}, ${saleTypeLabel.toLowerCase()} near me, ${(sale.categories || []).join(', ')}`}
         image={photos[0]}
         url={canonicalUrl}
+        canonical={canonicalUrl}
         type="event"
         structuredData={structuredData}
       />
