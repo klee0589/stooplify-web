@@ -310,12 +310,16 @@
         var path = window.location.pathname.replace(/\/$/, '') || '/';
         var meta = ROUTE_META[path];
 
-        // For /sale/* dynamic pages, use the clean slug URL as canonical (strip any query params)
+        // Always set canonical from clean pathname only — strip all query params/hash
+        // Exception: /YardSaleDetails keeps its ?id= param so Google can crawl individual sales
         var isSalePage = path.startsWith('/sale/');
         var isYardSaleDetails = path === '/YardSaleDetails';
+        var idParam = new URLSearchParams(window.location.search).get('id');
 
-        // Always set a self-referencing canonical based on clean path only (no query params)
         var canonicalHref = 'https://stooplify.com' + (path === '/' ? '/' : path);
+        if (isYardSaleDetails && idParam) {
+          canonicalHref = 'https://stooplify.com/YardSaleDetails?id=' + idParam;
+        }
         var existingCanonical = document.querySelector('link[rel="canonical"]');
         if (existingCanonical) {
           existingCanonical.setAttribute('href', canonicalHref);

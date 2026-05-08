@@ -18,7 +18,24 @@ export default function SEO({
   const scriptRefs = useRef([]);
 
   useEffect(() => {
-    const finalUrl = canonical || url || (typeof window !== 'undefined' ? `https://stooplify.com${window.location.pathname}` : 'https://stooplify.com');
+    // Strip query params and hash from any URL to prevent tracking param duplication.
+    // Exception: /YardSaleDetails needs its ?id= param to be a valid canonical.
+    const stripParams = (rawUrl) => {
+      if (!rawUrl) return rawUrl;
+      try {
+        const u = new URL(rawUrl);
+        // Keep ?id= only for the legacy YardSaleDetails route
+        if (u.pathname === '/YardSaleDetails' && u.searchParams.has('id')) {
+          return `${u.origin}${u.pathname}?id=${u.searchParams.get('id')}`;
+        }
+        return `${u.origin}${u.pathname}`;
+      } catch {
+        return rawUrl;
+      }
+    };
+
+    const rawUrl = canonical || url || (typeof window !== 'undefined' ? `https://stooplify.com${window.location.pathname}` : 'https://stooplify.com');
+    const finalUrl = stripParams(rawUrl);
     const finalRobots = noindex ? 'noindex, nofollow' : robots;
 
     // Title
