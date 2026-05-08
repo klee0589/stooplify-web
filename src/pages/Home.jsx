@@ -11,6 +11,7 @@ import HowItWorks from '../components/home/HowItWorks';
 import FeaturedSales from '../components/home/FeaturedSales';
 import CTASection from '../components/home/CTASection';
 import FreeNearYou from '../components/home/FreeNearYou';
+import TrendingNeighborhoods from '../components/home/TrendingNeighborhoods';
 import SocialSection from '../components/home/SocialSection';
 import WeekendAlertSignup from '../components/WeekendAlertSignup';
 import { deferAnalyticsLoad } from '../components/AnalyticsLoader';
@@ -158,6 +159,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* TRENDING NEIGHBORHOODS */}
+      <TrendingNeighborhoods />
 
       {/* FREE ITEMS */}
       <FreeNearYou />
