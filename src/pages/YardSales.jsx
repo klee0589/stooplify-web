@@ -3,7 +3,7 @@ import { useTranslation } from '../components/translations';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Map, List, Loader2, MapPin, Calendar, Tag, Building2 } from 'lucide-react';
+import { Map, List, Loader2, MapPin, Calendar, Tag, Building2, Maximize2, Minimize2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import SEO from '../components/SEO';
 import SaleCard from '../components/sales/SaleCard';
@@ -66,6 +66,7 @@ export default function YardSales() {
   const [visibleMapSales, setVisibleMapSales] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
   const [locationLoaded, setLocationLoaded] = useState(false);
+  const [mapFullscreen, setMapFullscreen] = useState(false);
 
   useEffect(() => {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
@@ -582,9 +583,36 @@ export default function YardSales() {
               transition={{ duration: 0.3 }}
               className="mb-20 md:mb-0">
 
-                <div className="h-[600px] md:h-[800px] rounded-2xl overflow-hidden">
-                  <SaleMap sales={filteredSales} onVisibleSalesChange={setVisibleMapSales} />
-                </div>
+                {mapFullscreen ? (
+                  <div className="fixed inset-0 z-[9999] bg-black">
+                    <div className="absolute top-4 right-4 z-[10000]">
+                      <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setMapFullscreen(false)}
+                        className="flex items-center gap-2 px-4 py-2 bg-white text-gray-900 rounded-lg shadow-lg hover:bg-gray-100 transition-colors"
+                      >
+                        <Minimize2 className="w-4 h-4" />
+                        <span className="text-sm font-medium">Exit Fullscreen</span>
+                      </motion.button>
+                    </div>
+                    <SaleMap sales={filteredSales} onVisibleSalesChange={setVisibleMapSales} />
+                  </div>
+                ) : (
+                  <>
+                    <div className="relative h-[600px] md:h-[800px] rounded-2xl overflow-hidden">
+                      <SaleMap sales={filteredSales} onVisibleSalesChange={setVisibleMapSales} />
+                      <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => setMapFullscreen(true)}
+                        className="absolute top-4 right-4 flex items-center gap-2 px-3 py-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg shadow-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors z-10"
+                        title="View map fullscreen"
+                      >
+                        <Maximize2 className="w-4 h-4" />
+                      </motion.button>
+                    </div>
+                  </>
+                )}
+
                 {visibleMapSales.length > 0 &&
               <div className="mt-6 hidden md:block">
                     <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-4">
