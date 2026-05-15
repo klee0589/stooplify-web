@@ -95,14 +95,12 @@ export default function YardSales() {
     const checkAuth = async () => {
       try {
         const isAuth = await base44.auth.isAuthenticated();
-        if (!isAuth) {
-          base44.auth.redirectToLogin(window.location.pathname);
-          return;
+        if (isAuth) {
+          const currentUser = await base44.auth.me();
+          setUser(currentUser);
         }
-        const currentUser = await base44.auth.me();
-        setUser(currentUser);
       } catch (e) {
-        base44.auth.redirectToLogin(window.location.pathname);
+        // not logged in — that's fine, page is public
       }
     };
     checkAuth();
@@ -225,7 +223,8 @@ export default function YardSales() {
     if (!locationLoaded) return false; // Wait until we know location status
 
     if (userLocation) {
-      if (!sale.latitude || !sale.longitude) return false;
+      // If sale has no coords, show it anyway (can't filter by distance)
+      if (!sale.latitude || !sale.longitude) return true;
       return getDistanceMiles(userLocation.lat, userLocation.lng, sale.latitude, sale.longitude) <= 25;
     }
     // Location denied/unavailable — show all sales (can't filter by distance)
