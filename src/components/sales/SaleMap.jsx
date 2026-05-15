@@ -216,7 +216,7 @@ export default function SaleMap({ sales, center, onVisibleSalesChange }) {
       zoom={userLocation ? 14 : 12}
       style={{ height: '100%', width: '100%' }}
       scrollWheelZoom={true}
-      maxBounds={[[40.35, -74.35], [41.0, -73.60]]}
+      maxBounds={[[40.2, -74.6], [41.1, -72.8]]}
       maxBoundsViscosity={0.85}
       minZoom={10}
       >
