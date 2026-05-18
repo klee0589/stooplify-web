@@ -29,6 +29,7 @@ import MessageThread from '../components/messaging/MessageThread';
 import { useTranslation } from '../components/translations';
 import QRCodeDisplay from '../components/sales/QRCodeDisplay';
 import ScanQRButton from '../components/sales/ScanQRButton';
+import SaleAnalytics from '../components/sales/SaleAnalytics';
 
 export default function YardSaleDetails() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -1056,6 +1057,13 @@ export default function YardSaleDetails() {
             </div>
           ) : null}
         </div>
+
+        {/* Analytics Section — host only */}
+        {user && sale.created_by === user.email && (
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+            <SaleAnalytics sale={sale} saleId={saleId} />
+          </div>
+        )}
 
         {/* Printable Flyer Section */}
         {user && sale.created_by === user.email && (
