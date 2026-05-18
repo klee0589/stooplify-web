@@ -142,18 +142,37 @@ function MapBoundsWatcher({ onBoundsChange, onZoomChange }) {
   return null;
 }
 
-function RecenterButton({ userLocation }) {
+function RecenterButton({ userLocation, onLocationFound }) {
   const map = useMap();
-  if (!userLocation) return null;
+  const [loading, setLoading] = useState(false);
+
+  const handleClick = () => {
+    if (userLocation) {
+      map.flyTo(userLocation, 14, { animate: true, duration: 0.8 });
+      return;
+    }
+    if (!navigator.geolocation) return;
+    setLoading(true);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const coords = [pos.coords.latitude, pos.coords.longitude];
+        onLocationFound(coords);
+        map.flyTo(coords, 14, { animate: true, duration: 0.8 });
+        setLoading(false);
+      },
+      () => setLoading(false)
+    );
+  };
 
   return (
     <button
-      onClick={() => map.flyTo(userLocation, 14, { animate: true, duration: 0.8 })}
-      className="absolute bottom-6 right-4 z-[1000] bg-white dark:bg-gray-800 shadow-lg rounded-full p-3 border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-      title="Re-center on my location"
+      onClick={handleClick}
+      className="absolute bottom-6 left-1/2 -translate-x-1/2 z-[1000] flex items-center gap-2 px-4 py-2.5 bg-white shadow-lg rounded-full border border-gray-200 hover:bg-gray-50 transition-colors text-sm font-medium text-[#2E3A59]"
+      title="Find my location"
       style={{ touchAction: 'none' }}
     >
-      <LocateFixed className="w-5 h-5 text-[#14B8FF]" />
+      <LocateFixed className={`w-4 h-4 text-[#14B8FF] ${loading ? 'animate-spin' : ''}`} />
+      {loading ? 'Finding location…' : 'Find My Location'}
     </button>
   );
 }
@@ -222,7 +241,7 @@ export default function SaleMap({ sales, center, onVisibleSalesChange }) {
       >
         <MapUpdater center={center} />
         <MapBoundsWatcher onBoundsChange={setMapBounds} onZoomChange={setZoom} />
-        <RecenterButton userLocation={userLocation} />
+        <RecenterButton userLocation={userLocation} onLocationFound={setUserLocation} />
 
         <TileLayer
           attribution='&copy; <a href="https://maps.google.com">Google Maps</a>'
