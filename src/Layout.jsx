@@ -23,11 +23,11 @@ const initPostHog = () => {
         ph.init('phc_O1v6eh3WZWysCmiW5sODyx8YScYNMEligZyMHZGEekb', {
           api_host: 'https://us.i.posthog.com',
           person_profiles: 'identified_only',
-          capture_pageview: false,
+          capture_pageview: false
         });
       }
       posthog = ph;
-    }).catch(err => {
+    }).catch((err) => {
       console.log('PostHog failed to load:', err);
       posthog = null;
     });
@@ -45,36 +45,36 @@ function LayoutContent({ children, currentPageName }) {
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   const PUBLIC_PAGES = [
-    // Core browsing — no login required
-    'Home',
-    'YardSales', 'yard-sales',
-    'YardSaleDetails', 'SalePage',
-    'SellerPage',
-    'Pricing',
-    'Calendar',
-    // Blog
-    'Blog', 'BlogPost', 'BlogSlug',
-    // Guides
-    'Guides', 'GuidesAdvertise', 'GuidesFindSales', 'GuidesPermit', 'GuidesPricing', 'GuidesTimings', 'GuidesSeniors',
-    'guides', 'guides-advertise-yard-sale', 'guides-best-time-yard-sale', 'guides-find-yard-sales',
-    'guides-permit-requirements-nyc', 'guides-pricing-yard-sale-items', 'guides-seniors-yard-sales',
-    // SEO landing pages
-    'BrooklynStoopSalesWeekend', 'StoopSalesNYCWeekend', 'StoopSalesBrooklyn', 'StoopSalesManhattan',
-    'StoopSalesQueens', 'StoopSalesBronx', 'StoopSalesJerseyCity',
-    'YardSalesNearMeWeekend', 'GarageSalesLosAngeles', 'GarageSalesSanFrancisco',
-    'StoopSalesParkSlope', 'StoopSalesWilliamsburg',
-    'stoop-sales-williamsburg', 'stoop-sales-park-slope',
-    'garage-sales-nyc', 'garage-sales-brooklyn', 'garage-sales-manhattan', 'garage-sales-queens', 'garage-sales-bronx',
-    'stoop-sales-nyc', 'find-stoop-sales-near-you',
-    'how-to-price-items-stoop-sale', 'where-to-post-yard-sale-online',
-    'free-items', 'free-stuff-nyc', 'free-stuff-brooklyn', 'free-stuff-queens', 'free-stuff-hoboken',
-    'guides-post-free-stuff', 'guides-selling-vs-giving',
-    'site-map',
-    // Knowledge Hub
-    'what-is-a-stoop-sale', 'stoop-sale-vs-yard-sale', 'how-to-host-a-stoop-sale', 'best-time-for-yard-sales',
-    // Legal & misc
-    'Legal', 'about', 'contact',
-  ];
+  // Core browsing — no login required
+  'Home',
+  'YardSales', 'yard-sales',
+  'YardSaleDetails', 'SalePage',
+  'SellerPage',
+  'Pricing',
+  'Calendar',
+  // Blog
+  'Blog', 'BlogPost', 'BlogSlug',
+  // Guides
+  'Guides', 'GuidesAdvertise', 'GuidesFindSales', 'GuidesPermit', 'GuidesPricing', 'GuidesTimings', 'GuidesSeniors',
+  'guides', 'guides-advertise-yard-sale', 'guides-best-time-yard-sale', 'guides-find-yard-sales',
+  'guides-permit-requirements-nyc', 'guides-pricing-yard-sale-items', 'guides-seniors-yard-sales',
+  // SEO landing pages
+  'BrooklynStoopSalesWeekend', 'StoopSalesNYCWeekend', 'StoopSalesBrooklyn', 'StoopSalesManhattan',
+  'StoopSalesQueens', 'StoopSalesBronx', 'StoopSalesJerseyCity',
+  'YardSalesNearMeWeekend', 'GarageSalesLosAngeles', 'GarageSalesSanFrancisco',
+  'StoopSalesParkSlope', 'StoopSalesWilliamsburg',
+  'stoop-sales-williamsburg', 'stoop-sales-park-slope',
+  'garage-sales-nyc', 'garage-sales-brooklyn', 'garage-sales-manhattan', 'garage-sales-queens', 'garage-sales-bronx',
+  'stoop-sales-nyc', 'find-stoop-sales-near-you',
+  'how-to-price-items-stoop-sale', 'where-to-post-yard-sale-online',
+  'free-items', 'free-stuff-nyc', 'free-stuff-brooklyn', 'free-stuff-queens', 'free-stuff-hoboken',
+  'guides-post-free-stuff', 'guides-selling-vs-giving',
+  'site-map',
+  // Knowledge Hub
+  'what-is-a-stoop-sale', 'stoop-sale-vs-yard-sale', 'how-to-host-a-stoop-sale', 'best-time-for-yard-sales',
+  // Legal & misc
+  'Legal', 'about', 'contact'];
+
   const [language, setLanguage] = useState('en');
   const { theme, toggleTheme } = useTheme();
   const queryClient = useQueryClient();
@@ -122,49 +122,49 @@ function LayoutContent({ children, currentPageName }) {
     document.head.appendChild(link);
 
     const checkAuth = async () => {
-    try {
-    const isAuth = await base44.auth.isAuthenticated();
-    if (isAuth) {
-      const currentUser = await base44.auth.me();
-      setUser(currentUser);
-      setUserContext(currentUser);
-      // Initialize PostHog when user is authenticated
-      initPostHog();
-      if (posthog) {
-        posthog.identify(currentUser.email, {
-          email: currentUser.email,
-          name: currentUser.full_name,
-          role: currentUser.role,
-        });
-      }
-      // Detect new sign-ups (created within the last 5 minutes)
-      if (currentUser.created_date) {
-        const createdAt = new Date(currentUser.created_date);
-        const minutesAgo = (Date.now() - createdAt.getTime()) / 1000 / 60;
-        if (minutesAgo < 5) {
-          base44.analytics.track({
-            eventName: 'user_signed_up',
-            properties: {
-              email: currentUser.email,
-              role: currentUser.role || 'user',
-            }
-          });
+      try {
+        const isAuth = await base44.auth.isAuthenticated();
+        if (isAuth) {
+          const currentUser = await base44.auth.me();
+          setUser(currentUser);
+          setUserContext(currentUser);
+          // Initialize PostHog when user is authenticated
+          initPostHog();
           if (posthog) {
-            posthog.capture('user_signed_up', {
+            posthog.identify(currentUser.email, {
               email: currentUser.email,
-              role: currentUser.role || 'user',
+              name: currentUser.full_name,
+              role: currentUser.role
             });
           }
-        } else {
-          base44.analytics.track({
-            eventName: 'user_logged_in',
-            properties: {
-              email: currentUser.email,
-              role: currentUser.role || 'user',
+          // Detect new sign-ups (created within the last 5 minutes)
+          if (currentUser.created_date) {
+            const createdAt = new Date(currentUser.created_date);
+            const minutesAgo = (Date.now() - createdAt.getTime()) / 1000 / 60;
+            if (minutesAgo < 5) {
+              base44.analytics.track({
+                eventName: 'user_signed_up',
+                properties: {
+                  email: currentUser.email,
+                  role: currentUser.role || 'user'
+                }
+              });
+              if (posthog) {
+                posthog.capture('user_signed_up', {
+                  email: currentUser.email,
+                  role: currentUser.role || 'user'
+                });
+              }
+            } else {
+              base44.analytics.track({
+                eventName: 'user_logged_in',
+                properties: {
+                  email: currentUser.email,
+                  role: currentUser.role || 'user'
+                }
+              });
             }
-          });
-        }
-      }
+          }
         } else if (!PUBLIC_PAGES.includes(currentPageName)) {
           base44.auth.redirectToLogin();
           return;
@@ -306,7 +306,7 @@ function LayoutContent({ children, currentPageName }) {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
-      <a href="#main-content" className="skip-to-content">Skip to main content</a>
+      <a href="#main-content" className="skip-to-content hidden">Skip to main content</a>
       {/* Mobile Web compact header — replaces bottom nav + heavy header on mobile browsers */}
       {isMobileWeb && <MobileWebHeader currentPageName={currentPageName} />}
       {/* Load fonts non-blocking */}
@@ -316,8 +316,8 @@ function LayoutContent({ children, currentPageName }) {
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"
         media="print"
-        onLoad={(e) => { e.target.media = 'all'; }}
-      />
+        onLoad={(e) => {e.target.media = 'all';}} />
+      
       <style>{`
 
         :root {
@@ -485,42 +485,42 @@ function LayoutContent({ children, currentPageName }) {
         isScrolled ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent'}`
         }
         style={{ paddingTop: 'env(safe-area-inset-top)' }}
-        role="banner"
-        >
+        role="banner">
+        
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Mobile: Back Button or Logo */}
-            {showBackButton ? (
-              <button
-                onClick={() => navigate(-1)}
-                className="flex md:hidden items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-[#14B8FF] transition-colors"
-                style={{ userSelect: 'none', WebkitTouchCallout: 'none' }}
-              >
+            {showBackButton ?
+            <button
+              onClick={() => navigate(-1)}
+              className="flex md:hidden items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-[#14B8FF] transition-colors"
+              style={{ userSelect: 'none', WebkitTouchCallout: 'none' }}>
+              
                 <ArrowLeft className="w-5 h-5" />
                 <span className="text-sm font-medium">{t('back')}</span>
-              </button>
-            ) : (
-              <Link to={createPageUrl('Home')} className="flex md:hidden items-center">
+              </button> :
+
+            <Link to={createPageUrl('Home')} className="flex md:hidden items-center">
                 <motion.img
-                  src={theme === 'dark' 
-                    ? "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/3e64c6f8d_Stooplify1-02.png"
-                    : "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/283ee8687_logo_v2.png"
-                  }
-                  alt="Stooplify"
-                  className="h-8 w-auto"
-                  width={160}
-                  height={64}
-                  whileHover={{ scale: 1.05 }} />
+                src={theme === 'dark' ?
+                "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/3e64c6f8d_Stooplify1-02.png" :
+                "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/283ee8687_logo_v2.png"
+                }
+                alt="Stooplify"
+                className="h-8 w-auto"
+                width={160}
+                height={64}
+                whileHover={{ scale: 1.05 }} />
               </Link>
-            )}
+            }
 
             {/* Desktop: Logo (always visible) */}
             <Link to={createPageUrl('Home')} className="hidden md:flex items-center">
               <motion.img
-                src={theme === 'dark' 
-                  ? "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/3e64c6f8d_Stooplify1-02.png"
-                  : "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/283ee8687_logo_v2.png"
+                src={theme === 'dark' ?
+                "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/3e64c6f8d_Stooplify1-02.png" :
+                "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/283ee8687_logo_v2.png"
                 }
                 alt="Stooplify"
                 className="h-10 w-auto"
@@ -541,8 +541,8 @@ function LayoutContent({ children, currentPageName }) {
                     currentPageName === link.page ? 'text-[#14B8FF]' : 'text-[#2E3A59] dark:text-white'}`
                     }>
                       {link.name}
-                    </Link>
-                );
+                    </Link>);
+
               })}
             </nav>
 
@@ -568,19 +568,19 @@ function LayoutContent({ children, currentPageName }) {
                   className="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors relative">
 
                     <div className="w-8 h-8 rounded-full flex items-center justify-center relative overflow-hidden">
-                      {user.profile_picture ? (
-                        <img 
-                          src={user.profile_picture}
-                          alt="Profile"
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gradient-to-br from-[#FF6F61] to-[#F5A623] flex items-center justify-center">
+                      {user.profile_picture ?
+                    <img
+                      src={user.profile_picture}
+                      alt="Profile"
+                      className="w-full h-full object-cover" /> :
+
+
+                    <div className="w-full h-full bg-gradient-to-br from-[#FF6F61] to-[#F5A623] flex items-center justify-center">
                           <span className="text-sm font-bold text-white">
                             {(user.full_name || user.email)?.[0]?.toUpperCase()}
                           </span>
                         </div>
-                      )}
+                    }
                       {user && unreadCount > 0 &&
                     <span className="absolute -top-1 -right-1 w-5 h-5 bg-green-500 text-white text-xs font-bold rounded-full flex items-center justify-center border-2 border-white dark:border-gray-900">
                           {unreadCount > 9 ? '9+' : unreadCount}
@@ -731,22 +731,22 @@ function LayoutContent({ children, currentPageName }) {
 
               <div className="px-4 py-4 space-y-2">
                 {navLinks.map((link) => {
-                  const seoUrl = getSeoUrl(link.page);
-                  return (
-                    <Link
-                      key={link.page}
-                      to={createPageUrl(seoUrl)}
-                      onClick={() => setIsMenuOpen(false)}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
-                      currentPageName === link.page ?
-                      'bg-[#14B8FF]/10 text-[#14B8FF]' :
-                      'text-[#2E3A59] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'}`
-                      }>
+                const seoUrl = getSeoUrl(link.page);
+                return (
+                  <Link
+                    key={link.page}
+                    to={createPageUrl(seoUrl)}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                    currentPageName === link.page ?
+                    'bg-[#14B8FF]/10 text-[#14B8FF]' :
+                    'text-[#2E3A59] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'}`
+                    }>
                         <link.icon size={20} />
                         <span className="font-medium">{link.name}</span>
-                      </Link>
-                  );
-                })}
+                      </Link>);
+
+              })}
 
                 {user &&
               <>
@@ -828,20 +828,20 @@ function LayoutContent({ children, currentPageName }) {
       </motion.header>
 
       {/* Main Content with Page Transitions */}
-      <main 
+      <main
         ref={mainContentRef}
         className={isMobileWeb ? "pt-14" : "pt-16 md:pt-20 pb-0 md:pb-0"}
         style={isMobileWeb ? {} : { paddingBottom: 'calc(4rem + env(safe-area-inset-bottom))' }}
-        id="main-content"
-      >
+        id="main-content">
+        
         <AnimatePresence mode="wait">
           <motion.div
             key={location.pathname}
             initial={{ opacity: 0, x: 100 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -100 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
-          >
+            transition={{ duration: 0.3, ease: 'easeInOut' }}>
+            
             {children}
           </motion.div>
         </AnimatePresence>
@@ -849,20 +849,20 @@ function LayoutContent({ children, currentPageName }) {
 
       {/* Scroll to Top Button */}
       <AnimatePresence>
-        {showScrollTop && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="fixed bottom-24 right-4 z-50 w-10 h-10 bg-[#14B8FF] text-white rounded-full shadow-lg flex items-center justify-center hover:bg-[#0da3e6] transition-colors"
-            aria-label="Scroll to top"
-          >
+        {showScrollTop &&
+        <motion.button
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed bottom-24 right-4 z-50 w-10 h-10 bg-[#14B8FF] text-white rounded-full shadow-lg flex items-center justify-center hover:bg-[#0da3e6] transition-colors"
+          aria-label="Scroll to top">
+          
             <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="18 15 12 9 6 15" />
             </svg>
           </motion.button>
-        )}
+        }
       </AnimatePresence>
 
       {/* Bottom Navigation - Mobile Only (hidden in mobile browser) */}
@@ -874,9 +874,9 @@ function LayoutContent({ children, currentPageName }) {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             <div className="col-span-1 md:col-span-2">
               <img
-                src={theme === 'dark' 
-                  ? "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/3e64c6f8d_Stooplify1-02.png"
-                  : "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/283ee8687_logo_v2.png"
+                src={theme === 'dark' ?
+                "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/3e64c6f8d_Stooplify1-02.png" :
+                "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/283ee8687_logo_v2.png"
                 }
                 alt="Stooplify"
                 className="h-10 w-auto mb-4"
@@ -940,7 +940,7 @@ function LayoutContent({ children, currentPageName }) {
                     className="inline-flex items-center gap-2 text-gray-600 dark:text-white/70 hover:text-[#14B8FF] transition-colors">
 
                     <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                     </svg>
                     <span>Stooplify</span>
                   </a>
@@ -999,6 +999,6 @@ export default function Layout({ children, currentPageName }) {
       <ThemeProvider>
         <LayoutContent children={children} currentPageName={currentPageName} />
       </ThemeProvider>
-    </SentryErrorBoundary>
-  );
+    </SentryErrorBoundary>);
+
 }
