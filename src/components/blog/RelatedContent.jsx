@@ -104,7 +104,7 @@ export default function RelatedContent({ currentSlug }) {
       </div>
 
       {/* List Your Sale CTA */}
-      <div className="p-6 bg-[#FF6F61]/5 rounded-2xl border border-[#FF6F61]/20">
+      <div className="p-6 bg-[#FF6F61]/5 rounded-2xl border border-[#FF6F61]/20 hidden">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <h3 className="font-bold text-[#2E3A59] dark:text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>Have a Sale Coming Up?</h3>
