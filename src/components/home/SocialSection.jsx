@@ -4,7 +4,7 @@ import { Instagram, ChevronLeft, ChevronRight } from 'lucide-react';
 
 // Paste your actual Instagram post URLs here (copy from instagram.com/p/...)
 const INSTAGRAM_POST_URLS = [
-  // 'https://www.instagram.com/p/YOUR_POST_1/',
+  'https://www.instagram.com/p/DYjCAH-DcLP/',
   // 'https://www.instagram.com/p/YOUR_POST_2/',
   // 'https://www.instagram.com/p/YOUR_POST_3/',
 ];
