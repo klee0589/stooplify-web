@@ -1,4 +1,5 @@
 import React, { useState, useEffect, Suspense } from 'react';
+import StooplifyChat from '../components/StooplifyChat';
 import { useTranslation } from '../components/translations';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
@@ -262,6 +263,9 @@ export default function Home() {
 
       {/* SOCIAL MEDIA */}
       <SocialSection />
+
+      {/* AI Chat Assistant */}
+      <StooplifyChat />
 
       {/* Final CTA */}
       <motion.section 
