@@ -1,12 +1,34 @@
-import React, { useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { Instagram } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Instagram, ChevronLeft, ChevronRight } from 'lucide-react';
 
 // Paste your actual Instagram post URLs here (copy from instagram.com/p/...)
 const INSTAGRAM_POST_URLS = [
   // 'https://www.instagram.com/p/YOUR_POST_1/',
   // 'https://www.instagram.com/p/YOUR_POST_2/',
   // 'https://www.instagram.com/p/YOUR_POST_3/',
+];
+
+// Placeholder Instagram-style post cards for the carousel
+const MOCK_POSTS = [
+  {
+    image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=400&fit=crop',
+    caption: '🛍️ Amazing finds at this weekend\'s Park Slope stoop sale! Vintage furniture, books & more.',
+    likes: 142,
+    tag: 'Park Slope',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400&h=400&fit=crop',
+    caption: '🌇 Williamsburg stoop sale season is HERE. Dozens of sales mapped on Stooplify 📍',
+    likes: 218,
+    tag: 'Williamsburg',
+  },
+  {
+    image: 'https://images.unsplash.com/photo-1545241047-6083a3684587?w=400&h=400&fit=crop',
+    caption: '✨ From one stoop to another — your treasure is someone\'s Sunday morning find. List yours free!',
+    likes: 309,
+    tag: 'NYC',
+  },
 ];
 
 function InstagramEmbed({ url }) {
@@ -27,31 +49,100 @@ function InstagramEmbed({ url }) {
   );
 }
 
-function InstagramProfileCard() {
+function InstagramCarousel() {
+  const [active, setActive] = useState(0);
+  const posts = MOCK_POSTS;
+  const count = posts.length;
+
+  // Auto-rotate every 3.5s
+  useEffect(() => {
+    const timer = setInterval(() => setActive(i => (i + 1) % count), 3500);
+    return () => clearInterval(timer);
+  }, [count]);
+
+  const getPosition = (i) => {
+    const diff = (i - active + count) % count;
+    if (diff === 0) return 'center';
+    if (diff === 1) return 'right';
+    return 'left';
+  };
+
+  const posStyles = {
+    center: { x: 0, scale: 1, zIndex: 10, rotateY: 0, opacity: 1 },
+    right:  { x: 220, scale: 0.8, zIndex: 5, rotateY: -18, opacity: 0.75 },
+    left:   { x: -220, scale: 0.8, zIndex: 5, rotateY: 18, opacity: 0.75 },
+  };
+
   return (
-    <motion.a
-      href="https://www.instagram.com/stooplify/"
-      target="_blank"
-      rel="noopener noreferrer"
-      initial={{ opacity: 0, scale: 0.95 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      whileHover={{ scale: 1.02 }}
-      className="flex flex-col items-center gap-6 p-10 rounded-3xl text-white shadow-2xl max-w-sm mx-auto w-full"
-      style={{ background: 'linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)' }}
-    >
-      <div className="w-24 h-24 rounded-full border-4 border-white/50 overflow-hidden bg-white/20 flex items-center justify-center">
-        <Instagram className="w-12 h-12 text-white" />
+    <div className="relative flex justify-center items-center" style={{ height: 460, perspective: 1000 }}>
+      {posts.map((post, i) => {
+        const pos = getPosition(i);
+        const style = posStyles[pos];
+        return (
+          <motion.div
+            key={i}
+            animate={{
+              x: style.x,
+              scale: style.scale,
+              rotateY: style.rotateY,
+              opacity: style.opacity,
+              y: pos === 'center' ? [0, -10, 0] : 0,
+            }}
+            transition={{
+              x: { type: 'spring', stiffness: 300, damping: 30 },
+              scale: { duration: 0.4 },
+              rotateY: { duration: 0.4 },
+              opacity: { duration: 0.4 },
+              y: pos === 'center' ? { duration: 3, repeat: Infinity, ease: 'easeInOut' } : { duration: 0 },
+            }}
+            style={{ zIndex: style.zIndex, position: 'absolute', transformStyle: 'preserve-3d' }}
+            onClick={() => setActive(i)}
+            className="cursor-pointer"
+          >
+            <div className="w-72 rounded-3xl overflow-hidden shadow-2xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+              {/* Header */}
+              <div className="flex items-center gap-3 px-4 py-3">
+                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #f09433, #dc2743, #bc1888)' }}>
+                  <Instagram className="w-4 h-4 text-white" />
+                </div>
+                <span className="font-semibold text-sm text-gray-800 dark:text-white">stooplify</span>
+                <span className="ml-auto text-xs text-gray-400">{post.tag}</span>
+              </div>
+              {/* Image */}
+              <div className="w-full aspect-square overflow-hidden">
+                <img src={post.image} alt={post.tag} className="w-full h-full object-cover" loading="lazy" />
+              </div>
+              {/* Caption */}
+              <div className="px-4 py-3">
+                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">❤️ {post.likes} likes</p>
+                <p className="text-xs text-gray-700 dark:text-gray-300 line-clamp-2">{post.caption}</p>
+              </div>
+            </div>
+          </motion.div>
+        );
+      })}
+
+      {/* Nav buttons */}
+      <button
+        onClick={() => setActive(i => (i - 1 + count) % count)}
+        className="absolute left-0 z-20 w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow-lg flex items-center justify-center text-gray-600 dark:text-gray-300 hover:scale-110 transition-transform"
+      >
+        <ChevronLeft className="w-5 h-5" />
+      </button>
+      <button
+        onClick={() => setActive(i => (i + 1) % count)}
+        className="absolute right-0 z-20 w-10 h-10 rounded-full bg-white dark:bg-gray-800 shadow-lg flex items-center justify-center text-gray-600 dark:text-gray-300 hover:scale-110 transition-transform"
+      >
+        <ChevronRight className="w-5 h-5" />
+      </button>
+
+      {/* Dots */}
+      <div className="absolute bottom-0 flex gap-2">
+        {posts.map((_, i) => (
+          <button key={i} onClick={() => setActive(i)} className={`w-2 h-2 rounded-full transition-all ${i === active ? 'bg-pink-500 w-4' : 'bg-gray-300 dark:bg-gray-600'}`} />
+        ))}
       </div>
-      <div className="text-center">
-        <p className="text-2xl font-bold" style={{ fontFamily: 'Poppins, sans-serif' }}>@stooplify</p>
-        <p className="text-white/80 mt-1 text-sm">Sale spotlights · NYC finds · Community</p>
-      </div>
-      <div className="flex items-center gap-2 bg-white text-pink-600 font-semibold px-6 py-3 rounded-full shadow-lg text-sm">
-        <Instagram className="w-4 h-4" />
-        Follow on Instagram
-      </div>
-    </motion.a>
+    </div>
   );
 }
 
@@ -101,8 +192,8 @@ export default function SocialSection() {
             ))}
           </div>
         ) : (
-          <div className="flex justify-center mb-10">
-            <InstagramProfileCard />
+          <div className="mb-10 overflow-hidden px-16">
+            <InstagramCarousel />
           </div>
         )}
 
