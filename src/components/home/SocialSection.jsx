@@ -74,7 +74,7 @@ function InstagramCarousel() {
   };
 
   return (
-    <div className="relative flex justify-center items-center" style={{ height: 460, perspective: 1000 }}>
+    <div className="relative flex justify-center items-center" style={{ height: 340, perspective: 1000 }}>
       {posts.map((post, i) => {
         const pos = getPosition(i);
         const style = posStyles[pos];
@@ -86,7 +86,7 @@ function InstagramCarousel() {
               scale: style.scale,
               rotateY: style.rotateY,
               opacity: style.opacity,
-              y: pos === 'center' ? [0, -10, 0] : 0,
+              y: pos === 'center' ? [0, -8, 0] : 0,
             }}
             transition={{
               x: { type: 'spring', stiffness: 300, damping: 30 },
@@ -99,23 +99,21 @@ function InstagramCarousel() {
             onClick={() => setActive(i)}
             className="cursor-pointer"
           >
-            <div className="w-72 rounded-3xl overflow-hidden shadow-2xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
+            <div className="w-56 rounded-2xl overflow-hidden shadow-xl bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700">
               {/* Header */}
-              <div className="flex items-center gap-3 px-4 py-3">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #f09433, #dc2743, #bc1888)' }}>
-                  <Instagram className="w-4 h-4 text-white" />
+              <div className="flex items-center gap-2 px-3 py-2">
+                <div className="w-6 h-6 rounded-full flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #f09433, #dc2743, #bc1888)' }}>
+                  <Instagram className="w-3 h-3 text-white" />
                 </div>
-                <span className="font-semibold text-sm text-gray-800 dark:text-white">stooplify</span>
-                <span className="ml-auto text-xs text-gray-400">{post.tag}</span>
+                <span className="font-semibold text-xs text-gray-800 dark:text-white">stooplify</span>
               </div>
               {/* Image */}
               <div className="w-full aspect-square overflow-hidden">
                 <img src={post.image} alt={post.tag} className="w-full h-full object-cover" loading="lazy" />
               </div>
               {/* Caption */}
-              <div className="px-4 py-3">
-                <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">❤️ {post.likes} likes</p>
-                <p className="text-xs text-gray-700 dark:text-gray-300 line-clamp-2">{post.caption}</p>
+              <div className="px-3 py-2">
+                <p className="text-[10px] text-gray-600 dark:text-gray-400 line-clamp-1">{post.caption}</p>
               </div>
             </div>
           </motion.div>
