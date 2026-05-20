@@ -933,7 +933,7 @@ function LayoutContent({ children, currentPageName }) {
                   </a>
                 </div>
               </div>
-              <div className="flex-1">
+              <div className="flex-row">
                 <h4 className="font-semibold text-lg mb-4 text-gray-900 dark:text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>{t('legal')}</h4>
                 <ul className="flex flex-wrap gap-4 text-gray-600 dark:text-white/70 text-sm">
                   <li><Link to={createPageUrl('Legal') + '#terms'} className="hover:text-[#14B8FF] transition-colors">{t('termsOfService')}</Link></li>
