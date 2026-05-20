@@ -950,11 +950,6 @@ function LayoutContent({ children, currentPageName }) {
           </div>
 
           {/* Email Signup */}
-          
-
-
-
-
 
 
 
