@@ -85,40 +85,40 @@ export default function RelatedContent({ currentSlug }) {
       </div>
 
       {/* Related Guides */}
-      <div className="p-6 bg-gray-50 dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 hidden">
-        <h3 className="text-xl font-bold text-[#2E3A59] dark:text-white mb-4 flex items-center gap-2" style={{ fontFamily: 'Poppins, sans-serif' }}>
-          📚 Related Guides
-        </h3>
-        <div className="grid sm:grid-cols-2 gap-3">
-          {GUIDE_LINKS.map((guide) =>
-          <Link
-            key={guide.url}
-            to={guide.url}
-            className="flex items-center gap-2 px-4 py-3 bg-white dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600 hover:border-[#14B8FF] hover:text-[#14B8FF] transition-all text-sm font-medium text-gray-700 dark:text-gray-300">
-            
-              <span className="text-[#14B8FF]">→</span>
-              {guide.label}
-            </Link>
-          )}
-        </div>
-      </div>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
 
       {/* List Your Sale CTA */}
-      <div className="p-6 bg-[#FF6F61]/5 rounded-2xl border border-[#FF6F61]/20 hidden">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div>
-            <h3 className="font-bold text-[#2E3A59] dark:text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>Have a Sale Coming Up?</h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">List your yard sale for free and reach local buyers in your neighborhood.</p>
-          </div>
-          <Link
-            to="/add-yard-sale"
-            className="flex-shrink-0 flex items-center gap-2 px-6 py-3 bg-[#FF6F61] text-white rounded-xl font-semibold text-sm hover:bg-[#e85d50] transition-colors shadow-md">
-            
-            <PlusCircle className="w-4 h-4" />
-            List Your Sale Free
-          </Link>
-        </div>
-      </div>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
     </div>);
 
 }
