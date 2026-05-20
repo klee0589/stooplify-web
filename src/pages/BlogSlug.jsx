@@ -282,6 +282,19 @@ export default function BlogSlug() {
           </motion.div>
         )}
 
+        {/* AdSense — top of article */}
+        <div className="my-6">
+          <ins
+            className="adsbygoogle"
+            style={{ display: 'block' }}
+            data-ad-client="ca-pub-9420381871665480"
+            data-ad-slot="1031641212"
+            data-ad-format="auto"
+            data-full-width-responsive="true"
+          />
+          <script dangerouslySetInnerHTML={{ __html: '(adsbygoogle = window.adsbygoogle || []).push({});' }} />
+        </div>
+
         {/* In-content CTA — top */}
         <div className="my-8 p-5 bg-gradient-to-r from-[#14B8FF]/10 to-[#FF6F61]/10 border border-[#14B8FF]/20 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4 not-prose">
           <div>
