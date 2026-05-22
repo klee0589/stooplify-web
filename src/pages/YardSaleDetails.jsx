@@ -7,8 +7,9 @@ import { createPageUrl } from '../utils';
 import { 
   MapPin, Calendar, Clock, Heart, Share2, Navigation, 
   ChevronLeft, ChevronRight, X, ArrowLeft, Tag, UserCheck, Flag, Trash2, Edit,
-  DollarSign, CreditCard, Smartphone, Package, Sofa, Shirt, Zap, Baby, Crown, BookOpen, Dumbbell, Users, MessageCircle
+  DollarSign, CreditCard, Smartphone, Package, Sofa, Shirt, Zap, Baby, Crown, BookOpen, Dumbbell, Users, MessageCircle, CalendarPlus, ChevronDown
 } from 'lucide-react';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MapContainer, TileLayer, Marker, Popup, Circle } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Button } from "@/components/ui/button";
@@ -440,6 +441,43 @@ export default function YardSaleDetails() {
       const url = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
       window.open(url, '_blank');
     }
+  };
+
+  const handleAddToCalendar = (type) => {
+    const title = encodeURIComponent(sale.title);
+    const location = encodeURIComponent(`${sale.general_location || ''}, ${sale.city}, ${sale.state}`);
+    const details = encodeURIComponent(sale.description || `Yard sale on Stooplify: ${window.location.href}`);
+    const startTime = parseTimeTo24h(sale.start_time).replace(/:/g, '').slice(0, 4);
+    const endTime = parseTimeTo24h(sale.end_time).replace(/:/g, '').slice(0, 4);
+    const dateStr = sale.date ? sale.date.replace(/-/g, '') : '';
+    const startDT = `${dateStr}T${startTime}00`;
+    const endDT = `${dateStr}T${endTime}00`;
+
+    if (type === 'google') {
+      const url = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${startDT}/${endDT}&details=${details}&location=${location}`;
+      window.open(url, '_blank');
+    } else if (type === 'ical' || type === 'outlook') {
+      const icsContent = [
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
+        'BEGIN:VEVENT',
+        `DTSTART:${startDT}`,
+        `DTEND:${endDT}`,
+        `SUMMARY:${decodeURIComponent(title)}`,
+        `DESCRIPTION:${decodeURIComponent(details)}`,
+        `LOCATION:${decodeURIComponent(location)}`,
+        'END:VEVENT',
+        'END:VCALENDAR'
+      ].join('\r\n');
+      const blob = new Blob([icsContent], { type: 'text/calendar' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${sale.title.replace(/\s+/g, '_')}.ics`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+    base44.analytics.track({ eventName: 'add_to_calendar', properties: { sale_id: saleId, calendar_type: type } });
   };
 
   const isAddressUnlocked = () => {
@@ -1021,6 +1059,38 @@ export default function YardSaleDetails() {
               >
                 <Share2 className="w-6 h-6" />
               </motion.button>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <motion.button
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="flex items-center gap-2 px-4 py-3 bg-white border-2 border-gray-200 text-gray-600 rounded-xl font-medium hover:border-[#FF6F61] hover:text-[#FF6F61] transition-all"
+                  >
+                    <CalendarPlus className="w-5 h-5" />
+                    <span className="text-sm font-semibold">Add to Calendar</span>
+                    <ChevronDown className="w-4 h-4" />
+                  </motion.button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-52">
+                  <DropdownMenuItem onClick={() => handleAddToCalendar('google')} className="cursor-pointer gap-2">
+                    <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none">
+                      <path d="M21.8 10.2H12v3.6h5.6c-.5 2.5-2.7 4.2-5.6 4.2-3.3 0-6-2.7-6-6s2.7-6 6-6c1.5 0 2.9.6 4 1.5l2.7-2.7C17.1 3.2 14.7 2 12 2 6.5 2 2 6.5 2 12s4.5 10 10 10c5.5 0 9.7-4 9.7-9.7 0-.7-.1-1.4-.2-2.1h-.7z" fill="#4285F4"/>
+                    </svg>
+                    Google Calendar
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleAddToCalendar('ical')} className="cursor-pointer gap-2">
+                    <Calendar className="w-4 h-4 text-gray-500" />
+                    Apple Calendar (.ics)
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => handleAddToCalendar('outlook')} className="cursor-pointer gap-2">
+                    <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="#0078D4">
+                      <path d="M7 2H3a1 1 0 00-1 1v18a1 1 0 001 1h18a1 1 0 001-1V8l-6-6H7zm11 17H6V11h12v8zM13 3.5L18.5 9H13V3.5z"/>
+                    </svg>
+                    Outlook / iCal
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
 
             {/* Social Share Strip */}
