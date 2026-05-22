@@ -45,34 +45,10 @@ function LayoutContent({ children, currentPageName }) {
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   const PUBLIC_PAGES = [
-  // Core browsing — no login required
-  'Home',
-  'YardSaleDetails', 'SalePage',
-  'SellerPage',
-  'Pricing',
-  'Calendar',
-  // Blog
+  // Blog only — publicly accessible without login
   'Blog', 'BlogPost', 'BlogSlug',
-  // Guides
-  'Guides', 'GuidesAdvertise', 'GuidesFindSales', 'GuidesPermit', 'GuidesPricing', 'GuidesTimings', 'GuidesSeniors',
-  'guides', 'guides-advertise-yard-sale', 'guides-best-time-yard-sale', 'guides-find-yard-sales',
-  'guides-permit-requirements-nyc', 'guides-pricing-yard-sale-items', 'guides-seniors-yard-sales',
-  // SEO landing pages
-  'BrooklynStoopSalesWeekend', 'StoopSalesNYCWeekend', 'StoopSalesBrooklyn', 'StoopSalesManhattan',
-  'StoopSalesQueens', 'StoopSalesBronx', 'StoopSalesJerseyCity',
-  'YardSalesNearMeWeekend', 'GarageSalesLosAngeles', 'GarageSalesSanFrancisco',
-  'StoopSalesParkSlope', 'StoopSalesWilliamsburg',
-  'stoop-sales-williamsburg', 'stoop-sales-park-slope',
-  'garage-sales-nyc', 'garage-sales-brooklyn', 'garage-sales-manhattan', 'garage-sales-queens', 'garage-sales-bronx',
-  'stoop-sales-nyc', 'find-stoop-sales-near-you',
-  'how-to-price-items-stoop-sale', 'where-to-post-yard-sale-online',
-  'free-items', 'free-stuff-nyc', 'free-stuff-brooklyn', 'free-stuff-queens', 'free-stuff-hoboken',
-  'guides-post-free-stuff', 'guides-selling-vs-giving',
-  'site-map',
-  // Knowledge Hub
-  'what-is-a-stoop-sale', 'stoop-sale-vs-yard-sale', 'how-to-host-a-stoop-sale', 'best-time-for-yard-sales',
   // Legal & misc
-  'Legal', 'about', 'contact'];
+  'Legal', 'about', 'contact', 'site-map'];
 
   const [language, setLanguage] = useState('en');
   const { theme, toggleTheme } = useTheme();
