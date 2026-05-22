@@ -62,6 +62,7 @@ export default function YardSales() {
   const [showUpcomingEvents, setShowUpcomingEvents] = useState(true);
   const [favorites, setFavorites] = useState([]);
   const [user, setUser] = useState(null);
+  const [authChecked, setAuthChecked] = useState(false);
   const [language, setLanguage] = useState('en');
   const [visibleMapSales, setVisibleMapSales] = useState([]);
   const [userLocation, setUserLocation] = useState(null);
@@ -101,7 +102,9 @@ export default function YardSales() {
           setUser(currentUser);
         }
       } catch (e) {
-        // not logged in — that's fine, page is public
+        // not logged in
+      } finally {
+        setAuthChecked(true);
       }
     };
     checkAuth();
@@ -415,6 +418,42 @@ export default function YardSales() {
     await queryClient.invalidateQueries(['yardSales']);
     await queryClient.invalidateQueries(['favorites']);
   };
+
+  if (!authChecked) {
+    return (
+      <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900 flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-[#FF6F61]/30 border-t-[#FF6F61] rounded-full animate-spin" />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900 flex items-center justify-center px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl p-10 max-w-md w-full text-center"
+        >
+          <div className="w-20 h-20 bg-[#FF6F61]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+            <MapPin className="w-10 h-10 text-[#FF6F61]" />
+          </div>
+          <h2 className="text-2xl font-bold text-[#2E3A59] dark:text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            Sign in to Find Sales
+          </h2>
+          <p className="text-gray-500 dark:text-gray-400 mb-8">
+            Create a free account or sign in to browse yard sales, stoop sales, and local deals near you.
+          </p>
+          <Button
+            onClick={() => base44.auth.redirectToLogin()}
+            className="w-full bg-[#FF6F61] hover:bg-[#e55a4d] text-white font-semibold py-3 rounded-xl text-base"
+          >
+            Sign In / Create Account
+          </Button>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <PullToRefresh onRefresh={handleRefresh}>

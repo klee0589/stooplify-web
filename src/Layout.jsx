@@ -47,7 +47,6 @@ function LayoutContent({ children, currentPageName }) {
   const PUBLIC_PAGES = [
   // Core browsing — no login required
   'Home',
-  'YardSales', 'yard-sales',
   'YardSaleDetails', 'SalePage',
   'SellerPage',
   'Pricing',
