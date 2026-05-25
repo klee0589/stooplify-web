@@ -626,17 +626,120 @@ export default function YardSaleDetails() {
         </div>
       )}
 
-      {/* Back Button */}
+      {/* Back Button & Quick Actions */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-        <Link to={createPageUrl('YardSales')}>
-          <motion.button
-            whileHover={{ x: -5 }}
-            className="flex items-center gap-2 text-gray-600 hover:text-[#FF6F61] transition-colors"
-          >
-            <ArrowLeft className="w-5 h-5" />
-            {t('backToSales')}
-          </motion.button>
-        </Link>
+        <div className="flex items-center justify-between gap-4">
+          <Link to={createPageUrl('YardSales')}>
+            <motion.button
+              whileHover={{ x: -5 }}
+              className="flex items-center gap-2 text-gray-600 hover:text-[#FF6F61] transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5" />
+              {t('backToSales')}
+            </motion.button>
+          </Link>
+
+          {/* Quick Action Buttons */}
+          <div className="flex flex-wrap gap-2 justify-end">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => attendanceMutation.mutate()}
+              className={`flex items-center justify-center gap-2 px-4 py-2 rounded-lg font-semibold text-sm shadow-md transition-all ${
+                isAttending
+                  ? 'bg-green-500 text-white hover:bg-green-600'
+                  : 'bg-[#2E3A59] text-white hover:bg-[#1a2238]'
+              }`}
+            >
+              <UserCheck className="w-4 h-4" />
+              {isAttending ? '✓ Attending' : "I'm Attending"}
+            </motion.button>
+
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handleGetDirections}
+              className="flex items-center justify-center gap-2 px-4 py-2 bg-[#FF6F61] text-white rounded-lg font-semibold text-sm shadow-md"
+            >
+              <Navigation className="w-4 h-4" />
+              Directions
+            </motion.button>
+
+            {sale.created_by !== user?.email && (
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => {
+                  if (!user) {
+                    base44.auth.redirectToLogin();
+                    return;
+                  }
+                  const msgSection = document.getElementById('message-section');
+                  if (msgSection) {
+                    msgSection.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
+                className="flex items-center justify-center gap-2 px-4 py-2 bg-[#14B8FF] text-white rounded-lg font-semibold text-sm shadow-md"
+              >
+                <MessageCircle className="w-4 h-4" />
+                Chat
+              </motion.button>
+            )}
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={() => favoriteMutation.mutate()}
+              className={`w-10 h-10 rounded-lg flex items-center justify-center border-2 transition-all ${
+                isFavorite 
+                  ? 'bg-[#FF6F61]/10 border-[#FF6F61] text-[#FF6F61]' 
+                  : 'bg-white border-gray-200 text-gray-400 hover:border-[#FF6F61] hover:text-[#FF6F61]'
+              }`}
+            >
+              <Heart className={`w-5 h-5 ${isFavorite ? 'fill-current' : ''}`} />
+            </motion.button>
+
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleShare}
+              className="w-10 h-10 rounded-lg flex items-center justify-center bg-white border-2 border-gray-200 text-gray-400 hover:border-[#2E3A59] hover:text-[#2E3A59] transition-all"
+            >
+              <Share2 className="w-5 h-5" />
+            </motion.button>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="flex items-center justify-center gap-1 px-4 py-2 bg-white border-2 border-gray-200 text-gray-600 rounded-lg font-medium hover:border-[#FF6F61] hover:text-[#FF6F61] transition-all"
+                >
+                  <CalendarPlus className="w-4 h-4" />
+                  <ChevronDown className="w-3 h-3" />
+                </motion.button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem onClick={() => handleAddToCalendar('google')} className="cursor-pointer gap-2">
+                  <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none">
+                    <path d="M21.8 10.2H12v3.6h5.6c-.5 2.5-2.7 4.2-5.6 4.2-3.3 0-6-2.7-6-6s2.7-6 6-6c1.5 0 2.9.6 4 1.5l2.7-2.7C17.1 3.2 14.7 2 12 2 6.5 2 2 6.5 2 12s4.5 10 10 10c5.5 0 9.7-4 9.7-9.7 0-.7-.1-1.4-.2-2.1h-.7z" fill="#4285F4"/>
+                  </svg>
+                  Google
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleAddToCalendar('ical')} className="cursor-pointer gap-2">
+                  <Calendar className="w-4 h-4 text-gray-500" />
+                  Apple
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => handleAddToCalendar('outlook')} className="cursor-pointer gap-2">
+                  <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="#0078D4">
+                    <path d="M7 2H3a1 1 0 00-1 1v18a1 1 0 001 1h18a1 1 0 001-1V8l-6-6H7zm11 17H6V11h12v8zM13 3.5L18.5 9H13V3.5z"/>
+                  </svg>
+                  Outlook
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 w-full">
@@ -988,110 +1091,7 @@ export default function YardSaleDetails() {
               </div>
             )}
 
-            {/* Action Buttons */}
-            <div className="flex flex-wrap gap-3">
-              <motion.button
-                whileHover={{ scale: 1.02, boxShadow: '0 10px 30px rgba(46, 58, 89, 0.3)' }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => attendanceMutation.mutate()}
-                className={`flex-1 min-w-[200px] flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold shadow-lg transition-all ${
-                  isAttending
-                    ? 'bg-green-500 text-white hover:bg-green-600'
-                    : 'bg-[#2E3A59] text-white hover:bg-[#1a2238]'
-                }`}
-                style={{ fontFamily: 'Poppins, sans-serif' }}
-              >
-                <UserCheck className="w-5 h-5" />
-                {isAttending ? t('imAttendingConfirmed') : t('imAttending')}
-              </motion.button>
-              
-              <motion.button
-                whileHover={{ scale: 1.02, boxShadow: '0 10px 30px rgba(255, 111, 97, 0.3)' }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleGetDirections}
-                className="flex-1 min-w-[200px] flex items-center justify-center gap-2 px-5 py-3 bg-[#FF6F61] text-white rounded-xl font-semibold shadow-lg"
-                style={{ fontFamily: 'Poppins, sans-serif' }}
-              >
-                <Navigation className="w-5 h-5" />
-                {t('getDirections')}
-              </motion.button>
-              
-              {sale.created_by !== user?.email && (
-                <motion.button
-                  whileHover={{ scale: 1.02, boxShadow: '0 10px 30px rgba(20, 184, 255, 0.3)' }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => {
-                    if (!user) {
-                      base44.auth.redirectToLogin();
-                      return;
-                    }
-                    const msgSection = document.getElementById('message-section');
-                    if (msgSection) {
-                      msgSection.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }}
-                  className="flex-1 min-w-[200px] flex items-center justify-center gap-2 px-5 py-3 bg-[#14B8FF] text-white rounded-xl font-semibold shadow-lg"
-                  style={{ fontFamily: 'Poppins, sans-serif' }}
-                >
-                  <MessageCircle className="w-5 h-5" />
-                  Chat with Host
-                </motion.button>
-              )}
-              
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => favoriteMutation.mutate()}
-                className={`w-14 h-14 rounded-xl flex items-center justify-center border-2 transition-all ${
-                  isFavorite 
-                    ? 'bg-[#FF6F61]/10 border-[#FF6F61] text-[#FF6F61]' 
-                    : 'bg-white border-gray-200 text-gray-400 hover:border-[#FF6F61] hover:text-[#FF6F61]'
-                }`}
-              >
-                <Heart className={`w-6 h-6 ${isFavorite ? 'fill-current' : ''}`} />
-              </motion.button>
-              
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={handleShare}
-                className="w-14 h-14 rounded-xl flex items-center justify-center bg-white border-2 border-gray-200 text-gray-400 hover:border-[#2E3A59] hover:text-[#2E3A59] transition-all"
-              >
-                <Share2 className="w-6 h-6" />
-              </motion.button>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="flex items-center gap-2 px-4 py-3 bg-white border-2 border-gray-200 text-gray-600 rounded-xl font-medium hover:border-[#FF6F61] hover:text-[#FF6F61] transition-all"
-                  >
-                    <CalendarPlus className="w-5 h-5" />
-                    <span className="text-sm font-semibold">Add to Calendar</span>
-                    <ChevronDown className="w-4 h-4" />
-                  </motion.button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-52">
-                  <DropdownMenuItem onClick={() => handleAddToCalendar('google')} className="cursor-pointer gap-2">
-                    <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none">
-                      <path d="M21.8 10.2H12v3.6h5.6c-.5 2.5-2.7 4.2-5.6 4.2-3.3 0-6-2.7-6-6s2.7-6 6-6c1.5 0 2.9.6 4 1.5l2.7-2.7C17.1 3.2 14.7 2 12 2 6.5 2 2 6.5 2 12s4.5 10 10 10c5.5 0 9.7-4 9.7-9.7 0-.7-.1-1.4-.2-2.1h-.7z" fill="#4285F4"/>
-                    </svg>
-                    Google Calendar
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleAddToCalendar('ical')} className="cursor-pointer gap-2">
-                    <Calendar className="w-4 h-4 text-gray-500" />
-                    Apple Calendar (.ics)
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => handleAddToCalendar('outlook')} className="cursor-pointer gap-2">
-                    <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="#0078D4">
-                      <path d="M7 2H3a1 1 0 00-1 1v18a1 1 0 001 1h18a1 1 0 001-1V8l-6-6H7zm11 17H6V11h12v8zM13 3.5L18.5 9H13V3.5z"/>
-                    </svg>
-                    Outlook / iCal
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
 
             {/* Social Share Strip */}
             <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
