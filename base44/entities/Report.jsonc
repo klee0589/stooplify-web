@@ -1,0 +1,71 @@
+{
+  "name": "Report",
+  "type": "object",
+  "properties": {
+    "yard_sale_id": {
+      "type": "string",
+      "description": "ID of the reported yard sale"
+    },
+    "reporter_email": {
+      "type": "string",
+      "description": "Email of the user reporting"
+    },
+    "reason": {
+      "type": "string",
+      "enum": [
+        "no_sale_at_location",
+        "feels_unsafe",
+        "suspicious_listing",
+        "spam",
+        "inappropriate"
+      ],
+      "description": "Reason for report"
+    },
+    "details": {
+      "type": "string",
+      "description": "Additional details about the report"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "reviewed",
+        "resolved"
+      ],
+      "default": "pending",
+      "description": "Status of the report"
+    }
+  },
+  "required": [
+    "yard_sale_id",
+    "reporter_email",
+    "reason"
+  ],
+  "rls": {
+    "create": {
+      "data.reporter_email": "{{user.email}}"
+    },
+    "read": {
+      "$or": [
+        {
+          "data.reporter_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -1,0 +1,136 @@
+{
+  "name": "BlogPost",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "The title of the blog post"
+    },
+    "title_es": {
+      "type": "string",
+      "description": "Spanish title of the blog post"
+    },
+    "slug": {
+      "type": "string",
+      "description": "URL-friendly identifier (e.g., best-yard-sale-tips-2026)"
+    },
+    "author_name": {
+      "type": "string",
+      "default": "Stooplify Team",
+      "description": "Name of the author"
+    },
+    "author_email": {
+      "type": "string",
+      "format": "email",
+      "description": "Email of the author"
+    },
+    "excerpt": {
+      "type": "string",
+      "description": "Short summary/preview of the post (150-160 chars for snippets)"
+    },
+    "excerpt_es": {
+      "type": "string",
+      "description": "Spanish excerpt/summary of the post"
+    },
+    "content": {
+      "type": "string",
+      "description": "Main content in markdown format"
+    },
+    "content_es": {
+      "type": "string",
+      "description": "Spanish content in markdown format"
+    },
+    "featured_image_url": {
+      "type": "string",
+      "description": "URL of featured image"
+    },
+    "meta_description": {
+      "type": "string",
+      "description": "SEO meta description (150-160 characters)"
+    },
+    "meta_description_es": {
+      "type": "string",
+      "description": "Spanish SEO meta description"
+    },
+    "meta_keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "SEO keywords for the post"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tags/categories for the post"
+    },
+    "publish_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Publication date and time"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "published",
+        "archived"
+      ],
+      "default": "published",
+      "description": "Publication status"
+    },
+    "reading_time_minutes": {
+      "type": "number",
+      "description": "Estimated reading time in minutes"
+    },
+    "view_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of views"
+    }
+  },
+  "required": [
+    "title",
+    "slug",
+    "content",
+    "excerpt",
+    "meta_description",
+    "publish_date"
+  ],
+  "rls": {
+    "read": {
+      "$or": [
+        {
+          "data.status": "published"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "write": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

@@ -261,6 +261,57 @@ export default function Home() {
         </div>
       </section>
 
+      {/* FAQ / Editorial Content — boosts AdSense content quality signals */}
+      <section className="py-16 bg-white dark:bg-gray-900">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10 text-center">
+            <h2 className="text-3xl font-bold text-[#2E3A59] dark:text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>Frequently Asked Questions</h2>
+            <p className="text-gray-500 dark:text-gray-400">Everything you need to know about finding and listing stoop sales in NYC and New Jersey</p>
+          </motion.div>
+          <div className="space-y-6">
+            {[
+              {
+                q: "What is a stoop sale?",
+                a: "A stoop sale is a type of yard sale held on the front stoop or sidewalk outside a home or apartment building — a tradition unique to New York City. Instead of a suburban driveway, NYC residents use their stoops, sidewalk space, or building courtyards to sell secondhand goods, clothing, books, furniture, and other household items. Stoop sales are popular in Brooklyn, Queens, and Manhattan neighborhoods and typically happen on weekend mornings."
+              },
+              {
+                q: "How do I find yard sales near me this weekend?",
+                a: "Use Stooplify's live map to browse all upcoming stoop sales, yard sales, and garage sales in your area. You can filter by neighborhood, date, and category. Sign up for weekend alerts to receive a curated list of sales near you every Thursday before the weekend. The map is updated in real time as new listings are submitted and approved."
+              },
+              {
+                q: "How do I list my stoop sale or yard sale on Stooplify?",
+                a: "Click 'List Sale' or visit stooplify.com/add-yard-sale. Your first listing is completely free — no credit card needed. Add your title, date, time, location, categories, photos, and a description. Our AI can help write your description from photos. Once submitted, your listing is reviewed and published within a few hours."
+              },
+              {
+                q: "Is Stooplify free to use?",
+                a: "Yes! Finding sales on Stooplify is always free. Listing your first stoop sale or yard sale is also free. We offer optional paid listings for sellers who want extra visibility — a $4 single-listing boost or a $9/month unlimited plan for power sellers. There are no commissions or transaction fees."
+              },
+              {
+                q: "Do I need a permit to have a yard sale or stoop sale in NYC?",
+                a: "In New York City, you generally do not need a permit for a one-day stoop sale or yard sale on private property. However, if you're selling on a public sidewalk or street, rules vary by borough and you may need permission. In New Jersey, most municipalities allow yard sales without permits for a limited number of days per year. Read our full Permit Requirements Guide for NYC-specific rules."
+              },
+              {
+                q: "How does address unlocking work?",
+                a: "To protect seller privacy, the exact street address of a listing is only shown on the day of the sale and to users who have marked themselves as attending. Before the sale day, buyers see the approximate neighborhood and a radius on the map. This protects sellers from unwanted visits before their sale while still giving motivated buyers what they need to plan their trip."
+              },
+              {
+                q: "What areas does Stooplify cover?",
+                a: "Stooplify currently serves all five NYC boroughs (Brooklyn, Queens, Manhattan, the Bronx, and Staten Island) plus major New Jersey cities including Jersey City, Hoboken, Newark, Elizabeth, Linden, and beyond. We're expanding to new cities regularly."
+              },
+              {
+                q: "Can I sell online or only at a physical location?",
+                a: "Stooplify is designed for in-person stoop sales, yard sales, and garage sales — not online selling. All listings should represent a physical sale event at a real location. If you're looking to sell items online, platforms like eBay, Poshmark, or Facebook Marketplace may be better suited."
+              },
+            ].map((faq, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.04 }} className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700">
+                <h3 className="font-bold text-lg text-[#2E3A59] dark:text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>{faq.q}</h3>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{faq.a}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* SOCIAL MEDIA */}
       <SocialSection />
 

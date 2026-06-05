@@ -1,0 +1,67 @@
+{
+  "name": "CreditTransaction",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user receiving/losing credits"
+    },
+    "amount": {
+      "type": "number",
+      "description": "Credit amount (positive = earned, negative = spent)"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "scan_reward",
+        "referral",
+        "bonus",
+        "admin_adjustment",
+        "spent"
+      ],
+      "description": "Type of credit transaction"
+    },
+    "related_scan_id": {
+      "type": "string",
+      "description": "ID of the related VerifiedScan record (if applicable)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of the transaction"
+    }
+  },
+  "required": [
+    "user_email",
+    "amount",
+    "type"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {
+      "$or": [
+        {
+          "data.user_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

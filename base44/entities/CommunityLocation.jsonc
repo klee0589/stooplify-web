@@ -1,0 +1,84 @@
+{
+  "name": "CommunityLocation",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Name of the community location/hub"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of this community location"
+    },
+    "address": {
+      "type": "string",
+      "description": "Full street address"
+    },
+    "city": {
+      "type": "string",
+      "description": "City"
+    },
+    "state": {
+      "type": "string",
+      "description": "State"
+    },
+    "zip_code": {
+      "type": "string",
+      "description": "ZIP code"
+    },
+    "latitude": {
+      "type": "number",
+      "description": "Latitude coordinate"
+    },
+    "longitude": {
+      "type": "number",
+      "description": "Longitude coordinate"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "neighborhood_hub",
+        "popular_area",
+        "event_venue",
+        "parking",
+        "other"
+      ],
+      "description": "Type of community location"
+    },
+    "icon": {
+      "type": "string",
+      "description": "Optional emoji or icon for the location"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether this location is currently active/visible"
+    }
+  },
+  "required": [
+    "name",
+    "address",
+    "city",
+    "state",
+    "latitude",
+    "longitude"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "read": {},
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

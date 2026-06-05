@@ -1,0 +1,57 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "role": {
+      "type": "string",
+      "enum": [
+        "admin",
+        "user"
+      ],
+      "default": "user"
+    },
+    "username": {
+      "type": "string",
+      "description": "Unique public username/handle for seller pages"
+    },
+    "bio": {
+      "type": "string",
+      "description": "Short seller bio"
+    },
+    "profile_picture": {
+      "type": "string",
+      "description": "Profile picture URL"
+    },
+    "location": {
+      "type": "string",
+      "description": "General location (e.g. Brooklyn, NY)"
+    },
+    "free_listings_used": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of free listings the user has created"
+    },
+    "subscription_active": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether the user has an active paid subscription"
+    },
+    "subscription_stripe_id": {
+      "type": "string",
+      "description": "Stripe subscription ID for managing cancellations"
+    },
+    "last_listing_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Timestamp of last listing creation for rate limiting"
+    }
+  },
+  "required": [
+    "username",
+    "bio",
+    "profile_picture",
+    "location",
+    "subscription_stripe_id",
+    "last_listing_date"
+  ]
+}

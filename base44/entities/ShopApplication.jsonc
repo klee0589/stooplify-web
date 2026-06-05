@@ -1,0 +1,132 @@
+{
+  "name": "ShopApplication",
+  "type": "object",
+  "properties": {
+    "shop_name": {
+      "type": "string",
+      "description": "Name of the shop"
+    },
+    "business_type": {
+      "type": "string",
+      "enum": [
+        "thrift_store",
+        "consignment",
+        "antique_shop",
+        "flea_market",
+        "other"
+      ],
+      "description": "Type of business"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the shop and what they sell"
+    },
+    "address": {
+      "type": "string",
+      "description": "Physical address"
+    },
+    "city": {
+      "type": "string",
+      "description": "City"
+    },
+    "state": {
+      "type": "string",
+      "description": "State"
+    },
+    "zip_code": {
+      "type": "string",
+      "description": "ZIP code"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Contact phone number"
+    },
+    "website": {
+      "type": "string",
+      "description": "Website URL"
+    },
+    "hours": {
+      "type": "string",
+      "description": "Operating hours"
+    },
+    "photos": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Shop photos"
+    },
+    "contact_name": {
+      "type": "string",
+      "description": "Contact person name"
+    },
+    "contact_email": {
+      "type": "string",
+      "description": "Contact email"
+    },
+    "years_in_business": {
+      "type": "number",
+      "description": "Years in business"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending",
+      "description": "Application status"
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether shop is featured on homepage"
+    },
+    "subscription_status": {
+      "type": "string",
+      "enum": [
+        "none",
+        "active",
+        "cancelled"
+      ],
+      "default": "none",
+      "description": "Subscription status"
+    }
+  },
+  "required": [
+    "shop_name",
+    "business_type",
+    "description",
+    "city",
+    "state",
+    "contact_email"
+  ],
+  "rls": {
+    "create": {
+      "data.contact_email": "{{user.email}}"
+    },
+    "read": {
+      "$or": [
+        {
+          "data.contact_email": "{{user.email}}"
+        },
+        {
+          "user_condition": {
+            "role": "admin"
+          }
+        }
+      ]
+    },
+    "update": {
+      "user_condition": {
+        "role": "admin"
+      }
+    },
+    "delete": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}
