@@ -294,15 +294,53 @@ export default function Pricing() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.6 }}
-          className="text-center"
+          className="mb-16"
         >
-          <h3 className="text-xl font-semibold text-[#2E3A59] mb-4">{t('haveQuestions')}</h3>
-          <p className="text-gray-600">
-            {t('contactUs')}{' '}
-            <a href="mailto:daniel@stooplify.com" className="text-[#FF6F61] hover:underline">
-              daniel@stooplify.com
-            </a>
-          </p>
+          <h2 className="text-2xl font-bold text-[#2E3A59] mb-8 text-center" style={{ fontFamily: 'Poppins, sans-serif' }}>
+            Pricing FAQ
+          </h2>
+          <div className="max-w-3xl mx-auto space-y-4">
+            {[
+              {
+                q: 'Is it really free to list my yard sale?',
+                a: 'Yes — your first listing is completely free. No credit card required. You can post your date, location, photos, and description and go live within a few hours of approval.'
+              },
+              {
+                q: 'What does the $4 single listing include?',
+                a: 'A $4 paid listing removes the 24-hour time restriction and gives you a boost in search visibility so more local buyers see your sale. Great for sellers who host a few sales per year.'
+              },
+              {
+                q: 'What does the $9/month Pro plan include?',
+                a: 'The Pro plan gives you unlimited listings every month, no time limits, unlimited photo uploads, priority placement in search results, an analytics dashboard, and a Featured badge on your listings.'
+              },
+              {
+                q: 'Can I cancel my Pro subscription anytime?',
+                a: 'Yes, you can cancel your $9/month Pro plan at any time. Your plan remains active until the end of the current billing period with no additional charges.'
+              },
+              {
+                q: 'Are there any transaction fees or commissions?',
+                a: 'None. Stooplify does not take a cut of your sales. You keep 100% of what you make at your stoop sale or yard sale. We only charge for listing visibility, never for transactions.'
+              },
+              {
+                q: 'What is the Featured Shop plan for?',
+                a: 'The Featured Shop plan is designed for permanent businesses — thrift stores, consignment shops, antique dealers, and flea market vendors — that want ongoing visibility on Stooplify alongside regular stoop sales.'
+              },
+            ].map((faq, i) => (
+              <div key={i} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                <h3 className="font-bold text-[#2E3A59] mb-2">{faq.q}</h3>
+                <p className="text-gray-600 text-sm leading-relaxed">{faq.a}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-10">
+            <p className="text-gray-600">
+              {t('haveQuestions')}?{' '}
+              <a href="mailto:daniel@stooplify.com" className="text-[#FF6F61] hover:underline font-medium">
+                daniel@stooplify.com
+              </a>
+            </p>
+          </div>
         </motion.div>
 
 
