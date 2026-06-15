@@ -27,6 +27,7 @@ import GarageSalesBronx from './pages/garage-sales-bronx';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import { Navigate } from 'react-router-dom';
+import Login from './pages/Login.jsx';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -127,6 +128,9 @@ const AuthenticatedApp = () => {
       <Route path="/FreeItems" element={<Navigate to="/free-items" replace />} />
       <Route path="/GarageSalesSanFrancisco" element={<Navigate to="/garage-sales-san-francisco" replace />} />
       <Route path="/GarageSalesLosAngeles" element={<Navigate to="/garage-sales-los-angeles" replace />} />
+
+      {/* Auth pages — no Layout wrapper */}
+      <Route path="/login" element={<Login />} />
 
       <Route path="*" element={<PageNotFound />} />
     </Routes>
