@@ -44,11 +44,12 @@ function LayoutContent({ children, currentPageName }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
-  const PUBLIC_PAGES = [
-  // Blog only — publicly accessible without login
-  'Blog', 'BlogPost', 'BlogSlug',
-  // Legal & misc
-  'Legal', 'about', 'contact', 'site-map'];
+  // Pages that require login — everything else is public
+  const PROTECTED_PAGES = [
+    'Messages', 'Profile', 'Favorites', 'AddYardSale', 'add-yard-sale',
+    'MyYardSales', 'my-yard-sales', 'ChatSupport',
+  ];
+  const isProtectedPage = PROTECTED_PAGES.includes(currentPageName);
 
   const [language, setLanguage] = useState('en');
   const { theme, toggleTheme } = useTheme();
@@ -140,13 +141,13 @@ function LayoutContent({ children, currentPageName }) {
               });
             }
           }
-        } else if (!PUBLIC_PAGES.includes(currentPageName)) {
+        } else if (isProtectedPage) {
           base44.auth.redirectToLogin();
           return;
         }
       } catch (e) {
         console.log('Not authenticated');
-        if (!PUBLIC_PAGES.includes(currentPageName)) {
+        if (isProtectedPage) {
           base44.auth.redirectToLogin();
           return;
         }
@@ -244,7 +245,7 @@ function LayoutContent({ children, currentPageName }) {
   }, [user?.email, queryClient]);
 
   // Don't render protected pages until auth is confirmed
-  if (!isAuthChecked && !PUBLIC_PAGES.includes(currentPageName)) {
+  if (!isAuthChecked && isProtectedPage) {
     return <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900" />;
   }
 
