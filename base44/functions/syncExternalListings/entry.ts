@@ -46,16 +46,19 @@ function stripHtml(html: string): string {
     .trim();
 }
 
-async function geocodeAddress(address: string, apiKey: string): Promise<{lat: number, lng: number} | null> {
+async function geocodeAddress(address: string): Promise<{lat: number, lng: number} | null> {
   try {
-    const url = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`;
-    const resp = await fetch(url);
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`;
+    const resp = await fetch(url, {
+      headers: {
+        'User-Agent': 'Stooplify/1.0 (daniel@stooplify.com)',
+        'Accept': 'application/json',
+      },
+      signal: AbortSignal.timeout(10000),
+    });
     const data = await resp.json();
-    if (data.results && data.results[0]) {
-      return {
-        lat: data.results[0].geometry.location.lat,
-        lng: data.results[0].geometry.location.lng,
-      };
+    if (data && data.length > 0) {
+      return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
     }
   } catch (e) {
     console.log('Geocode failed for:', address, e.message);
@@ -77,7 +80,6 @@ Deno.serve(async (req) => {
     }
 
     const b44 = base44.asServiceRole;
-    const apiKey = Deno.env.get("GOOGLE_MAPS_API_KEY");
     const allListings: any[] = [];
 
     // --- Phase 1: Fetch directly-scrapeable sources ---
@@ -175,12 +177,20 @@ Deno.serve(async (req) => {
         ? `${listing.address}, ${listing.city}, ${listing.state}`
         : `${listing.general_location || listing.city}, ${listing.city}, ${listing.state}`;
 
-      if (apiKey) {
-        const coords = await geocodeAddress(geoQuery, apiKey);
-        if (coords) {
-          lat = coords.lat;
-          lng = coords.lng;
+      // Nominatim requires 1 req/sec rate limiting
+      await new Promise(r => setTimeout(r, 1100));
+      const coords = await geocodeAddress(geoQuery);
+      if (!coords) {
+        // Fallback to city/state only
+        await new Promise(r => setTimeout(r, 1100));
+        const fallback = await geocodeAddress(`${listing.city}, ${listing.state}`);
+        if (fallback) {
+          lat = fallback.lat;
+          lng = fallback.lng;
         }
+      } else {
+        lat = coords.lat;
+        lng = coords.lng;
       }
 
       prepared.push({
