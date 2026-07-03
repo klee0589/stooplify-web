@@ -156,7 +156,9 @@ Deno.serve(async (req) => {
       const date = l.date;
       const city = (l.city || '').trim();
       const state = (l.state || '').trim();
+      const photos = (l.photos || []).filter((p: string) => p && p.startsWith('http'));
       if (!title || !date || !city || !state) return false;
+      if (photos.length === 0) return false;
       const key = `${title.toLowerCase()}|${date}|${city.toLowerCase()}`;
       return !existingKeys.has(key);
     });
