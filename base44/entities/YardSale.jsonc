@@ -213,6 +213,15 @@
     "quantity_note": {
       "type": "string",
       "description": "Single item or bundle description for free items"
+    },
+    "source": {
+      "type": "string",
+      "description": "Source URL or identifier for imported listings (e.g. 'estatesales.net', 'craigslist', 'yardshoppers.com')"
+    },
+    "is_imported": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this listing was imported from an external source"
     }
   },
   "required": [
