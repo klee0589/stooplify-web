@@ -94,47 +94,47 @@ export default function WeekendAlertSignup({ variant = 'banner', className = '' 
 
   // Banner variant (default)
   return (
-    <div className="bg-gradient-to-r px-3 py-6 rounded-2xl from-[#14B8FF]/10 to-[#2E3A59]/10 dark:from-[#14B8FF]/20 dark:to-[#2E3A59]/20 border border-[#14B8FF]/20">
-      <div className="flex items-start gap-3 mb-4">
-        <div className="w-10 h-10 bg-[#14B8FF] rounded-xl flex items-center justify-center flex-shrink-0">
-          <Bell className="w-5 h-5 text-white" />
+    <div className="px-4 py-6 rounded-2xl bg-card">
+      <div className="flex items-start gap-3 mb-5">
+        <div className="w-10 h-10 bg-accent-warm/10 text-accent-warm rounded-xl flex items-center justify-center flex-shrink-0">
+          <Bell className="w-5 h-5" />
         </div>
         <div>
-          <h3 className="font-bold text-[#2E3A59] dark:text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>
+          <h3 className="font-heading font-semibold text-foreground">
             Get Weekend Sale Alerts
           </h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">
+          <p className="text-sm text-muted-foreground mt-1">
             Every Friday: the best stoop sales and yard sales near you, straight to your inbox.
           </p>
         </div>
       </div>
-      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2" onClick={() => base44.analytics.track({ eventName: 'weekend_alert_started', properties: { source: variant } })}>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2" onClick={() => base44.analytics.track({ eventName: 'weekend_alert_started', properties: { source: variant } })}>
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="your@email.com"
           required
-          className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#14B8FF]" />
+          className="w-full h-11 px-4 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring" />
         
         <select
           value={city}
           onChange={(e) => setCity(e.target.value)}
-          className="px-3 py-2.5 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#14B8FF]">
+          className="w-full h-11 px-3 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-ring">
           
-          <option value="">📍 All cities</option>
+          <option value="">All cities</option>
           {CITIES.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
         <button
           type="submit"
           disabled={isLoading}
-          className="px-5 py-2.5 bg-[#14B8FF] text-white rounded-xl font-semibold text-sm hover:bg-[#0da3e6] transition-colors disabled:opacity-60 flex items-center gap-2 justify-center whitespace-nowrap">
+          className="w-full h-11 px-5 bg-accent-warm text-accent-warm-foreground rounded-xl font-heading font-semibold text-sm hover:bg-accent-warm/90 shadow-sm hover:shadow-md transition-all disabled:opacity-60 flex items-center gap-2 justify-center whitespace-nowrap">
           
-          {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-          {isLoading ? 'Joining...' : '🔔 Subscribe Free'}
+          {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Bell className="w-4 h-4" />}
+          {isLoading ? 'Joining...' : 'Subscribe free'}
         </button>
       </form>
-      <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">No spam. Unsubscribe anytime.</p>
+      <p className="text-xs text-muted-foreground mt-3">No spam. Unsubscribe anytime.</p>
     </div>);
 
 }

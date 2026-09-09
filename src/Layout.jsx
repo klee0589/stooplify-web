@@ -246,7 +246,7 @@ function LayoutContent({ children, currentPageName }) {
 
   // Don't render protected pages until auth is confirmed
   if (!isAuthChecked && isProtectedPage) {
-    return <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900" />;
+    return <div className="min-h-screen flex items-center justify-center bg-background" />;
   }
 
   const toggleLanguage = () => {
@@ -281,7 +281,7 @@ function LayoutContent({ children, currentPageName }) {
 
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
+    <div className="min-h-screen bg-background transition-colors duration-300">
       
       {/* Mobile Web compact header — replaces bottom nav + heavy header on mobile browsers */}
       {isMobileWeb && <MobileWebHeader currentPageName={currentPageName} />}
@@ -295,22 +295,6 @@ function LayoutContent({ children, currentPageName }) {
         onLoad={(e) => {e.target.media = 'all';}} />
       
       <style>{`
-
-        :root {
-          --primary: #0099cc;
-          --secondary: #1a2842;
-          --accent: #F5A623;
-          --bg-light: #FAFAFA;
-          --text-dark: #1a1a1a;
-        }
-
-        .dark {
-          --primary: #66d9ff;
-          --secondary: #0f1623;
-          --accent: #F5A623;
-          --bg-light: #0a0e1a;
-          --text-dark: #ffffff;
-        }
 
         * {
           -webkit-font-smoothing: antialiased;
@@ -387,7 +371,7 @@ function LayoutContent({ children, currentPageName }) {
         
         /* Accessibility */
         :focus-visible {
-          outline: 2px solid var(--primary);
+          outline: 2px solid hsl(var(--primary));
           outline-offset: 2px;
         }
         
@@ -396,7 +380,7 @@ function LayoutContent({ children, currentPageName }) {
           position: absolute;
           top: -40px;
           left: 0;
-          background: var(--primary);
+          background: hsl(var(--primary));
           color: white;
           padding: 8px;
           z-index: 100000;
@@ -412,40 +396,29 @@ function LayoutContent({ children, currentPageName }) {
           -webkit-tap-highlight-color: transparent;
         }
 
-        .dark body {
-          background: #050810;
-          color: #ffffff;
-        }
-
         h1, h2, h3, h4, h5, h6 {
           font-family: 'Poppins', sans-serif;
         }
 
         .btn-primary {
-          background: #0099cc;
-          color: white;
+          background: hsl(var(--primary));
+          color: hsl(var(--primary-foreground));
           font-family: 'Poppins', sans-serif;
           font-weight: 500;
         }
 
         .btn-primary:hover {
-          background: #007aa3;
+          opacity: 0.9;
         }
 
         .btn-secondary {
-          background: var(--secondary);
-          color: white;
+          background: hsl(var(--foreground));
+          color: hsl(var(--background));
           font-family: 'Poppins', sans-serif;
           font-weight: 500;
         }
 
-        .text-primary { color: var(--primary); }
-        .text-secondary { color: var(--secondary); }
-        .text-accent { color: var(--accent); }
-        .bg-primary { background: var(--primary); }
-        .bg-secondary { background: var(--secondary); }
-        .bg-accent { background: var(--accent); }
-        .bg-light { background: var(--bg-light); }
+        .bg-light { background: hsl(var(--background)); }
 
         /* Optimize image loading */
         img {
@@ -458,7 +431,7 @@ function LayoutContent({ children, currentPageName }) {
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         className={`${isMobileWeb ? 'hidden' : ''} fixed top-0 left-0 right-0 z-[1000] transition-all duration-300 ${
-        isScrolled ? 'bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg' : 'bg-transparent'}`
+        isScrolled ? 'bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200/60 dark:border-slate-800 shadow-sm' : 'bg-transparent'}`
         }
         style={{ paddingTop: 'env(safe-area-inset-top)' }}
         role="banner">
@@ -470,7 +443,7 @@ function LayoutContent({ children, currentPageName }) {
             {showBackButton ?
             <button
               onClick={() => navigate(-1)}
-              className="flex md:hidden items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-[#14B8FF] transition-colors"
+              className="flex md:hidden items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-primary transition-colors"
               style={{ userSelect: 'none', WebkitTouchCallout: 'none' }}>
               
                 <ArrowLeft className="w-5 h-5" />
@@ -506,15 +479,15 @@ function LayoutContent({ children, currentPageName }) {
             </Link>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-8" role="navigation" aria-label="Main navigation">
+            <nav className="hidden md:flex items-center gap-1" role="navigation" aria-label="Main navigation">
               {navLinks.map((link) => {
                 const seoUrl = getSeoUrl(link.page);
                 return (
                   <Link
                     key={link.page}
                     to={createPageUrl(seoUrl)}
-                    className={`font-medium transition-colors hover:text-[#14B8FF] ${
-                    currentPageName === link.page ? 'text-[#14B8FF]' : 'text-[#2E3A59] dark:text-white'}`
+                    className={`px-3.5 py-2 rounded-full text-sm font-medium transition-colors ${
+                    currentPageName === link.page ? 'bg-primary/10 text-primary' : 'text-foreground hover:bg-muted hover:text-primary'}`
                     }>
                       {link.name}
                     </Link>);
@@ -528,7 +501,7 @@ function LayoutContent({ children, currentPageName }) {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={toggleLanguage}
-                className="px-3 py-2 text-[#2E3A59] dark:text-white font-medium hover:text-[#14B8FF] transition-colors flex items-center gap-2"
+                className="px-3 py-2 text-foreground dark:text-white font-medium hover:text-primary transition-colors flex items-center gap-2"
                 title={language === 'en' ? 'Switch to Spanish' : 'Cambiar a inglés'}>
 
                 <Globe className="w-4 h-4" />
@@ -551,7 +524,7 @@ function LayoutContent({ children, currentPageName }) {
                       className="w-full h-full object-cover" /> :
 
 
-                    <div className="w-full h-full bg-gradient-to-br from-[#FF6F61] to-[#F5A623] flex items-center justify-center">
+                    <div className="w-full h-full bg-gradient-to-br from-primary to-accent-warm flex items-center justify-center">
                           <span className="text-sm font-bold text-white">
                             {(user.full_name || user.email)?.[0]?.toUpperCase()}
                           </span>
@@ -572,10 +545,10 @@ function LayoutContent({ children, currentPageName }) {
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
-                    className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-2 z-50">
+                    className="absolute right-0 mt-2 w-56 bg-card rounded-xl shadow-card-hover border border-border py-2 z-50">
 
                         <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
-                          <p className="text-sm font-semibold text-[#2E3A59] dark:text-white truncate">
+                          <p className="text-sm font-semibold text-foreground dark:text-white truncate">
                             {user.full_name || user.email}
                           </p>
                           <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
@@ -587,7 +560,7 @@ function LayoutContent({ children, currentPageName }) {
                       className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
 
                           <User className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                          <span className="text-sm text-[#2E3A59] dark:text-white">{t('profile')}</span>
+                          <span className="text-sm text-foreground dark:text-white">{t('profile')}</span>
                         </Link>
                         
                         <Link
@@ -596,7 +569,7 @@ function LayoutContent({ children, currentPageName }) {
                       className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
 
                           <Heart className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                          <span className="text-sm text-[#2E3A59] dark:text-white">{t('favorites')}</span>
+                          <span className="text-sm text-foreground dark:text-white">{t('favorites')}</span>
                         </Link>
 
                         <Link
@@ -605,7 +578,7 @@ function LayoutContent({ children, currentPageName }) {
                       className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors relative">
 
                           <MessageCircle className="w-4 h-4 text-gray-600 dark:text-gray-300" />
-                          <span className="text-sm text-[#2E3A59] dark:text-white">Messages</span>
+                          <span className="text-sm text-foreground dark:text-white">Messages</span>
                           {user && unreadCount > 0 &&
                       <span className="ml-auto px-2 py-0.5 bg-green-500 text-white text-xs font-bold rounded-full">
                               {unreadCount}
@@ -618,7 +591,7 @@ function LayoutContent({ children, currentPageName }) {
                       className="w-full flex items-center gap-3 px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
 
                           {theme === 'light' ? <Moon className="w-4 h-4 text-gray-600 dark:text-gray-300" /> : <Sun className="w-4 h-4 text-gray-600 dark:text-gray-300" />}
-                          <span className="text-sm text-[#2E3A59] dark:text-white">
+                          <span className="text-sm text-foreground dark:text-white">
                             {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
                           </span>
                         </button>
@@ -669,7 +642,7 @@ function LayoutContent({ children, currentPageName }) {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => base44.auth.redirectToLogin()}
-                  className="px-3 py-1.5 text-[#2E3A59] dark:text-white font-medium hover:text-[#14B8FF] transition-colors">
+                  className="px-3 py-1.5 text-foreground dark:text-white font-medium hover:text-primary transition-colors">
 
                     {t('signIn')}
                   </motion.button>
@@ -677,7 +650,7 @@ function LayoutContent({ children, currentPageName }) {
                   whileHover={{ scale: 1.05, boxShadow: '0 10px 30px rgba(20, 184, 255, 0.3)' }}
                   whileTap={{ scale: 0.95 }}
                   onClick={() => base44.auth.redirectToLogin()}
-                  className="px-4 py-2 bg-[#14B8FF] text-white rounded-full font-medium shadow-lg">
+                  className="px-5 py-2 bg-accent-warm text-accent-warm-foreground rounded-full font-semibold shadow-sm hover:shadow-md hover:bg-accent-warm/90 transition-all">
 
                     {t('getStarted')}
                   </motion.button>
@@ -689,7 +662,7 @@ function LayoutContent({ children, currentPageName }) {
             <motion.button
               whileTap={{ scale: 0.9 }}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden p-2 text-[#2E3A59]">
+              className="md:hidden p-2 text-foreground">
 
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </motion.button>
@@ -703,7 +676,7 @@ function LayoutContent({ children, currentPageName }) {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white dark:bg-gray-900 border-t shadow-lg">
+            className="md:hidden bg-card border-t border-border shadow-card-hover">
 
               <div className="px-4 py-4 space-y-2">
                 {navLinks.map((link) => {
@@ -715,8 +688,8 @@ function LayoutContent({ children, currentPageName }) {
                     onClick={() => setIsMenuOpen(false)}
                     className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
                     currentPageName === link.page ?
-                    'bg-[#14B8FF]/10 text-[#14B8FF]' :
-                    'text-[#2E3A59] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'}`
+                    'bg-primary/10 text-primary' :
+                    'text-foreground dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'}`
                     }>
                         <link.icon size={20} />
                         <span className="font-medium">{link.name}</span>
@@ -731,8 +704,8 @@ function LayoutContent({ children, currentPageName }) {
                   onClick={() => setIsMenuOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
                   currentPageName === 'Profile' ?
-                  'bg-[#14B8FF]/10 text-[#14B8FF]' :
-                  'text-[#2E3A59] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'}`
+                  'bg-primary/10 text-primary' :
+                  'text-foreground dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'}`
                   }>
 
                       <User size={20} />
@@ -743,8 +716,8 @@ function LayoutContent({ children, currentPageName }) {
                   onClick={() => setIsMenuOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
                   currentPageName === 'Favorites' ?
-                  'bg-[#14B8FF]/10 text-[#14B8FF]' :
-                  'text-[#2E3A59] dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'}`
+                  'bg-primary/10 text-primary' :
+                  'text-foreground dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800'}`
                   }>
 
                       <Heart size={20} />
@@ -759,7 +732,7 @@ function LayoutContent({ children, currentPageName }) {
                     toggleTheme();
                     setIsMenuOpen(false);
                   }}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-[#2E3A59] dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl">
+                  className="w-full flex items-center gap-3 px-4 py-3 text-foreground dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl">
 
                     {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
                     <span>{theme === 'light' ? 'Dark Mode' : 'Light Mode'}</span>
@@ -769,7 +742,7 @@ function LayoutContent({ children, currentPageName }) {
                     toggleLanguage();
                     setIsMenuOpen(false);
                   }}
-                  className="w-full flex items-center gap-3 px-4 py-3 text-[#2E3A59] dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl">
+                  className="w-full flex items-center gap-3 px-4 py-3 text-foreground dark:text-white font-medium hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl">
 
                     <Globe size={20} />
                     <span>{language === 'en' ? 'Español' : 'English'}</span>
@@ -791,7 +764,7 @@ function LayoutContent({ children, currentPageName }) {
                     base44.auth.redirectToLogin();
                     setIsMenuOpen(false);
                   }}
-                  className="w-full px-4 py-3 bg-[#14B8FF] text-white text-center rounded-xl font-medium">
+                  className="w-full px-4 py-3 bg-primary text-white text-center rounded-xl font-medium">
 
                       {t('signIn')} / {t('getStarted')}
                     </button>
@@ -831,7 +804,7 @@ function LayoutContent({ children, currentPageName }) {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.8 }}
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="fixed bottom-24 right-4 z-50 w-10 h-10 bg-[#14B8FF] text-white rounded-full shadow-lg flex items-center justify-center hover:bg-[#0da3e6] transition-colors"
+          className="fixed bottom-24 right-4 z-50 w-10 h-10 bg-primary text-white rounded-full shadow-lg flex items-center justify-center hover:bg-primary/90 transition-colors"
           aria-label="Scroll to top">
           
             <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -845,115 +818,87 @@ function LayoutContent({ children, currentPageName }) {
       {!isMobileWeb && <BottomNavBar />}
 
       {/* Footer */}
-      <footer className="bg-white dark:bg-gray-950 text-gray-900 dark:text-white" role="contentinfo">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div className="col-span-1 md:col-span-2">
+      <footer className="bg-card border-t border-border text-foreground" role="contentinfo">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-10">
+            <div className="md:col-span-4">
               <img
                 src={theme === 'dark' ?
                 "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/3e64c6f8d_Stooplify1-02.png" :
                 "https://qtrypzzcjebvfcihiynt.supabase.co/storage/v1/object/public/base44-prod/public/6963ddb3a6f317a7cba3c5d6/283ee8687_logo_v2.png"
                 }
                 alt="Stooplify"
-                className="h-10 w-auto mb-4"
+                className="h-9 w-auto mb-4"
                 width={200}
                 height={80} />
-
-              <p className="text-gray-600 dark:text-white/70 max-w-sm">
+              <p className="text-sm text-muted-foreground max-w-xs leading-relaxed">
                 Discover amazing finds at yard sales near you. Join our community of treasure hunters today!
               </p>
-            </div>
-            <div>
-              <h4 className="font-semibold text-lg mb-4 text-gray-900 dark:text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>{t('quickLinks')}</h4>
-              <ul className="space-y-2 text-gray-600 dark:text-white/70 text-sm">
-                <li><Link to={createPageUrl('yard-sales')} className="hover:text-[#14B8FF] transition-colors">Find Sales Near Me</Link></li>
-                <li><Link to={createPageUrl('add-yard-sale')} className="hover:text-[#14B8FF] transition-colors">List Your Stoop Sale</Link></li>
-                <li><Link to={createPageUrl('Calendar')} className="hover:text-[#14B8FF] transition-colors">Sale Calendar</Link></li>
-                <li><Link to={createPageUrl('Pricing')} className="hover:text-[#14B8FF] transition-colors">Pricing</Link></li>
-                <li><Link to={createPageUrl('Blog')} className="hover:text-[#14B8FF] transition-colors">Blog</Link></li>
-                <li><Link to={createPageUrl('ApplyAsShop')} className="hover:text-[#14B8FF] transition-colors">Apply as a Shop</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-lg mb-4 text-gray-900 dark:text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>Seller Guides</h4>
-              <ul className="space-y-2 text-gray-600 dark:text-white/70 text-sm">
-                <li><Link to={createPageUrl('guides-find-yard-sales')} className="hover:text-[#14B8FF] transition-colors">Finding Yard Sales</Link></li>
-                <li><Link to={createPageUrl('guides-advertise-yard-sale')} className="hover:text-[#14B8FF] transition-colors">How to Advertise a Sale</Link></li>
-                <li><Link to={createPageUrl('guides-pricing-yard-sale-items')} className="hover:text-[#14B8FF] transition-colors">How to Price Items</Link></li>
-                <li><Link to={createPageUrl('guides-permit-requirements-nyc')} className="hover:text-[#14B8FF] transition-colors">Permit Requirements</Link></li>
-                <li><Link to={createPageUrl('guides-best-time-yard-sale')} className="hover:text-[#14B8FF] transition-colors">Best Days & Times</Link></li>
-                <li><Link to={createPageUrl('guides-seniors-yard-sales')} className="hover:text-[#14B8FF] transition-colors">Guide for Seniors</Link></li>
-              </ul>
-            </div>
-          </div>
-
-          {/* Follow Us + Legal — full width row */}
-          <div className="flex flex-col md:flex-row md:items-start gap-6 mt-6 pt-6 border-t border-gray-200 dark:border-white/10">
-            <div>
-              <h4 className="font-semibold text-lg mb-3 text-gray-900 dark:text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>Follow Us</h4>
-              <div className="flex gap-4">
-                <a href="https://www.instagram.com/stooplify/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-gray-600 dark:text-white/70 hover:text-[#14B8FF] transition-colors text-sm">
-                  <Instagram className="w-5 h-5" />
-                  <span>@stooplify</span>
+              <div className="flex gap-4 mt-6">
+                <a href="https://www.instagram.com/stooplify/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted-foreground hover:text-primary hover:border-primary transition-colors">
+                  <Instagram className="w-4 h-4" />
                 </a>
-                <a href="https://www.facebook.com/profile.php?id=61586102653727" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-gray-600 dark:text-white/70 hover:text-[#14B8FF] transition-colors text-sm">
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <a href="https://www.facebook.com/profile.php?id=61586102653727" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-muted-foreground hover:text-primary hover:border-primary transition-colors">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
                   </svg>
-                  <span>Stooplify</span>
                 </a>
               </div>
             </div>
-            <div className="md:ml-auto">
-              <h4 className="font-semibold text-lg mb-3 text-gray-900 dark:text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>{t('legal')}</h4>
-              <ul className="flex flex-wrap gap-4 text-gray-600 dark:text-white/70 text-sm">
-                <li><Link to={createPageUrl('Legal') + '#terms'} className="hover:text-[#14B8FF] transition-colors">{t('termsOfService')}</Link></li>
-                <li><Link to={createPageUrl('Legal') + '#privacy'} className="hover:text-[#14B8FF] transition-colors">{t('privacyPolicy')}</Link></li>
-                <li><Link to={createPageUrl('Legal') + '#disclaimer'} className="hover:text-[#14B8FF] transition-colors">Disclaimer</Link></li>
-                <li><Link to={createPageUrl('Legal') + '#safety'} className="hover:text-[#14B8FF] transition-colors">Safety</Link></li>
-                <li><a href="mailto:daniel@stooplify.com" className="hover:text-[#14B8FF] transition-colors">Contact</a></li>
-                <li><Link to="/about" className="hover:text-[#14B8FF] transition-colors">About</Link></li>
-                <li><Link to="/contact" className="hover:text-[#14B8FF] transition-colors">Contact Page</Link></li>
-                <li><Link to="/site-map" className="hover:text-[#14B8FF] transition-colors">Site Map</Link></li>
-              </ul>
+            <div className="md:col-span-8 grid grid-cols-2 sm:grid-cols-3 gap-8">
+              <div>
+                <h4 className="font-heading font-semibold text-sm mb-4 text-foreground">{t('quickLinks')}</h4>
+                <ul className="space-y-2.5 text-sm text-muted-foreground">
+                  <li><Link to={createPageUrl('yard-sales')} className="hover:text-primary transition-colors">Find Sales Near Me</Link></li>
+                  <li><Link to={createPageUrl('add-yard-sale')} className="hover:text-primary transition-colors">List Your Stoop Sale</Link></li>
+                  <li><Link to={createPageUrl('Calendar')} className="hover:text-primary transition-colors">Sale Calendar</Link></li>
+                  <li><Link to={createPageUrl('Pricing')} className="hover:text-primary transition-colors">Pricing</Link></li>
+                  <li><Link to={createPageUrl('Blog')} className="hover:text-primary transition-colors">Blog</Link></li>
+                  <li><Link to={createPageUrl('ApplyAsShop')} className="hover:text-primary transition-colors">Apply as a Shop</Link></li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-heading font-semibold text-sm mb-4 text-foreground">Seller Guides</h4>
+                <ul className="space-y-2.5 text-sm text-muted-foreground">
+                  <li><Link to={createPageUrl('guides-find-yard-sales')} className="hover:text-primary transition-colors">Finding Yard Sales</Link></li>
+                  <li><Link to={createPageUrl('guides-advertise-yard-sale')} className="hover:text-primary transition-colors">How to Advertise a Sale</Link></li>
+                  <li><Link to={createPageUrl('guides-pricing-yard-sale-items')} className="hover:text-primary transition-colors">How to Price Items</Link></li>
+                  <li><Link to={createPageUrl('guides-permit-requirements-nyc')} className="hover:text-primary transition-colors">Permit Requirements</Link></li>
+                  <li><Link to={createPageUrl('guides-best-time-yard-sale')} className="hover:text-primary transition-colors">Best Days & Times</Link></li>
+                  <li><Link to={createPageUrl('guides-seniors-yard-sales')} className="hover:text-primary transition-colors">Guide for Seniors</Link></li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-heading font-semibold text-sm mb-4 text-foreground">{t('legal')}</h4>
+                <ul className="space-y-2.5 text-sm text-muted-foreground">
+                  <li><Link to={createPageUrl('Legal') + '#terms'} className="hover:text-primary transition-colors">{t('termsOfService')}</Link></li>
+                  <li><Link to={createPageUrl('Legal') + '#privacy'} className="hover:text-primary transition-colors">{t('privacyPolicy')}</Link></li>
+                  <li><Link to={createPageUrl('Legal') + '#disclaimer'} className="hover:text-primary transition-colors">Disclaimer</Link></li>
+                  <li><Link to={createPageUrl('Legal') + '#safety'} className="hover:text-primary transition-colors">Safety</Link></li>
+                  <li><a href="mailto:daniel@stooplify.com" className="hover:text-primary transition-colors">Contact</a></li>
+                  <li><Link to="/about" className="hover:text-primary transition-colors">About</Link></li>
+                  <li><Link to="/contact" className="hover:text-primary transition-colors">Contact Page</Link></li>
+                  <li><Link to="/site-map" className="hover:text-primary transition-colors">Site Map</Link></li>
+                </ul>
+              </div>
             </div>
           </div>
 
-          {/* Email Signup */}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-          <div className="border-t border-gray-200 dark:border-white/20 mt-6 pt-6 text-center text-gray-600 dark:text-white/60">
+          <div className="border-t border-border mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
             <p>© {new Date().getFullYear()} Stooplify. {t('allRightsReserved')}.</p>
+            <div className="flex items-center gap-2">
+              <button onClick={toggleLanguage} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-border hover:text-primary hover:border-primary transition-colors text-xs font-medium">
+                <Globe className="w-3.5 h-3.5" />
+                {language === 'en' ? 'Español' : 'English'}
+              </button>
+              <button onClick={toggleTheme} className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-border hover:text-primary hover:border-primary transition-colors text-xs font-medium">
+                {theme === 'light' ? <Moon className="w-3.5 h-3.5" /> : <Sun className="w-3.5 h-3.5" />}
+                {theme === 'light' ? 'Dark' : 'Light'}
+              </button>
+            </div>
           </div>
-          </div>
-          </footer>
+        </div>
+      </footer>
     </div>);
 
 }

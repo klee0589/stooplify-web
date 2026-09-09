@@ -3,20 +3,19 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { TrendingUp } from 'lucide-react';
+import { TrendingUp, ArrowUpRight } from 'lucide-react';
 
 const NEIGHBORHOODS = [
-  { name: 'Williamsburg', slug: 'stoop-sales-williamsburg', emoji: '🎨', city: 'Brooklyn' },
-  { name: 'Park Slope',   slug: 'stoop-sales-park-slope',  emoji: '🌳', city: 'Brooklyn' },
-  { name: 'Astoria',      slug: 'stoop-sales-queens',      emoji: '🏙️', city: 'Queens'   },
-  { name: 'Bushwick',     slug: 'garage-sales-brooklyn',   emoji: '🖌️', city: 'Brooklyn' },
-  { name: 'Upper West Side', slug: 'garage-sales-manhattan', emoji: '🎭', city: 'Manhattan' },
-  { name: 'Jersey City',  slug: 'stoop-sales-jersey-city', emoji: '🌉', city: 'NJ'       },
-  { name: 'Astoria',      slug: 'garage-sales-queens',     emoji: '🏘️', city: 'Queens'   },
-  { name: 'The Bronx',    slug: 'garage-sales-bronx',      emoji: '🏗️', city: 'Bronx'    },
+  { name: 'Williamsburg', slug: 'stoop-sales-williamsburg', city: 'Brooklyn' },
+  { name: 'Park Slope',   slug: 'stoop-sales-park-slope',  city: 'Brooklyn' },
+  { name: 'Astoria',      slug: 'stoop-sales-queens',      city: 'Queens'   },
+  { name: 'Bushwick',     slug: 'garage-sales-brooklyn',   city: 'Brooklyn' },
+  { name: 'Upper West Side', slug: 'garage-sales-manhattan', city: 'Manhattan' },
+  { name: 'Jersey City',  slug: 'stoop-sales-jersey-city', city: 'NJ'       },
+  { name: 'Astoria',      slug: 'garage-sales-queens',     city: 'Queens'   },
+  { name: 'The Bronx',    slug: 'garage-sales-bronx',      city: 'Bronx'    },
 ];
 
-// Deduplicate by slug
 const HOODS = NEIGHBORHOODS.filter((h, i, arr) => arr.findIndex(x => x.slug === h.slug) === i);
 
 export default function TrendingNeighborhoods() {
@@ -26,8 +25,6 @@ export default function TrendingNeighborhoods() {
       const now = new Date();
       const sales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 200);
       const upcoming = sales.filter(s => s.date && new Date(`${s.date}T23:59:59`) >= now);
-
-      // Count by city as proxy for borough
       const counts = {};
       upcoming.forEach(s => {
         const c = (s.city || '').toLowerCase();
@@ -40,51 +37,47 @@ export default function TrendingNeighborhoods() {
 
   const getCityCount = (city) => {
     const key = city.toLowerCase();
-    // fuzzy match
-    const total = Object.entries(saleCounts)
+    return Object.entries(saleCounts)
       .filter(([k]) => k.includes(key) || key.includes(k))
       .reduce((sum, [, v]) => sum + v, 0);
-    return total;
   };
 
   return (
-    <section className="py-12 bg-white dark:bg-gray-900 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-3 mb-6">
-          <TrendingUp className="w-5 h-5 text-[#FF6F61]" />
-          <h2 className="text-xl font-bold text-[#2E3A59] dark:text-white" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            Trending Neighborhoods This Weekend
-          </h2>
+    <section className="py-16 bg-background overflow-hidden">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mb-6 flex items-center gap-2.5">
+          <TrendingUp className="h-5 w-5 text-accent-warm" />
+          <h2 className="font-heading text-xl font-semibold text-foreground">Trending neighborhoods this weekend</h2>
         </div>
 
-        {/* Horizontally scrollable strip */}
-        <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap scrollbar-hide">
+        <div className="-mx-4 flex gap-3 overflow-x-auto px-4 pb-2 scrollbar-hide sm:mx-0 sm:grid sm:grid-cols-2 sm:px-0 lg:grid-cols-4 sm:overflow-visible">
           {HOODS.map((hood, i) => {
             const count = getCityCount(hood.city);
             return (
               <motion.div
                 key={hood.slug}
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: 12 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.05 }}
+                transition={{ delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
+                className="shrink-0 w-[200px] sm:w-auto"
               >
                 <Link
                   to={`/${hood.slug}`}
-                  className="flex-shrink-0 flex flex-col items-center justify-between gap-2 px-5 py-4 bg-gray-50 dark:bg-gray-800 hover:bg-[#14B8FF]/5 border-2 border-transparent hover:border-[#14B8FF] rounded-2xl transition-all group min-w-[130px] text-center"
+                  className="group flex h-full flex-col justify-between gap-4 rounded-xl border border-border bg-card p-5 shadow-card hover:shadow-card-hover hover:-translate-y-0.5 transition-all"
                 >
-                  <span className="text-3xl">{hood.emoji}</span>
-                  <div>
-                    <p className="font-bold text-sm text-[#2E3A59] dark:text-white group-hover:text-[#14B8FF] transition-colors" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                      {hood.name}
-                    </p>
-                    <p className="text-xs text-gray-400 dark:text-gray-500">{hood.city}</p>
+                  <div className="flex items-start justify-between">
+                    <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{hood.city}</span>
+                    <ArrowUpRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                   </div>
-                  {count > 0 && (
-                    <span className="text-xs font-semibold px-2 py-0.5 bg-[#14B8FF]/10 text-[#14B8FF] rounded-full">
-                      {count} sale{count !== 1 ? 's' : ''}
-                    </span>
-                  )}
+                  <div className="flex items-end justify-between gap-2">
+                    <p className="font-heading text-base font-semibold text-foreground group-hover:text-primary transition-colors">{hood.name}</p>
+                    {count > 0 && (
+                      <span className="rounded-full bg-accent-warm/10 px-2 py-0.5 text-xs font-semibold text-accent-warm whitespace-nowrap">
+                        {count} sale{count !== 1 ? 's' : ''}
+                      </span>
+                    )}
+                  </div>
                 </Link>
               </motion.div>
             );

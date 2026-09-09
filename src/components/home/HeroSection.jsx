@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
-import { MapPin, Plus, ArrowRight, Sparkles } from 'lucide-react';
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { MapPin, Plus, ArrowRight, Sparkles, Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
 import { toast } from "sonner";
 import { useTranslation } from '../translations';
 import { useQuery } from '@tanstack/react-query';
+import HeroPhotoCard from './HeroPhotoCard';
+
+const ease = [0.22, 1, 0.36, 1];
 
 export default function HeroSection() {
   const [email, setEmail] = useState('');
@@ -18,46 +19,29 @@ export default function HeroSection() {
   useEffect(() => {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
     setLanguage(savedLang);
-
-    const handleLanguageChange = (e) => {
-      setLanguage(e.detail);
-    };
-
+    const handleLanguageChange = (e) => setLanguage(e.detail);
     window.addEventListener('languageChange', handleLanguageChange);
-
-    return () => {
-      window.removeEventListener('languageChange', handleLanguageChange);
-    };
+    return () => window.removeEventListener('languageChange', handleLanguageChange);
   }, []);
 
   const t = useTranslation(language);
 
-  const [photoIndex, setPhotoIndex] = useState(0);
-
-  // Fetch real data - defer until visible
   const { data: statsData, isLoading: statsLoading } = useQuery({
     queryKey: ['heroStats'],
     queryFn: async () => {
       const sales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 500);
       const now = new Date();
-      const liveSales = sales.filter((sale) => {
-        const saleDate = new Date(`${sale.date}T23:59:59`);
-        return saleDate >= now;
-      });
+      const liveSales = sales.filter((sale) => new Date(`${sale.date}T23:59:59`) >= now);
       return { activeSales: liveSales.length };
     },
     staleTime: 120000
   });
 
-  // Fetch real photos from past/recent approved sales
   const { data: heroPhotos = [] } = useQuery({
     queryKey: ['heroPhotos'],
     queryFn: async () => {
       const sales = await base44.entities.YardSale.filter({ status: 'approved' }, '-created_date', 50);
-      const photos = sales.
-      flatMap((s) => s.photos || []).
-      filter(Boolean);
-      // Shuffle
+      const photos = sales.flatMap((s) => s.photos || []).filter(Boolean);
       for (let i = photos.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [photos[i], photos[j]] = [photos[j], photos[i]];
@@ -67,232 +51,146 @@ export default function HeroSection() {
     staleTime: 300000
   });
 
-  const FALLBACK = 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=600&q=70&fit=crop';
-  const photos = heroPhotos.length > 0 ? heroPhotos : [FALLBACK];
-
-  // Auto-rotate every 4 seconds when there are real photos
-  useEffect(() => {
-    if (photos.length <= 1) return;
-    const interval = setInterval(() => {
-      setPhotoIndex((i) => (i + 1) % photos.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [photos.length]);
-
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
     if (!email) return;
-
-    base44.analytics.track({
-      eventName: 'email_subscription_started'
-    });
-
+    base44.analytics.track({ eventName: 'email_subscription_started' });
     setIsSubmitting(true);
     try {
       await base44.entities.EmailSubscriber.create({ email, notify_new_sales: true });
-      base44.analytics.track({
-        eventName: 'email_subscribed',
-        properties: { success: true }
-      });
+      base44.analytics.track({ eventName: 'email_subscribed', properties: { success: true } });
       toast.success('Thanks for subscribing! We\'ll notify you about new sales.');
       setEmail('');
     } catch (error) {
-      base44.analytics.track({
-        eventName: 'email_subscribed',
-        properties: { success: false }
-      });
+      base44.analytics.track({ eventName: 'email_subscribed', properties: { success: false } });
       toast.error('Something went wrong. Please try again.');
     }
     setIsSubmitting(false);
   };
 
   return (
-    <section className="relative min-h-[85vh] flex items-center overflow-hidden">
-      {/* Spring background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#E8F8F0] via-white to-[#FFF5F0] dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-        <div className="absolute top-10 right-[8%] w-48 h-48 bg-green-300/20 rounded-full blur-2xl" />
-        <div className="absolute bottom-20 left-[3%] w-40 h-40 bg-[#FF6F61]/15 rounded-full blur-2xl" />
-        <div className="absolute top-1/3 left-[40%] w-32 h-32 bg-yellow-200/20 rounded-full blur-2xl" />
+    <section className="relative overflow-hidden bg-background">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-24 right-[10%] h-72 w-72 rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute bottom-0 left-[5%] h-56 w-56 rounded-full bg-accent-warm/10 blur-3xl" />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Content */}
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 md:py-24">
+        <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-6">
+          {/* Left column */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7 }}
-            className="text-center lg:text-left">
-            
-            {/* Spring Badge */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              className="inline-flex items-center gap-2 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-700 px-4 py-2 rounded-full shadow-sm mb-6">
-              
-              <span className="text-lg">🗽</span>
-              <span className="text-xs sm:text-sm font-semibold text-green-700 dark:text-green-300">
-                NYC & NJ's #1 stoop sale finder
-              </span>
-            </motion.div>
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease }}
+            className="lg:col-span-6 text-center lg:text-left"
+          >
+            <motion.span
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1, ease }}
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3.5 py-1.5 text-xs sm:text-sm font-medium text-muted-foreground shadow-card"
+            >
+              <span className="h-2 w-2 rounded-full bg-accent-warm animate-pulse" />
+              NYC &amp; NJ's #1 stoop sale finder
+            </motion.span>
 
             <motion.h1
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#2E3A59] dark:text-white leading-tight mb-4"
-              style={{ fontFamily: 'Poppins, sans-serif' }}>
-              
-              Find Stoop Sales in <span className="text-[#14B8FF]">NYC & New Jersey</span>
+              transition={{ delay: 0.2, ease }}
+              className="mt-6 text-display font-heading font-bold text-foreground"
+            >
+              Find stoop sales in{' '}
+              <span className="text-primary">NYC &amp; New Jersey</span>
             </motion.h1>
 
             <motion.p
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="text-base sm:text-lg text-gray-600 dark:text-gray-300 mb-6 max-w-lg mx-auto lg:mx-0">
-              
+              transition={{ delay: 0.3, ease }}
+              className="mt-5 max-w-lg mx-auto lg:mx-0 text-base sm:text-lg text-muted-foreground leading-relaxed"
+            >
               Browse live stoop sales, yard sales, and free giveaways across Brooklyn, Queens, Manhattan, the Bronx, and New Jersey — updated every day.
             </motion.p>
 
-            {/* CTA Buttons */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              className="flex flex-col sm:flex-row gap-3 mb-8 justify-center lg:justify-start">
-              
-              <Link to={createPageUrl('yard-sales')} className="w-full sm:w-auto">
-                <motion.button
-                  whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(20, 184, 255, 0.35)' }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full sm:w-auto px-6 py-3 bg-[#14B8FF] text-white rounded-2xl font-semibold flex items-center justify-center gap-2 shadow-lg shadow-[#14B8FF]/25 text-base"
-                  style={{ fontFamily: 'Poppins, sans-serif' }}>
-                  
-                  <MapPin className="w-5 h-5" />
-                  Find Sales Near Me
-                </motion.button>
+              transition={{ delay: 0.4, ease }}
+              className="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start"
+            >
+              <Link
+                to={createPageUrl('yard-sales')}
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-primary px-6 font-heading font-semibold text-primary-foreground shadow-sm hover:shadow-md hover:bg-primary/90 transition-all"
+              >
+                <MapPin className="h-5 w-5" />
+                Find Sales Near Me
               </Link>
-              <Link to={createPageUrl('add-yard-sale')} className="w-full sm:w-auto">
-                <motion.button
-                  whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(255, 111, 97, 0.3)' }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full sm:w-auto px-6 py-3 border-2 border-[#FF6F61] text-[#FF6F61] bg-white dark:bg-transparent dark:text-[#FF6F61] rounded-2xl font-semibold flex items-center justify-center gap-2"
-                  style={{ fontFamily: 'Poppins, sans-serif' }}>
-                  
-                  <Plus className="w-5 h-5" />
-                  Post Your Sale Free
-                </motion.button>
+              <Link
+                to={createPageUrl('add-yard-sale')}
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-accent-warm px-6 font-heading font-semibold text-accent-warm-foreground shadow-sm hover:shadow-md hover:bg-accent-warm/90 transition-all"
+              >
+                <Plus className="h-5 w-5" />
+                Post Your Sale Free
               </Link>
             </motion.div>
 
-            {/* Stats row */}
+            <motion.form
+              onSubmit={handleEmailSubmit}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.55, ease }}
+              className="mt-6 flex w-full max-w-md mx-auto lg:mx-0 items-center gap-2 rounded-xl border border-border bg-card p-1.5 shadow-card"
+            >
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Email me new sales nearby"
+                required
+                className="h-10 flex-1 min-w-0 bg-transparent px-3 text-base text-foreground placeholder:text-muted-foreground focus:outline-none"
+              />
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-lg bg-foreground px-4 text-sm font-semibold text-background hover:opacity-90 transition-opacity disabled:opacity-60"
+              >
+                {isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <ArrowRight className="h-4 w-4" />}
+                Notify me
+              </button>
+            </motion.form>
+
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.6 }}
-              className="flex flex-wrap items-center justify-center lg:justify-start gap-6 text-sm text-gray-600 dark:text-gray-400">
-              
-              <div className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-xl px-4 py-2 shadow-sm border border-gray-100 dark:border-gray-700">
-                <span className="text-xl">📍</span>
-                <span>
-                  {statsLoading ?
-                  <span className="inline-block w-6 h-4 bg-gray-200 dark:bg-gray-600 rounded animate-pulse align-middle" /> :
-
-                  <strong className="text-[#14B8FF]">{statsData?.activeSales ?? 0}</strong>
-                  }
-                  {' '}active sales
-                </span>
-              </div>
-              <div className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-xl px-4 py-2 shadow-sm border border-gray-100 dark:border-gray-700">
-                <span className="text-xl">🎁</span>
-                <span>Free items available</span>
-              </div>
-              
-
-
-              
+              transition={{ delay: 0.65 }}
+              className="mt-6 flex flex-wrap items-center justify-center lg:justify-start gap-x-6 gap-y-2 text-sm text-muted-foreground"
+            >
+              <span className="inline-flex items-center gap-2">
+                <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                {statsLoading
+                  ? <span className="inline-block h-4 w-6 rounded bg-muted animate-pulse align-middle" />
+                  : <strong className="font-semibold text-foreground">{statsData?.activeSales ?? 0}</strong>}
+                {' '}active sales
+              </span>
+              <span className="inline-flex items-center gap-2">
+                <Sparkles className="h-4 w-4 text-accent-warm" />
+                Free items available
+              </span>
             </motion.div>
           </motion.div>
 
-          {/* Right Content - Spring image */}
+          {/* Right column */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="relative hidden lg:block">
-            
-           <div className="relative w-full aspect-square max-w-lg mx-auto">
-             <div className="absolute inset-0">
-               <div className="w-full h-full bg-gradient-to-br from-green-100/50 to-orange-100/50 rounded-[3rem] overflow-hidden shadow-2xl relative">
-                 {photos.map((src, i) =>
-                  <motion.img
-                    key={src + i}
-                    src={src}
-                    alt="Stoop sale photo"
-                    className="absolute inset-0 w-full h-full object-cover"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: i === photoIndex ? 1 : 0 }}
-                    transition={{ duration: 0.8 }}
-                    width={500}
-                    height={500}
-                    loading={i === 0 ? 'eager' : 'lazy'} />
-
-                  )}
-                 {/* Dot indicators */}
-                 {photos.length > 1 &&
-                  <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
-                     {photos.map((_, i) =>
-                    <button
-                      key={i}
-                      onClick={() => setPhotoIndex(i)}
-                      className={`w-1.5 h-1.5 rounded-full transition-all ${i === photoIndex ? 'bg-white w-4' : 'bg-white/50'}`} />
-
-                    )}
-                   </div>
-                  }
-               </div>
-             </div>
-
-              {/* Floating Cards */}
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.9 }}
-                className="absolute -top-4 -right-4 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-xl border border-green-100">
-                
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center">
-                    <span className="text-2xl">🌸</span>
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Brooklyn · Queens · Manhattan</p>
-                    <p className="font-semibold text-[#2E3A59] dark:text-white">& All of NJ</p>
-                  </div>
-                </div>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 1.1 }}
-                className="absolute -bottom-4 -left-4 bg-white dark:bg-gray-800 rounded-2xl p-4 shadow-xl border border-orange-100">
-                
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-[#FF6F61]/10 rounded-xl flex items-center justify-center">
-                    <Sparkles className="w-6 h-6 text-[#FF6F61]" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 dark:text-gray-400">Save big</p>
-                    <p className="font-semibold text-[#2E3A59] dark:text-white">Up to 90% off retail</p>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.25, ease }}
+            className="lg:col-span-6"
+          >
+            <HeroPhotoCard photos={heroPhotos} />
           </motion.div>
         </div>
       </div>
-    </section>);
-
+    </section>
+  );
 }

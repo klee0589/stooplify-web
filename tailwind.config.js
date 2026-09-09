@@ -4,10 +4,23 @@ module.exports = {
     content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
   theme: {
   	extend: {
+  		fontFamily: {
+  			heading: ['var(--font-heading)'],
+  			body: ['var(--font-body)'],
+  			display: ['var(--font-heading)']
+  		},
   		borderRadius: {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
+  		},
+  		boxShadow: {
+  			card: '0 1px 2px 0 rgb(15 23 42 / 0.04), 0 1px 3px 0 rgb(15 23 42 / 0.06)',
+  			'card-hover': '0 4px 12px -2px rgb(15 23 42 / 0.08), 0 2px 6px -2px rgb(15 23 42 / 0.05)',
+  			glass: '0 8px 30px -10px rgb(15 23 42 / 0.18)'
+  		},
+  		transitionTimingFunction: {
+  			smooth: 'cubic-bezier(0.22, 1, 0.36, 1)'
   		},
   		colors: {
   			background: 'hsl(var(--background))',
@@ -23,6 +36,10 @@ module.exports = {
   			primary: {
   				DEFAULT: 'hsl(var(--primary))',
   				foreground: 'hsl(var(--primary-foreground))'
+  			},
+  			'accent-warm': {
+  				DEFAULT: 'hsl(var(--accent-warm))',
+  				foreground: 'hsl(var(--accent-warm-foreground))'
   			},
   			secondary: {
   				DEFAULT: 'hsl(var(--secondary))',

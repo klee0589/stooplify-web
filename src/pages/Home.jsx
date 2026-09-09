@@ -3,54 +3,43 @@ import StooplifyChat from '../components/StooplifyChat';
 import { useTranslation } from '../components/translations';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
 import SEO from '../components/SEO';
 import HeroSection from '../components/home/HeroSection';
-import DiscoveryDropdowns from '../components/sales/DiscoveryDropdowns';
+import DiscoverBand from '../components/home/DiscoverBand';
 import HowItWorks from '../components/home/HowItWorks';
 import FeaturedSales from '../components/home/FeaturedSales';
 import CTASection from '../components/home/CTASection';
 import FreeNearYou from '../components/home/FreeNearYou';
 import TrendingNeighborhoods from '../components/home/TrendingNeighborhoods';
 import SocialSection from '../components/home/SocialSection';
-import WeekendAlertSignup from '../components/WeekendAlertSignup';
+import GuidesGrid from '../components/home/GuidesGrid';
+import SeoTextBlock from '../components/home/SeoTextBlock';
+import HomeFaq from '../components/home/HomeFaq';
+import FinalCta from '../components/home/FinalCta';
 import { deferAnalyticsLoad } from '../components/AnalyticsLoader';
-
 
 export default function Home() {
   const [language, setLanguage] = useState('en');
-  
+
   useEffect(() => {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
     setLanguage(savedLang);
-    
-    const handleLanguageChange = (e) => {
-      setLanguage(e.detail);
-    };
-    
+    const handleLanguageChange = (e) => setLanguage(e.detail);
     window.addEventListener('languageChange', handleLanguageChange);
     return () => window.removeEventListener('languageChange', handleLanguageChange);
   }, []);
-  
+
   const t = useTranslation(language);
 
   useEffect(() => {
-    // Defer analytics loading to avoid blocking main thread
     deferAnalyticsLoad();
-    
-    // Track after paint if available
     if ('requestIdleCallback' in window) {
-      requestIdleCallback(() => {
-        base44.analytics.track({ eventName: 'home_page_viewed' });
-      });
+      requestIdleCallback(() => base44.analytics.track({ eventName: 'home_page_viewed' }));
     } else {
-      setTimeout(() => {
-        base44.analytics.track({ eventName: 'home_page_viewed' });
-      }, 0);
+      setTimeout(() => base44.analytics.track({ eventName: 'home_page_viewed' }), 0);
     }
   }, []);
-  
+
   // Featured sales — scored by quality signals: photos, views, seller history
   const { data: sales = [] } = useQuery({
     queryKey: ['featuredSales'],
@@ -64,41 +53,27 @@ export default function Home() {
         return new Date(y, m - 1, d) >= now;
       });
 
-      // Count posts per seller for history signal
       const sellerPostCount = {};
       allSales.forEach(s => {
         if (s.created_by) sellerPostCount[s.created_by] = (sellerPostCount[s.created_by] || 0) + 1;
       });
 
-      // Score each sale
       const scored = upcomingSales.map(sale => {
         const photoCount = (sale.photos || []).length;
         const views = sale.views || 0;
         const postHistory = sellerPostCount[sale.created_by] || 1;
-
-        // Points:
-        // Photos: 0=0, 1=5, 2=12, 3+=20
         const photoScore = photoCount === 0 ? 0 : photoCount === 1 ? 5 : photoCount === 2 ? 12 : 20;
-        // Views: up to 30pts (1pt per 2 views, capped)
         const viewScore = Math.min(views / 2, 30);
-        // Seller history: repeat seller bonus (up to 15pts)
         const historyScore = Math.min((postHistory - 1) * 5, 15);
-
-        const total = photoScore + viewScore + historyScore;
-        return { ...sale, _score: total };
+        return { ...sale, _score: photoScore + viewScore + historyScore };
       });
 
-      // Only show sales that meet a minimum quality bar (at least 1 photo + some engagement)
       const qualified = scored.filter(s => (s.photos || []).length >= 1 && s._score >= 5);
-
-      // Sort by score desc, take top 6
       qualified.sort((a, b) => b._score - a._score);
       return qualified.slice(0, 6);
     },
     staleTime: 180000
   });
-
-  const userCount = 500; // Approximate community size
 
   const structuredData = {
     "@context": "https://schema.org",
@@ -114,247 +89,29 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen">
-      <SEO 
+    <div className="min-h-screen bg-background">
+      <SEO
         title="Stooplify - Find Stoop Sales & Yard Sales in NYC and New Jersey"
         description="Discover stoop sales, yard sales, and garage sales across Brooklyn, Queens, Manhattan, the Bronx, and New Jersey. Browse live listings, find free items, and score unbeatable deals near you."
         keywords="brooklyn stoop sale, stoop sales NYC, yard sales near me, Queens yard sales, Manhattan garage sales, Bronx yard sales, New Jersey yard sales, Jersey City stoop sale, Hoboken yard sale, NYC stoop sale, garage sales NJ"
         structuredData={structuredData}
       />
 
-      {/* HERO */}
       <HeroSection />
-
-      {/* FIND SALES — Map CTA front and center */}
-      <section className="py-14 bg-white dark:bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <span className="inline-block bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-sm font-semibold px-4 py-1.5 rounded-full mb-3">🗽 NYC & NJ Sales Are Live</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[#2E3A59] dark:text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>What's Happening in NYC & New Jersey</h2>
-            <p className="text-gray-500 dark:text-gray-400 text-lg max-w-xl mx-auto">Browse the live map across Brooklyn, Queens, Manhattan, the Bronx, and NJ — plan your weekend route before you leave home.</p>
-          </div>
-
-          {/* Browse shortcuts */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4 justify-center mb-8">
-            <span className="text-sm font-semibold text-gray-500 dark:text-gray-400 shrink-0">Filter by:</span>
-            <DiscoveryDropdowns />
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/yard-sales"
-              onClick={() => base44.analytics.track({ eventName: 'homepage_cta_clicked', properties: { cta: 'browse_map' } })}
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#14B8FF] text-white rounded-2xl font-semibold text-lg shadow-lg hover:bg-[#0da3e6] transition-colors"
-              style={{ fontFamily: 'Poppins, sans-serif' }}
-            >
-              🗺️ Browse the Live Map
-            </Link>
-            <Link
-              to="/free-items"
-              onClick={() => base44.analytics.track({ eventName: 'homepage_cta_clicked', properties: { cta: 'free_items' } })}
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-green-500 text-white rounded-2xl font-semibold text-lg shadow-lg hover:bg-green-600 transition-colors"
-              style={{ fontFamily: 'Poppins, sans-serif' }}
-            >
-              🎁 Free Items Near Me
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* TRENDING NEIGHBORHOODS */}
+      <DiscoverBand />
       <TrendingNeighborhoods />
-
-      {/* FREE ITEMS */}
       <FreeNearYou />
-
-      {/* FEATURED SALES */}
-      <Suspense fallback={<div className="h-96 bg-gray-100 dark:bg-gray-800 animate-pulse" />}>
+      <Suspense fallback={<div className="h-96 bg-muted animate-pulse" />}>
         <FeaturedSales sales={sales} />
       </Suspense>
-
-      {/* WEEKEND ALERTS */}
-      <section className="py-12 bg-gray-50 dark:bg-gray-800/50">
-        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-          <WeekendAlertSignup variant="banner" />
-        </div>
-      </section>
-
-      {/* HOW IT WORKS */}
       <HowItWorks />
-
-      {/* SPRING SELLING CTA */}
       <CTASection />
-
-      {/* GUIDES */}
-      <section className="py-16 bg-white dark:bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10">
-            <span className="text-xs font-bold tracking-widest text-[#FF6F61] uppercase mb-2 block">// NYC & NJ Seller Tips</span>
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-3">
-              <h2 className="text-4xl md:text-5xl font-extrabold text-[#2E3A59] dark:text-white uppercase tracking-tight" style={{ fontFamily: 'Poppins, sans-serif' }}>Yard Sale Guides</h2>
-              <p className="text-gray-500 dark:text-gray-400 max-w-xs text-sm">Everything you need to host or find an amazing sale in NYC and New Jersey</p>
-            </div>
-          </motion.div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            {[
-              { label: 'Advertise Your Sale', url: '/guides-advertise-yard-sale', num: '01', tag: 'MARKETING' },
-              { label: 'Best Days & Times', url: '/guides-best-time-yard-sale', num: '02', tag: 'TIMING' },
-              { label: 'Permit Requirements', url: '/guides-permit-requirements-nyc', num: '03', tag: 'LEGAL · NYC' },
-              { label: 'Pricing Your Items', url: '/guides-pricing-yard-sale-items', num: '04', tag: 'STRATEGY' },
-              { label: 'Guide for Seniors', url: '/guides-seniors-yard-sales', num: '05', tag: 'ACCESSIBILITY' },
-              { label: 'Finding Sales Near You', url: '/guides-find-yard-sales', num: '06', tag: 'DISCOVERY' },
-            ].map((guide, i) => (
-              <motion.div key={guide.url} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.06 }}>
-                <Link to={guide.url} className="relative group flex flex-col justify-between border-2 border-gray-200 dark:border-gray-700 hover:border-[#FF6F61] rounded-2xl p-6 min-h-[140px] bg-white dark:bg-gray-800 transition-all hover:shadow-lg overflow-hidden">
-                  <div className="flex items-start justify-between mb-3">
-                    <span className="text-xs font-bold tracking-widest text-gray-400 dark:text-gray-500 uppercase">{guide.num}</span>
-                    <span className="text-5xl font-black text-gray-100 dark:text-gray-700 select-none leading-none" style={{ fontFamily: 'Poppins, sans-serif' }}>{guide.num}</span>
-                  </div>
-                  <h3 className="text-base font-extrabold uppercase tracking-tight text-[#2E3A59] dark:text-white group-hover:text-[#FF6F61] transition-colors mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>{guide.label}</h3>
-                  <span className="text-xs font-bold px-2.5 py-1 border border-gray-300 dark:border-gray-600 text-gray-500 dark:text-gray-400 rounded tracking-widest uppercase self-start">{guide.tag}</span>
-                  <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#FF6F61] scale-x-0 group-hover:scale-x-100 transition-transform origin-left rounded-b-2xl" />
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-          <div className="mt-8">
-            <Link to="/guides" className="inline-flex items-center gap-2 px-6 py-3 border-2 border-[#FF6F61] text-[#FF6F61] rounded-xl font-bold uppercase tracking-wide hover:bg-[#FF6F61] hover:text-white transition-all text-sm" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              View All Guides →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* SEO text block */}
-      <section className="bg-gray-50 dark:bg-gray-900 py-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-[#2E3A59] dark:text-white mb-6 text-center" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            Stoop Sales &amp; Yard Sales Across NYC &amp; New Jersey
-          </h2>
-          <div className="prose prose-lg max-w-none text-gray-600 dark:text-gray-300 space-y-4 text-center">
-            <p>
-              Stooplify is the easiest way to find <strong>stoop sales, yard sales, and garage sales</strong> across <strong>Brooklyn, Queens, Manhattan, the Bronx, Staten Island, Jersey City, Hoboken, and Newark</strong>.
-            </p>
-            <p>
-              Neighbors across NYC and New Jersey set up sales every weekend — browse live listings in Williamsburg, Park Slope, Bushwick, Crown Heights, Bed-Stuy, Astoria, the Upper West Side, and beyond.
-            </p>
-            <p>
-              Or <a href="/add-yard-sale" className="text-[#14B8FF] hover:underline">list your own stoop sale for free</a> and reach buyers already searching in your neighborhood.
-            </p>
-          </div>
-          {/* Internal NYC borough links */}
-          <div className="mt-10 flex flex-wrap gap-3 justify-center">
-            {[
-              { label: '🏙️ Garage Sales NYC', url: '/garage-sales-nyc' },
-              { label: '🌇 Stoop Sales NYC', url: '/stoop-sales-nyc' },
-              { label: '🏘️ Brooklyn Garage Sales', url: '/garage-sales-brooklyn' },
-              { label: '🗽 Manhattan Garage Sales', url: '/garage-sales-manhattan' },
-              { label: '🌆 Queens Garage Sales', url: '/garage-sales-queens' },
-              { label: '🏗️ Bronx Garage Sales', url: '/garage-sales-bronx' },
-              { label: '🌉 Jersey City Sales', url: '/stoop-sales-jersey-city' },
-            ].map(link => (
-              <Link key={link.url} to={link.url} className="px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:border-[#14B8FF] hover:text-[#14B8FF] transition-all shadow-sm">
-                {link.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ / Editorial Content — boosts AdSense content quality signals */}
-      <section className="py-16 bg-white dark:bg-gray-900">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mb-10 text-center">
-            <h2 className="text-3xl font-bold text-[#2E3A59] dark:text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>Frequently Asked Questions</h2>
-            <p className="text-gray-500 dark:text-gray-400">Everything you need to know about finding and listing stoop sales in NYC and New Jersey</p>
-          </motion.div>
-          <div className="space-y-6">
-            {[
-              {
-                q: "What is a stoop sale?",
-                a: "A stoop sale is a type of yard sale held on the front stoop or sidewalk outside a home or apartment building — a tradition unique to New York City. Instead of a suburban driveway, NYC residents use their stoops, sidewalk space, or building courtyards to sell secondhand goods, clothing, books, furniture, and other household items. Stoop sales are popular in Brooklyn, Queens, and Manhattan neighborhoods and typically happen on weekend mornings."
-              },
-              {
-                q: "How do I find yard sales near me this weekend?",
-                a: "Use Stooplify's live map to browse all upcoming stoop sales, yard sales, and garage sales in your area. You can filter by neighborhood, date, and category. Sign up for weekend alerts to receive a curated list of sales near you every Thursday before the weekend. The map is updated in real time as new listings are submitted and approved."
-              },
-              {
-                q: "How do I list my stoop sale or yard sale on Stooplify?",
-                a: "Click 'List Sale' or visit stooplify.com/add-yard-sale. Your first listing is completely free — no credit card needed. Add your title, date, time, location, categories, photos, and a description. Our AI can help write your description from photos. Once submitted, your listing is reviewed and published within a few hours."
-              },
-              {
-                q: "Is Stooplify free to use?",
-                a: "Yes! Finding sales on Stooplify is always free. Listing your first stoop sale or yard sale is also free. We offer optional paid listings for sellers who want extra visibility — a $4 single-listing boost or a $9/month unlimited plan for power sellers. There are no commissions or transaction fees."
-              },
-              {
-                q: "Do I need a permit to have a yard sale or stoop sale in NYC?",
-                a: "In New York City, you generally do not need a permit for a one-day stoop sale or yard sale on private property. However, if you're selling on a public sidewalk or street, rules vary by borough and you may need permission. In New Jersey, most municipalities allow yard sales without permits for a limited number of days per year. Read our full Permit Requirements Guide for NYC-specific rules."
-              },
-              {
-                q: "How does address unlocking work?",
-                a: "To protect seller privacy, the exact street address of a listing is only shown on the day of the sale and to users who have marked themselves as attending. Before the sale day, buyers see the approximate neighborhood and a radius on the map. This protects sellers from unwanted visits before their sale while still giving motivated buyers what they need to plan their trip."
-              },
-              {
-                q: "What areas does Stooplify cover?",
-                a: "Stooplify currently serves all five NYC boroughs (Brooklyn, Queens, Manhattan, the Bronx, and Staten Island) plus major New Jersey cities including Jersey City, Hoboken, Newark, Elizabeth, Linden, and beyond. We're expanding to new cities regularly."
-              },
-              {
-                q: "Can I sell online or only at a physical location?",
-                a: "Stooplify is designed for in-person stoop sales, yard sales, and garage sales — not online selling. All listings should represent a physical sale event at a real location. If you're looking to sell items online, platforms like eBay, Poshmark, or Facebook Marketplace may be better suited."
-              },
-            ].map((faq, i) => (
-              <motion.div key={i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.04 }} className="bg-gray-50 dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700">
-                <h3 className="font-bold text-lg text-[#2E3A59] dark:text-white mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>{faq.q}</h3>
-                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{faq.a}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* SOCIAL MEDIA */}
+      <GuidesGrid />
+      <SeoTextBlock />
+      <HomeFaq />
       <SocialSection />
-
-      {/* AI Chat Assistant */}
       <StooplifyChat />
-
-      {/* Final CTA */}
-      <motion.section 
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="bg-gradient-to-br from-green-500 to-[#14B8FF] py-20"
-      >
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <span className="text-4xl mb-4 block">🗽</span>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            The Best Stoop Sales in NYC & New Jersey
-          </h2>
-          <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
-            Brooklyn, Queens, Manhattan, the Bronx, Jersey City, Hoboken — find the best local sales near you, updated every day.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <motion.a
-               href="/yard-sales"
-               whileHover={{ scale: 1.05 }}
-               whileTap={{ scale: 0.95 }}
-               className="px-8 py-4 bg-white text-[#2E3A59] rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all"
-               style={{ fontFamily: 'Poppins, sans-serif' }}
-             >
-               Find Sales Near Me 🗺️
-             </motion.a>
-             <motion.a
-               href="/add-yard-sale"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 bg-[#FF6F61] text-white rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transition-all"
-              style={{ fontFamily: 'Poppins, sans-serif' }}
-            >
-              Post Your Sale Free 🌱
-            </motion.a>
-          </div>
-        </div>
-      </motion.section>
+      <FinalCta />
     </div>
   );
 }
