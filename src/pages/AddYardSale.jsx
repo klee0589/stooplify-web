@@ -236,27 +236,6 @@ export default function AddYardSale() {
       const { exact_latitude, exact_longitude, latitude, longitude } = geoResult.data;
       const coordinates = { exact_latitude, exact_longitude, latitude, longitude };
 
-      // For new listings only (non-admins), verify user is within 1 mile of the address
-      const isAdmin = user?.role === 'admin';
-      if (!isEditMode && !isAdmin) {
-        const position = await new Promise((resolve, reject) =>
-          navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 10000 })
-        );
-        const userLat = position.coords.latitude;
-        const userLon = position.coords.longitude;
-        const R = 3958.8;
-        const dLat = (exact_latitude - userLat) * Math.PI / 180;
-        const dLon = (exact_longitude - userLon) * Math.PI / 180;
-        const a = Math.sin(dLat/2) ** 2 +
-          Math.cos(userLat * Math.PI / 180) * Math.cos(exact_latitude * Math.PI / 180) * Math.sin(dLon/2) ** 2;
-        const distance = R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-
-        if (distance > 1) {
-          toast.error(`You must be within 1 mile of the sale address to create a listing. You are ${distance.toFixed(1)} miles away.`);
-          throw new Error('Too far from event location');
-        }
-      }
-
       if (isEditMode) {
         // Update existing sale
         await base44.entities.YardSale.update(editSaleId, {
@@ -337,7 +316,7 @@ export default function AddYardSale() {
     const uploadedUrls = [];
     for (const file of filesToUpload) {
       try {
-        const { file_url } = await base44.integrations.Core.UploadFile({ file });
+        const { file_url } = await base44.integrations.Core.UploadPublicFile({ file });
         uploadedUrls.push(file_url);
         setPhotos((prev) => [...prev, file_url]);
       } catch (error) {
@@ -383,7 +362,7 @@ export default function AddYardSale() {
     setIsUploading(true);
 
     try {
-      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      const { file_url } = await base44.integrations.Core.UploadPublicFile({ file });
       setPhotos((prev) => [...prev, file_url]);
 
       // Generate AI description from photo

@@ -116,12 +116,8 @@ export default function YardSaleDetails() {
         
         if (sales.length > 0) {
           console.log('✅ Found sale:', sales[0].title);
-          // Increment views (silently fail if no permission)
-          try {
-            await base44.entities.YardSale.update(saleId, { views: (sales[0].views || 0) + 1 });
-          } catch (err) {
-            console.log('Could not increment views (permission denied - user not sale creator)');
-          }
+          // Increment views via backend (service role — works for anonymous and non-owner viewers)
+          base44.functions.invoke('incrementSaleViews', { saleId }).catch(() => {});
           
           // Fetch seller info via backend function
           const sellerEmail = sales[0].created_by;
