@@ -1,0 +1,44 @@
+{
+  "name": "Weekly Social Post",
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "weekly_social_post",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "publish_post": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "publishWeeklySocialPost"
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Publish weekly social post",
+            "description": "Generate and publish to Facebook"
+          }
+        }
+      }
+    ]
+  },
+  "description": "Auto-publishes a weekly post to Facebook alternating between featured yard sales and tips/guides content",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 10 * * 1",
+      "one_time_date": null,
+      "timezone": "America/New_York",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  }
+}
