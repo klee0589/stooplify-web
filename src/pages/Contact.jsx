@@ -13,6 +13,11 @@ export default function Contact() {
     const mailto = `mailto:daniel@stooplify.com?subject=${encodeURIComponent(form.subject || 'Stooplify Contact Form')}&body=${encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`)}`;
     window.location.href = mailto;
     setSubmitted(true);
+    if (typeof window !== 'undefined' && window.gtag) {
+      window.gtag('event', 'conversion', {
+        send_to: 'AW-18443760574/PiyVCNKsv_McEL7n1dpE',
+      });
+    }
   };
 
   return (

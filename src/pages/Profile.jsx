@@ -65,6 +65,37 @@ export default function Profile() {
     base44.analytics.track({ eventName: 'profile_page_viewed' });
   }, []);
 
+  // Google Ads conversion — fires once when Stripe redirects back with ?payment=success
+  const paymentFiredRef = React.useRef(false);
+  useEffect(() => {
+    if (paymentFiredRef.current) return;
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('payment') !== 'success') return;
+    const listingType = urlParams.get('type');
+    const sessionId = urlParams.get('session_id');
+    paymentFiredRef.current = true;
+    const fire = () => {
+      if (typeof window === 'undefined' || !window.gtag) return;
+      if (listingType === 'subscription') {
+        window.gtag('event', 'conversion', {
+          send_to: 'AW-18443760574/IeulCIKHyvMcEL7n1dpE',
+          value: 9,
+          currency: 'USD',
+          transaction_id: sessionId || ('sub_' + Date.now()),
+        });
+      } else {
+        window.gtag('event', 'conversion', {
+          send_to: 'AW-18443760574/rnirCIKhv_McEL7n1dpE',
+          value: 4,
+          currency: 'USD',
+          transaction_id: sessionId || ('single_' + Date.now()),
+        });
+      }
+    };
+    fire();
+    try { window.history.replaceState({}, '', window.location.pathname); } catch (_e) {}
+  }, []);
+
   useEffect(() => {
     const checkAuth = async () => {
       try {

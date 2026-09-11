@@ -41,6 +41,29 @@ export default function AddYardSale() {
 
   const t = useTranslation(language);
 
+  // Google Ads PURCHASE conversion — fires once when Stripe redirects back with ?payment=success
+  const purchaseFiredRef = React.useRef(false);
+  useEffect(() => {
+    if (purchaseFiredRef.current) return;
+    if (urlParams.get('payment') !== 'success') return;
+    const sessionId = urlParams.get('session_id');
+    const listingType = urlParams.get('type');
+    if (listingType && listingType !== 'single') return; // only single-listing purchases land here
+    purchaseFiredRef.current = true;
+    const fire = () => {
+      if (typeof window === 'undefined' || !window.gtag) return;
+      window.gtag('event', 'conversion', {
+        send_to: 'AW-18443760574/rnirCIKhv_McEL7n1dpE',
+        value: 4,
+        currency: 'USD',
+        transaction_id: sessionId || ('single_' + Date.now()),
+      });
+    };
+    fire();
+    // Clean the URL so a refresh doesn't re-trigger
+    try { window.history.replaceState({}, '', window.location.pathname); } catch (_e) {}
+  }, []);
+
   const getCategoryLabels = () => [
   { value: 'general', label: t('general'), icon: Package },
   { value: 'furniture', label: t('furniture'), icon: Sofa },

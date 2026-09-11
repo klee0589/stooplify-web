@@ -30,10 +30,6 @@ Deno.serve(async (req) => {
     const baseUrl = origin.startsWith('http') ? origin : `https://${origin}`;
     console.log('🟢 Origin:', baseUrl);
     
-    const successUrl = returnToPhotos
-      ? `${baseUrl}/add-yard-sale?payment=success&step=3`
-      : `${baseUrl}/Profile?payment=success`;
-
     console.log('🟢 Creating Stripe session...');
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -42,7 +38,9 @@ Deno.serve(async (req) => {
         quantity: 1,
       }],
       mode: listingType === 'subscription' ? 'subscription' : 'payment',
-      success_url: successUrl,
+      success_url: returnToPhotos
+        ? `${baseUrl}/add-yard-sale?payment=success&step=3&type=${listingType}&session_id={CHECKOUT_SESSION_ID}`
+        : `${baseUrl}/Profile?payment=success&type=${listingType}&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${baseUrl}/add-yard-sale?payment=cancelled&step=3`,
       customer_email: user.email,
       metadata: {

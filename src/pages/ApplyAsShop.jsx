@@ -73,6 +73,11 @@ export default function ApplyAsShop() {
     onSuccess: () => {
       toast.success('Application submitted! We\'ll review it within 24 hours.');
       setSubmitted(true);
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('event', 'conversion', {
+          send_to: 'AW-18443760574/dR5NCPCRx_McEL7n1dpE',
+        });
+      }
     },
     onError: () => {
       toast.error('Failed to submit application. Please try again.');
