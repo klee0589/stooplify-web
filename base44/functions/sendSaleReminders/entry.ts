@@ -1,8 +1,25 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
+import { escapeHtml } from '../../shared/escapeHtml.ts';
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+
+    // Auth check: admin user or valid automation token
+    const body = await req.json().catch(() => ({}));
+    const automationToken = Deno.env.get('AUTOMATION_TOKEN');
+    const hasValidToken = !!(automationToken && body.automation_token && body.automation_token === automationToken);
+    if (!hasValidToken) {
+      let isAuthorized = false;
+      try {
+        const user = await base44.auth.me();
+        isAuthorized = !!user && user.role === 'admin';
+      } catch {}
+      if (!isAuthorized) {
+        return Response.json({ error: 'Unauthorized' }, { status: 403 });
+      }
+    }
+
     console.log('🔔 Starting sale reminder job...');
 
     // Get tomorrow's date in YYYY-MM-DD format (ET timezone)
@@ -58,12 +75,12 @@ Deno.serve(async (req) => {
         const saleUrl = `https://stooplify.com/YardSaleDetails?id=${sale.id}`;
         return `
           <div style="margin-bottom: 20px; padding: 18px; background: #f9f9f9; border-radius: 10px; border-left: 4px solid #FF6F61;">
-            <h3 style="margin: 0 0 8px 0; color: #2E3A59; font-size: 16px;">${sale.title}</h3>
+            <h3 style="margin: 0 0 8px 0; color: #2E3A59; font-size: 16px;">${escapeHtml(sale.title)}</h3>
             <p style="margin: 0 0 4px 0; color: #555; font-size: 14px;">
               🕐 ${sale.start_time || '8:00 AM'} – ${sale.end_time || '2:00 PM'}
             </p>
             <p style="margin: 0 0 12px 0; color: #555; font-size: 14px;">
-              📍 ${sale.general_location || sale.city + ', ' + sale.state}
+              📍 ${escapeHtml(sale.general_location || sale.city + ', ' + sale.state)}
             </p>
             <a href="${saleUrl}"
                style="display: inline-block; padding: 9px 18px; background: #FF6F61; color: white; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px;">

@@ -27,20 +27,8 @@ export default function WeekendAlertSignup({ variant = 'banner', className = '' 
           city: city || 'NYC',
           notify_new_sales: true
         });
-        // Send welcome email
-        await base44.integrations.Core.SendEmail({
-          to: email,
-          subject: '🛍️ Weekend Alerts Activated — You\'re on the Stooplify list!',
-          body: `<h2>You're in!</h2>
-<p>Hey there,</p>
-<p>You're now subscribed to weekend sale alerts from Stooplify${city ? ` for <strong>${city}</strong>` : ''}.</p>
-<p>Every Friday we'll send you a roundup of the best upcoming stoop sales, yard sales, and garage sales near you so you can plan your weekend route.</p>
-<p style="margin-top:20px;">
-  <a href="https://stooplify.com/yard-sales" style="background:#14B8FF;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:bold;">Browse This Weekend's Sales →</a>
-</p>
-<p style="margin-top:24px;font-size:13px;color:#888;">You can unsubscribe anytime by replying "unsubscribe" to any alert email.</p>
-<p>Happy treasure hunting,<br/>The Stooplify Team</p>`
-        });
+        // Welcome email removed — subscriber will receive weekly alert emails via the scheduled workflow
+        // This prevents the public SendEmail integration from being used as an open mail relay
       }
       base44.analytics.track({ eventName: 'weekend_alert_completed', properties: { city: city || 'unknown', source: variant } });
       setIsDone(true);

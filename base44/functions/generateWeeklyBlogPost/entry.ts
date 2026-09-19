@@ -3,6 +3,21 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 Deno.serve(async (req) => {
     try {
         const base44 = createClientFromRequest(req);
+
+        // Auth check: admin user or valid automation token
+        const body = await req.json().catch(() => ({}));
+        const automationToken = Deno.env.get('AUTOMATION_TOKEN');
+        const hasValidToken = !!(automationToken && body.automation_token && body.automation_token === automationToken);
+        if (!hasValidToken) {
+            let isAuthorized = false;
+            try {
+                const user = await base44.auth.me();
+                isAuthorized = !!user && user.role === 'admin';
+            } catch {}
+            if (!isAuthorized) {
+                return Response.json({ error: 'Unauthorized' }, { status: 403 });
+            }
+        }
         
         console.log('Starting blog post batch generation (3 posts)...');
 

@@ -11,6 +11,20 @@ Deno.serve(async (req) => {
     const base44 = createClientFromRequest(req);
     const body = await req.json();
 
+    // Auth check: admin user or valid automation token
+    const automationToken = Deno.env.get('AUTOMATION_TOKEN');
+    const hasValidToken = !!(automationToken && body.automation_token && body.automation_token === automationToken);
+    if (!hasValidToken) {
+      let isAuthorized = false;
+      try {
+        const user = await base44.auth.me();
+        isAuthorized = !!user && user.role === 'admin';
+      } catch {}
+      if (!isAuthorized) {
+        return Response.json({ error: 'Unauthorized' }, { status: 403 });
+      }
+    }
+
     // Check if this is an automation event or direct API call
     let action, saleId, saleData, isAutomation = false;
     

@@ -22,7 +22,18 @@ Deno.serve(async (req) => {
     if (event.type === 'checkout.session.completed') {
       const session = event.data.object;
       const userEmail = session.metadata.user_email;
-      const listingType = session.metadata.listing_type;
+      // Derive listingType from the price, not from client-controlled metadata
+      const fullSession = await stripe.checkout.sessions.retrieve(session.id, { expand: ['line_items'] });
+      const priceId = fullSession.line_items?.data?.[0]?.price?.id;
+      const PRICE_TO_LISTING_TYPE: Record<string, string> = {
+        'price_1Sp0DuEBgBmaTVQE0iSg1m5n': 'subscription',
+        'price_1Sp0DuEBgBmaTVQEKO1W2NrG': 'paid',
+      };
+      const listingType = priceId ? PRICE_TO_LISTING_TYPE[priceId] : undefined;
+      if (!listingType) {
+        console.log('⚠️ Unknown price in checkout, skipping:', priceId);
+        return Response.json({ received: true });
+      }
 
       console.log('Processing checkout for:', userEmail, 'Type:', listingType);
 

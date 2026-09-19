@@ -18,13 +18,24 @@ Deno.serve(async (req) => {
       return Response.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { priceId, listingType, returnToPhotos } = await req.json();
-    console.log('🟢 Request parsed:', { priceId, listingType, returnToPhotos });
+    const { priceId, returnToPhotos } = await req.json();
 
-    if (!priceId || !listingType) {
-      console.log('🔴 Missing params');
-      return Response.json({ error: 'Missing priceId or listingType' }, { status: 400 });
+    if (!priceId) {
+      console.log('🔴 Missing priceId');
+      return Response.json({ error: 'Missing priceId' }, { status: 400 });
     }
+
+    // Server-side price validation — derive listingType from the priceId, never trust client input
+    const PRICE_TO_LISTING_TYPE: Record<string, string> = {
+      'price_1Sp0DuEBgBmaTVQE0iSg1m5n': 'subscription',
+      'price_1Sp0DuEBgBmaTVQEKO1W2NrG': 'paid',
+    };
+    const listingType = PRICE_TO_LISTING_TYPE[priceId];
+    if (!listingType) {
+      console.log('🔴 Invalid priceId');
+      return Response.json({ error: 'Invalid price' }, { status: 400 });
+    }
+    console.log('🟢 Request parsed:', { priceId, listingType, returnToPhotos });
 
     const origin = req.headers.get('origin') || req.headers.get('referer') || 'https://stooplify-cba3c5d6.base44.app';
     const baseUrl = origin.startsWith('http') ? origin : `https://${origin}`;

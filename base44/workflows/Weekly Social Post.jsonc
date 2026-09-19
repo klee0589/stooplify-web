@@ -1,29 +1,4 @@
 {
-  "name": "Weekly Social Post",
-  "definition": {
-    "document": {
-      "dsl": "1.0.0",
-      "name": "weekly_social_post",
-      "version": "1.0",
-      "namespace": "base44"
-    },
-    "do": [
-      {
-        "publish_post": {
-          "call": "invoke_backend_function",
-          "with": {
-            "function_name": "publishWeeklySocialPost"
-          },
-          "then": "end",
-          "x-base44": {
-            "title": "Publish weekly social post",
-            "description": "Generate and publish to Facebook"
-          }
-        }
-      }
-    ]
-  },
-  "description": "Auto-publishes a weekly post to Facebook alternating between featured yard sales and tips/guides content",
   "trigger": {
     "condition": null,
     "config": {
@@ -40,5 +15,33 @@
       "ends_on_date": null,
       "ends_after_count": null
     }
-  }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "weekly_social_post",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "publish_post": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "publishWeeklySocialPost",
+            "args": {
+              "automation_token": "stooplify-auto-2bd4d2012de4e8f54fff88f4330f6a22"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Publish weekly social post",
+            "description": "Generate and publish to Facebook"
+          }
+        }
+      }
+    ]
+  },
+  "name": "Weekly Social Post",
+  "description": "Auto-publishes a weekly post to Facebook alternating between featured yard sales and tips/guides content"
 }

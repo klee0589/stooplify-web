@@ -3,6 +3,16 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 Deno.serve(async (req) => {
   const base44 = createClientFromRequest(req);
 
+  // Require admin auth
+  let isAuthorized = false;
+  try {
+    const user = await base44.auth.me();
+    isAuthorized = !!user && user.role === 'admin';
+  } catch {}
+  if (!isAuthorized) {
+    return Response.json({ error: 'Admin access required' }, { status: 403 });
+  }
+
   const users = await base44.asServiceRole.entities.User.list();
 
   const rows = users

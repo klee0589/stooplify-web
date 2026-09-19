@@ -1,10 +1,25 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { escapeHtml } from '../../shared/escapeHtml.ts';
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
     const payload = await req.json();
     
+    // Auth check: admin user or valid automation token
+    const automationToken = Deno.env.get('AUTOMATION_TOKEN');
+    const hasValidToken = !!(automationToken && payload.automation_token && payload.automation_token === automationToken);
+    if (!hasValidToken) {
+      let isAuthorized = false;
+      try {
+        const user = await base44.auth.me();
+        isAuthorized = !!user && user.role === 'admin';
+      } catch {}
+      if (!isAuthorized) {
+        return Response.json({ error: 'Unauthorized' }, { status: 403 });
+      }
+    }
+
     const { event, data: saleFromEvent } = payload;
     
     // Only process new sales
@@ -129,14 +144,14 @@ Deno.serve(async (req) => {
             </p>
             
             <div style="padding: 20px; background: #f9f9f9; border-radius: 8px; margin-bottom: 20px;">
-              <h2 style="margin: 0 0 15px 0; color: #2E3A59;">${sale.title}</h2>
+              <h2 style="margin: 0 0 15px 0; color: #2E3A59;">${escapeHtml(sale.title)}</h2>
               <p style="margin: 5px 0; color: #666;">
                 📅 ${formattedDate} at ${sale.start_time || '8:00 AM'}
               </p>
               <p style="margin: 5px 0; color: #666;">
-                📍 ${sale.general_location || sale.city}
+                📍 ${escapeHtml(sale.general_location || sale.city)}
               </p>
-              ${sale.description ? `<p style="margin: 15px 0 0 0; color: #666;">${sale.description}</p>` : ''}
+              ${sale.description ? `<p style="margin: 15px 0 0 0; color: #666;">${escapeHtml(sale.description)}</p>` : ''}
             </div>
 
             <div style="text-align: center;">

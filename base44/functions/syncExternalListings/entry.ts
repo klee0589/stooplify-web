@@ -70,13 +70,19 @@ Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
 
-    // Admin-only or service-role triggered (scheduled automations run as service role)
-    let isAdmin = false;
-    try {
-      const user = await base44.auth.me();
-      isAdmin = user?.role === 'admin';
-    } catch (e) {
-      // No user context — likely a scheduled automation, allow service-role execution
+    // Auth check: admin user or valid automation token
+    const body = await req.json().catch(() => ({}));
+    const automationToken = Deno.env.get('AUTOMATION_TOKEN');
+    const hasValidToken = !!(automationToken && body.automation_token && body.automation_token === automationToken);
+    if (!hasValidToken) {
+      let isAuthorized = false;
+      try {
+        const user = await base44.auth.me();
+        isAuthorized = !!user && user.role === 'admin';
+      } catch {}
+      if (!isAuthorized) {
+        return Response.json({ error: 'Unauthorized' }, { status: 403 });
+      }
     }
 
     const b44 = base44.asServiceRole;

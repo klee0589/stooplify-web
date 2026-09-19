@@ -3,6 +3,18 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.25';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
+
+    // Require authentication
+    let user;
+    try {
+      user = await base44.auth.me();
+    } catch {
+      return Response.json({ error: 'Authentication required' }, { status: 401 });
+    }
+    if (!user) {
+      return Response.json({ error: 'Authentication required' }, { status: 401 });
+    }
+
     const { email, id } = await req.json();
 
     if (!email && !id) {
@@ -21,12 +33,11 @@ Deno.serve(async (req) => {
     }
 
     const seller = sellers[0];
+    // Return only public display fields — email is already available via sale.created_by
     return Response.json({
       seller: {
-        email: seller.email,
         full_name: seller.full_name,
-        id: seller.id,
-        created_date: seller.created_date
+        email: seller.email,
       }
     });
   } catch (error) {

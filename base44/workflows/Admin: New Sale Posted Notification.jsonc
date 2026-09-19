@@ -24,7 +24,9 @@
           "call": "invoke_backend_function",
           "with": {
             "function_name": "notifyAdminNewSale",
-            "args": {}
+            "args": {
+              "automation_token": "stooplify-auto-2bd4d2012de4e8f54fff88f4330f6a22"
+            }
           },
           "then": "end"
         }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { safeFromUrl } from '@/lib/authReturnTo';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -7,8 +8,8 @@ export default function Login() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // Get the return URL from query params
-  const fromUrl = new URLSearchParams(window.location.search).get('from_url') || '/';
+  // Get the safe return URL (validated same-origin path)
+  const fromUrl = safeFromUrl();
 
   const handleSubmit = async (e) => {
     e.preventDefault();

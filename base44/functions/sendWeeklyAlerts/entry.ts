@@ -1,9 +1,25 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
+import { escapeHtml } from '../../shared/escapeHtml.ts';
 
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    
+
+    // Auth check: admin user or valid automation token
+    const body = await req.json().catch(() => ({}));
+    const automationToken = Deno.env.get('AUTOMATION_TOKEN');
+    const hasValidToken = !!(automationToken && body.automation_token && body.automation_token === automationToken);
+    if (!hasValidToken) {
+      let isAuthorized = false;
+      try {
+        const user = await base44.auth.me();
+        isAuthorized = !!user && user.role === 'admin';
+      } catch {}
+      if (!isAuthorized) {
+        return Response.json({ error: 'Unauthorized' }, { status: 403 });
+      }
+    }
+
     // This should be called by a scheduled automation (weekly on Friday mornings)
     console.log('🔔 Starting weekly alert job...');
 
@@ -73,10 +89,10 @@ Deno.serve(async (req) => {
             
             return `
               <div style="margin-bottom: 20px; padding: 15px; background: #f9f9f9; border-radius: 8px;">
-                <h3 style="margin: 0 0 8px 0; color: #2E3A59;">${sale.title}</h3>
+                <h3 style="margin: 0 0 8px 0; color: #2E3A59;">${escapeHtml(sale.title)}</h3>
                 <p style="margin: 0; color: #666;">
                   📅 ${formattedDate} at ${sale.start_time || '8:00 AM'}<br>
-                  📍 ${sale.general_location || sale.city}
+                  📍 ${escapeHtml(sale.general_location || sale.city)}
                 </p>
                 <a href="https://stooplify.com/YardSaleDetails?id=${sale.id}" 
                    style="display: inline-block; margin-top: 10px; padding: 8px 16px; background: #14B8FF; color: white; text-decoration: none; border-radius: 6px;">
