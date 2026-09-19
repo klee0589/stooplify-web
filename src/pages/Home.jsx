@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import SEO from '../components/SEO';
 import HeroSection from '../components/home/HeroSection';
+import WeekendSales from '../components/home/WeekendSales';
 import DiscoverBand from '../components/home/DiscoverBand';
 import HowItWorks from '../components/home/HowItWorks';
 import FeaturedSales from '../components/home/FeaturedSales';
@@ -98,6 +99,7 @@ export default function Home() {
       />
 
       <HeroSection />
+      <WeekendSales />
       <DiscoverBand />
       <TrendingNeighborhoods />
       <FreeNearYou />

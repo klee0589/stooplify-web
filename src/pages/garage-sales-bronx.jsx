@@ -4,7 +4,7 @@ const config = {
   city: 'Bronx',
   state: 'NY',
   title: 'Bronx Garage Sales',
-  metaTitle: 'Garage Sales in the Bronx Today (Live Map) | Stooplify',
+  metaTitle: 'Garage Sales Bronx — Find Garage & Yard Sales This Weekend in the Bronx | Stooplify',
   metaDescription: 'Browse garage sales and yard sales happening in the Bronx today. Live listings from Riverdale, Fordham, Pelham Bay, and more. Find great deals near you.',
   keywords: 'garage sales bronx, bronx garage sale, bronx yard sale, riverdale garage sale, fordham stoop sale, bronx NYC yard sales',
   h1: 'Garage Sales in the Bronx — Live Listings',

@@ -4,7 +4,7 @@ const config = {
   city: 'Queens',
   state: 'NY',
   title: 'Queens Garage Sales',
-  metaTitle: 'Garage Sales in Queens Today (Live Map) | Stooplify',
+  metaTitle: 'Garage Sales Queens — Find Garage & Yard Sales This Weekend in Queens NYC | Stooplify',
   metaDescription: 'Find garage sales and yard sales happening in Queens today. Live listings from Astoria, Jackson Heights, Flushing, Forest Hills, Jamaica and more.',
   keywords: 'garage sales queens, queens garage sale, astoria yard sale, jackson heights stoop sale, flushing garage sale, queens NYC yard sales',
   h1: 'Garage Sales in Queens — Live Listings',

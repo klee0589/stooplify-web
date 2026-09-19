@@ -42,7 +42,7 @@ export default function StoopSalesParkSlope() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <SEO
-        title="Park Slope Stoop Sales — Yard Sales in Park Slope Brooklyn This Weekend | Stooplify"
+        title="Park Slope Stoop Sales — This Weekend's Stoop Sales in Park Slope Brooklyn | Stooplify"
         description="Browse upcoming stoop sales in Park Slope, Brooklyn. Find furniture, vintage clothing, books & more from Park Slope neighbors. Live map updated every weekend."
         keywords="Park Slope stoop sales, Park Slope yard sales, Park Slope Brooklyn stoop sale, stoop sales Park Slope this weekend, yard sales Park Slope"
         url="https://stooplify.com/stoop-sales-park-slope"

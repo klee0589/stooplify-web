@@ -18,6 +18,11 @@ import GuidesSellingVsGiving from './pages/guides-selling-vs-giving';
 import AdminAnalytics from './pages/AdminAnalytics';
 import StoopSalesParkSlope from './pages/StoopSalesParkSlope';
 import StoopSalesWilliamsburg from './pages/StoopSalesWilliamsburg';
+import StoopSalesBushwick from './pages/stoop-sales-bushwick';
+import StoopSalesBedStuy from './pages/stoop-sales-bed-stuy';
+import StoopSalesCarrollGardens from './pages/stoop-sales-carroll-gardens';
+import StoopSalesAstoria from './pages/stoop-sales-astoria';
+import StoopSalesHarlem from './pages/stoop-sales-harlem';
 import GarageSalesNYC from './pages/garage-sales-nyc';
 import StoopSalesNYC from './pages/stoop-sales-nyc';
 import GarageSalesBrooklyn from './pages/garage-sales-brooklyn';
@@ -90,6 +95,11 @@ const AuthenticatedApp = () => {
       <Route path="/admin-analytics" element={<LayoutWrapper currentPageName="admin-analytics"><AdminAnalytics /></LayoutWrapper>} />
       <Route path="/stoop-sales-park-slope" element={<LayoutWrapper currentPageName="stoop-sales-park-slope"><StoopSalesParkSlope /></LayoutWrapper>} />
       <Route path="/stoop-sales-williamsburg" element={<LayoutWrapper currentPageName="stoop-sales-williamsburg"><StoopSalesWilliamsburg /></LayoutWrapper>} />
+      <Route path="/stoop-sales-bushwick" element={<LayoutWrapper currentPageName="stoop-sales-bushwick"><StoopSalesBushwick /></LayoutWrapper>} />
+      <Route path="/stoop-sales-bed-stuy" element={<LayoutWrapper currentPageName="stoop-sales-bed-stuy"><StoopSalesBedStuy /></LayoutWrapper>} />
+      <Route path="/stoop-sales-carroll-gardens" element={<LayoutWrapper currentPageName="stoop-sales-carroll-gardens"><StoopSalesCarrollGardens /></LayoutWrapper>} />
+      <Route path="/stoop-sales-astoria" element={<LayoutWrapper currentPageName="stoop-sales-astoria"><StoopSalesAstoria /></LayoutWrapper>} />
+      <Route path="/stoop-sales-harlem" element={<LayoutWrapper currentPageName="stoop-sales-harlem"><StoopSalesHarlem /></LayoutWrapper>} />
       <Route path="/garage-sales-nyc" element={<LayoutWrapper currentPageName="garage-sales-nyc"><GarageSalesNYC /></LayoutWrapper>} />
       <Route path="/stoop-sales-nyc" element={<LayoutWrapper currentPageName="stoop-sales-nyc"><StoopSalesNYC /></LayoutWrapper>} />
       <Route path="/garage-sales-brooklyn" element={<LayoutWrapper currentPageName="garage-sales-brooklyn"><GarageSalesBrooklyn /></LayoutWrapper>} />

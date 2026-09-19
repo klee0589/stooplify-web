@@ -4,7 +4,7 @@ const config = {
   city: 'New York City',
   state: 'NY',
   title: 'NYC Garage Sales',
-  metaTitle: 'Garage Sales NYC Today (Live Map) | Stooplify',
+  metaTitle: 'Garage Sales NYC — Find Garage & Yard Sales This Weekend in New York | Stooplify',
   metaDescription: 'Find garage sales, stoop sales, and yard sales happening in NYC today. Browse live listings across Brooklyn, Queens, Manhattan, the Bronx, and Staten Island on Stooplify.',
   keywords: 'garage sales NYC, NYC garage sale, garage sales New York City, NYC yard sales, stoop sales NYC, New York garage sales today',
   h1: 'Garage Sales in NYC — Live Map',

@@ -4,7 +4,7 @@ const config = {
   city: 'Manhattan',
   state: 'NY',
   title: 'Manhattan Stoop Sales',
-  metaTitle: 'Manhattan Stoop Sales 2026 — Upper West Side, Harlem, East Village | Stooplify',
+  metaTitle: "Manhattan Stoop Sales — This Weekend's Stoop Sales in Manhattan NYC | Stooplify",
   metaDescription: 'Discover stoop sales across Manhattan in 2026 — Upper West Side, Harlem, East Village, Washington Heights & more. Live listings updated daily on Stooplify.',
   keywords: 'manhattan stoop sales, upper west side stoop sale, harlem yard sale, east village stoop sale, washington heights yard sale, manhattan yard sales nyc 2026',
   h1: 'Manhattan Stoop Sales — Find Local Sales Near You This Weekend',
