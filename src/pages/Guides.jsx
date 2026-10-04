@@ -460,7 +460,7 @@ export default function Guides() {
             {t('faq.contactTitle')}
           </h3>
           <p className="mb-4 opacity-90">{t('faq.contactSubtitle')}</p>
-          <a href="mailto:daniel@stooplify.com" className="inline-block px-6 py-3 bg-white text-[#14B8FF] rounded-xl font-semibold hover:bg-gray-100 transition-colors">
+          <a href="mailto:klee0589@gmail.com" className="inline-block px-6 py-3 bg-white text-[#14B8FF] rounded-xl font-semibold hover:bg-gray-100 transition-colors">
             {t('faq.contactButton')}
           </a>
         </motion.div>

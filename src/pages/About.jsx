@@ -106,7 +106,7 @@ export default function About() {
 
             <h2 className="text-2xl font-bold text-[#2E3A59] dark:text-white mt-10" style={{ fontFamily: 'Poppins, sans-serif' }}>Contact Us</h2>
             <p>
-              We'd love to hear from you — whether you have feedback, a partnership idea, or just want to say hello. Reach us at <a href="mailto:daniel@stooplify.com" className="text-[#14B8FF] hover:underline">daniel@stooplify.com</a> or visit our <Link to="/contact" className="text-[#14B8FF] hover:underline">Contact page</Link>.
+              We'd love to hear from you — whether you have feedback, a partnership idea, or just want to say hello. Reach us at <a href="mailto:klee0589@gmail.com" className="text-[#14B8FF] hover:underline">klee0589@gmail.com</a> or visit our <Link to="/contact" className="text-[#14B8FF] hover:underline">Contact page</Link>.
             </p>
             <p>
               Follow us on <a href="https://www.instagram.com/stooplify/" target="_blank" rel="noopener noreferrer" className="text-[#14B8FF] hover:underline">Instagram @stooplify</a> and <a href="https://www.facebook.com/profile.php?id=61586102653727" target="_blank" rel="noopener noreferrer" className="text-[#14B8FF] hover:underline">Facebook</a> for sale highlights, tips, and community updates.

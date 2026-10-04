@@ -336,8 +336,8 @@ export default function Pricing() {
           <div className="text-center mt-10">
             <p className="text-gray-600">
               {t('haveQuestions')}?{' '}
-              <a href="mailto:daniel@stooplify.com" className="text-[#FF6F61] hover:underline font-medium">
-                daniel@stooplify.com
+              <a href="mailto:klee0589@gmail.com" className="text-[#FF6F61] hover:underline font-medium">
+                klee0589@gmail.com
               </a>
             </p>
           </div>

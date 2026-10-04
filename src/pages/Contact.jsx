@@ -10,7 +10,7 @@ export default function Contact() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const mailto = `mailto:daniel@stooplify.com?subject=${encodeURIComponent(form.subject || 'Stooplify Contact Form')}&body=${encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`)}`;
+    const mailto = `mailto:klee0589@gmail.com?subject=${encodeURIComponent(form.subject || 'Stooplify Contact Form')}&body=${encodeURIComponent(`Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`)}`;
     window.location.href = mailto;
     setSubmitted(true);
     if (typeof window !== 'undefined' && window.gtag) {
@@ -125,7 +125,7 @@ export default function Contact() {
               </h2>
               <div className="space-y-4">
                 <a
-                  href="mailto:daniel@stooplify.com"
+                  href="mailto:klee0589@gmail.com"
                   className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-2xl border border-gray-100 dark:border-gray-700 hover:border-[#FF6F61] transition-colors"
                 >
                   <div className="w-11 h-11 bg-[#FF6F61]/10 rounded-xl flex items-center justify-center flex-shrink-0">
@@ -133,7 +133,7 @@ export default function Contact() {
                   </div>
                   <div>
                     <p className="font-semibold text-[#2E3A59] dark:text-white text-sm">Email</p>
-                    <p className="text-[#FF6F61] text-sm">daniel@stooplify.com</p>
+                    <p className="text-[#FF6F61] text-sm">klee0589@gmail.com</p>
                   </div>
                 </a>
 

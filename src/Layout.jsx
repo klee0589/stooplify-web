@@ -933,7 +933,7 @@ function LayoutContent({ children, currentPageName }) {
                   <li><Link to={createPageUrl('Legal') + '#privacy'} className="hover:text-primary transition-colors">{t('privacyPolicy')}</Link></li>
                   <li><Link to={createPageUrl('Legal') + '#disclaimer'} className="hover:text-primary transition-colors">Disclaimer</Link></li>
                   <li><Link to={createPageUrl('Legal') + '#safety'} className="hover:text-primary transition-colors">Safety</Link></li>
-                  <li><a href="mailto:daniel@stooplify.com" className="hover:text-primary transition-colors">Contact</a></li>
+                  <li><a href="mailto:klee0589@gmail.com" className="hover:text-primary transition-colors">Contact</a></li>
                   <li><Link to="/about" className="hover:text-primary transition-colors">About</Link></li>
                   <li><Link to="/contact" className="hover:text-primary transition-colors">Contact Page</Link></li>
                   <li><Link to="/site-map" className="hover:text-primary transition-colors">Site Map</Link></li>
