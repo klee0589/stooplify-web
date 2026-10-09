@@ -47,6 +47,7 @@ export default function Home() {
     queryFn: async () => {
       const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
       const now = new Date();
+      now.setHours(0, 0, 0, 0);
 
       const upcomingSales = allSales.filter(sale => {
         if (!sale.date) return false;
@@ -69,7 +70,7 @@ export default function Home() {
         return { ...sale, _score: photoScore + viewScore + historyScore };
       });
 
-      const qualified = scored.filter(s => (s.photos || []).length >= 1 && s._score >= 5);
+      const qualified = scored;
       // Spotlight reward: featured listings always appear first, then by score
       qualified.sort((a, b) => {
         const aFeatured = a.is_featured ? 1 : 0;
