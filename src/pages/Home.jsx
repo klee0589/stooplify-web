@@ -106,13 +106,13 @@ export default function Home() {
       />
 
       <HeroSection />
+      <Suspense fallback={<div className="h-96 bg-muted animate-pulse" />}>
+        <FeaturedSales sales={sales} />
+      </Suspense>
       <WeekendSales />
       <DiscoverBand />
       <TrendingNeighborhoods />
       <FreeNearYou />
-      <Suspense fallback={<div className="h-96 bg-muted animate-pulse" />}>
-        <FeaturedSales sales={sales} />
-      </Suspense>
       <HowItWorks />
       <CTASection />
       <GuidesGrid />
