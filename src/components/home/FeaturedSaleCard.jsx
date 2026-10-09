@@ -31,6 +31,14 @@ export default function FeaturedSaleCard({ sale }) {
             <MapPin className="h-10 w-10 text-primary/30" />
           </div>
         )}
+        {sale.is_featured && (
+          <div className="absolute right-3 top-3">
+            <span className="inline-flex items-center gap-1 rounded-full bg-accent-warm px-2.5 py-0.5 text-xs font-semibold text-white shadow-sm">
+              <svg className="h-3 w-3" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 16.8 5.8 21.3l2.4-7.4L2 9.4h7.6z"/></svg>
+              Spotlight
+            </span>
+          </div>
+        )}
         {sale.categories && sale.categories.length > 0 && (
           <div className="absolute left-3 top-3 flex gap-1.5">
             {sale.categories.slice(0, 2).map((cat) => (

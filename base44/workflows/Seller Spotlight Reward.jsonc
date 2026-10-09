@@ -1,0 +1,47 @@
+{
+  "name": "Seller Spotlight Reward",
+  "description": "Weekly reward: features qualifying sellers' listings on the homepage carousel and emails them a spotlight notification",
+  "trigger": {
+    "condition": null,
+    "config": {
+      "trigger_type": "scheduled",
+      "events": [],
+      "schedule_mode": "recurring",
+      "cron_expression": "0 9 * * 1",
+      "one_time_date": null,
+      "timezone": "America/New_York",
+      "interval_value": null,
+      "interval_unit": null,
+      "interval_anchor": null,
+      "ends_type": "never",
+      "ends_on_date": null,
+      "ends_after_count": null
+    }
+  },
+  "definition": {
+    "document": {
+      "dsl": "1.0.0",
+      "name": "seller_spotlight_reward",
+      "version": "1.0",
+      "namespace": "base44"
+    },
+    "do": [
+      {
+        "reward_sellers": {
+          "call": "invoke_backend_function",
+          "with": {
+            "function_name": "rewardSpotlightSellers",
+            "args": {
+              "automation_token": "stooplify-auto-2bd4d2012de4e8f54fff88f4330f6a22"
+            }
+          },
+          "then": "end",
+          "x-base44": {
+            "title": "Reward spotlight sellers",
+            "description": "Feature qualifying listings and email sellers"
+          }
+        }
+      }
+    ]
+  }
+}

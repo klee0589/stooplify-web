@@ -70,7 +70,13 @@ export default function Home() {
       });
 
       const qualified = scored.filter(s => (s.photos || []).length >= 1 && s._score >= 5);
-      qualified.sort((a, b) => b._score - a._score);
+      // Spotlight reward: featured listings always appear first, then by score
+      qualified.sort((a, b) => {
+        const aFeatured = a.is_featured ? 1 : 0;
+        const bFeatured = b.is_featured ? 1 : 0;
+        if (aFeatured !== bFeatured) return bFeatured - aFeatured;
+        return b._score - a._score;
+      });
       return qualified.slice(0, 6);
     },
     staleTime: 180000
