@@ -5,8 +5,11 @@ import 'leaflet/dist/leaflet.css';
 
 export default function SaleLocationMap({ sale, exactVisible, t }) {
   if (!sale.latitude || !sale.longitude) return null;
-  const lat = exactVisible ? (sale.exact_latitude || sale.latitude) : sale.latitude;
-  const lng = exactVisible ? (sale.exact_longitude || sale.longitude) : sale.longitude;
+  const exLat = sale.exact_latitude || sale.latitude;
+  const exLng = sale.exact_longitude || sale.longitude;
+  // Keep the approximate circle near the real address (stored offsets can land in water)
+  const lat = exactVisible ? exLat : exLat + (sale.latitude - exLat) * 0.25;
+  const lng = exactVisible ? exLng : exLng + (sale.longitude - exLng) * 0.25;
 
   return (
     <div className="bg-card border border-border p-5 rounded-2xl shadow-card relative z-0">
