@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../components/translations';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { activeSaleQuery } from '@/lib/listingLifecycle';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Map, List, Loader2, MapPin, Calendar, Tag, Building2, Maximize2, Minimize2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -127,7 +128,7 @@ export default function YardSales() {
   const { data: sales = [], isLoading, refetch, error } = useQuery({
     queryKey: ['yardSales'],
     queryFn: async () => {
-      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
+      const allSales = await base44.entities.YardSale.filter(activeSaleQuery({ status: 'approved' }), '-date', 100);
       const todayStr = new Date().toISOString().split('T')[0];
       // Only keep today's or future sales
       const upcomingSales = allSales.filter(sale => sale.date >= todayStr);

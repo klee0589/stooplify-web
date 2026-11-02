@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { activeSaleQuery } from '@/lib/listingLifecycle';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MapPin, Gift, Loader2, Filter } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -43,7 +44,7 @@ export default function FreeItems() {
     queryKey: ['freeItems'],
     queryFn: async () => {
       const now = new Date().toISOString().split('T')[0];
-      const all = await base44.entities.YardSale.filter({ status: 'approved', is_free_item: true }, '-created_date', 100);
+      const all = await base44.entities.YardSale.filter(activeSaleQuery({ status: 'approved', is_free_item: true }), '-created_date', 100);
       return all.filter(s => !s.date || s.date >= now);
     },
     staleTime: 60000,

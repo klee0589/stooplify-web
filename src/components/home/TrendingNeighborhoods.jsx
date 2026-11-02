@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { activeSaleQuery } from '@/lib/listingLifecycle';
 import { TrendingUp, ArrowUpRight } from 'lucide-react';
 
 const NEIGHBORHOODS = [
@@ -23,7 +24,7 @@ export default function TrendingNeighborhoods() {
     queryKey: ['neighborhoodCounts'],
     queryFn: async () => {
       const now = new Date();
-      const sales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 200);
+      const sales = await base44.entities.YardSale.filter(activeSaleQuery({ status: 'approved' }), '-date', 200);
       const upcoming = sales.filter(s => s.date && new Date(`${s.date}T23:59:59`) >= now);
       const counts = {};
       upcoming.forEach(s => {

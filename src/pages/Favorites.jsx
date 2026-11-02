@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { activeSaleQuery } from '@/lib/listingLifecycle';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
@@ -55,7 +56,7 @@ export default function Favorites() {
     queryKey: ['favoriteSales', favorites],
     queryFn: async () => {
       if (favorites.length === 0) return [];
-      const allSales = await base44.entities.YardSale.filter({ status: 'approved' });
+      const allSales = await base44.entities.YardSale.filter(activeSaleQuery({ status: 'approved' }));
       const favoriteIds = favorites.map(f => f.yard_sale_id);
       const favoritedSales = allSales.filter(sale => favoriteIds.includes(sale.id));
       

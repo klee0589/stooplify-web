@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { activeSaleQuery } from '@/lib/listingLifecycle';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { motion } from 'framer-motion';
@@ -28,7 +29,7 @@ export default function SellerPage() {
     queryKey: ['sellerSales', seller?.email],
     queryFn: async () => {
       if (!seller?.email) return [];
-      return await base44.entities.YardSale.filter({ created_by: seller.email, status: 'approved' }, '-date', 50);
+      return await base44.entities.YardSale.filter(activeSaleQuery({ created_by: seller.email, status: 'approved' }), '-date', 50);
     },
     enabled: !!seller?.email,
   });

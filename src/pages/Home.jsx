@@ -3,6 +3,7 @@ import StooplifyChat from '../components/StooplifyChat';
 import { useTranslation } from '../components/translations';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { activeSaleQuery } from '@/lib/listingLifecycle';
 import SEO from '../components/SEO';
 import HeroSection from '../components/home/HeroSection';
 import WeekendSales from '../components/home/WeekendSales';
@@ -45,7 +46,7 @@ export default function Home() {
   const { data: sales = [] } = useQuery({
     queryKey: ['featuredSales'],
     queryFn: async () => {
-      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 100);
+      const allSales = await base44.entities.YardSale.filter(activeSaleQuery({ status: 'approved' }), '-date', 100);
       const now = new Date();
       now.setHours(0, 0, 0, 0);
 

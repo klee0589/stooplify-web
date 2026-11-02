@@ -268,7 +268,7 @@ export default function AddYardSale() {
       }
     },
     onSuccess: (data) => {
-      toast.success(isEditMode ? 'Your yard sale has been updated!' : 'Your yard sale is now live!');
+      toast.success(isEditMode ? 'Your yard sale has been updated!' : 'Your yard sale is now live! Listings stay up for 7 days.');
       // Clear draft and refresh header "My Listings"
       localStorage.removeItem(DRAFT_KEY);
       queryClient.invalidateQueries({ queryKey: ['userYardSales'] });

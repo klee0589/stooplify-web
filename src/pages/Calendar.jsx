@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { activeSaleQuery } from '@/lib/listingLifecycle';
 import { motion } from 'framer-motion';
 import { Calendar as CalendarIcon, Heart, UserCheck, MapPin, Clock, ArrowRight } from 'lucide-react';
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
@@ -123,7 +124,7 @@ export default function Calendar() {
   const { data: allSales = [] } = useQuery({
     queryKey: ['calendarSales'],
     queryFn: async () => {
-      const sales = await base44.entities.YardSale.filter({ status: 'approved' });
+      const sales = await base44.entities.YardSale.filter(activeSaleQuery({ status: 'approved' }));
       const now = new Date();
       now.setHours(0, 0, 0, 0); // Start of today
       // Only upcoming/live sales

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '../../utils';
 import { MapPin, Plus, ArrowRight, Sparkles, Loader2 } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { activeSaleQuery } from '@/lib/listingLifecycle';
 import { toast } from "sonner";
 import { useTranslation } from '../translations';
 import { useQuery } from '@tanstack/react-query';
@@ -29,7 +30,7 @@ export default function HeroSection() {
   const { data: statsData, isLoading: statsLoading } = useQuery({
     queryKey: ['heroStats'],
     queryFn: async () => {
-      const sales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 500);
+      const sales = await base44.entities.YardSale.filter(activeSaleQuery({ status: 'approved' }), '-date', 500);
       const now = new Date();
       const liveSales = sales.filter((sale) => new Date(`${sale.date}T23:59:59`) >= now);
       return { activeSales: liveSales.length };
@@ -40,7 +41,7 @@ export default function HeroSection() {
   const { data: heroPhotos = [] } = useQuery({
     queryKey: ['heroPhotos'],
     queryFn: async () => {
-      const sales = await base44.entities.YardSale.filter({ status: 'approved' }, '-created_date', 50);
+      const sales = await base44.entities.YardSale.filter(activeSaleQuery({ status: 'approved' }), '-created_date', 50);
       const photos = sales.flatMap((s) => s.photos || []).filter(Boolean);
       for (let i = photos.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));

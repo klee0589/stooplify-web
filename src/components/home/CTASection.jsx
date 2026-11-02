@@ -6,6 +6,7 @@ import { Plus, ArrowRight, Tag, Users } from 'lucide-react';
 import { useTranslation } from '../translations';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { activeSaleQuery } from '@/lib/listingLifecycle';
 
 export default function CTASection() {
   const [language, setLanguage] = useState('en');
@@ -23,7 +24,7 @@ export default function CTASection() {
   const { data: salesData } = useQuery({
     queryKey: ['ctaStats'],
     queryFn: async () => {
-      const sales = await base44.entities.YardSale.filter({ status: 'approved' });
+      const sales = await base44.entities.YardSale.filter(activeSaleQuery({ status: 'approved' }));
       const users = await base44.entities.User.list();
       const now = new Date();
       now.setHours(0, 0, 0, 0);

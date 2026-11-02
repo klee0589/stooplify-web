@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { activeSaleQuery } from '@/lib/listingLifecycle';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { format, parseISO } from 'date-fns';
@@ -71,7 +72,7 @@ export default function SalePage() {
     queryFn: async () => {
       if (!sale) return [];
       const now = new Date();
-      const all = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 20);
+      const all = await base44.entities.YardSale.filter(activeSaleQuery({ status: 'approved' }), '-date', 20);
       return all
         .filter(s => s.id !== sale.id && (
           s.city?.toLowerCase() === sale.city?.toLowerCase() ||

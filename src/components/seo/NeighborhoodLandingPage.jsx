@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { activeSaleQuery } from '@/lib/listingLifecycle';
 import { motion } from 'framer-motion';
 import { MapPin, Calendar, Clock, ArrowRight, PlusCircle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
@@ -17,7 +18,7 @@ export default function NeighborhoodLandingPage({ config }) {
   const { data: sales = [], isLoading } = useQuery({
     queryKey: ['neighborhoodSales', neighborhood, city],
     queryFn: async () => {
-      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, '-date', 50);
+      const allSales = await base44.entities.YardSale.filter(activeSaleQuery({ status: 'approved' }), '-date', 50);
       const now = new Date();
       return allSales.filter((sale) => {
         const loc = (sale.general_location || '').toLowerCase();

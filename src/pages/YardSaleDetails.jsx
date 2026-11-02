@@ -21,6 +21,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import { format } from 'date-fns';
 import { toast } from "sonner";
 import SEO from '../components/SEO';
+import { isListingActive, LISTING_TTL_DAYS } from '@/lib/listingLifecycle';
 import AddressDisplay from '../components/sales/AddressDisplay';
 import TrustBadges from '../components/sales/TrustBadges';
 import SellerReputation from '../components/sales/SellerReputation';
@@ -589,6 +590,7 @@ export default function YardSaleDetails() {
   };
 
   const isOwner = !!user && sale.created_by === user.email;
+  const isExpired = !isListingActive(sale);
   const scrollToMessages = (trackContact = false) => {
     if (!user) { base44.auth.redirectToLogin(); return; }
     if (trackContact) base44.analytics.track({ eventName: 'seller_contacted', properties: { sale_id: saleId } });
@@ -607,6 +609,7 @@ export default function YardSaleDetails() {
         url={`https://stooplify.com/YardSaleDetails?id=${saleId}`}
         canonical={`https://stooplify.com/YardSaleDetails?id=${saleId}`}
         type="event"
+        noindex={isExpired}
         structuredData={structuredData}
       />
 
@@ -638,6 +641,23 @@ export default function YardSaleDetails() {
           </motion.button>
         </Link>
       </div>
+
+      {/* Expired listing notice */}
+      {isExpired && (
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-2">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 dark:border-amber-700/60 dark:bg-amber-900/20">
+            <div className="flex-1 text-sm text-amber-900 dark:text-amber-200">
+              <span className="font-semibold">This listing has ended.</span>{' '}
+              Listings stay live for {LISTING_TTL_DAYS} days — this sale has passed or the listing expired.
+            </div>
+            <Link to={createPageUrl('AddYardSale')}>
+              <Button size="sm" className="rounded-full">
+                {isOwner ? 'Relist this sale' : t('browseAllSales')}
+              </Button>
+            </Link>
+          </div>
+        </div>
+      )}
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 w-full">
         <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 w-full min-w-0">

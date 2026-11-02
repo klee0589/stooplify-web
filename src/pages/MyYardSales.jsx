@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { isListingActive } from '@/lib/listingLifecycle';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
@@ -110,6 +111,8 @@ export default function MyYardSales() {
 
   const getSaleStatus = (sale) => {
     if (!sale.date) return 'upcoming';
+    // Listings expire after a week, so they drop into "finished" for the seller too
+    if (!isListingActive(sale)) return 'finished';
     const now = new Date();
     now.setHours(0, 0, 0, 0); // Start of today
     

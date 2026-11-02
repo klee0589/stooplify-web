@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { base44 } from '@/api/base44Client';
+import { activeSaleQuery } from '@/lib/listingLifecycle';
 import { Calendar, MapPin, Clock, PlusCircle, ArrowRight } from 'lucide-react';
 import { format, parseISO } from 'date-fns';
 
@@ -28,7 +29,7 @@ export default function WeekendSales() {
   const { data: sales = [], isLoading } = useQuery({
     queryKey: ['weekendSales', satStr, sunStr],
     queryFn: async () => {
-      const allSales = await base44.entities.YardSale.filter({ status: 'approved' }, 'date', 50);
+      const allSales = await base44.entities.YardSale.filter(activeSaleQuery({ status: 'approved' }), 'date', 50);
       return allSales.filter((sale) => {
         if (!sale.date) return false;
         return sale.date >= satStr && sale.date <= sunStr;
