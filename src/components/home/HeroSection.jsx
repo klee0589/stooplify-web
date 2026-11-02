@@ -178,6 +178,13 @@ export default function HeroSection() {
                 <Sparkles className="h-4 w-4 text-accent-warm" />
                 Free items available
               </span>
+              <a
+                href="#how-it-works"
+                className="inline-flex items-center gap-1.5 font-semibold text-primary hover:underline"
+              >
+                See how it works
+                <ArrowRight className="h-4 w-4 rotate-90" />
+              </a>
             </motion.div>
           </motion.div>
 

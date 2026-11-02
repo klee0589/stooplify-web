@@ -6,9 +6,11 @@ import { base44 } from '@/api/base44Client';
 import { activeSaleQuery } from '@/lib/listingLifecycle';
 import SEO from '../components/SEO';
 import HeroSection from '../components/home/HeroSection';
+import QuickNav from '../components/home/QuickNav';
 import WeekendSales from '../components/home/WeekendSales';
 import DiscoverBand from '../components/home/DiscoverBand';
 import HowItWorks from '../components/home/HowItWorks';
+import Benefits from '../components/home/Benefits';
 import FeaturedSales from '../components/home/FeaturedSales';
 import CTASection from '../components/home/CTASection';
 import FreeNearYou from '../components/home/FreeNearYou';
@@ -107,14 +109,16 @@ export default function Home() {
       />
 
       <HeroSection />
+      <QuickNav />
       <Suspense fallback={<div className="h-96 bg-muted animate-pulse" />}>
         <FeaturedSales sales={sales} />
       </Suspense>
+      <HowItWorks />
+      <Benefits />
       <WeekendSales />
       <DiscoverBand />
       <TrendingNeighborhoods />
       <FreeNearYou />
-      <HowItWorks />
       <CTASection />
       <GuidesGrid />
       <SeoTextBlock />
