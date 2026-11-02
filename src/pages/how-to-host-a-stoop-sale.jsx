@@ -180,7 +180,7 @@ export default function HowToHostAStoopSale() {
 
           <div className="mt-12 p-8 bg-gradient-to-r from-[#FF6F61] to-[#F5A623] rounded-2xl text-white text-center">
             <h3 className="text-2xl font-bold mb-3" style={{ fontFamily: 'Poppins, sans-serif' }}>Ready to List Your Stoop Sale?</h3>
-            <p className="mb-6 text-white/90">Your first listing is free. Reach local buyers in minutes.</p>
+            <p className="mb-6 text-white/90">Listing is always free. Reach local buyers in minutes.</p>
             <Link to="/add-yard-sale" className="inline-block px-8 py-4 bg-white text-[#FF6F61] rounded-xl font-bold hover:bg-gray-100 transition-colors text-lg">
               List Your Sale Free →
             </Link>

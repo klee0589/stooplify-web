@@ -18,7 +18,6 @@ import { toast } from "sonner";
 import { useTranslation } from '../components/translations';
 import SEO from '../components/SEO';
 import { DrawerSelect } from '@/components/ui/drawer-select';
-import UpgradePrompt from '../components/sales/UpgradePrompt';
 import WeatherForecast from '../components/sales/WeatherForecast';
 
 export default function AddYardSale() {
@@ -81,10 +80,7 @@ export default function AddYardSale() {
   const [step, setStep] = useState(1);
   const [photos, setPhotos] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
-  const [needsPayment, setNeedsPayment] = useState(false);
-  const [isCheckingPayment, setIsCheckingPayment] = useState(false);
   const [isLoadingSale, setIsLoadingSale] = useState(isEditMode);
-  const [freeListingBlocked, setFreeListingBlocked] = useState(null); // null | 'active_sale' | 'rate_limit'
   const [aiDescription, setAiDescription] = useState(null);
   const [showAiPreview, setShowAiPreview] = useState(false);
   const [editableDescription, setEditableDescription] = useState('');
@@ -97,9 +93,7 @@ export default function AddYardSale() {
 
   const DRAFT_KEY = 'stooplify_listing_draft';
 
-  // Stripe price IDs (from your Stripe products)
-  const SINGLE_LISTING_PRICE_ID = 'price_1Sp0DuEBgBmaTVQEKO1W2NrG'; // $4 one-time
-  const SUBSCRIPTION_PRICE_ID = 'price_1Sp0DuEBgBmaTVQE0iSg1m5n'; // $9/month
+  const PHOTO_LIMIT = 20;
   const urlParamsInit = new URLSearchParams(window.location.search);
   const initFreeType = urlParamsInit.get('type') === 'free';
   const [listingMode, setListingMode] = useState(initFreeType ? 'free' : 'sale');
@@ -164,15 +158,6 @@ export default function AddYardSale() {
           const currentUser = await base44.auth.me();
           setUser(currentUser);
 
-          // Check if payment is needed (not first listing and no subscription) - only for new sales
-           if (!isEditMode) {
-             const isAdmin = currentUser.role === 'admin';
-             const hasSubscription = currentUser.subscription_active || false;
-             const hasUsedFreeListing = (currentUser.free_listings_used || 0) >= 1;
-             const needsPay = !isAdmin && hasUsedFreeListing && !hasSubscription;
-             setNeedsPayment(needsPay);
-           }
-
           // Load existing sale data if editing
           if (isEditMode && editSaleId) {
                         const sales = await base44.entities.YardSale.filter({ id: editSaleId });
@@ -224,17 +209,9 @@ export default function AddYardSale() {
     };
     checkAuth();
 
-    // Check for payment success/cancel
-    const paymentStatus = urlParams.get('payment');
+    // Resume at the photo step when returning from an old checkout link
     const returnStep = urlParams.get('step');
-    if (paymentStatus === 'success') {
-      toast.success('Payment successful! You can now add more photos.');
-      setNeedsPayment(false);
-      if (returnStep === '3') setStep(3);
-    } else if (paymentStatus === 'cancelled') {
-      toast.error('Payment cancelled. Please try again.');
-      if (returnStep === '3') setStep(3);
-    }
+    if (returnStep === '3') setStep(3);
   }, []);
 
   const createMutation = useMutation({
@@ -269,17 +246,14 @@ export default function AddYardSale() {
         return { id: editSaleId };
       } else {
         // Create new sale
-        const isSubscribed = user?.subscription_active;
-        const listingType = isSubscribed ? 'paid' : 'free';
-        const photoLimit = isSubscribed ? 20 : 5;
         const sale = await base44.entities.YardSale.create({
           ...data,
           ...coordinates,
-          photos: photos.slice(0, photoLimit),
+          photos: photos.slice(0, PHOTO_LIMIT),
           status: 'approved',
           views: 0,
-          listing_type: listingType,
-          is_featured: isSubscribed,
+          listing_type: 'free',
+          is_featured: false,
           is_free_item: data.is_free_item || false,
           free_item_tags: data.free_item_tags || [],
         });
@@ -317,21 +291,16 @@ export default function AddYardSale() {
       properties: { count: files.length }
     });
 
-    const photoLimit = user?.subscription_active ? 20 : 5;
-    const remainingSlots = photoLimit - photos.length;
+    const remainingSlots = PHOTO_LIMIT - photos.length;
 
     if (remainingSlots <= 0) {
-      if (user?.subscription_active) {
-        toast.error('Maximum 20 photos allowed.');
-      } else {
-        toast.error('Free plan allows up to 5 photos. Scroll up to upgrade for up to 20 photos.', { duration: 5000 });
-      }
+      toast.error(`Maximum ${PHOTO_LIMIT} photos allowed.`);
       return;
     }
 
     const filesToUpload = files.slice(0, remainingSlots);
     if (files.length > remainingSlots) {
-      toast.warning(`Only ${remainingSlots} photo slot${remainingSlots === 1 ? '' : 's'} remaining — uploading the first ${remainingSlots}. Upgrade to add more.`);
+      toast.warning(`Only ${remainingSlots} photo slot${remainingSlots === 1 ? '' : 's'} remaining — uploading the first ${remainingSlots}.`);
     }
 
     setIsUploading(true);
@@ -372,13 +341,8 @@ export default function AddYardSale() {
     const file = e.target.files[0];
     if (!file) return;
 
-    const photoLimit = user?.subscription_active ? 20 : 5;
-    if (photos.length >= photoLimit) {
-      if (user?.subscription_active) {
-        toast.error('Maximum 20 photos allowed.');
-      } else {
-        toast.error('Free plan allows up to 5 photos. Scroll up to upgrade for up to 20 photos.', { duration: 5000 });
-      }
+    if (photos.length >= PHOTO_LIMIT) {
+      toast.error(`Maximum ${PHOTO_LIMIT} photos allowed.`);
       return;
     }
 
@@ -412,35 +376,6 @@ export default function AddYardSale() {
 
   const removePhoto = (index) => {
     setPhotos((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleCheckout = async (priceId, listingType, returnToPhotos = false) => {
-    setIsCheckingPayment(true);
-    base44.analytics.track({
-      eventName: 'checkout_initiated',
-      properties: { listing_type: listingType }
-    });
-    try {
-      // Check if running in iframe
-      if (window.self !== window.top) {
-        toast.error('Checkout only works from the published app. Please open in a new tab.');
-        setIsCheckingPayment(false);
-        return;
-      }
-
-      const response = await base44.functions.invoke('createCheckout', { priceId, listingType, returnToPhotos });
-
-      const checkoutUrl = response?.data?.url;
-      if (checkoutUrl) {
-        window.location.href = checkoutUrl;
-      } else {
-        toast.error('Failed to create checkout session');
-        setIsCheckingPayment(false);
-      }
-    } catch (error) {
-      toast.error(error?.message || 'Failed to create checkout session');
-      setIsCheckingPayment(false);
-    }
   };
 
   const handleSubmit = () => {
@@ -523,28 +458,6 @@ export default function AddYardSale() {
 
   }
 
-  // Free listing blocked screen
-  if (freeListingBlocked) {
-    return (
-      <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900 flex items-center justify-center p-4">
-        <div className="max-w-md w-full">
-          <UpgradePrompt
-            reason={freeListingBlocked}
-            onUpgrade={(type) => {
-              const priceId = type === 'subscription' ? 'price_1Sp0DuEBgBmaTVQE0iSg1m5n' : 'price_1Sp0DuEBgBmaTVQEKO1W2NrG';
-              handleCheckout(priceId, type);
-            }}
-          />
-          <p className="text-center mt-4 text-sm text-gray-500">
-            {freeListingBlocked === 'active_sale'
-              ? 'Your current free listing must expire before you can post another.'
-              : 'Free plan: 1 new listing every 7 days. Upgrade for unlimited.'}
-          </p>
-        </div>
-      </div>
-    );
-  }
-
   const isEmailValid = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email || '');
 
   if (isAuthenticated && user && !isEmailValid(user.email)) {
@@ -623,9 +536,9 @@ export default function AddYardSale() {
             {isEditMode ? t('editYourYardSale') : t('addYourYardSale')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400">{isEditMode ? t('updateYourSaleDetails') : t('listYourSaleInJustSteps')}</p>
-          {!isEditMode && !user?.subscription_active && (
+          {!isEditMode && (
             <div className="mt-3 inline-flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-200 rounded-full text-sm text-green-700 font-medium">
-              <span>✅</span> Your first listing is FREE — up to 5 photos
+              <span>✅</span> Always free to list — up to 20 photos
             </div>
           )}
         </motion.div>
@@ -1070,91 +983,8 @@ export default function AddYardSale() {
             </motion.div>
           }
 
-          {/* Step 3: Photos or Payment */}
-          {step === 3 && needsPayment &&
-          <motion.div
-            key="step3-payment"
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="bg-white rounded-3xl p-6 md:p-8 shadow-lg">
-
-              <h2
-              className="text-xl font-bold text-[#2E3A59] mb-2"
-              style={{ fontFamily: 'Poppins, sans-serif' }}>
-
-                {t('paymentRequired')}
-              </h2>
-              <p className="text-gray-600 mb-6 text-sm">
-                {t('firstListingFree')}
-              </p>
-
-              <div className="space-y-4 mb-6">
-                {/* Single Listing */}
-                <motion.button
-                whileHover={{ scale: isCheckingPayment ? 1 : 1.02 }}
-                className={`w-full border-2 border-gray-200 rounded-2xl p-6 text-left hover:border-[#FF6F61] transition-all ${
-                isCheckingPayment ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`
-                }
-                onClick={() => !isCheckingPayment && handleCheckout(SINGLE_LISTING_PRICE_ID, 'single')}
-                disabled={isCheckingPayment}>
-
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-lg font-bold text-[#2E3A59]" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                      {t('singleListing')}
-                    </h3>
-                    <span className="text-2xl font-bold text-[#FF6F61]">$4</span>
-                  </div>
-                  <p className="text-gray-600 text-sm">{t('payOnceForThisListing')}</p>
-                </motion.button>
-
-                {/* Unlimited Subscription */}
-                <motion.button
-                whileHover={{ scale: isCheckingPayment ? 1 : 1.02 }}
-                className={`w-full border-2 border-gray-200 bg-[#FF6F61]/5 rounded-2xl p-6 text-left hover:border-[#FF6F61] transition-all relative overflow-hidden ${
-                isCheckingPayment ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`
-                }
-                onClick={() => !isCheckingPayment && handleCheckout(SUBSCRIPTION_PRICE_ID, 'subscription')}
-                disabled={isCheckingPayment}>
-
-                  <div className="absolute top-2 right-2 bg-[#F5A623] text-white text-xs font-bold px-3 py-1 rounded-full">
-                    {t('bestValue')}
-                  </div>
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="text-lg font-bold text-[#2E3A59]" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                      {t('unlimitedListings')}
-                    </h3>
-                    <div className="text-right">
-                      <span className="text-2xl font-bold text-[#FF6F61]">$9</span>
-                      <span className="text-gray-600 text-sm ml-1">/month</span>
-                    </div>
-                  </div>
-                  <p className="text-gray-600 text-sm">{t('postAsManySalesAsYouWant')}</p>
-                </motion.button>
-              </div>
-
-              {isCheckingPayment &&
-            <div className="flex items-center justify-center gap-2 text-[#FF6F61] mb-4">
-                  <Loader2 className="w-5 h-5 animate-spin" />
-                  <span className="font-medium">{t('redirectingToCheckout')}</span>
-                </div>
-            }
-
-              <div className="flex gap-4">
-                <Button
-                variant="outline"
-                onClick={() => setStep(2)}
-                className="flex-1 py-3 rounded-xl"
-                disabled={isCheckingPayment}>
-
-                  {t('back')}
-                </Button>
-              </div>
-            </motion.div>
-          }
-
           {/* Step 3: Photos */}
-          {step === 3 && !needsPayment &&
+          {step === 3 &&
           <motion.div
             key="step3"
             initial={{ opacity: 0, x: 20 }}
@@ -1175,26 +1005,12 @@ export default function AddYardSale() {
               {/* Photo Upload Area */}
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-2">
-                   <p className="text-sm text-gray-600">
-                     {photos.length} / {user?.subscription_active ? '20' : '5'} {t('photos')}
-                   </p>
-                 </div>
-                 {!user?.subscription_active && photos.length >= 5 && (
-                   <div className="mb-4 p-3 bg-gradient-to-r from-[#FF6F61]/10 to-[#F5A623]/10 border border-[#FF6F61]/30 rounded-xl flex items-center justify-between gap-3">
-                     <p className="text-sm text-gray-700 font-medium">📸 Unlock up to 20 photos</p>
-                     <button
-                       type="button"
-                       onClick={() => handleCheckout(SUBSCRIPTION_PRICE_ID, 'subscription', true)}
-                       disabled={isCheckingPayment}
-                       className="flex-shrink-0 px-3 py-1.5 bg-[#FF6F61] text-white text-xs font-semibold rounded-lg hover:bg-[#e55a4d] transition-colors disabled:opacity-50"
-                     >
-                       {isCheckingPayment ? 'Loading...' : 'Upgrade $9/mo'}
-                     </button>
-                   </div>
-                 )}
+                  <p className="text-sm text-gray-600">
+                    {photos.length} / {PHOTO_LIMIT} {t('photos')}
+                  </p>
+                </div>
                 {(() => {
-                  const photoLimit = user?.subscription_active ? 20 : 5;
-                  const atLimit = photos.length >= photoLimit;
+                 const atLimit = photos.length >= PHOTO_LIMIT;
                   return (
                     <div className="grid grid-cols-2 gap-3 mb-4">
                       <label className={atLimit ? 'block opacity-40 cursor-not-allowed pointer-events-none' : 'block'}>

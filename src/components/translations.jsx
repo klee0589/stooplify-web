@@ -88,7 +88,7 @@ export const translations = {
     // CTA Section
     ctaTitle: 'Ready to Host Your',
     ctaOwnSale: 'Own Sale?',
-    ctaSubtitle: 'Turn your unused items into cash. Your first listing is free - reach thousands of local shoppers looking for their next great find.',
+    ctaSubtitle: 'Turn your unused items into cash. Listing is always free - reach thousands of local shoppers looking for their next great find.',
     listSaleFree: 'List Your Sale',
     browseSalesBtn: 'Browse Sales',
     activeSales: 'Active Sales',

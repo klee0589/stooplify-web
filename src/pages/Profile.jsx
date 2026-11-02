@@ -31,7 +31,6 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
-const SUBSCRIPTION_PRICE_ID = 'price_1Sp0DuEBgBmaTVQE0iSg1m5n'; // $9/month
 
 export default function Profile() {
   const [user, setUser] = useState(null);
@@ -234,35 +233,6 @@ export default function Profile() {
       toast.error('Failed to delete sale');
     },
   });
-
-  const [isCheckingOut, setIsCheckingOut] = useState(false);
-
-  const handleUpgradeNow = async () => {
-    setIsCheckingOut(true);
-    try {
-      if (window.self !== window.top) {
-        toast.error('Checkout only works from the published app. Please open in a new tab.');
-        setIsCheckingOut(false);
-        return;
-      }
-
-      const response = await base44.functions.invoke('createCheckout', { 
-        priceId: SUBSCRIPTION_PRICE_ID,
-        listingType: 'subscription'
-      });
-
-      const checkoutUrl = response?.data?.url;
-      if (checkoutUrl) {
-        window.location.href = checkoutUrl;
-      } else {
-        toast.error('Failed to create checkout session');
-        setIsCheckingOut(false);
-      }
-    } catch (error) {
-      toast.error(error?.message || 'Failed to create checkout session');
-      setIsCheckingOut(false);
-    }
-  };
 
   if (isChecking) {
     return (
@@ -497,64 +467,22 @@ export default function Profile() {
           </div>
         </motion.div>
 
-        {/* Subscription Plan */}
+        {/* Listing Plan */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
           className="bg-gradient-to-br from-[#FF6F61] to-[#F5A623] rounded-2xl p-6 shadow-lg mb-6 text-white"
         >
-          <div className="flex items-start justify-between mb-4">
-            <div>
-              <div className="flex items-center gap-2 mb-2">
-                {user.subscription_active ? (
-                  <Crown className="w-5 h-5" />
-                ) : (
-                  <Zap className="w-5 h-5" />
-                )}
-                <h3 className="text-lg font-bold" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                  {user.subscription_active ? t('unlimitedPlan') : t('freePlan')}
-                </h3>
-              </div>
-              <p className="text-white/90 text-sm">
-                {user.subscription_active 
-                   ? t('postUnlimitedYardSales') 
-                   : `${user.free_listings_used || 0} ${t('of')} 1 ${t('freeListingUsed')}`}
-              </p>
-            </div>
-            {user.subscription_active ? (
-              <div className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-semibold">
-                {t('active')}
-              </div>
-            ) : null}
+          <div className="flex items-center gap-2 mb-2">
+            <Zap className="w-5 h-5" />
+            <h3 className="text-lg font-bold" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              Unlimited free listings
+            </h3>
           </div>
-
-          {!user.subscription_active && (
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-3">
-            <div className="flex items-center justify-between mb-2">
-              <span className="font-semibold">{t('upgradeToUnlimited')}</span>
-              <span className="text-xl font-bold">$9<span className="text-sm font-normal">/mo</span></span>
-            </div>
-            <ul className="space-y-1 text-sm text-white/90 mb-3">
-              <li>• {t('postUnlimitedYardSales')}</li>
-              <li>• {t('noPerListingFees')}</li>
-              <li>• {t('prioritySupport')}</li>
-            </ul>
-            <Button 
-              onClick={handleUpgradeNow}
-              disabled={isCheckingOut}
-              className="w-full bg-white text-[#FF6F61] hover:bg-white/90 rounded-xl font-semibold disabled:opacity-50"
-            >
-              {isCheckingOut ? 'Redirecting...' : t('upgradeNow')}
-            </Button>
-            </div>
-          )}
-
-          {!user.subscription_active && (user.free_listings_used || 0) >= 1 && (
-            <p className="text-white/80 text-xs text-center">
-              {t('orPayPerListing')}
-            </p>
-          )}
+          <p className="text-white/90 text-sm">
+            Post as many sales as you like, with up to 20 photos each. Always free.
+          </p>
         </motion.div>
 
         {/* Smart Alerts */}

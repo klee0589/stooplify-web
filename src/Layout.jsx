@@ -10,7 +10,6 @@ import { toast } from 'sonner';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import BottomNavBar from '../components/BottomNavBar';
 import SentryErrorBoundary, { setUserContext } from '../components/SentryErrorBoundary';
-import LaunchPromoBanner from '../components/sales/LaunchPromoBanner';
 import MobileWebHeader from '../components/MobileWebHeader';
 import { useMobileWeb } from '../components/useMobileWeb';
 
@@ -909,7 +908,6 @@ function LayoutContent({ children, currentPageName }) {
                   <li><Link to={createPageUrl('yard-sales')} className="hover:text-primary transition-colors">Find Sales Near Me</Link></li>
                   <li><Link to={createPageUrl('add-yard-sale')} className="hover:text-primary transition-colors">List Your Stoop Sale</Link></li>
                   <li><Link to={createPageUrl('Calendar')} className="hover:text-primary transition-colors">Sale Calendar</Link></li>
-                  <li><Link to={createPageUrl('Pricing')} className="hover:text-primary transition-colors">Pricing</Link></li>
                   <li><Link to={createPageUrl('Blog')} className="hover:text-primary transition-colors">Blog</Link></li>
                   <li><Link to={createPageUrl('ApplyAsShop')} className="hover:text-primary transition-colors">Apply as a Shop</Link></li>
                 </ul>

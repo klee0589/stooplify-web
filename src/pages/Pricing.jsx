@@ -1,349 +1,86 @@
-import React, { useState, useEffect } from 'react';
-import { useTranslation } from '../components/translations';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '../utils';
-import { Check, Store, Zap, TrendingUp, MapPin, Star, Users } from 'lucide-react';
+import { Check, Sparkles } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import SEO from '../components/SEO';
 
+const INCLUDED = [
+  'Unlimited listings — no monthly fee, no per-listing fee',
+  'Up to 20 photos on every sale',
+  'Pin your sale on the live neighborhood map',
+  'Weekend alerts and buyer messages',
+  'Verified seller badge via QR check-ins',
+  'Free item giveaways for curbside pickups',
+];
+
 export default function Pricing() {
-  const [language, setLanguage] = useState('en');
-  
-  useEffect(() => {
-    const savedLang = localStorage.getItem('stooplify_lang') || 'en';
-    setLanguage(savedLang);
-    
-    const handleLanguageChange = (e) => {
-      setLanguage(e.detail);
-    };
-    
-    window.addEventListener('languageChange', handleLanguageChange);
-    return () => window.removeEventListener('languageChange', handleLanguageChange);
-  }, []);
-  
-  const t = useTranslation(language);
-  
-  const individualPlans = [
-    {
-      name: 'Free',
-      price: '$0',
-      period: 'forever',
-      description: 'Perfect for your first yard sale',
-      features: [
-        '1 active listing at a time',
-        'Listings live for 24 hours',
-        'Photo uploads (up to 3)',
-        'Map visibility',
-        'Community access'
-      ],
-      cta: 'Get Started',
-      ctaLink: 'AddYardSale',
-      popular: false,
-      icon: MapPin,
-      color: 'gray'
-    },
-    {
-      name: 'Pro',
-      price: '$9',
-      period: 'per month',
-      description: 'Best for frequent sellers',
-      features: [
-        'Unlimited listings per month',
-        'No listing time limits',
-        'Unlimited photo uploads',
-        'Premium placement',
-        'Analytics dashboard',
-        'Featured badge',
-        'Priority support',
-        'Cancel anytime'
-      ],
-      cta: 'Go Pro',
-      ctaLink: 'AddYardSale',
-      popular: true,
-      icon: TrendingUp,
-      color: 'coral'
-    }
-  ];
-
-  const businessPlan = {
-    name: 'Featured Shop',
-    price: '$49',
-    period: 'per month',
-    description: 'For thrift stores, consignment shops & permanent locations',
-    features: [
-      'Homepage featured placement',
-      'Unlimited weekly postings',
-      'Shop profile page',
-      'Custom branding',
-      'Priority customer support',
-      'Analytics & insights',
-      'Social media promotion',
-      'Link to your website'
-    ],
-    cta: 'Apply Now',
-    ctaLink: 'ApplyAsShop',
-    icon: Store,
-    badge: 'Most Visible'
-  };
-
-  const structuredData = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    "name": "Pricing Plans",
-    "description": "Choose from free, pay-per-listing, or unlimited monthly plans for yard sales. Business plans available for thrift stores and permanent locations.",
-    "offers": [
-      {
-        "@type": "Offer",
-        "name": "Free Plan",
-        "price": "0",
-        "priceCurrency": "USD"
-      },
-      {
-        "@type": "Offer",
-        "name": "Pay Per Listing",
-        "price": "4",
-        "priceCurrency": "USD"
-      },
-      {
-        "@type": "Offer",
-        "name": "Unlimited Plan",
-        "price": "9",
-        "priceCurrency": "USD",
-        "billingIncrement": "monthly"
-      },
-      {
-        "@type": "Offer",
-        "name": "Featured Shop",
-        "price": "49",
-        "priceCurrency": "USD",
-        "billingIncrement": "monthly"
-      }
-    ]
-  };
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#F9F9F9] to-white py-12">
-      <SEO 
-        title="Yard Sale Listing Pricing - Start Free | Stooplify"
-        description="List your first yard sale FREE! Then choose: $4 per listing or $9/month unlimited. No hidden fees. Reach thousands of local buyers. Perfect for garage sales, estate sales, and multi-family events."
-        keywords="yard sale listing cost, garage sale pricing, how much to list yard sale, free yard sale posting, yard sale advertising cost, estate sale listing fee"
-        robots="index, follow"
-        structuredData={structuredData}
+    <div className="min-h-screen bg-background py-16 px-4">
+      <SEO
+        title="Stooplify is Free | List Your Stoop Sale at No Cost"
+        description="Listing a stoop, yard, or garage sale on Stooplify is completely free — unlimited listings, up to 20 photos, and live map placement. No subscriptions, no per-listing fees."
+        keywords="free yard sale listing, free stoop sale listing, list garage sale free, nyc yard sales"
+        url="https://stooplify.com/pricing"
+        breadcrumbs={[{ name: 'Home', url: 'https://stooplify.com/' }, { name: 'Pricing', url: 'https://stooplify.com/pricing' }]}
       />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
+
+      <div className="max-w-3xl mx-auto text-center">
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
         >
-          <h1 
-            className="text-4xl md:text-5xl font-bold text-[#2E3A59] mb-4"
-            style={{ fontFamily: 'Poppins, sans-serif' }}
-          >
-            {t('simplePricing')}
+          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-6">
+            <Sparkles className="w-4 h-4" />
+            Free, and staying free
+          </span>
+          <h1 className="text-h2 font-heading font-semibold text-foreground mb-4">
+            Everything on Stooplify is free
           </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            {t('pricingDesc')}
+          <p className="text-muted-foreground text-lg max-w-xl mx-auto mb-10">
+            We're focused on getting more sales on the map and more people through your door. No
+            subscriptions, no upgrade prompts, no limits on how many sales you can post.
           </p>
         </motion.div>
 
-        {/* Individual Plans */}
-        <div className="mb-16">
-          <h2 
-            className="text-2xl font-bold text-[#2E3A59] mb-8 text-center"
-            style={{ fontFamily: 'Poppins, sans-serif' }}
-          >
-            {t('forIndividualSellers')}
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {individualPlans.map((plan, index) => (
-              <motion.div
-                key={plan.name}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className={`bg-white rounded-3xl p-8 shadow-lg relative ${
-                  plan.popular ? 'ring-2 ring-[#FF6F61] scale-105' : ''
-                }`}
-              >
-                {plan.popular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-[#FF6F61] text-white px-6 py-1 rounded-full text-sm font-semibold">
-                      {t('mostPopular')}
-                    </span>
-                  </div>
-                )}
-
-                <div className="mb-6">
-                  <div className="w-12 h-12 bg-[#FF6F61]/10 rounded-xl flex items-center justify-center mb-4">
-                    <plan.icon className="w-6 h-6 text-[#FF6F61]" />
-                  </div>
-                  <h3 
-                    className="text-2xl font-bold text-[#2E3A59] mb-2"
-                    style={{ fontFamily: 'Poppins, sans-serif' }}
-                  >
-                    {plan.name}
-                  </h3>
-                  <div className="flex items-baseline gap-2 mb-2">
-                    <span className="text-4xl font-bold text-[#2E3A59]">{plan.price}</span>
-                    <span className="text-gray-500">/ {plan.period}</span>
-                  </div>
-                  <p className="text-gray-600">{plan.description}</p>
-                </div>
-
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3">
-                      <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                      <span className="text-gray-700">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Link to={createPageUrl(plan.ctaLink)}>
-                  <Button 
-                    className={`w-full py-6 rounded-xl font-semibold ${
-                      plan.popular 
-                        ? 'bg-[#FF6F61] hover:bg-[#e55a4d]' 
-                        : 'bg-gray-900 hover:bg-gray-800'
-                    }`}
-                  >
-                    {plan.cta}
-                  </Button>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-
-        {/* Business Plan */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="mb-12"
+          transition={{ delay: 0.1 }}
+          className="bg-card border border-border rounded-2xl shadow-card p-8 text-left"
         >
-          <h2 
-            className="text-2xl font-bold text-[#2E3A59] mb-8 text-center"
-            style={{ fontFamily: 'Poppins, sans-serif' }}
-          >
-            {t('forBusinesses')}
+          <h2 className="font-heading font-semibold text-foreground text-lg mb-5">
+            What every seller gets
           </h2>
-          
-          <div className="bg-gradient-to-r from-[#FF6F61] to-[#F5A623] rounded-3xl p-8 md:p-12 shadow-2xl text-white relative overflow-hidden">
-            <div className="absolute top-4 right-4">
-              <span className="bg-white/20 backdrop-blur-sm px-4 py-1 rounded-full text-sm font-semibold flex items-center gap-2">
-                <Star className="w-4 h-4" />
-                {t('mostVisible')}
-              </span>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8">
-              <div>
-                <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-6">
-                  <businessPlan.icon className="w-8 h-8" />
-                </div>
-                <h3 
-                  className="text-3xl font-bold mb-3"
-                  style={{ fontFamily: 'Poppins, sans-serif' }}
-                >
-                  {businessPlan.name}
-                </h3>
-                <div className="flex items-baseline gap-2 mb-4">
-                  <span className="text-5xl font-bold">{businessPlan.price}</span>
-                  <span className="text-white/80 text-lg">/ {businessPlan.period}</span>
-                </div>
-                <p className="text-white/90 text-lg mb-6">{businessPlan.description}</p>
-
-                <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 mb-6">
-                  <p className="text-sm text-white/90 leading-relaxed">
-                    <strong>{t('perfectFor')}:</strong> {t('perfectForDesc')}
-                  </p>
-                </div>
-
-                <Link to={createPageUrl(businessPlan.ctaLink)}>
-                  <Button 
-                    className="bg-white text-[#FF6F61] hover:bg-gray-100 py-6 px-8 rounded-xl font-semibold text-lg"
-                  >
-                    {businessPlan.cta}
-                  </Button>
-                </Link>
-              </div>
-
-              <div>
-                <h4 className="text-xl font-semibold mb-4">{t('everythingYouNeed')}:</h4>
-                <ul className="space-y-3">
-                  {businessPlan.features.map((feature) => (
-                    <li key={feature} className="flex items-start gap-3">
-                      <div className="w-6 h-6 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center flex-shrink-0">
-                        <Check className="w-4 h-4" />
-                      </div>
-                      <span className="text-white/95">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* FAQ */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="mb-16"
-        >
-          <h2 className="text-2xl font-bold text-[#2E3A59] mb-8 text-center" style={{ fontFamily: 'Poppins, sans-serif' }}>
-            Pricing FAQ
-          </h2>
-          <div className="max-w-3xl mx-auto space-y-4">
-            {[
-              {
-                q: 'Is it really free to list my yard sale?',
-                a: 'Yes — your first listing is completely free. No credit card required. You can post your date, location, photos, and description and go live within a few hours of approval.'
-              },
-              {
-                q: 'What does the $4 single listing include?',
-                a: 'A $4 paid listing removes the 24-hour time restriction and gives you a boost in search visibility so more local buyers see your sale. Great for sellers who host a few sales per year.'
-              },
-              {
-                q: 'What does the $9/month Pro plan include?',
-                a: 'The Pro plan gives you unlimited listings every month, no time limits, unlimited photo uploads, priority placement in search results, an analytics dashboard, and a Featured badge on your listings.'
-              },
-              {
-                q: 'Can I cancel my Pro subscription anytime?',
-                a: 'Yes, you can cancel your $9/month Pro plan at any time. Your plan remains active until the end of the current billing period with no additional charges.'
-              },
-              {
-                q: 'Are there any transaction fees or commissions?',
-                a: 'None. Stooplify does not take a cut of your sales. You keep 100% of what you make at your stoop sale or yard sale. We only charge for listing visibility, never for transactions.'
-              },
-              {
-                q: 'What is the Featured Shop plan for?',
-                a: 'The Featured Shop plan is designed for permanent businesses — thrift stores, consignment shops, antique dealers, and flea market vendors — that want ongoing visibility on Stooplify alongside regular stoop sales.'
-              },
-            ].map((faq, i) => (
-              <div key={i} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-                <h3 className="font-bold text-[#2E3A59] mb-2">{faq.q}</h3>
-                <p className="text-gray-600 text-sm leading-relaxed">{faq.a}</p>
-              </div>
+          <ul className="space-y-3">
+            {INCLUDED.map((item) => (
+              <li key={item} className="flex items-start gap-3 text-foreground">
+                <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                  <Check className="w-3.5 h-3.5 text-primary" />
+                </span>
+                <span className="text-sm leading-relaxed">{item}</span>
+              </li>
             ))}
-          </div>
+          </ul>
 
-          <div className="text-center mt-10">
-            <p className="text-gray-600">
-              {t('haveQuestions')}?{' '}
-              <a href="mailto:klee0589@gmail.com" className="text-[#FF6F61] hover:underline font-medium">
-                klee0589@gmail.com
-              </a>
-            </p>
+          <div className="flex flex-col sm:flex-row gap-3 mt-8">
+            <Link to={createPageUrl('add-yard-sale')} className="flex-1">
+              <Button className="w-full rounded-xl">List your sale</Button>
+            </Link>
+            <Link to={createPageUrl('yard-sales')} className="flex-1">
+              <Button variant="outline" className="w-full rounded-xl">Browse sales</Button>
+            </Link>
           </div>
         </motion.div>
 
-
+        <p className="text-sm text-muted-foreground mt-6">
+          Running a thrift shop, antique store, or flea market?{' '}
+          <Link to={createPageUrl('ApplyAsShop')} className="text-primary hover:underline">
+            Get listed for free too
+          </Link>
+          .
+        </p>
       </div>
     </div>
   );

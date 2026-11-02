@@ -104,7 +104,7 @@ export default function StoopSalesHarlem() {
             </ul>
 
             <h2 className="text-2xl font-bold text-[#2E3A59] dark:text-white mt-10" style={{ fontFamily: 'Poppins, sans-serif' }}>Hosting a Stoop Sale in Harlem?</h2>
-            <p>List your Harlem stoop sale for free on Stooplify and reach thousands of local buyers already searching for sales in your neighborhood. Your first listing is completely free with up to 5 photos.</p>
+            <p>List your Harlem stoop sale for free on Stooplify and reach thousands of local buyers already searching for sales in your neighborhood. Listing is always free, with up to 20 photos.</p>
             <p>See our guides on <Link to="/guides-advertise-yard-sale" className="text-[#14B8FF] hover:underline">how to advertise your sale</Link> and <Link to="/guides-best-time-yard-sale" className="text-[#14B8FF] hover:underline">the best time to host</Link> for maximum foot traffic.</p>
           </div>
 

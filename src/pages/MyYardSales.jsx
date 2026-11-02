@@ -4,7 +4,7 @@ import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
-import { Calendar, MapPin, Edit, Trash2, Eye, Loader2, Plus, AlertCircle, CreditCard } from 'lucide-react';
+import { Calendar, MapPin, Edit, Trash2, Eye, Loader2, Plus } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { format } from 'date-fns';
@@ -16,7 +16,6 @@ export default function MyYardSales() {
   const [user, setUser] = useState(null);
   const [language, setLanguage] = useState('en');
   const [showFinishedSales, setShowFinishedSales] = useState(false);
-  const [showUpgradeBanner, setShowUpgradeBanner] = useState(false);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const t = useTranslation(language);
@@ -31,14 +30,6 @@ export default function MyYardSales() {
 
     window.addEventListener('languageChange', handleLanguageChange);
     return () => window.removeEventListener('languageChange', handleLanguageChange);
-  }, []);
-
-  useEffect(() => {
-    // Check if redirected here due to listing limit
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('upgrade') === 'true') {
-      setShowUpgradeBanner(true);
-    }
   }, []);
 
   useEffect(() => {
@@ -151,36 +142,6 @@ export default function MyYardSales() {
         keywords="my yard sales, manage listings, edit yard sale, my garage sales, seller dashboard"
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Upgrade Banner */}
-        {showUpgradeBanner && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-6 bg-amber-50 border-2 border-amber-300 rounded-2xl p-5 flex items-start gap-4"
-          >
-            <AlertCircle className="w-6 h-6 text-amber-500 flex-shrink-0 mt-0.5" />
-            <div className="flex-1">
-              <h3 className="font-bold text-amber-800 mb-1" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                Free Listing Already Used
-              </h3>
-              <p className="text-amber-700 text-sm mb-3">
-                You've already used your 1 free listing. To post more yard sales, you'll need to upgrade to a paid plan.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                <Link to={createPageUrl('AddYardSale')}>
-                  <Button size="sm" className="bg-amber-500 hover:bg-amber-600 text-white gap-2">
-                    <CreditCard className="w-4 h-4" />
-                    View Plans ($4 single / $9/mo unlimited)
-                  </Button>
-                </Link>
-                <Button size="sm" variant="ghost" className="text-amber-700" onClick={() => setShowUpgradeBanner(false)}>
-                  Dismiss
-                </Button>
-              </div>
-            </div>
-          </motion.div>
-        )}
-
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
