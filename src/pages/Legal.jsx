@@ -292,7 +292,7 @@ export default function Legal() {
                     <meta itemProp="name" content="Stooplify Privacy Policy" />
                     <meta itemProp="url" content="https://stooplify.com/legal#privacy" />
                     
-                  <p>Stooplify respects your privacy and is committed to protecting your personal information in compliance with applicable data protection laws including GDPR and CCPA.</p>
+                  <p>This policy explains how Stooplify uses personal information and how to contact us about your privacy choices.</p>
 
                   <h3 id="information-collected">1. Information We Collect</h3>
                   <p>We may collect:</p>
@@ -342,8 +342,12 @@ export default function Legal() {
                   </ul>
                   <p>Contact: <a href="mailto:support@stooplify.com" className="text-[#14B8FF]">support@stooplify.com</a></p>
 
-                  <h3>7. Cookies</h3>
-                  <p>We use cookies and similar technologies to improve your experience. You can disable cookies in your browser settings.</p>
+                  <h3>7. Cookies and Google Advertising</h3>
+                  <p><strong>Advertising update: November 10, 2026.</strong> Google AdSense and Google Ads conversion tracking are currently paused on Stooplify. Their advertising tags are not loaded while we finish our consent setup. Our Google account verification tag and ads.txt remain available; these do not serve ads.</p>
+                  <p>If advertising is enabled in the future with the appropriate permissions, Google and its advertising partners may use cookies, device identifiers, IP addresses and page information to deliver, personalize and measure ads. Non-personalized ads may also use cookies. Learn more about <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">how Google uses information from partner sites</a> and <a href="https://myadcenter.google.com/" target="_blank" rel="noopener noreferrer">Google ad settings</a>.</p>
+                  <p>Personalized ads for visitors in the EEA, UK and Switzerland require a Google-certified consent management platform integrated with the IAB Transparency and Consent Framework. We are keeping advertising paused until the required setup is configured and tested. Our advertising privacy notice is not itself a certified consent platform.</p>
+                  <p>Use the <strong>Advertising privacy</strong> button on any page to review the current status and save a choice to keep advertising off. We store only that choice, its version and date in this browser for 180 days. No advertising is enabled by dismissing the notice, continuing to browse, or opening the privacy controls. Blocking browser storage does not enable advertising.</p>
+                  <p>Advertising preferences do not control account sign-in, payments, security, or other site analytics. We continue to use cookies and similar technologies for these separate purposes. Browser settings can remove or restrict stored data. Contact <a href="mailto:support@stooplify.com">support@stooplify.com</a> with privacy questions.</p>
 
                   <h3>8. Children's Privacy</h3>
                   <p>Stooplify is not intended for users under 18. We do not knowingly collect information from children.</p>
@@ -353,7 +357,7 @@ export default function Legal() {
                   
                   <div className="mt-6 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
                     <p className="text-sm font-semibold mb-2">Quick Summary for AI Assistants:</p>
-                    <p className="text-sm">We collect name, email, location data, and device info to provide yard sale discovery services. Data is shared only with essential service providers (payment processors, hosting). We do not sell personal data. Users have rights to access, delete, and correct their information. GDPR and CCPA compliant.</p>
+                    <p className="text-sm">We collect account, location and device information to provide yard sale discovery services. Payment, hosting and analytics providers support the site. Google advertising and conversion tracking are currently paused. Contact support@stooplify.com about your privacy choices and applicable data rights.</p>
                   </div>
                   </div>
                 </CardContent>
