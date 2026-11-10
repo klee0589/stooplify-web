@@ -1,62 +1,33 @@
 /**
- * Advertising is deliberately paused until a certified CMP is configured,
- * published and verified. This is a deny-only safety switch, not a CMP.
- * Do not re-enable Google tags using a localStorage flag or a timeout.
+ * Consent defaults for Google AdSense (Auto ads).
+ * Google's certified CMP (published in AdSense > Privacy & messaging) shows the
+ * consent message to EEA/UK/Swiss visitors and updates these signals itself.
+ * Must load before adsbygoogle.js.
  */
 (function () {
   'use strict';
   var KEY = 'stooplify_advertising_preference_v1';
   var MAX_AGE = 180 * 24 * 60 * 60 * 1000;
-  var denied = { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' };
-  window.dataLayer = window.dataLayer || [];
-  // No ad conversion or configuration events are queued while paused.
-  window.gtag = function () {
-    if (arguments[0] === 'consent') window.dataLayer.push(arguments);
-  };
-  window.gtag('consent', 'default', denied);
-  window.gtag('consent', 'update', denied);
-  window.adsbygoogle = window.adsbygoogle || [];
-  window.adsbygoogle.pauseAdRequests = 1;
+  var denied = { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied' };
+  var CONSENT_REGIONS = ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IS','IE','IT','LV','LI','LT','LU','MT','NL','NO','PL','PT','RO','SK','SI','ES','SE','GB','CH'];
 
-  function clearAdvertisingStorage() {
-    try { window.localStorage.removeItem('_b44_gads_click'); } catch (_) { /* Storage may be blocked. */ }
-    try {
-      document.cookie.split(';').forEach(function (cookie) {
-        var name = cookie.split('=')[0].trim();
-        if (!/^_gcl_/.test(name)) return;
-        var domains = ['', '; Domain=' + window.location.hostname, '; Domain=.stooplify.com'];
-        domains.forEach(function (domain) {
-          document.cookie = name + '=; Max-Age=0; Path=/; Secure; SameSite=Lax' + domain;
-        });
-      });
-    } catch (_) { /* Advertising stays disabled even if cookies cannot be cleared. */ }
-  }
-  function hasSavedChoice() {
-    try {
-      var choice = JSON.parse(window.localStorage.getItem(KEY) || 'null');
-      var valid = !!choice && choice.version === 1 && choice.advertising === 'denied' &&
-        Number.isFinite(choice.savedAt) && choice.savedAt <= Date.now() &&
-        Date.now() - choice.savedAt < MAX_AGE;
-      if (choice && !valid) window.localStorage.removeItem(KEY);
-      return valid;
-    } catch (_) { return false; }
-  }
-  function keepOff() {
-    var saved = false;
-    clearAdvertisingStorage();
-    window.gtag('consent', 'update', denied);
-    try {
-      window.localStorage.setItem(KEY, JSON.stringify({ version: 1, advertising: 'denied', savedAt: Date.now() }));
-      saved = true;
-    } catch (_) { /* Do not imply that a blocked preference was saved. */ }
-    window.dispatchEvent(new CustomEvent('stooplify-advertising-choice', { detail: { saved: saved } }));
-    return saved;
-  }
-  clearAdvertisingStorage();
-  window.stooplifyAdvertising = Object.freeze({
-    status: 'paused_pending_certified_cmp',
-    isEnabled: function () { return false; },
-    hasSavedChoice: hasSavedChoice,
-    keepOff: keepOff
-  });
+  window.dataLayer = window.dataLayer || [];
+  window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+  window.adsbygoogle = window.adsbygoogle || [];
+
+  // Denied by default where consent is legally required; Google's CMP updates it.
+  window.gtag('consent', 'default', Object.assign({ region: CONSENT_REGIONS, wait_for_update: 500 }, denied));
+
+  // Visitors who previously chose "Keep advertising off" keep non-personalized ads.
+  try {
+    var choice = JSON.parse(window.localStorage.getItem(KEY) || 'null');
+    var valid = !!choice && choice.advertising === 'denied' && Number.isFinite(choice.savedAt) &&
+      choice.savedAt <= Date.now() && Date.now() - choice.savedAt < MAX_AGE;
+    if (valid) {
+      window.gtag('consent', 'update', denied);
+      window.adsbygoogle.requestNonPersonalizedAds = 1;
+    } else if (choice) {
+      window.localStorage.removeItem(KEY);
+    }
+  } catch (_) { /* Storage may be blocked. */ }
 })();

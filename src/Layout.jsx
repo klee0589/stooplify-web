@@ -883,6 +883,18 @@ function LayoutContent({ children, currentPageName }) {
                   <li><Link to="/about" className="hover:text-primary transition-colors">About</Link></li>
                   <li><Link to="/contact" className="hover:text-primary transition-colors">Contact Page</Link></li>
                   <li><Link to="/site-map" className="hover:text-primary transition-colors">Site Map</Link></li>
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        window.googlefc = window.googlefc || {};
+                        window.googlefc.callbackQueue = window.googlefc.callbackQueue || [];
+                        window.googlefc.callbackQueue.push(() => window.googlefc.showRevocationMessage());
+                      }}
+                      className="no-min-tap text-left hover:text-primary transition-colors">
+                      Privacy & cookie settings
+                    </button>
+                  </li>
                 </ul>
               </div>
             </div>

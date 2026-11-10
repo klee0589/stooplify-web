@@ -33,7 +33,6 @@ import About from './pages/About';
 import Contact from './pages/Contact';
 import { Navigate } from 'react-router-dom';
 import Login from './pages/Login.jsx';
-import AdvertisingPrivacy from '@/components/AdvertisingPrivacy';
 
 const { Pages, Layout, mainPage } = pagesConfig;
 const mainPageKey = mainPage ?? Object.keys(Pages)[0];
@@ -156,7 +155,6 @@ function App() {
           <AuthenticatedApp />
         </Router>
         <Toaster />
-        <AdvertisingPrivacy />
       </QueryClientProvider>
     </AuthProvider>
   )
