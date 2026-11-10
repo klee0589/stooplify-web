@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import BlogCTABanner from '../components/BlogCTABanner';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Calendar, Clock, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import SEO from '@/components/SEO';
-import { format } from 'date-fns';
+import BlogPostCard from '@/components/blog/BlogPostCard';
+import BlogFeatured from '@/components/blog/BlogFeatured';
+import TrendingPosts from '@/components/blog/TrendingPosts';
+import TopicChips, { TOPICS } from '@/components/blog/TopicChips';
 
-const POSTS_PER_PAGE = 10;
+const POSTS_PER_PAGE = 12;
 
 const blogTranslations = {
   en: {
-    title: 'Stooplify Blog',
-    subtitle: 'Expert tips, guides, and stories about yard sales, secondhand shopping, and finding community treasures',
+    eyebrow: 'The Stooplify Blog',
+    title: 'Stories, tips & treasure-hunting guides',
+    subtitle: 'Everything you need to score great finds and run a sale your whole block will talk about.',
     searchPlaceholder: 'Search articles...',
     noResults: 'No articles found matching your search.',
     noPosts: 'No blog posts yet. Check back soon!',
@@ -24,11 +27,17 @@ const blogTranslations = {
     seoDesc: 'Discover expert tips, guides, and stories about yard sales, garage sales, and secondhand shopping.',
     previous: 'Previous',
     next: 'Next',
-    page: 'Page'
+    page: 'Page',
+    latest: 'Latest story',
+    readNow: 'Read now',
+    trending: 'Trending now',
+    trendingSub: 'Most-read from Google search this month',
+    allPosts: 'Fresh reads'
   },
   es: {
-    title: 'Blog de Stooplify',
-    subtitle: 'Consejos de expertos, guías e historias sobre ventas de garaje, compras de segunda mano y tesoros comunitarios',
+    eyebrow: 'El Blog de Stooplify',
+    title: 'Historias, consejos y guías para cazar tesoros',
+    subtitle: 'Todo lo que necesitas para encontrar joyas y organizar una venta de la que hable todo el barrio.',
     searchPlaceholder: 'Buscar artículos...',
     noResults: 'No se encontraron artículos.',
     noPosts: 'Aún no hay publicaciones. ¡Vuelve pronto!',
@@ -37,7 +46,12 @@ const blogTranslations = {
     seoDesc: 'Descubre consejos de expertos, guías e historias sobre ventas de garaje y compras de segunda mano.',
     previous: 'Anterior',
     next: 'Siguiente',
-    page: 'Página'
+    page: 'Página',
+    latest: 'Lo más nuevo',
+    readNow: 'Leer ahora',
+    trending: 'En tendencia',
+    trendingSub: 'Lo más leído desde Google este mes',
+    allPosts: 'Lecturas recientes'
   }
 };
 
@@ -45,9 +59,9 @@ export default function Blog() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState('newest');
+  const [topic, setTopic] = useState('All');
   const [language, setLanguage] = useState(() => localStorage.getItem('stooplify_lang') || 'en');
 
-  // Read page from URL query param
   const urlParams = new URLSearchParams(window.location.search);
   const currentPage = Math.max(1, parseInt(urlParams.get('page') || '1', 10));
 
@@ -59,45 +73,35 @@ export default function Blog() {
 
   const t = blogTranslations[language] || blogTranslations.en;
   const isSpanish = language === 'es';
-
   const offset = (currentPage - 1) * POSTS_PER_PAGE;
-
   const sortParam = sortOrder === 'newest' ? '-publish_date' : sortOrder === 'oldest' ? 'publish_date' : 'title';
+  const topicTags = TOPICS.find((x) => x.label === topic)?.tags;
 
-  // Fetch current page of posts
   const { data: posts = [], isLoading } = useQuery({
-    queryKey: ['blogPosts', currentPage, searchTerm, sortOrder],
+    queryKey: ['blogPosts', currentPage, searchTerm, sortOrder, topic],
     queryFn: async () => {
+      const query = { status: 'published', ...(topicTags ? { tags: { $in: topicTags } } : {}) };
       if (searchTerm) {
-        return await base44.entities.BlogPost.filter({ status: 'published' }, sortParam);
+        const rx = { $regex: searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), $options: 'i' };
+        return await base44.entities.BlogPost.filter({ ...query, $or: [{ title: rx }, { excerpt: rx }, { title_es: rx }] }, sortParam, 50);
       }
-      return await base44.entities.BlogPost.filter({ status: 'published' }, sortParam, POSTS_PER_PAGE + 1, offset);
+      return await base44.entities.BlogPost.filter(query, sortParam, POSTS_PER_PAGE + 1, offset);
     },
     keepPreviousData: true
   });
 
-  // Fetch next page to know if there are more posts
   const hasMorePosts = !searchTerm && posts.length > POSTS_PER_PAGE;
-  const displayedPosts = searchTerm
-    ? posts.filter((post) => {
-        const title = isSpanish ? post.title_es || post.title : post.title;
-        const excerpt = isSpanish ? post.excerpt_es || post.excerpt : post.excerpt;
-        return (
-          title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          post.tags?.some((tag) => tag.toLowerCase().includes(searchTerm.toLowerCase()))
-        );
-      })
-    : posts.slice(0, POSTS_PER_PAGE);
+  const displayedPosts = searchTerm ? posts : posts.slice(0, POSTS_PER_PAGE);
+  const showSpotlight = currentPage === 1 && !searchTerm && topic === 'All' && sortOrder === 'newest';
+  const featured = showSpotlight ? displayedPosts[0] : null;
+  const gridPosts = featured ? displayedPosts.slice(1) : displayedPosts;
 
-  const canonicalUrl = currentPage === 1
-    ? 'https://stooplify.com/blog'
-    : `https://stooplify.com/blog?page=${currentPage}`;
+  const canonicalUrl = currentPage === 1 ? 'https://stooplify.com/blog' : `https://stooplify.com/blog?page=${currentPage}`;
 
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Blog",
-    "name": t.title,
+    "name": t.eyebrow,
     "description": t.subtitle,
     "url": canonicalUrl,
     "inLanguage": isSpanish ? "es" : "en",
@@ -112,27 +116,17 @@ export default function Blog() {
   };
 
   const goToPage = (page) => {
-    const params = page === 1 ? '' : `?page=${page}`;
-    navigate(`/blog${params}`);
+    navigate(`/blog${page === 1 ? '' : `?page=${page}`}`);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Build page numbers to show
-  const getPageNumbers = () => {
-    const pages = [];
-    const range = 2;
-    for (let i = Math.max(1, currentPage - range); i <= currentPage + range; i++) {
-      pages.push(i);
-    }
-    return pages;
-  };
+  const pageNumbers = [];
+  for (let i = Math.max(1, currentPage - 2); i <= currentPage + (hasMorePosts ? 2 : 0); i++) pageNumbers.push(i);
 
-  const seoTitle = currentPage > 1
-    ? `${t.seoTitle} - ${t.page} ${currentPage}`
-    : t.seoTitle;
+  const seoTitle = currentPage > 1 ? `${t.seoTitle} - ${t.page} ${currentPage}` : t.seoTitle;
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen bg-background">
       <SEO
         title={seoTitle}
         description={t.seoDesc}
@@ -143,39 +137,30 @@ export default function Blog() {
         url={canonicalUrl}
       />
 
-      {/* Hero Section */}
-      <div className="bg-gradient-to-br from-[#14B8FF] to-[#0da3e6] text-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center"
-          >
-            <h1 className="text-5xl md:text-6xl font-bold mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
-              {t.title}
-            </h1>
-            <p className="text-xl text-white/90 max-w-2xl mx-auto mb-8">
-              {t.subtitle}
-            </p>
-
-            {/* Search + Sort */}
-            <div className="max-w-xl mx-auto mb-6 flex gap-3">
-              <div className="flex-1">
+      {/* Hero */}
+      <section className="relative overflow-hidden bg-primary text-primary-foreground">
+        <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-accent-warm/40 blur-3xl" />
+        <div className="absolute -bottom-32 -left-16 w-80 h-80 rounded-full bg-primary-foreground/10 blur-3xl" />
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-3xl">
+            <span className="inline-block px-3 py-1 rounded-full bg-primary-foreground/15 text-xs font-bold uppercase tracking-widest mb-5">{t.eyebrow}</span>
+            <h1 className="font-heading text-4xl md:text-6xl font-bold leading-[1.05] mb-5">{t.title}</h1>
+            <p className="text-lg text-primary-foreground/85 mb-8 max-w-2xl">{t.subtitle}</p>
+            <div className="flex flex-col sm:flex-row gap-3 max-w-xl">
+              <div className="relative flex-1">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
                 <Input
                   type="text"
                   placeholder={t.searchPlaceholder}
                   value={searchTerm}
-                  onChange={(e) => {
-                    setSearchTerm(e.target.value);
-                    if (currentPage !== 1) goToPage(1);
-                  }}
-                  className="bg-white text-slate-950 pl-4 px-3 py-6 text-lg rounded-md flex h-9 w-full border border-input shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                  onChange={(e) => { setSearchTerm(e.target.value); if (currentPage !== 1) goToPage(1); }}
+                  className="h-12 pl-12 rounded-full bg-card text-foreground border-0 shadow-glass"
                 />
               </div>
               <select
                 value={sortOrder}
                 onChange={(e) => { setSortOrder(e.target.value); goToPage(1); }}
-                className="bg-white text-slate-800 text-sm font-medium rounded-md border border-input shadow-sm px-3 py-2 focus:outline-none focus:ring-1 focus:ring-[#14B8FF] cursor-pointer"
+                className="h-12 px-4 rounded-full bg-card text-foreground text-sm font-semibold border-0 shadow-glass cursor-pointer"
               >
                 <option value="newest">Newest</option>
                 <option value="oldest">Oldest</option>
@@ -184,139 +169,77 @@ export default function Blog() {
             </div>
           </motion.div>
         </div>
-      </div>
+      </section>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+        {/* Spotlight: latest + trending */}
+        {showSpotlight && (
+          <div className="grid lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2">
+              {featured && <BlogFeatured post={featured} isSpanish={isSpanish} label={t.latest} readLabel={t.readNow} />}
+            </div>
+            <TrendingPosts isSpanish={isSpanish} title={t.trending} subtitle={t.trendingSub} />
+          </div>
+        )}
+
         <BlogCTABanner />
-        {isLoading ? (
-          <div className="text-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#14B8FF] border-t-transparent mx-auto" />
+
+        <section>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+            <h2 className="font-heading text-2xl md:text-3xl font-bold text-foreground">{t.allPosts}</h2>
+            <TopicChips active={topic} onChange={(label) => { setTopic(label); if (currentPage !== 1) goToPage(1); }} />
           </div>
-        ) : displayedPosts.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="text-gray-600 dark:text-gray-400 text-lg">
-              {searchTerm ? t.noResults : t.noPosts}
-            </p>
-          </div>
-        ) : (
-          <>
+
+          {isLoading ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {displayedPosts.map((post, index) => (
-                <React.Fragment key={post.id}>
-                  {/* Advertising paused pending certified consent setup. */}
-                  <motion.article
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                  >
-                  <Link
-                    to={`/blog/${post.slug}`}
-                    className="group block h-full bg-white dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 hover:border-[#14B8FF] hover:shadow-xl transition-all duration-300"
-                  >
-                    <div className="aspect-[16/9] overflow-hidden bg-gradient-to-br from-[#e8f7ff] to-[#d0efff] dark:from-gray-700 dark:to-gray-800">
-                      {post.featured_image_url ? (
-                        <img
-                          src={post.featured_image_url}
-                          alt={post.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                          loading="lazy"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex flex-col items-center justify-center gap-2 opacity-60">
-                          <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 text-[#14B8FF]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" />
-                          </svg>
-                          <span className="text-xs text-[#14B8FF] font-medium">Stooplify Blog</span>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="p-5">
-                      {post.tags && post.tags.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mb-3">
-                          {post.tags.slice(0, 2).map((tag) => (
-                            <Badge key={tag} className="bg-[#14B8FF]/10 text-[#14B8FF] hover:bg-[#14B8FF]/20 text-xs font-medium">
-                              {tag}
-                            </Badge>
-                          ))}
-                        </div>
-                      )}
-
-                      <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-[#14B8FF] transition-colors line-clamp-2 leading-snug" style={{ fontFamily: 'Poppins, sans-serif' }}>
-                        {isSpanish ? post.title_es || post.title : post.title}
-                      </h2>
-
-                      <p className="text-sm text-gray-600 dark:text-gray-300 mb-4 line-clamp-2 leading-relaxed">
-                        {isSpanish ? post.excerpt_es || post.excerpt : post.excerpt}
-                      </p>
-
-                      <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400 pt-3 border-t border-gray-100 dark:border-gray-700">
-                        <div className="flex items-center gap-3">
-                          <span className="flex items-center gap-1">
-                            <Calendar className="w-3.5 h-3.5" />
-                            {format(new Date(post.publish_date), 'MMM d, yyyy')}
-                          </span>
-                          {post.reading_time_minutes && (
-                            <span className="flex items-center gap-1">
-                              <Clock className="w-3.5 h-3.5" />
-                              {post.reading_time_minutes} {t.minRead}
-                            </span>
-                          )}
-                        </div>
-                        <ArrowRight className="w-4 h-4 text-[#14B8FF] group-hover:translate-x-1 transition-transform" />
-                      </div>
-                    </div>
-                  </Link>
-                  </motion.article>
-                </React.Fragment>
+              {[0, 1, 2, 3, 4, 5].map((i) => <div key={i} className="h-80 rounded-2xl bg-muted animate-pulse" />)}
+            </div>
+          ) : displayedPosts.length === 0 ? (
+            <p className="text-center py-20 text-muted-foreground text-lg">{searchTerm ? t.noResults : t.noPosts}</p>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {gridPosts.map((post, index) => (
+                <motion.article key={post.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.04 }}>
+                  <BlogPostCard post={post} isSpanish={isSpanish} minRead={t.minRead} />
+                </motion.article>
               ))}
             </div>
+          )}
 
-            {/* Pagination — only show when not searching */}
-            {!searchTerm && (currentPage > 1 || hasMorePosts) && (
-              <div className="flex items-center justify-center gap-2 mt-12">
-                {/* Previous */}
+          {!searchTerm && (currentPage > 1 || hasMorePosts) && (
+            <div className="flex items-center justify-center gap-2 mt-12">
+              <button
+                onClick={() => goToPage(currentPage - 1)}
+                disabled={currentPage === 1}
+                className="flex items-center gap-1 px-4 py-2 rounded-full border border-border text-sm font-medium text-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed"
+                aria-label="Previous page"
+              >
+                <ChevronLeft className="w-4 h-4" />{t.previous}
+              </button>
+              {pageNumbers.map((n) => (
                 <button
-                  onClick={() => goToPage(currentPage - 1)}
-                  disabled={currentPage === 1}
-                  className="flex items-center gap-1 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                  aria-label="Previous page"
+                  key={n}
+                  onClick={() => goToPage(n)}
+                  className={`w-10 h-10 rounded-full text-sm font-semibold transition-colors ${
+                    n === currentPage ? 'bg-primary text-primary-foreground shadow-md' : 'border border-border text-foreground hover:bg-muted'
+                  }`}
+                  aria-label={`${t.page} ${n}`}
+                  aria-current={n === currentPage ? 'page' : undefined}
                 >
-                  <ChevronLeft className="w-4 h-4" />
-                  {t.previous}
+                  {n}
                 </button>
-
-                {/* Page numbers */}
-                {getPageNumbers().map((pageNum) => (
-                  <button
-                    key={pageNum}
-                    onClick={() => goToPage(pageNum)}
-                    className={`w-10 h-10 rounded-lg text-sm font-semibold transition-colors ${
-                      pageNum === currentPage
-                        ? 'bg-[#14B8FF] text-white shadow-md'
-                        : 'border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800'
-                    }`}
-                    aria-label={`${t.page} ${pageNum}`}
-                    aria-current={pageNum === currentPage ? 'page' : undefined}
-                  >
-                    {pageNum}
-                  </button>
-                ))}
-
-                {/* Next */}
-                <button
-                  onClick={() => goToPage(currentPage + 1)}
-                  disabled={!hasMorePosts}
-                  className="flex items-center gap-1 px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                  aria-label="Next page"
-                >
-                  {t.next}
-                  <ChevronRight className="w-4 h-4" />
-                </button>
-              </div>
-            )}
-          </>
-        )}
+              ))}
+              <button
+                onClick={() => goToPage(currentPage + 1)}
+                disabled={!hasMorePosts}
+                className="flex items-center gap-1 px-4 py-2 rounded-full border border-border text-sm font-medium text-foreground hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed"
+                aria-label="Next page"
+              >
+                {t.next}<ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
+        </section>
       </div>
     </div>
   );

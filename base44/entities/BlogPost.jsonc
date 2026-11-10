@@ -78,6 +78,11 @@
         "published",
         "archived"
       ],
+      "enumColors": [
+        "gray",
+        "green",
+        "yellow"
+      ],
       "default": "published",
       "description": "Publication status"
     },
@@ -89,6 +94,21 @@
       "type": "number",
       "default": 0,
       "description": "Number of views"
+    },
+    "search_clicks": {
+      "type": "number",
+      "default": 0,
+      "description": "Google Search clicks in the last 28 days (from Search Console)"
+    },
+    "search_impressions": {
+      "type": "number",
+      "default": 0,
+      "description": "Google Search impressions in the last 28 days (from Search Console)"
+    },
+    "trend_score": {
+      "type": "number",
+      "default": 0,
+      "description": "Ranking score for the Trending section, computed from search clicks and impressions"
     }
   },
   "required": [
