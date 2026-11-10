@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
+import { Dialog, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 
 // This is an advertising status/opt-out interface, not a certified consent platform.
 export default function AdvertisingPrivacy() {
@@ -27,7 +28,9 @@ export default function AdvertisingPrivacy() {
         <DialogTrigger asChild>
           <button type="button" className="rounded-full border border-slate-400 bg-white px-3 py-2 font-medium text-slate-900 shadow-md dark:bg-slate-900 dark:text-white">Advertising privacy</button>
         </DialogTrigger>
-        <DialogContent className="max-h-[85vh] overflow-y-auto">
+        <DialogPrimitive.Portal>
+          <DialogPrimitive.Overlay className="fixed inset-0 bg-black/70" style={{ zIndex: 1999 }} />
+          <DialogPrimitive.Content className="fixed left-1/2 top-1/2 grid gap-4 overflow-y-auto rounded-xl border border-slate-300 bg-white p-6 text-slate-900 shadow-xl dark:border-slate-600 dark:bg-slate-900 dark:text-white" style={{ zIndex: 2000, transform: "translate(-50%, -50%)", width: "min(32rem, calc(100vw - 2rem))", maxHeight: "85dvh" }}>
           <DialogHeader>
             <DialogTitle>Advertising privacy</DialogTitle>
             <DialogDescription>Google advertising is currently paused on Stooplify.</DialogDescription>
@@ -40,7 +43,9 @@ export default function AdvertisingPrivacy() {
             <button type="button" onClick={keepOff} className="w-full rounded-lg bg-slate-900 px-4 py-2 font-medium text-white dark:bg-white dark:text-slate-900">Keep advertising off</button>
             {message && <p role="status">{message}</p>}
           </div>
-        </DialogContent>
+          <DialogPrimitive.Close className="rounded-lg border border-slate-400 px-4 py-2 font-medium">Close</DialogPrimitive.Close>
+          </DialogPrimitive.Content>
+        </DialogPrimitive.Portal>
       </Dialog>
     </div>
   );
