@@ -34,9 +34,11 @@
   function hasSavedChoice() {
     try {
       var choice = JSON.parse(window.localStorage.getItem(KEY) || 'null');
-      return !!choice && choice.version === 1 && choice.advertising === 'denied' &&
+      var valid = !!choice && choice.version === 1 && choice.advertising === 'denied' &&
         Number.isFinite(choice.savedAt) && choice.savedAt <= Date.now() &&
         Date.now() - choice.savedAt < MAX_AGE;
+      if (choice && !valid) window.localStorage.removeItem(KEY);
+      return valid;
     } catch (_) { return false; }
   }
   function keepOff() {

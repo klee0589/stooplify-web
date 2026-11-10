@@ -285,7 +285,7 @@ export default function Legal() {
               <Card>
                 <CardHeader>
                   <CardTitle>Privacy Policy</CardTitle>
-                  <CardDescription>Last Updated: January 15, 2026</CardDescription>
+                  <CardDescription>Last Updated: November 10, 2026</CardDescription>
                 </CardHeader>
                 <CardContent className="prose prose-sm max-w-none dark:prose-invert">
                   <div itemScope itemType="https://schema.org/PrivacyPolicy">
@@ -346,7 +346,7 @@ export default function Legal() {
                   <p><strong>Advertising update: November 10, 2026.</strong> Google AdSense and Google Ads conversion tracking are currently paused on Stooplify. Their advertising tags are not loaded while we finish our consent setup. Our Google account verification tag and ads.txt remain available; these do not serve ads.</p>
                   <p>If advertising is enabled in the future with the appropriate permissions, Google and its advertising partners may use cookies, device identifiers, IP addresses and page information to deliver, personalize and measure ads. Non-personalized ads may also use cookies. Learn more about <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">how Google uses information from partner sites</a> and <a href="https://myadcenter.google.com/" target="_blank" rel="noopener noreferrer">Google ad settings</a>.</p>
                   <p>Personalized ads for visitors in the EEA, UK and Switzerland require a Google-certified consent management platform integrated with the IAB Transparency and Consent Framework. We are keeping advertising paused until the required setup is configured and tested. Our advertising privacy notice is not itself a certified consent platform.</p>
-                  <p>Use the <strong>Advertising privacy</strong> button on any page to review the current status and save a choice to keep advertising off. We store only that choice, its version and date in this browser for 180 days. No advertising is enabled by dismissing the notice, continuing to browse, or opening the privacy controls. Blocking browser storage does not enable advertising.</p>
+                  <p>Use the <strong>Advertising privacy</strong> button on any page to review the current status and save a choice to keep advertising off. We store only that choice, its version and date in this browser. The saved choice expires after 180 days. No advertising is enabled by dismissing the notice, continuing to browse, or opening the privacy controls. Blocking browser storage does not enable advertising.</p>
                   <p>Advertising preferences do not control account sign-in, payments, security, or other site analytics. We continue to use cookies and similar technologies for these separate purposes. Browser settings can remove or restrict stored data. Contact <a href="mailto:support@stooplify.com">support@stooplify.com</a> with privacy questions.</p>
 
                   <h3>8. Children's Privacy</h3>
