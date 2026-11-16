@@ -25,7 +25,10 @@ const initPostHog = () => {
         ph.init('phc_O1v6eh3WZWysCmiW5sODyx8YScYNMEligZyMHZGEekb', {
           api_host: 'https://us.i.posthog.com',
           person_profiles: 'identified_only',
-          capture_pageview: false
+          capture_pageview: false,
+          // Heatmaps + session replay so we can see where people click, scroll and get stuck
+          enable_heatmaps: true,
+          session_recording: { maskAllInputs: true }
         });
       }
       posthog = ph;
