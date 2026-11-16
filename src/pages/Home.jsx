@@ -114,10 +114,10 @@ export default function Home() {
       <Suspense fallback={<div className="h-96 bg-muted animate-pulse" />}>
         <FeaturedSales sales={sales} />
       </Suspense>
+      <DiscoverBand />
       <HowItWorks />
       <Benefits />
       <WeekendSales />
-      <DiscoverBand />
       <TrendingNeighborhoods />
       <FreeNearYou />
       <CTASection />
