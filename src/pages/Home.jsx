@@ -3,6 +3,7 @@ import StooplifyChat from '../components/StooplifyChat';
 import { useTranslation } from '../components/translations';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { trackEvent } from '@/lib/trackEvent';
 import { activeSaleQuery } from '@/lib/listingLifecycle';
 import SEO from '../components/SEO';
 import HeroSection from '../components/home/HeroSection';
@@ -38,9 +39,9 @@ export default function Home() {
   useEffect(() => {
     deferAnalyticsLoad();
     if ('requestIdleCallback' in window) {
-      requestIdleCallback(() => base44.analytics.track({ eventName: 'home_page_viewed' }));
+      requestIdleCallback(() => trackEvent('home_page_viewed'));
     } else {
-      setTimeout(() => base44.analytics.track({ eventName: 'home_page_viewed' }), 0);
+      setTimeout(() => trackEvent('home_page_viewed'), 0);
     }
   }, []);
 

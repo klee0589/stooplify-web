@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { trackEvent } from '@/lib/trackEvent';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
@@ -379,14 +380,11 @@ export default function AddYardSale() {
   };
 
   const handleSubmit = () => {
-    base44.analytics.track({
-      eventName: isEditMode ? 'sale_updated' : 'listing_published',
-      properties: {
-        category: formData.category,
-        has_photos: photos.length > 0,
-        photo_count: photos.length,
-        listing_type: formData.is_free_item ? 'free' : 'sale'
-      }
+    trackEvent(isEditMode ? 'sale_updated' : 'listing_published', {
+      category: formData.category,
+      has_photos: photos.length > 0,
+      photo_count: photos.length,
+      listing_type: formData.is_free_item ? 'free' : 'sale'
     });
     createMutation.mutate(formData);
   };

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from '../components/translations';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { trackEvent } from '@/lib/trackEvent';
 import { activeSaleQuery } from '@/lib/listingLifecycle';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Map, List, Loader2, MapPin, Calendar, Tag, Building2, Maximize2, Minimize2 } from 'lucide-react';
@@ -89,10 +90,7 @@ export default function YardSales() {
 
   useEffect(() => {
     // Track page view
-    base44.analytics.track({
-      eventName: 'yard_sales_page_viewed',
-      properties: { view_mode: viewMode }
-    });
+    trackEvent('yard_sales_page_viewed', { view_mode: viewMode });
   }, []);
 
   useEffect(() => {
@@ -349,10 +347,7 @@ export default function YardSales() {
 
   // Track view mode changes
   useEffect(() => {
-    base44.analytics.track({
-      eventName: 'view_mode_changed',
-      properties: { view_mode: viewMode }
-    });
+    trackEvent('view_mode_changed', { view_mode: viewMode });
   }, [viewMode]);
 
   // Convert "9:00 AM" or "14:00" to "HH:MM:SS" 24h format

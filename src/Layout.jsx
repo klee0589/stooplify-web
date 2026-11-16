@@ -4,6 +4,7 @@ import { createPageUrl } from './utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Home, MapPin, PlusCircle, User, Heart, Settings, Globe, Moon, Sun, LogOut, ChevronDown, MessageCircle, Instagram, ArrowLeft } from 'lucide-react';
 import { base44 } from '@/api/base44Client';
+import { flushTrackedEvents } from '@/lib/trackEvent';
 import { useTranslation } from '../components/translations';
 import { useTheme, ThemeProvider } from '../components/ThemeProvider';
 import { toast } from 'sonner';
@@ -18,7 +19,7 @@ import { useMobileWeb } from '../components/useMobileWeb';
 
 // Lazy initialize PostHog (only on user interaction or after 5s)
 let posthog = null;
-const initPostHog = () => {
+const initPostHog = (onReady) => {
   if (typeof window !== 'undefined' && !posthog) {
     import('posthog-js').then(({ default: ph }) => {
       if (!ph.__loaded) {
@@ -32,6 +33,7 @@ const initPostHog = () => {
         });
       }
       posthog = ph;
+      if (typeof onReady === 'function') onReady();
     }).catch((err) => {
       console.log('PostHog failed to load:', err);
       posthog = null;
@@ -47,6 +49,7 @@ function LayoutContent({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [isAuthChecked, setIsAuthChecked] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [posthogReady, setPosthogReady] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   // Pages that require login — everything else is public
@@ -168,12 +171,12 @@ function LayoutContent({ children, currentPageName }) {
     setLanguage(savedLang);
     document.documentElement.lang = savedLang;
 
-    // Lazy load PostHog after 8 seconds to avoid blocking initial paint
-    const timer = setTimeout(() => {
-      if (!posthog) initPostHog();
-    }, 8000);
-
-    return () => clearTimeout(timer);
+    // Start PostHog immediately. The old 8s delay lost every visitor who left
+    // before it fired, which was most of them, making the data unusable.
+    initPostHog(() => {
+      setPosthogReady(true);
+      flushTrackedEvents();
+    });
   }, []);
 
 
@@ -184,7 +187,7 @@ function LayoutContent({ children, currentPageName }) {
     if (posthog) {
       posthog.capture('$pageview', { page: currentPageName });
     }
-  }, [location.pathname]);
+  }, [location.pathname, posthogReady]);
 
   useEffect(() => {
     const handleScroll = () => {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
+import { trackEvent } from '@/lib/trackEvent';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { createPageUrl } from '../utils';
@@ -69,10 +70,7 @@ export default function YardSaleDetails() {
 
   useEffect(() => {
     if (saleId) {
-      base44.analytics.track({
-        eventName: 'sale_details_viewed',
-        properties: { sale_id: saleId }
-      });
+      trackEvent('sale_details_viewed', { sale_id: saleId });
     }
   }, [saleId]);
 
@@ -418,10 +416,7 @@ export default function YardSaleDetails() {
   };
 
   const handleGetDirections = () => {
-    base44.analytics.track({
-      eventName: 'directions_clicked',
-      properties: { sale_id: saleId }
-    });
+    trackEvent('directions_clicked', { sale_id: saleId });
     // Use exact coordinates if available and unlocked, otherwise use approximate
     if (sale?.exact_latitude && sale?.exact_longitude && (isAttending || isAddressUnlocked())) {
       const url = `https://www.google.com/maps/dir/?api=1&destination=${sale.exact_latitude},${sale.exact_longitude}`;
