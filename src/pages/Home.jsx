@@ -102,9 +102,9 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background">
       <SEO
-        title="Stooplify - Find Stoop Sales & Yard Sales in NYC and New Jersey"
-        description="Discover stoop sales, yard sales, and garage sales across Brooklyn, Queens, Manhattan, the Bronx, and New Jersey. Browse live listings, find free items, and score unbeatable deals near you."
-        keywords="brooklyn stoop sale, stoop sales NYC, yard sales near me, Queens yard sales, Manhattan garage sales, Bronx yard sales, New Jersey yard sales, Jersey City stoop sale, Hoboken yard sale, NYC stoop sale, garage sales NJ"
+        title="Garage Sales Near Me — NYC Stoop & Yard Sale Finder | Stooplify"
+        description="Find garage sales, yard sales & stoop sales near you this weekend. Live map for Brooklyn, Queens, Manhattan, the Bronx & NJ. Free to browse and list."
+        keywords="garage sales near me, yard sales near me, garage sale finder, brooklyn stoop sale, stoop sales NYC, Queens yard sales, Manhattan garage sales, Bronx yard sales, New Jersey yard sales, Jersey City stoop sale, Hoboken yard sale, NYC stoop sale"
         structuredData={structuredData}
       />
 
