@@ -1,19 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { MapPin, ArrowUpRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import HomePhoto from './HomePhoto';
 
 export default function HeroPhotoCard({ photos: heroPhotos = [] }) {
-  const [photoIndex, setPhotoIndex] = useState(0);
-  const [failedPhoto, setFailedPhoto] = useState(null);
-  const livePhoto = heroPhotos[photoIndex % Math.max(heroPhotos.length, 1)];
-  const showLivePhoto = livePhoto && livePhoto !== failedPhoto;
-
-  useEffect(() => {
-    if (heroPhotos.length <= 1 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const interval = setInterval(() => setPhotoIndex(i => (i + 1) % heroPhotos.length), 7000);
-    return () => clearInterval(interval);
-  }, [heroPhotos.length]);
+  const [failedPhotos, setFailedPhotos] = useState([]);
+  const livePhoto = heroPhotos.find(photo => !failedPhotos.includes(photo));
+  const showLivePhoto = Boolean(livePhoto);
 
   return (
     <div className="mx-auto w-full max-w-xl lg:ml-auto">
@@ -34,7 +27,7 @@ export default function HeroPhotoCard({ photos: heroPhotos = [] }) {
               loading="eager"
               fetchPriority="high"
               decoding="async"
-              onError={() => setFailedPhoto(livePhoto)}
+              onError={() => setFailedPhotos(previous => [...previous, livePhoto])}
               className="h-full w-full object-cover"
             />
           ) : (
