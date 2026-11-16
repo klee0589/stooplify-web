@@ -1,0 +1,14 @@
+{
+  "type": "posthog",
+  "scopes": [
+    "project:read",
+    "insight:read",
+    "dashboard:read",
+    "openid",
+    "profile",
+    "email",
+    "event_definition:read",
+    "person:read",
+    "cohort:read"
+  ]
+}
