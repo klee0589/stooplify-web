@@ -39,10 +39,41 @@ const boroughIntros = {
   },
 };
 
+// Unique per-borough Q&A. Keeps each city page distinct instead of sharing one template.
+const boroughFaqs = {
+  Brooklyn: [
+    { q: 'When are most stoop sales in Brooklyn?', a: 'Saturday and Sunday mornings from about 8am to 2pm, late spring through early fall. Park Slope, Williamsburg, Bed-Stuy and Carroll Gardens have the tightest clusters, so you can walk a full route in one morning.' },
+    { q: 'Where are the best Brooklyn neighborhoods for yard sales?', a: 'Park Slope and Carroll Gardens lean toward vintage furniture and kids gear. Williamsburg and Bushwick have more records, art and clothing. Bed-Stuy and Crown Heights tend to be the most affordable for household goods.' },
+    { q: 'Do Brooklyn stoop sales take cards?', a: 'Mostly cash, but a growing number take Venmo, Cash App or Zelle. Every Stooplify listing shows which payment methods the seller accepts before you go.' },
+  ],
+  Queens: [
+    { q: 'When are most garage sales in Queens?', a: 'Saturday and Sunday mornings, usually 8am to 2pm, with the busiest stretch from April through October. Astoria, Jackson Heights and Flushing see the most activity on Saturdays.' },
+    { q: 'Which Queens neighborhoods have the most yard sales?', a: 'Astoria, Jackson Heights, Flushing, Forest Hills and Ridgewood are consistently the busiest. Apartment-heavy areas like Astoria and Long Island City lean toward stoop sales, while Bayside and Howard Beach see more driveway and garage sales.' },
+    { q: 'Are Queens garage sales cash only?', a: 'Cash is still the default, but many sellers now accept Venmo, Cash App or Zelle. Check the payment options on each listing before you head out.' },
+    { q: 'Do I need a permit to host a garage sale in Queens?', a: 'Rules vary by block and building. Most small one-off sales need no permit, but co-ops, apartment buildings and sidewalk sales can have restrictions. Our NYC permit guide covers the details.' },
+  ],
+  Manhattan: [
+    { q: 'Where do stoop sales happen in Manhattan?', a: 'They cluster on the Upper West Side, Harlem, Washington Heights, the East Village and Hell\'s Kitchen. Space is tight, so sales are usually set up on stoops, in courtyards or on the sidewalk out front.' },
+    { q: 'When are Manhattan stoop sales?', a: 'Weekend mornings from about 9am to 1pm, April through November. Harlem and Washington Heights tend to start earliest and run latest.' },
+    { q: 'Are Manhattan stoop sales worth the trip?', a: 'Yes if you want quality over volume. Apartment cleanouts mean design pieces, books and kitchenware at a fraction of retail, in smaller quantities than outer-borough sales.' },
+  ],
+  Bronx: [
+    { q: 'When are yard sales in the Bronx?', a: 'Saturday and Sunday mornings, April through September, typically starting around 8am. Riverdale, Fordham and Pelham Bay are the most active areas.' },
+    { q: 'Do Bronx yard sales take cards?', a: 'Most are cash-first. A growing number take Venmo or Cash App — each listing shows what the seller accepts.' },
+    { q: 'What do people sell at Bronx garage sales?', a: 'Furniture, electronics, clothing, collectibles and household goods. Multi-family building sales are common, which means more inventory in one stop.' },
+  ],
+  'Jersey City': [
+    { q: 'When are yard sales in Jersey City?', a: 'Weekend mornings from May through October, usually 9am to 2pm on Saturdays. The Heights, Downtown and Bergen-Lafayette are the most active neighborhoods.' },
+    { q: 'How do I get to Jersey City sales from NYC?', a: 'Take the PATH to Grove Street, Journal Square or Hoboken and walk the route from there. Most clusters are within a 15-minute walk of a PATH station.' },
+    { q: 'Are Jersey City stoop sales different from NYC ones?', a: 'They are a mix: brownstone stoop sales Downtown and Village, plus driveway and garage sales in the Heights and Greenville. Expect more parking and bigger items than Manhattan.' },
+  ],
+};
+
 export default function CityLandingPage({ config }) {
   const navigate = useNavigate();
   const { city, state, title, metaTitle, metaDescription, keywords, h1, intro, neighborhoods, canonicalUrl, relatedCities, relatedGuides } = config;
   const boroughInfo = boroughIntros[city] || null;
+  const faqs = boroughFaqs[city] || [];
 
   const { data: sales = [], isLoading } = useQuery({
     queryKey: ['cityLandingSales', city, state],
@@ -233,6 +264,23 @@ export default function CityLandingPage({ config }) {
                 <h3 className="font-semibold text-gray-900 dark:text-white text-base mb-2">💡 Tips for Finding Them</h3>
                 <p>{boroughInfo.tips}</p>
               </div>
+            </div>
+          </section>
+        )}
+
+        {/* Borough-specific Q&A — unique crawlable content per city page */}
+        {faqs.length > 0 && (
+          <section className="mb-16">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6" style={{ fontFamily: 'Poppins, sans-serif' }}>
+              {title} — Common Questions
+            </h2>
+            <div className="space-y-3">
+              {faqs.map((f) => (
+                <div key={f.q} className="bg-gray-50 dark:bg-gray-800 rounded-xl p-5">
+                  <h3 className="font-semibold text-gray-900 dark:text-white mb-2">{f.q}</h3>
+                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">{f.a}</p>
+                </div>
+              ))}
             </div>
           </section>
         )}
