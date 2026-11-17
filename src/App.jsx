@@ -29,6 +29,14 @@ import GarageSalesBrooklyn from './pages/garage-sales-brooklyn';
 import GarageSalesManhattan from './pages/garage-sales-manhattan';
 import GarageSalesQueens from './pages/garage-sales-queens';
 import GarageSalesBronx from './pages/garage-sales-bronx';
+import StoopSalesBrooklyn from './pages/StoopSalesBrooklyn';
+import StoopSalesQueens from './pages/StoopSalesQueens';
+import StoopSalesManhattan from './pages/StoopSalesManhattan';
+import StoopSalesBronx from './pages/StoopSalesBronx';
+import StoopSalesJerseyCity from './pages/StoopSalesJerseyCity';
+import YardSalesNearMeWeekend from './pages/YardSalesNearMeWeekend';
+import StoopSalesNYCWeekend from './pages/StoopSalesNYCWeekend';
+import BrooklynStoopSalesWeekend from './pages/BrooklynStoopSalesWeekend';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import { Navigate } from 'react-router-dom';
@@ -106,6 +114,14 @@ const AuthenticatedApp = () => {
       <Route path="/garage-sales-manhattan" element={<LayoutWrapper currentPageName="garage-sales-manhattan"><GarageSalesManhattan /></LayoutWrapper>} />
       <Route path="/garage-sales-queens" element={<LayoutWrapper currentPageName="garage-sales-queens"><GarageSalesQueens /></LayoutWrapper>} />
       <Route path="/garage-sales-bronx" element={<LayoutWrapper currentPageName="garage-sales-bronx"><GarageSalesBronx /></LayoutWrapper>} />
+      <Route path="/stoop-sales-brooklyn" element={<LayoutWrapper currentPageName="stoop-sales-brooklyn"><StoopSalesBrooklyn /></LayoutWrapper>} />
+      <Route path="/stoop-sales-queens" element={<LayoutWrapper currentPageName="stoop-sales-queens"><StoopSalesQueens /></LayoutWrapper>} />
+      <Route path="/stoop-sales-manhattan" element={<LayoutWrapper currentPageName="stoop-sales-manhattan"><StoopSalesManhattan /></LayoutWrapper>} />
+      <Route path="/stoop-sales-bronx" element={<LayoutWrapper currentPageName="stoop-sales-bronx"><StoopSalesBronx /></LayoutWrapper>} />
+      <Route path="/stoop-sales-jersey-city" element={<LayoutWrapper currentPageName="stoop-sales-jersey-city"><StoopSalesJerseyCity /></LayoutWrapper>} />
+      <Route path="/yard-sales-near-me-this-weekend" element={<LayoutWrapper currentPageName="yard-sales-near-me-this-weekend"><YardSalesNearMeWeekend /></LayoutWrapper>} />
+      <Route path="/stoop-sales-nyc-this-weekend" element={<LayoutWrapper currentPageName="stoop-sales-nyc-this-weekend"><StoopSalesNYCWeekend /></LayoutWrapper>} />
+      <Route path="/brooklyn-stoop-sales-this-weekend" element={<LayoutWrapper currentPageName="brooklyn-stoop-sales-this-weekend"><BrooklynStoopSalesWeekend /></LayoutWrapper>} />
       <Route path="/about" element={<LayoutWrapper currentPageName="about"><About /></LayoutWrapper>} />
       <Route path="/contact" element={<LayoutWrapper currentPageName="contact"><Contact /></LayoutWrapper>} />
 
@@ -133,8 +149,6 @@ const AuthenticatedApp = () => {
       <Route path="/Profile" element={<Navigate to="/profile" replace />} />
       <Route path="/Messages" element={<Navigate to="/messages" replace />} />
       <Route path="/FreeItems" element={<Navigate to="/free-items" replace />} />
-      <Route path="/GarageSalesSanFrancisco" element={<Navigate to="/garage-sales-san-francisco" replace />} />
-      <Route path="/GarageSalesLosAngeles" element={<Navigate to="/garage-sales-los-angeles" replace />} />
 
       {/* Auth pages — no Layout wrapper */}
       <Route path="/login" element={<Login />} />

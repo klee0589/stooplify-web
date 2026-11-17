@@ -3,8 +3,9 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.21';
 Deno.serve(async (req) => {
   const base44 = createClientFromRequest(req);
 
-  // IMPORTANT: Only include URLs that have actual real pages/routes.
-  // Removing neighborhood/category/date pages that don't exist yet to avoid "Discovered - not indexed".
+  // IMPORTANT: every URL below must resolve to a real route in src/App.jsx or
+  // src/pages.config.js. A sitemap full of 404s is a direct quality/spam signal
+  // (and an AdSense policy problem), so only list pages that actually exist.
   const staticPages = [
     // Core
     { url: 'https://stooplify.com/', priority: '1.0', changefreq: 'daily' },
@@ -37,32 +38,30 @@ Deno.serve(async (req) => {
     { url: 'https://stooplify.com/find-stoop-sales-near-you', priority: '0.8', changefreq: 'monthly' },
     { url: 'https://stooplify.com/how-to-price-items-stoop-sale', priority: '0.8', changefreq: 'monthly' },
     { url: 'https://stooplify.com/where-to-post-yard-sale-online', priority: '0.8', changefreq: 'monthly' },
-    // City landing pages — NYC
+    // City landing pages — NYC (real registered routes)
+    { url: 'https://stooplify.com/stoop-sales-nyc', priority: '0.9', changefreq: 'daily' },
     { url: 'https://stooplify.com/stoop-sales-brooklyn', priority: '0.9', changefreq: 'daily' },
     { url: 'https://stooplify.com/stoop-sales-queens', priority: '0.8', changefreq: 'daily' },
     { url: 'https://stooplify.com/stoop-sales-manhattan', priority: '0.8', changefreq: 'daily' },
     { url: 'https://stooplify.com/stoop-sales-bronx', priority: '0.8', changefreq: 'daily' },
     { url: 'https://stooplify.com/stoop-sales-jersey-city', priority: '0.7', changefreq: 'daily' },
-    { url: 'https://stooplify.com/stoop-sales-nyc', priority: '0.9', changefreq: 'daily' },
-    // Garage sales
     { url: 'https://stooplify.com/garage-sales-nyc', priority: '0.9', changefreq: 'daily' },
     { url: 'https://stooplify.com/garage-sales-brooklyn', priority: '0.9', changefreq: 'daily' },
     { url: 'https://stooplify.com/garage-sales-manhattan', priority: '0.8', changefreq: 'daily' },
     { url: 'https://stooplify.com/garage-sales-queens', priority: '0.8', changefreq: 'daily' },
     { url: 'https://stooplify.com/garage-sales-bronx', priority: '0.8', changefreq: 'daily' },
-    { url: 'https://stooplify.com/garage-sales-los-angeles', priority: '0.7', changefreq: 'daily' },
-    { url: 'https://stooplify.com/garage-sales-san-francisco', priority: '0.7', changefreq: 'daily' },
-    // Weekend / high-intent search pages
+    // Weekend / high-intent pages (real routes)
+    { url: 'https://stooplify.com/yard-sales-near-me-this-weekend', priority: '0.9', changefreq: 'daily' },
     { url: 'https://stooplify.com/stoop-sales-nyc-this-weekend', priority: '0.9', changefreq: 'daily' },
     { url: 'https://stooplify.com/brooklyn-stoop-sales-this-weekend', priority: '0.9', changefreq: 'daily' },
-    { url: 'https://stooplify.com/yard-sales-near-me-this-weekend', priority: '0.9', changefreq: 'daily' },
-    { url: 'https://stooplify.com/yard-sales-near-me-today', priority: '0.9', changefreq: 'daily' },
-    { url: 'https://stooplify.com/yard-sales-near-me-saturday', priority: '0.9', changefreq: 'daily' },
-    { url: 'https://stooplify.com/yard-sales-near-me-sunday', priority: '0.9', changefreq: 'daily' },
-    { url: 'https://stooplify.com/stoop-sales-nyc-today', priority: '0.9', changefreq: 'daily' },
-    // Neighborhood landing pages (only ones with actual real pages)
-    { url: 'https://stooplify.com/stoop-sales-williamsburg-brooklyn', priority: '0.8', changefreq: 'daily' },
-    { url: 'https://stooplify.com/stoop-sales-park-slope-brooklyn', priority: '0.8', changefreq: 'daily' },
+    // Neighborhood landing pages (real routes)
+    { url: 'https://stooplify.com/stoop-sales-williamsburg', priority: '0.8', changefreq: 'daily' },
+    { url: 'https://stooplify.com/stoop-sales-park-slope', priority: '0.8', changefreq: 'daily' },
+    { url: 'https://stooplify.com/stoop-sales-bushwick', priority: '0.7', changefreq: 'daily' },
+    { url: 'https://stooplify.com/stoop-sales-bed-stuy', priority: '0.7', changefreq: 'daily' },
+    { url: 'https://stooplify.com/stoop-sales-carroll-gardens', priority: '0.7', changefreq: 'daily' },
+    { url: 'https://stooplify.com/stoop-sales-astoria', priority: '0.7', changefreq: 'daily' },
+    { url: 'https://stooplify.com/stoop-sales-harlem', priority: '0.7', changefreq: 'daily' },
     // Free items pages
     { url: 'https://stooplify.com/free-items', priority: '0.9', changefreq: 'daily' },
     { url: 'https://stooplify.com/free-stuff-nyc', priority: '0.9', changefreq: 'daily' },
