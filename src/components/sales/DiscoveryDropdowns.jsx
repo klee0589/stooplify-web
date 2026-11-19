@@ -8,28 +8,22 @@ const CITY_PAGES = [
   { label: 'Manhattan', url: '/stoop-sales-manhattan', emoji: '🗽' },
   { label: 'Bronx', url: '/stoop-sales-bronx', emoji: '🏘️' },
   { label: 'Jersey City', url: '/stoop-sales-jersey-city', emoji: '🌉' },
-  { label: 'Los Angeles', url: '/garage-sales-los-angeles', emoji: '☀️' },
-  { label: 'San Francisco', url: '/garage-sales-san-francisco', emoji: '🌁' },
 ];
 
+// Each neighborhood links to its one canonical URL — no duplicate paths.
 const NEIGHBORHOOD_PAGES = [
-  { label: 'Williamsburg', url: '/stoop-sales-williamsburg-brooklyn' },
-  { label: 'Park Slope', url: '/stoop-sales-park-slope-brooklyn' },
-  { label: 'Bushwick', url: '/stoop-sales-bushwick-brooklyn' },
-  { label: 'Bed-Stuy', url: '/stoop-sales-bed-stuy-brooklyn' },
-  { label: 'Crown Heights', url: '/stoop-sales-crown-heights-brooklyn' },
-  { label: 'Greenpoint', url: '/stoop-sales-greenpoint-brooklyn' },
-  { label: 'Astoria', url: '/stoop-sales-astoria-queens' },
-  { label: 'Upper West Side', url: '/stoop-sales-upper-west-side-manhattan' },
-  { label: 'Harlem', url: '/stoop-sales-harlem-manhattan' },
+  { label: 'Williamsburg', url: '/stoop-sales-williamsburg' },
+  { label: 'Park Slope', url: '/stoop-sales-park-slope' },
+  { label: 'Bushwick', url: '/stoop-sales-bushwick' },
+  { label: 'Bed-Stuy', url: '/stoop-sales-bed-stuy' },
+  { label: 'Carroll Gardens', url: '/stoop-sales-carroll-gardens' },
+  { label: 'Astoria', url: '/stoop-sales-astoria' },
+  { label: 'Harlem', url: '/stoop-sales-harlem' },
 ];
 
 const DATE_PAGES = [
   { label: 'Today', url: '/yard-sales-near-me-today' },
-  { label: 'This Saturday', url: '/yard-sales-near-me-saturday' },
-  { label: 'This Sunday', url: '/yard-sales-near-me-sunday' },
   { label: 'This Weekend', url: '/yard-sales-near-me-this-weekend' },
-  { label: 'NYC Today', url: '/stoop-sales-nyc-today' },
   { label: 'NYC This Weekend', url: '/stoop-sales-nyc-this-weekend' },
 ];
 

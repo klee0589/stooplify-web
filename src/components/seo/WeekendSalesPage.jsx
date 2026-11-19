@@ -89,6 +89,7 @@ export default function WeekendSalesPage({ config }) {
         keywords={keywords}
         url={canonicalUrl}
         structuredData={structuredData}
+        noindex={!isLoading && sales.length === 0}
       />
 
       {/* Hero */}

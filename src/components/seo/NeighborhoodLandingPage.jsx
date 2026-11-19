@@ -42,7 +42,7 @@ export default function NeighborhoodLandingPage({ config }) {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
-      <SEO title={metaTitle} description={metaDescription} keywords={keywords} url={canonicalUrl} structuredData={structuredData} />
+      <SEO title={metaTitle} description={metaDescription} keywords={keywords} url={canonicalUrl} structuredData={structuredData} noindex={!isLoading && sales.length === 0} />
 
       {/* Hero */}
       <div className="bg-gradient-to-br from-[#1a2842] to-[#14B8FF] text-white pt-32 md:pt-36 pb-20">

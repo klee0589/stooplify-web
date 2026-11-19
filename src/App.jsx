@@ -150,6 +150,25 @@ const AuthenticatedApp = () => {
       <Route path="/Messages" element={<Navigate to="/messages" replace />} />
       <Route path="/FreeItems" element={<Navigate to="/free-items" replace />} />
 
+      {/* Consolidated duplicate landing pages → one canonical URL each */}
+      <Route path="/stoop-sales-williamsburg-brooklyn" element={<Navigate to="/stoop-sales-williamsburg" replace />} />
+      <Route path="/stoop-sales-park-slope-brooklyn" element={<Navigate to="/stoop-sales-park-slope" replace />} />
+      <Route path="/stoop-sales-bushwick-brooklyn" element={<Navigate to="/stoop-sales-bushwick" replace />} />
+      <Route path="/stoop-sales-bed-stuy-brooklyn" element={<Navigate to="/stoop-sales-bed-stuy" replace />} />
+      <Route path="/stoop-sales-astoria-queens" element={<Navigate to="/stoop-sales-astoria" replace />} />
+      <Route path="/stoop-sales-harlem-manhattan" element={<Navigate to="/stoop-sales-harlem" replace />} />
+      <Route path="/stoop-sales-crown-heights-brooklyn" element={<Navigate to="/stoop-sales-brooklyn" replace />} />
+      <Route path="/stoop-sales-greenpoint-brooklyn" element={<Navigate to="/stoop-sales-brooklyn" replace />} />
+      <Route path="/stoop-sales-upper-west-side-manhattan" element={<Navigate to="/stoop-sales-manhattan" replace />} />
+      <Route path="/yard-sales-near-me-saturday" element={<Navigate to="/yard-sales-near-me-this-weekend" replace />} />
+      <Route path="/yard-sales-near-me-sunday" element={<Navigate to="/yard-sales-near-me-this-weekend" replace />} />
+      <Route path="/stoop-sales-nyc-today" element={<Navigate to="/yard-sales-near-me-today" replace />} />
+      <Route path="/stoop-sales-nyc-tomorrow" element={<Navigate to="/yard-sales-near-me-this-weekend" replace />} />
+      <Route path="/stoop-sales-nyc-saturday" element={<Navigate to="/yard-sales-near-me-this-weekend" replace />} />
+      <Route path="/stoop-sales-nyc-sunday" element={<Navigate to="/yard-sales-near-me-this-weekend" replace />} />
+      <Route path="/garage-sales-los-angeles" element={<Navigate to="/yard-sales" replace />} />
+      <Route path="/garage-sales-san-francisco" element={<Navigate to="/yard-sales" replace />} />
+
       {/* Auth pages — no Layout wrapper */}
       <Route path="/login" element={<Login />} />
 

@@ -96,6 +96,18 @@ export default function BlogSlug() {
     if (post) incrementViewMutation.mutate();
   }, [post?.id]);
 
+  // Archived or removed posts must return a real 404, not a 200 soft-404,
+  // otherwise search engines keep thin/duplicate URLs indexed.
+  useEffect(() => {
+    if (isLoading || !slug || post) return;
+    if (!error && !post) return;
+    const meta = document.createElement('meta');
+    meta.name = 'prerender-status-code';
+    meta.content = '404';
+    document.head.appendChild(meta);
+    return () => meta.remove();
+  }, [isLoading, slug, post, error]);
+
   const handleShare = async () => {
     const shareUrl = `https://stooplify.com/blog/${slug}`;
     if (navigator.share) {
