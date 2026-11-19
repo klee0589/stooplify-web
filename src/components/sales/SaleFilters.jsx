@@ -6,8 +6,9 @@ import { Input } from "@/components/ui/input";
 import { useTranslation } from '../translations';
 import { DrawerSelect } from '@/components/ui/drawer-select';
 import DiscoveryDropdowns from './DiscoveryDropdowns';
+import LocationSearch from './LocationSearch';
 
-export default function SaleFilters({ filters, onFilterChange, onReset }) {
+export default function SaleFilters({ filters, onFilterChange, onReset, location, onLocationChange }) {
   const [language, setLanguage] = useState('en');
   const [sheetOpen, setSheetOpen] = useState(false);
 
@@ -99,6 +100,11 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
               <span className="text-xs font-semibold text-gray-400 dark:text-gray-500 shrink-0 uppercase tracking-wide">Browse by:</span>
               <DiscoveryDropdowns />
             </div>
+            <LocationSearch
+              location={location}
+              onSelect={onLocationChange}
+              language={language}
+            />
             <Input
               placeholder={language === 'es' ? 'Buscar ventas...' : 'Search sales...'}
               value={filters.search || ''}
@@ -153,6 +159,11 @@ export default function SaleFilters({ filters, onFilterChange, onReset }) {
 
       {/* ── Mobile: search + filter button ── */}
       <div className="sm:hidden space-y-2">
+        <LocationSearch
+          location={location}
+          onSelect={onLocationChange}
+          language={language}
+        />
         <div className="flex gap-2">
           <Input
             placeholder={language === 'es' ? 'Buscar ventas...' : 'Search sales...'}

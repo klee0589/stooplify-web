@@ -93,7 +93,7 @@ export default function HeroSection() {
               className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3.5 py-1.5 text-xs sm:text-sm font-medium text-muted-foreground shadow-card"
             >
               <span className="h-2 w-2 rounded-full bg-accent-warm animate-pulse" />
-              NYC &amp; NJ's #1 stoop sale finder
+              Now live across the United States
             </motion.span>
 
             <motion.h1
@@ -102,8 +102,8 @@ export default function HeroSection() {
               transition={{ delay: 0.2, ease }}
               className="mt-6 text-display font-heading font-bold text-foreground"
             >
-              Find stoop sales in{' '}
-              <span className="text-primary">NYC &amp; New Jersey</span>
+              Find stoop sales{' '}
+              <span className="text-primary">anywhere in the US</span>
             </motion.h1>
 
             <motion.p
@@ -112,7 +112,7 @@ export default function HeroSection() {
               transition={{ delay: 0.3, ease }}
               className="mt-5 max-w-lg mx-auto lg:mx-0 text-base sm:text-lg text-muted-foreground leading-relaxed"
             >
-              Browse live stoop sales, yard sales, and free giveaways across Brooklyn, Queens, Manhattan, the Bronx, and New Jersey — updated every day.
+              Search any city or ZIP to find live yard sales, stoop sales, and free giveaways near you — updated every day.
             </motion.p>
 
             <motion.div

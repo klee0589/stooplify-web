@@ -65,6 +65,7 @@ export default function YardSales() {
   const [userLocation, setUserLocation] = useState(null);
   const [locationLoaded, setLocationLoaded] = useState(false);
   const [mapFullscreen, setMapFullscreen] = useState(false);
+  const [location, setLocation] = useState(null);
 
   useEffect(() => {
     const savedLang = localStorage.getItem('stooplify_lang') || 'en';
@@ -120,7 +121,7 @@ export default function YardSales() {
   const { data: sales = [], isLoading, refetch, error } = useQuery({
     queryKey: ['yardSales'],
     queryFn: async () => {
-      const allSales = await base44.entities.YardSale.filter(activeSaleQuery({ status: 'approved' }), '-date', 100);
+      const allSales = await base44.entities.YardSale.filter(activeSaleQuery({ status: 'approved' }), '-date', 300);
       const todayStr = new Date().toISOString().split('T')[0];
       // Only keep today's or future sales
       const upcomingSales = allSales.filter(sale => sale.date >= todayStr);
@@ -156,6 +157,10 @@ export default function YardSales() {
     const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLng / 2) ** 2;
     return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   };
+
+  // A searched city wins over the device location as the center of the search.
+  const searchCenter = location ? { lat: location.lat, lng: location.lng } : userLocation;
+  const radiusMiles = filters.distance !== 'all' ? Number(filters.distance) : (location ? 50 : null);
 
   const { data: userFavorites = [] } = useQuery({
     queryKey: ['favorites', user?.email],
@@ -220,12 +225,14 @@ export default function YardSales() {
     if (isFavorited || isAttending) return true;
     if (!locationLoaded) return false; // Wait until we know location status
 
-    if (userLocation) {
-      // If sale has no coords, show it anyway (can't filter by distance)
-      if (!sale.latitude || !sale.longitude) return true;
-      return getDistanceMiles(userLocation.lat, userLocation.lng, sale.latitude, sale.longitude) <= 25;
+    if (searchCenter) {
+      // Sales without coordinates can still match by city name
+      if (!sale.latitude || !sale.longitude) {
+        return !!location?.city && sale.city?.toLowerCase() === location.city.toLowerCase();
+      }
+      return getDistanceMiles(searchCenter.lat, searchCenter.lng, sale.latitude, sale.longitude) <= (radiusMiles || 25);
     }
-    // Location denied/unavailable — show all sales (can't filter by distance)
+    // No center known — show every active sale
     return true;
   };
 
@@ -306,6 +313,16 @@ export default function YardSales() {
             return false;
           }
           break;
+      }
+    }
+
+    // Distance from the searched city or the device location
+    if (searchCenter && radiusMiles) {
+      if (!sale.latitude || !sale.longitude) {
+        const matchesCity = location?.city && sale.city?.toLowerCase() === location.city.toLowerCase();
+        if (!matchesCity) return false;
+      } else if (getDistanceMiles(searchCenter.lat, searchCenter.lng, sale.latitude, sale.longitude) > radiusMiles) {
+        return false;
       }
     }
 
@@ -422,9 +439,9 @@ export default function YardSales() {
     <PullToRefresh onRefresh={handleRefresh}>
     <div className="min-h-screen bg-[#F9F9F9] dark:bg-gray-900">
       <SEO
-          title={`${filteredSales.length} Brooklyn Stoop Sales & Yard Sales Near You | Stooplify`}
-          description={`Browse ${filteredSales.length} upcoming Brooklyn stoop sales, yard sales, garage sales, and estate sales in your area. Find furniture, clothing, antiques, electronics and more at unbeatable prices.`}
-          keywords="brooklyn stoop sale, stoop sales brooklyn, yard sales near me, garage sales today, estate sales, weekend yard sales, local sales, secondhand furniture, thrift shopping, neighborhood sales, NYC stoop sale"
+          title={`${filteredSales.length} Yard Sales & Stoop Sales Near You | Stooplify`}
+          description={`Browse ${filteredSales.length} upcoming yard sales, stoop sales, garage sales, and estate sales${location ? ` near ${location.label}` : ' across the United States'}. Find furniture, clothing, antiques, electronics and more at unbeatable prices.`}
+          keywords="yard sales near me, yard sales this weekend, garage sales today, stoop sales, estate sales, local sales, secondhand furniture, thrift shopping, neighborhood sales, yard sales by city"
           structuredData={structuredData} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -455,7 +472,9 @@ export default function YardSales() {
           <SaleFilters
               filters={filters}
               onFilterChange={setFilters}
-              onReset={resetFilters} />
+              onReset={resetFilters}
+              location={location}
+              onLocationChange={setLocation} />
 
         </div>
 
@@ -469,7 +488,7 @@ export default function YardSales() {
             <p className="text-gray-600 dark:text-gray-300">
               <span className="font-semibold text-[#2E3A59] dark:text-white">
                 {viewMode === 'map' && visibleMapSales.length > 0 ? visibleMapSales.length : filteredSales.length}
-              </span> {t('salesFound')}
+              </span> {t('salesFound')}{location ? ` near ${location.label}` : ''}
               {viewMode === 'map' && visibleMapSales.length > 0 && visibleMapSales.length < filteredSales.length &&
                 <span className="text-xs text-gray-400 ml-1">(in view)</span>
                 }
@@ -599,12 +618,18 @@ export default function YardSales() {
                         <span className="text-sm font-medium">Exit Fullscreen</span>
                       </motion.button>
                     </div>
-                    <SaleMap sales={filteredSales} onVisibleSalesChange={setVisibleMapSales} />
+                    <SaleMap
+                      sales={filteredSales}
+                      focus={location ? { lat: location.lat, lng: location.lng, zoom: 11 } : null}
+                      onVisibleSalesChange={setVisibleMapSales} />
                   </div>
                 ) : (
                   <>
                     <div className="relative h-[600px] md:h-[800px] rounded-2xl overflow-hidden">
-                      <SaleMap sales={filteredSales} onVisibleSalesChange={setVisibleMapSales} />
+                      <SaleMap
+                      sales={filteredSales}
+                      focus={location ? { lat: location.lat, lng: location.lng, zoom: 11 } : null}
+                      onVisibleSalesChange={setVisibleMapSales} />
                       <motion.button
                         whileTap={{ scale: 0.95 }}
                         onClick={() => setMapFullscreen(true)}
@@ -621,9 +646,10 @@ export default function YardSales() {
               <div className="mt-6 hidden md:block">
                     <p className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-4">
                       {visibleMapSales.length} sale{visibleMapSales.length !== 1 ? 's' : ''} in current map view
+                      {visibleMapSales.length > 12 && <span className="font-normal"> — showing the 12 soonest</span>}
                     </p>
                     <div className="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                      {[...visibleMapSales].sort((a, b) => (a.date || '').localeCompare(b.date || '')).map((sale, index) =>
+                      {[...visibleMapSales].sort((a, b) => (a.date || '').localeCompare(b.date || '')).slice(0, 12).map((sale, index) =>
                   <motion.div
                     key={sale.id}
                     initial={{ opacity: 0, y: 20 }}

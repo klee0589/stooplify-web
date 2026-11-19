@@ -94,7 +94,8 @@ const createCommunityIcon = (emoji) => new L.DivIcon({
 
 // Cluster sales by proximity based on current zoom
 function clusterSales(sales, zoom) {
-  const clusterRadius = Math.max(0.001, 0.02 / Math.pow(2, zoom - 11));
+  // Country zoom spreads one cluster over a couple of degrees at most.
+  const clusterRadius = Math.min(2.5, Math.max(0.001, 0.02 / Math.pow(2, zoom - 11)));
   const clusters = [];
   const assigned = new Set();
 
@@ -118,11 +119,14 @@ function clusterSales(sales, zoom) {
   return clusters;
 }
 
-function MapUpdater({ center }) {
+// Flies the map to a searched city whenever the focus changes.
+function FlyTo({ focus }) {
   const map = useMap();
   useEffect(() => {
-    if (center) map.setView(center, map.getZoom());
-  }, [center, map]);
+    if (focus) {
+      map.flyTo([focus.lat, focus.lng], focus.zoom || 11, { animate: true, duration: 0.9 });
+    }
+  }, [focus?.lat, focus?.lng, focus?.zoom, map]);
   return null;
 }
 
@@ -177,12 +181,15 @@ function RecenterButton({ userLocation, onLocationFound }) {
   );
 }
 
-export default function SaleMap({ sales, center, onVisibleSalesChange }) {
+// The map opens on the continental US and can roam anywhere in the country.
+const US_CENTER = [39.5, -98.35];
+
+export default function SaleMap({ sales, center, focus, onVisibleSalesChange }) {
   const [mapReady, setMapReady] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
   const [mapBounds, setMapBounds] = useState(null);
-  const [zoom, setZoom] = useState(11);
-  const defaultCenter = center || userLocation || [40.7128, -74.0060];
+  const [zoom, setZoom] = useState(4);
+  const defaultCenter = center || US_CENTER;
 
   const { data: communityLocations = [] } = useQuery({
     queryKey: ['communityLocations'],
@@ -190,12 +197,6 @@ export default function SaleMap({ sales, center, onVisibleSalesChange }) {
   });
 
   useEffect(() => {
-    if (navigator.geolocation && !center) {
-      navigator.geolocation.getCurrentPosition(
-        (pos) => setUserLocation([pos.coords.latitude, pos.coords.longitude]),
-        () => {}
-      );
-    }
     setMapReady(true);
   }, []);
 
@@ -232,14 +233,15 @@ export default function SaleMap({ sales, center, onVisibleSalesChange }) {
       `}</style>
       <MapContainer
       center={defaultCenter}
-      zoom={userLocation ? 14 : 12}
+      zoom={focus?.zoom || 4}
       style={{ height: '100%', width: '100%' }}
       scrollWheelZoom={true}
-      maxBounds={[[39.5, -75.5], [41.5, -71.5]]}
-      maxBoundsViscosity={0.5}
-      minZoom={9}
+      maxBounds={[[15, -170], [72, -50]]}
+      maxBoundsViscosity={0.2}
+      minZoom={3}
+      worldCopyJump={true}
       >
-        <MapUpdater center={center} />
+        <FlyTo focus={focus} />
         <MapBoundsWatcher onBoundsChange={setMapBounds} onZoomChange={setZoom} />
         <RecenterButton userLocation={userLocation} onLocationFound={setUserLocation} />
 
@@ -250,7 +252,7 @@ export default function SaleMap({ sales, center, onVisibleSalesChange }) {
         />
 
         {/* Community Locations */}
-        {communityLocations.map((loc) => (
+        {zoom >= 8 && communityLocations.map((loc) => (
           <Marker
             key={`community-${loc.id}`}
             position={[loc.latitude, loc.longitude]}
@@ -279,7 +281,12 @@ export default function SaleMap({ sales, center, onVisibleSalesChange }) {
           if (cluster.length === 1) {
             const sale = cluster[0];
             return (
-              <Marker key={sale.id} position={[sale.latitude, sale.longitude]} icon={sale.isUpcoming ? upcomingIcon : customIcon}>
+              <Marker
+                key={sale.id}
+                position={[sale.latitude, sale.longitude]}
+                icon={sale.isUpcoming ? upcomingIcon : customIcon}
+                riseOnHover
+              >
                 <Popup>
                   <div className="p-4">
                     {sale.photos?.length > 0 && (
