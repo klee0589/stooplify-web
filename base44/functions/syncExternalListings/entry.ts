@@ -5,6 +5,12 @@ const SOURCES = [
   { url: 'https://www.yardshoppers.com/yard-sales/new-york-ny', source: 'yardshoppers.com' },
   { url: 'https://classifieds.silive.com/silive/category/garage-sale-estate-sale-auctions/garage-yard-estate-sales', source: 'silive.com' },
   { url: 'https://yardsaletreasuremap.com/US/New-York/New-York-City.html', source: 'yardsaletreasuremap.com' },
+  { url: 'https://www.estatesales.net/NY/Brooklyn', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/NJ/Jersey-City', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/NY/Staten-Island', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/NJ/Newark', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/NJ/Hoboken', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/NY/Yonkers', source: 'estatesales.net' },
 ];
 
 const LISTING_SCHEMA = {
@@ -26,7 +32,8 @@ const LISTING_SCHEMA = {
           state: { type: "string" },
           zip_code: { type: "string" },
           categories: { type: "array", items: { type: "string" } },
-          photos: { type: "array", items: { type: "string" } }
+          photos: { type: "array", items: { type: "string" } },
+          photo_indices: { type: "array", items: { type: "number" } }
         }
       }
     }
@@ -44,6 +51,46 @@ function stripHtml(html: string): string {
     .replace(/&amp;/g, '&')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+// Scraped pages carry real listing photos in their markup. Pull them out before
+// stripping tags so every imported listing can show a real image.
+const IMAGE_SKIP = /logo|icon|sprite|favicon|placeholder|avatar|tutorial|app-route|badge|\.svg|thumb|150x150/i;
+
+function extractImages(html: string): string[] {
+  const found: string[] = [];
+  const push = (raw: string) => {
+    if (!raw) return;
+    let url = raw.trim().replace(/&amp;/g, '&');
+    if (url.startsWith('//')) url = 'https:' + url;
+    if (!/^https?:\/\//i.test(url)) return;
+    if (!/\.(jpe?g|png|webp)(\?|$)/i.test(url)) return;
+    if (IMAGE_SKIP.test(url)) return;
+    if (!found.includes(url)) found.push(url);
+  };
+  // <img> tags in document order, which is the order the sale cards appear in
+  for (const m of html.matchAll(/<img\b[^>]*>/gi)) {
+    push(m[0].match(/\bsrc=["']([^"']+)["']/i)?.[1] || '');
+  }
+  // Some sources keep photos in inline styles or embedded data
+  for (const m of html.matchAll(/https?:\/\/[^"'\s)\\]+\.(?:jpe?g|png|webp)(?:\?[^"'\s)\\]*)?/gi)) {
+    push(m[0]);
+  }
+  return found.slice(0, 60);
+}
+
+// Turn the IMAGE numbers the model picked into real photo URLs.
+function pickPhotos(listing: any): string[] {
+  const images: string[] = listing._images || [];
+  const out: string[] = [];
+  for (const idx of listing.photo_indices || []) {
+    const url = images[Number(idx)];
+    if (url && !out.includes(url)) out.push(url);
+  }
+  for (const url of listing.photos || []) {
+    if (typeof url === 'string' && /^https?:\/\//.test(url) && !out.includes(url)) out.push(url);
+  }
+  return out.slice(0, 5);
 }
 
 // Scraped dates arrive in mixed formats; the site compares ISO strings.
@@ -75,7 +122,14 @@ function resolveUpcomingDate(raw: string): string | null {
   return null;
 }
 
+// Most imported sales share a city, so caching the lookups keeps a batch well
+// inside the function timeout and lets more listings land per run.
+const geocodeCache = new Map<string, { lat: number, lng: number } | null>();
+
 async function geocodeAddress(address: string): Promise<{lat: number, lng: number} | null> {
+  const key = address.toLowerCase().trim();
+  if (geocodeCache.has(key)) return geocodeCache.get(key)!;
+  let result: {lat: number, lng: number} | null = null;
   try {
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`;
     const resp = await fetch(url, {
@@ -87,12 +141,21 @@ async function geocodeAddress(address: string): Promise<{lat: number, lng: numbe
     });
     const data = await resp.json();
     if (data && data.length > 0) {
-      return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+      result = { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
     }
   } catch (e) {
     console.log('Geocode failed for:', address, e.message);
   }
-  return null;
+  geocodeCache.set(key, result);
+  return result;
+}
+
+// Nominatim allows one request per second; cached lookups don't need the wait.
+async function geocodeThrottled(query: string) {
+  if (!geocodeCache.has(query.toLowerCase().trim())) {
+    await new Promise(r => setTimeout(r, 1100));
+  }
+  return await geocodeAddress(query);
 }
 
 Deno.serve(async (req) => {
@@ -133,6 +196,8 @@ Deno.serve(async (req) => {
           continue;
         }
         const html = await resp.text();
+        const images = extractImages(html);
+        console.log(`  Found ${images.length} candidate photos on ${source.source}`);
         const text = stripHtml(html).substring(0, 20000);
 
         if (text.length < 100) {
@@ -142,13 +207,13 @@ Deno.serve(async (req) => {
 
         console.log(`  Parsing ${source.source} with LLM...`);
         const llmResp = await b44.integrations.Core.InvokeLLM({
-          prompt: `You are a data extraction tool. Extract ALL yard sale, garage sale, and estate sale listings from this webpage content. For each listing, extract: title, description (what items are for sale), date (convert to YYYY-MM-DD, if a date range use the first date), start_time, end_time, general_location (neighborhood or cross streets), address (full street address if available), city, state (2-letter code), zip_code, categories (pick from: general, furniture, clothing, electronics, toys, antiques, books, sports, multi-family), and photos (array of image URLs found on the page for that listing). Only include real listings that have at least a title AND a city AND a state. Skip navigation menus, ads, or non-listing content. Webpage content:\n\n${text}`,
+          prompt: `You are a data extraction tool. Extract ALL yard sale, garage sale, and estate sale listings from this webpage content. For each listing, extract: title, description (what items are for sale), date (convert to YYYY-MM-DD, if a date range use the first date), start_time, end_time, general_location (neighborhood or cross streets), address (full street address if available), city, state (2-letter code), zip_code, categories (pick from: general, furniture, clothing, electronics, toys, antiques, books, sports, multi-family), and photo_indices (the IMAGE numbers below that belong to that listing, best photo first, at most 3). The IMAGE list is in page order, matching the order the sales appear, so assign each sale its own photos. Only include real listings that have at least a title AND a city AND a state. Skip navigation menus, ads, or non-listing content.${images.length ? `\n\nAVAILABLE IMAGES:\n${images.map((u, i) => `IMAGE ${i}: ${u}`).join('\n')}` : ''}\n\nWebpage content:\n\n${text}`,
           response_json_schema: LISTING_SCHEMA,
         });
 
         if (llmResp?.listings?.length > 0) {
           console.log(`  Found ${llmResp.listings.length} listings from ${source.source}`);
-          allListings.push(...llmResp.listings.map((l: any) => ({ ...l, source: source.source })));
+          allListings.push(...llmResp.listings.map((l: any) => ({ ...l, source: source.source, _images: images })));
         } else {
           console.log(`  No listings parsed from ${source.source}`);
         }
@@ -187,6 +252,8 @@ Deno.serve(async (req) => {
     );
 
     const today = new Date().toISOString().split('T')[0];
+    // Several source pages overlap, so the same sale can arrive twice in one run.
+    const seenKeys = new Set<string>();
     const newListings = allListings.filter((l: any) => {
       const title = (l.title || '').trim();
       const city = (l.city || '').trim();
@@ -206,15 +273,39 @@ Deno.serve(async (req) => {
         return false;
       }
       const key = `${title.toLowerCase()}|${date}|${city.toLowerCase()}`;
-      if (existingKeys.has(key)) {
+      if (existingKeys.has(key) || seenKeys.has(key)) {
         console.log(`  skip duplicate: ${key}`);
         return false;
       }
+      seenKeys.add(key);
       l.date = date;
       return true;
     });
 
     console.log(`${newListings.length} new listings after dedup (${allListings.length - newListings.length} duplicates skipped)`);
+
+    // --- Backfill: a listing imported before photos were captured still needs them ---
+    const existingByKey = new Map(
+      existing.map((s: any) => [`${(s.title || '').toLowerCase().trim()}|${s.date}|${(s.city || '').toLowerCase().trim()}`, s])
+    );
+    const photoUpdates: any[] = [];
+    const photoUpdateIds = new Set<string>();
+    for (const l of allListings) {
+      const date = resolveUpcomingDate(l.date);
+      if (!date) continue;
+      const key = `${(l.title || '').toLowerCase().trim()}|${date}|${(l.city || '').toLowerCase().trim()}`;
+      const record: any = existingByKey.get(key);
+      if (!record || photoUpdateIds.has(record.id)) continue;
+      const photos = pickPhotos(l);
+      if (photos.length > 0 && !(record.photos || []).length) {
+        photoUpdateIds.add(record.id);
+        photoUpdates.push({ id: record.id, photos });
+      }
+    }
+    if (photoUpdates.length > 0) {
+      await b44.entities.YardSale.bulkUpdate(photoUpdates);
+      console.log(`Added photos to ${photoUpdates.length} existing listings`);
+    }
 
     if (newListings.length === 0) {
       return Response.json({ found: allListings.length, new: 0, skipped: allListings.length });
@@ -223,7 +314,7 @@ Deno.serve(async (req) => {
     // --- Phase 4: Geocode and prepare records ---
     // Nominatim allows one request per second, so a large batch would time out.
     // The daily workflow keeps running, so a capped batch still fills the site.
-    const MAX_PER_RUN = 25;
+    const MAX_PER_RUN = 40;
     const prepared = [];
     for (const listing of newListings.slice(0, MAX_PER_RUN)) {
       let lat: number | null = null;
@@ -233,20 +324,17 @@ Deno.serve(async (req) => {
         ? `${listing.address}, ${listing.city}, ${listing.state}`
         : `${listing.general_location || listing.city}, ${listing.city}, ${listing.state}`;
 
-      // Nominatim requires 1 req/sec rate limiting
-      await new Promise(r => setTimeout(r, 1100));
-      const coords = await geocodeAddress(geoQuery);
-      if (!coords) {
-        // Fallback to city/state only
-        await new Promise(r => setTimeout(r, 1100));
-        const fallback = await geocodeAddress(`${listing.city}, ${listing.state}`);
+      const coords = await geocodeThrottled(geoQuery);
+      if (coords) {
+        lat = coords.lat;
+        lng = coords.lng;
+      } else {
+        // Fall back to city/state only
+        const fallback = await geocodeThrottled(`${listing.city}, ${listing.state}`);
         if (fallback) {
           lat = fallback.lat;
           lng = fallback.lng;
         }
-      } else {
-        lat = coords.lat;
-        lng = coords.lng;
       }
 
       prepared.push({
@@ -263,7 +351,7 @@ Deno.serve(async (req) => {
         latitude: lat,
         longitude: lng,
         categories: listing.categories || ['general'],
-        photos: (listing.photos || []).filter((p: string) => p && p.startsWith('http')),
+        photos: pickPhotos(listing),
         status: 'approved',
         listing_type: 'free',
         payment_cash: true,

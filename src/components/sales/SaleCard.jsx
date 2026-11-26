@@ -6,6 +6,7 @@ import { MapPin, Calendar, Clock, Heart, ArrowRight, DollarSign, CreditCard, Sma
 import { format, parseISO } from 'date-fns';
 import TrustBadges from './TrustBadges';
 import { useTranslation } from '../translations';
+import { salePhotos } from '@/lib/salePhotos';
 
 export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance, seller, isPast }) {
   const [language, setLanguage] = useState('en');
@@ -33,28 +34,14 @@ export default function SaleCard({ sale, isFavorite, onToggleFavorite, distance,
       {/* Image */}
       <Link to={createPageUrl('YardSaleDetails') + `?id=${sale.id}`}>
       <div className="relative h-40 bg-gradient-to-br from-[#FF6F61]/10 to-[#F5A623]/10">
-        {(() => {
-          const fallbackImages = [
-            'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
-            'https://images.unsplash.com/photo-1573408301185-9519f94bf100?w=800&q=80',
-            'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=800&q=80',
-            'https://images.unsplash.com/photo-1555502748-f09c63b2d3d4?w=800&q=80',
-            'https://images.unsplash.com/photo-1610701596061-2ecf227e85b2?w=800&q=80',
-          ];
-          const imgSrc = (sale.photos && sale.photos.length > 0)
-            ? sale.photos[0]
-            : fallbackImages[Math.abs(sale.id?.charCodeAt(0) || 0) % fallbackImages.length];
-          return (
-            <img
-              src={imgSrc}
-              alt={sale.title}
-              className={`w-full h-full object-cover ${isPast ? 'grayscale' : ''}`}
-              loading="lazy"
-              width={400}
-              height={300}
-            />
-          );
-        })()}
+        <img
+          src={salePhotos(sale)[0]}
+          alt={sale.title}
+          className={`w-full h-full object-cover ${isPast ? 'grayscale' : ''}`}
+          loading="lazy"
+          width={400}
+          height={300}
+        />
         
         {/* Past Sale Badge or Category */}
         {isPast ? (

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, X, MapPin } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { placeholderPhoto } from '@/lib/salePhotos';
 
 export default function SaleGallery({ photos = [], title }) {
   const [index, setIndex] = useState(0);
@@ -33,8 +34,8 @@ export default function SaleGallery({ photos = [], title }) {
             )}
           </>
         ) : (
-          <div className="aspect-[4/3] bg-gradient-to-br from-primary/10 to-accent-warm/10 flex items-center justify-center">
-            <MapPin className="w-16 h-16 text-primary/30" />
+          <div className="aspect-[4/3]">
+            <img src={placeholderPhoto({ title })} alt={title} className="w-full h-full object-cover" />
           </div>
         )}
       </div>
