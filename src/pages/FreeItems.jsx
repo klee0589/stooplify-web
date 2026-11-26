@@ -91,6 +91,7 @@ export default function FreeItems() {
         description={`Browse ${filtered.length} free items available for pickup near you. Free furniture, clothing, household goods, and more from neighbors giving things away.`}
         keywords="free stuff near me, free items pickup, free furniture, free stuff nyc, free giveaway, curbside free, moving free stuff, declutter free items"
         structuredData={structuredData}
+        noindex={!isLoading && items.length === 0}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

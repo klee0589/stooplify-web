@@ -76,6 +76,7 @@ export default function FreeStuffCity() {
         description={config.description}
         keywords={`free stuff ${config.city}, free items ${config.city}, free furniture ${config.city}, free giveaway ${config.city}, curbside free ${config.city}`}
         structuredData={structuredData}
+        noindex={!isLoading && items.length === 0}
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

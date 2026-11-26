@@ -149,7 +149,8 @@ export default function CityLandingPage({ config }) {
         description={metaDescription}
         keywords={keywords}
         url={canonicalUrl}
-        structuredData={structuredData} />
+        structuredData={structuredData}
+        noindex={!isLoading && sales.length === 0} />
 
 
       {/* Hero */}
