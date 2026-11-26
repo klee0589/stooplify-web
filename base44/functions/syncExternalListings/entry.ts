@@ -56,6 +56,25 @@ function normalizeDate(raw: string): string | null {
   return null;
 }
 
+// These sources usually print "November 27" with no year, so the extraction
+// guesses a year and lands in the past. Roll the month/day forward instead.
+function resolveUpcomingDate(raw: string): string | null {
+  const iso = normalizeDate(raw);
+  if (!iso) return null;
+  const today = new Date().toISOString().split('T')[0];
+  if (iso >= today) return iso;
+  const monthDay = iso.slice(5);
+  const year = new Date().getFullYear();
+  // Reject anything more than 90 days out: a sale a year away is stale source
+  // data, not an upcoming event.
+  const horizon = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+  for (const y of [year, year + 1]) {
+    const candidate = `${y}-${monthDay}`;
+    if (candidate >= today && candidate <= horizon) return candidate;
+  }
+  return null;
+}
+
 async function geocodeAddress(address: string): Promise<{lat: number, lng: number} | null> {
   try {
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`;
@@ -172,7 +191,12 @@ Deno.serve(async (req) => {
       const title = (l.title || '').trim();
       const city = (l.city || '').trim();
       const state = (l.state || '').trim();
-      const date = normalizeDate(l.date);
+      const date = resolveUpcomingDate(l.date);
+      // Online-only auctions are not local sales and read as junk listings.
+      if (/online|shipping only/i.test(title)) {
+        console.log(`  skip online-only: ${title}`);
+        return false;
+      }
       if (!title || !date || !city || !state) {
         console.log(`  skip incomplete: ${JSON.stringify({ title, date: l.date, city, state })}`);
         return false;
