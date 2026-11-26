@@ -46,6 +46,16 @@ function stripHtml(html: string): string {
     .trim();
 }
 
+// Scraped dates arrive in mixed formats; the site compares ISO strings.
+function normalizeDate(raw: string): string | null {
+  if (!raw) return null;
+  const s = String(raw).trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  const parsed = new Date(s);
+  if (!isNaN(parsed.getTime())) return parsed.toISOString().split('T')[0];
+  return null;
+}
+
 async function geocodeAddress(address: string): Promise<{lat: number, lng: number} | null> {
   try {
     const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`;
@@ -157,17 +167,27 @@ Deno.serve(async (req) => {
       existing.map((s: any) => `${(s.title || '').toLowerCase().trim()}|${s.date}|${(s.city || '').toLowerCase().trim()}`)
     );
 
+    const today = new Date().toISOString().split('T')[0];
     const newListings = allListings.filter((l: any) => {
       const title = (l.title || '').trim();
-      const date = l.date;
       const city = (l.city || '').trim();
       const state = (l.state || '').trim();
-      const photos = (l.photos || []).filter((p: string) => p && p.startsWith('http'));
-      if (!title || !date || !city || !state) return false;
-      if (photos.length === 0) return false;
-      if (!listing.address || !listing.address.trim()) return false;
+      const date = normalizeDate(l.date);
+      if (!title || !date || !city || !state) {
+        console.log(`  skip incomplete: ${JSON.stringify({ title, date: l.date, city, state })}`);
+        return false;
+      }
+      if (date < today) {
+        console.log(`  skip past date: ${date} — ${title}`);
+        return false;
+      }
       const key = `${title.toLowerCase()}|${date}|${city.toLowerCase()}`;
-      return !existingKeys.has(key);
+      if (existingKeys.has(key)) {
+        console.log(`  skip duplicate: ${key}`);
+        return false;
+      }
+      l.date = date;
+      return true;
     });
 
     console.log(`${newListings.length} new listings after dedup (${allListings.length - newListings.length} duplicates skipped)`);
@@ -177,8 +197,11 @@ Deno.serve(async (req) => {
     }
 
     // --- Phase 4: Geocode and prepare records ---
+    // Nominatim allows one request per second, so a large batch would time out.
+    // The daily workflow keeps running, so a capped batch still fills the site.
+    const MAX_PER_RUN = 25;
     const prepared = [];
-    for (const listing of newListings) {
+    for (const listing of newListings.slice(0, MAX_PER_RUN)) {
       let lat: number | null = null;
       let lng: number | null = null;
 
@@ -216,7 +239,7 @@ Deno.serve(async (req) => {
         latitude: lat,
         longitude: lng,
         categories: listing.categories || ['general'],
-        photos: listing.photos || [],
+        photos: (listing.photos || []).filter((p: string) => p && p.startsWith('http')),
         status: 'approved',
         listing_type: 'free',
         payment_cash: true,
