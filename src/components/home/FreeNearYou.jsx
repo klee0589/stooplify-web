@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-import { activeSaleQuery } from '@/lib/listingLifecycle';
+import { activeSaleQuery, localDateStr } from '@/lib/listingLifecycle';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Gift, ArrowRight } from 'lucide-react';
@@ -12,7 +12,7 @@ export default function FreeNearYou({ userLocation }) {
   const { data: items = [] } = useQuery({
     queryKey: ['freeItemsHome'],
     queryFn: async () => {
-      const now = new Date().toISOString().split('T')[0];
+      const now = localDateStr();
       const all = await base44.entities.YardSale.filter(activeSaleQuery({ status: 'approved', is_free_item: true }), '-created_date', 20);
       return all.filter(s => !s.date || s.date >= now).slice(0, 6);
     },

@@ -3,7 +3,7 @@ import { useTranslation } from '../components/translations';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { trackEvent } from '@/lib/trackEvent';
-import { activeSaleQuery } from '@/lib/listingLifecycle';
+import { activeSaleQuery, localDateStr } from '@/lib/listingLifecycle';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Map, List, Loader2, MapPin, Calendar, Tag, Building2, Maximize2, Minimize2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -122,7 +122,7 @@ export default function YardSales() {
     queryKey: ['yardSales'],
     queryFn: async () => {
       const allSales = await base44.entities.YardSale.filter(activeSaleQuery({ status: 'approved' }), '-date', 300);
-      const todayStr = new Date().toISOString().split('T')[0];
+      const todayStr = localDateStr();
       // Only keep today's or future sales
       const upcomingSales = allSales.filter(sale => sale.date >= todayStr);
       const now = new Date();
@@ -620,6 +620,7 @@ export default function YardSales() {
                     </div>
                     <SaleMap
                       sales={filteredSales}
+                      center={userLocation ? [userLocation.lat, userLocation.lng] : null}
                       focus={location ? { lat: location.lat, lng: location.lng, zoom: 11 } : null}
                       onVisibleSalesChange={setVisibleMapSales} />
                   </div>
@@ -628,6 +629,7 @@ export default function YardSales() {
                     <div className="relative h-[600px] md:h-[800px] rounded-2xl overflow-hidden">
                       <SaleMap
                       sales={filteredSales}
+                      center={userLocation ? [userLocation.lat, userLocation.lng] : null}
                       focus={location ? { lat: location.lat, lng: location.lng, zoom: 11 } : null}
                       onVisibleSalesChange={setVisibleMapSales} />
                       <motion.button

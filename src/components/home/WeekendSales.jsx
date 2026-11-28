@@ -20,7 +20,8 @@ export default function WeekendSales() {
     const sunday = new Date(saturday);
     sunday.setDate(saturday.getDate() + 1);
 
-    const fmt = (d) => d.toISOString().split('T')[0];
+    // Local calendar date — toISOString() would shift the weekend by a day in the evening
+    const fmt = (d) => format(d, 'yyyy-MM-dd');
     return { satStr: fmt(saturday), sunStr: fmt(sunday) };
   };
 

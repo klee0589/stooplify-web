@@ -9,6 +9,16 @@ const startOfToday = () => {
   return d;
 };
 
+// Local calendar date as YYYY-MM-DD. Never use toISOString() for this: it returns
+// the UTC date, which rolls over at 7-8pm Eastern and would hide every listing
+// dated "today" for the rest of the evening.
+export const localDateStr = (date = new Date()) => {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+};
+
 // ISO timestamp N days ago — used as a server-side filter on created_date
 export const postingCutoffISO = () => new Date(Date.now() - LISTING_TTL_DAYS * DAY_MS).toISOString();
 

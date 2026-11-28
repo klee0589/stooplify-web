@@ -10,6 +10,7 @@ import HeroSection from '../components/home/HeroSection';
 import QuickNav from '../components/home/QuickNav';
 import WeekendSales from '../components/home/WeekendSales';
 import DiscoverBand from '../components/home/DiscoverBand';
+import HomeMapSection from '../components/home/HomeMapSection';
 import HowItWorks from '../components/home/HowItWorks';
 import Benefits from '../components/home/Benefits';
 import FeaturedSales from '../components/home/FeaturedSales';
@@ -114,6 +115,7 @@ export default function Home() {
       <Suspense fallback={<div className="h-96 bg-muted animate-pulse" />}>
         <FeaturedSales sales={sales} />
       </Suspense>
+      <HomeMapSection />
       <DiscoverBand />
       <HowItWorks />
       <Benefits />

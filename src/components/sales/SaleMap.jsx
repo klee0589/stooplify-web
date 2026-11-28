@@ -130,6 +130,22 @@ function FlyTo({ focus }) {
   return null;
 }
 
+// Frames the map on the listings themselves, so the pins are on screen the moment
+// the map opens instead of leaving the whole country in view with nothing to see.
+function FitToSales({ signature, positions, enabled }) {
+  const map = useMap();
+  useEffect(() => {
+    if (!enabled || positions.length === 0) return;
+    if (positions.length === 1) {
+      map.setView(positions[0], 12, { animate: false });
+      return;
+    }
+    map.fitBounds(L.latLngBounds(positions), { padding: [48, 48], maxZoom: 12, animate: false });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [signature, enabled, map]);
+  return null;
+}
+
 function MapBoundsWatcher({ onBoundsChange, onZoomChange }) {
   const map = useMapEvents({
     dragstart: () => map.closePopup(),
@@ -191,6 +207,12 @@ export default function SaleMap({ sales, center, focus, onVisibleSalesChange }) 
   const [zoom, setZoom] = useState(4);
   const defaultCenter = center || US_CENTER;
 
+  // Every listing that has coordinates, plus a signature so the map only
+  // re-frames when the set of listings actually changes (not on every pan).
+  const mappedSales = sales.filter((s) => s.latitude && s.longitude);
+  const pinPositions = mappedSales.map((s) => [s.latitude, s.longitude]);
+  const pinSignature = mappedSales.map((s) => s.id).join('|');
+
   const { data: communityLocations = [] } = useQuery({
     queryKey: ['communityLocations'],
     queryFn: () => base44.entities.CommunityLocation.filter({ is_active: true }),
@@ -233,7 +255,7 @@ export default function SaleMap({ sales, center, focus, onVisibleSalesChange }) 
       `}</style>
       <MapContainer
       center={defaultCenter}
-      zoom={focus?.zoom || 4}
+      zoom={focus?.zoom || (center ? 11 : 4)}
       style={{ height: '100%', width: '100%' }}
       scrollWheelZoom={true}
       maxBounds={[[15, -170], [72, -50]]}
@@ -241,6 +263,7 @@ export default function SaleMap({ sales, center, focus, onVisibleSalesChange }) 
       minZoom={3}
       worldCopyJump={true}
       >
+        <FitToSales signature={pinSignature} positions={pinPositions} enabled={!focus} />
         <FlyTo focus={focus} />
         <MapBoundsWatcher onBoundsChange={setMapBounds} onZoomChange={setZoom} />
         <RecenterButton userLocation={userLocation} onLocationFound={setUserLocation} />
