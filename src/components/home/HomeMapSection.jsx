@@ -13,8 +13,11 @@ export default function HomeMapSection() {
   const { data: sales = [] } = useQuery({
     queryKey: ['homeMapSales', today],
     queryFn: async () => {
-      const allSales = await base44.entities.YardSale.filter(activeSaleQuery({ status: 'approved' }), '-date', 200);
-      return allSales.filter((sale) => sale.date && sale.date >= today);
+      const page = await base44.entities.YardSale.filter(
+        activeSaleQuery({ status: 'approved', date: { $gte: today } }),
+        { sort: 'date', limit: 200 }
+      );
+      return Array.isArray(page) ? page : (page?.items || []);
     },
     staleTime: 120000,
   });

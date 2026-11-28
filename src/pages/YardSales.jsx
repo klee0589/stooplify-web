@@ -121,17 +121,19 @@ export default function YardSales() {
   const { data: sales = [], isLoading, refetch, error } = useQuery({
     queryKey: ['yardSales'],
     queryFn: async () => {
-      const allSales = await base44.entities.YardSale.filter(activeSaleQuery({ status: 'approved' }), '-date', 300);
       const todayStr = localDateStr();
-      // Only keep today's or future sales
-      const upcomingSales = allSales.filter(sale => sale.date >= todayStr);
+      // Today and later only, filtered by the server so the page loads a light payload
+      const page = await base44.entities.YardSale.filter(
+        activeSaleQuery({ status: 'approved', date: { $gte: todayStr } }),
+        { sort: 'date', limit: 300 }
+      );
+      const upcomingSales = Array.isArray(page) ? page : (page?.items || []);
       const now = new Date();
-      const startOfTomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
       return upcomingSales.map((sale) => {
         let isPast = false;
         if (sale.date === todayStr && sale.end_time) {
           const parseTime = (t) => {
-            const m = t.match(/(\d+):(\d+)\s*(AM|PM)?/i);
+            const m = typeof t === 'string' ? t.match(/(\d+):(\d+)\s*(AM|PM)?/i) : null;
             if (!m) return null;
             let h = parseInt(m[1]);
             const min = m[2];
