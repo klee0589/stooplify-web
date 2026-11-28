@@ -92,56 +92,46 @@ export default function YardSaleDetails() {
   const { data: sale, isLoading, error: saleError } = useQuery({
     queryKey: ['yardSale', saleId],
     queryFn: async () => {
-      console.log('🔍 Fetching sale with ID:', saleId);
-      console.log('🔍 ID type:', typeof saleId, 'value:', saleId);
-      if (!saleId) {
-        console.error('❌ No sale ID provided');
-        return null;
-      }
-      
+      if (!saleId) return null;
+
+      // Load by id, then fall back to a filtered lookup and finally a recent scan
+      let found = null;
       try {
-        // Try filtering by ID
-        let sales = await base44.entities.YardSale.filter({ id: saleId });
-        console.log('📦 Filter by id found sales:', sales.length, sales);
-        
-        // If not found, try listing all and finding by ID (backup)
-        if (sales.length === 0) {
-          console.log('🔄 Trying backup method - listing all sales...');
-          const allSales = await base44.entities.YardSale.list();
-          console.log('📦 Total sales in DB:', allSales.length);
-          sales = allSales.filter(s => s.id === saleId);
-          console.log('📦 Found after manual filter:', sales.length);
-        }
-        
-        if (sales.length > 0) {
-          console.log('✅ Found sale:', sales[0].title);
-          // Increment views via backend (service role — works for anonymous and non-owner viewers)
-          base44.functions.invoke('incrementSaleViews', { saleId }).catch(() => {});
-          
-          // Fetch seller info via backend function
-          const sellerEmail = sales[0].created_by;
-          const sellerUserId = sales[0].created_by_id;
-          if (sellerEmail || sellerUserId) {
-            try {
-              const payload = sellerEmail ? { email: sellerEmail } : { id: sellerUserId };
-              const { data } = await base44.functions.invoke('getSellerInfo', payload);
-              if (data?.seller) {
-                setSeller(data.seller);
-              }
-            } catch (err) {
-              console.error('❌ Failed to fetch seller info:', err);
-            }
-          }
-          
-          return sales[0];
-        }
-        console.warn('⚠️ No sale found with ID:', saleId);
-        return null;
-      } catch (error) {
-        console.error('❌ Error fetching sale:', error);
-        console.error('❌ Error details:', error.message, error.stack);
-        throw error;
+        found = await base44.entities.YardSale.get(saleId);
+      } catch (e) {
+        found = null;
       }
+      if (!found) {
+        const byId = await base44.entities.YardSale.filter({ id: saleId });
+        const matches = Array.isArray(byId) ? byId : (byId?.items || []);
+        found = matches[0] || null;
+      }
+      if (!found) {
+        const recent = await base44.entities.YardSale.list('-created_date', 200);
+        const all = Array.isArray(recent) ? recent : (recent?.items || []);
+        found = all.find((s) => s.id === saleId) || null;
+      }
+      if (!found) return null;
+
+      // Increment views via backend (service role — works for anonymous and non-owner viewers)
+      base44.functions.invoke('incrementSaleViews', { saleId }).catch(() => {});
+
+      // Fetch seller info via backend function
+      const sellerEmail = found.created_by;
+      const sellerUserId = found.created_by_id;
+      if (sellerEmail || sellerUserId) {
+        try {
+          const payload = sellerEmail ? { email: sellerEmail } : { id: sellerUserId };
+          const { data } = await base44.functions.invoke('getSellerInfo', payload);
+          if (data?.seller) {
+            setSeller(data.seller);
+          }
+        } catch (err) {
+          console.error('❌ Failed to fetch seller info:', err);
+        }
+      }
+
+      return found;
     },
     enabled: !!saleId,
     retry: 1,
