@@ -5,7 +5,7 @@
       "trigger_type": "scheduled",
       "events": [],
       "schedule_mode": "recurring",
-      "cron_expression": "0 10 * * *",
+      "cron_expression": "0 10 * * 2,5",
       "one_time_date": null,
       "timezone": "UTC",
       "interval_value": null,
@@ -38,8 +38,8 @@
       }
     ]
   },
-  "name": "Daily External Listing Sync",
-  "description": "Daily scan of external yard sale sites (estatesales.net, yardshoppers.com, silive.com, yardsaletreasuremap.com, craigslist) \u2014 imports new listings with photos and full info as Stooplify-owned.",
+  "name": "Twice-Weekly External Listing Sync",
+  "description": "Runs twice a week (Tuesday and Friday, 10:00 UTC) scanning external yard sale sites (estatesales.net, yardshoppers.com, silive.com, yardsaletreasuremap.com, craigslist) \u2014 imports new listings with their photos and full info, and backfills photos on older imports.",
   "x-base44-migrated-from-automation": {
     "legacy_payload_function": "syncExternalListings"
   }
