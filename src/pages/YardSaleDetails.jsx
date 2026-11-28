@@ -567,6 +567,7 @@ export default function YardSaleDetails() {
       "price": "0",
       "priceCurrency": "USD",
       "availability": "https://schema.org/InStock",
+      "validFrom": sale.created_date ? new Date(sale.created_date).toISOString() : new Date().toISOString(),
       "url": window.location.href
     },
     "organizer": organizerInfo,

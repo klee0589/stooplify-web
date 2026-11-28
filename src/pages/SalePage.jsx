@@ -170,6 +170,7 @@ export default function SalePage() {
           "price": "0",
           "priceCurrency": "USD",
           "availability": "https://schema.org/InStock",
+          "validFrom": sale.created_date ? new Date(sale.created_date).toISOString() : new Date().toISOString(),
           "url": canonicalUrl
         },
         "organizer": { "@type": "Organization", "name": "Stooplify", "url": "https://stooplify.com" }
