@@ -1,17 +1,45 @@
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.31';
 
-const SOURCES = [
+// Local pages run every time: this is where most of the traffic is.
+const LOCAL_SOURCES = [
   { url: 'https://www.estatesales.net/NY/New-York', source: 'estatesales.net' },
-  { url: 'https://www.yardshoppers.com/yard-sales/new-york-ny', source: 'yardshoppers.com' },
+  { url: 'https://www.estatesales.net/NJ/Jersey-City', source: 'estatesales.net' },
   { url: 'https://classifieds.silive.com/silive/category/garage-sale-estate-sale-auctions/garage-yard-estate-sales', source: 'silive.com' },
   { url: 'https://yardsaletreasuremap.com/US/New-York/New-York-City.html', source: 'yardsaletreasuremap.com' },
-  { url: 'https://www.estatesales.net/NY/Brooklyn', source: 'estatesales.net' },
-  { url: 'https://www.estatesales.net/NJ/Jersey-City', source: 'estatesales.net' },
-  { url: 'https://www.estatesales.net/NY/Staten-Island', source: 'estatesales.net' },
-  { url: 'https://www.estatesales.net/NJ/Newark', source: 'estatesales.net' },
-  { url: 'https://www.estatesales.net/NJ/Hoboken', source: 'estatesales.net' },
-  { url: 'https://www.estatesales.net/NY/Yonkers', source: 'estatesales.net' },
 ];
+
+// The site covers the whole country, so each run also sweeps a rotating slice of
+// metros. Six at a time keeps the run inside the function timeout while still
+// covering every region within a few days.
+const NATIONAL_SOURCES = [
+  { url: 'https://www.estatesales.net/CA/Los-Angeles', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/CA/San-Francisco', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/TX/Houston', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/TX/Dallas', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/FL/Miami', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/FL/Tampa', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/IL/Chicago', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/PA/Philadelphia', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/MA/Boston', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/GA/Atlanta', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/AZ/Phoenix', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/WA/Seattle', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/CO/Denver', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/MI/Detroit', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/NC/Charlotte', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/OH/Columbus', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/TN/Nashville', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/DC/Washington', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/MD/Baltimore', source: 'estatesales.net' },
+  { url: 'https://www.estatesales.net/MN/Minneapolis', source: 'estatesales.net' },
+];
+
+const NATIONAL_PER_RUN = 6;
+const rotationStart = Math.floor(Date.now() / 86400000) % NATIONAL_SOURCES.length;
+const rotatingSources = Array.from({ length: NATIONAL_PER_RUN }, (_, i) =>
+  NATIONAL_SOURCES[(rotationStart + i) % NATIONAL_SOURCES.length]
+);
+const SOURCES = [...LOCAL_SOURCES, ...rotatingSources];
 
 const LISTING_SCHEMA = {
   type: "object",
